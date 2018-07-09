@@ -4,10 +4,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.support.v4.content.LocalBroadcastManager
-import nl.mpcjanssen.simpletask.dao.Daos
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.broadcastFileSync
-import nl.mpcjanssen.simpletask.util.broadcastRefreshUI
+import nl.mpcjanssen.simpletask.util.broadcastTasklistChanged
 
 class AlarmReceiver : BroadcastReceiver() {
 
@@ -17,7 +16,7 @@ class AlarmReceiver : BroadcastReceiver() {
         if (Constants.ALARM_RELOAD == intent.getStringExtra(Constants.ALARM_REASON_EXTRA)) {
             broadcastFileSync( lbm )
         } else {
-            broadcastRefreshUI(lbm)
+            TodoList.reload("Alarm")
         }
 
     }

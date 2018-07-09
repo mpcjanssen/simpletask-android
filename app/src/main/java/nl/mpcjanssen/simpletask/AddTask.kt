@@ -23,7 +23,6 @@ import kotlinx.android.synthetic.main.add_task.*
 import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
-import nl.mpcjanssen.simpletask.task.TodoList.todoQueue
 import nl.mpcjanssen.simpletask.util.*
 import java.util.*
 
@@ -52,7 +51,6 @@ class AddTask : ThemedActionBarActivity() {
         TodoApplication.app.loadTodoList("before adding tasks")
 
         val intentFilter = IntentFilter()
-        intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
         intentFilter.addAction(Constants.BROADCAST_SYNC_START)
         intentFilter.addAction(Constants.BROADCAST_SYNC_DONE)
 
@@ -89,46 +87,45 @@ class AddTask : ThemedActionBarActivity() {
 
         setTitle(R.string.addtask)
 
-        todoQueue("Fill addtask") {
+        log.debug(TAG, "Fill addtask")
 
-            val pendingTasks = TodoList.pendingEdits.map {
-                TodoList.todoItems.get(it).inFileFormat()
+        val pendingTasks = TodoList.pendingEdits.map {
+            TodoList.todoItems.get(it).inFileFormat()
+        }
+        runOnUiThread {
+            val preFillString = if (pendingTasks.isNotEmpty()) {
+                setTitle(R.string.updatetask)
+                join(pendingTasks, "\n")
+            } else if (intent.hasExtra(Constants.EXTRA_PREFILL_TEXT)) {
+                intent.getStringExtra(Constants.EXTRA_PREFILL_TEXT)
+            } else if (intent.hasExtra(Query.INTENT_JSON)) {
+                Query(intent, luaModule = "from_intent").prefill
+            } else {
+                ""
             }
-            runOnUiThread {
-                val preFillString = if (pendingTasks.isNotEmpty()) {
-                    setTitle(R.string.updatetask)
-                    join(pendingTasks, "\n")
-                } else if (intent.hasExtra(Constants.EXTRA_PREFILL_TEXT)) {
-                    intent.getStringExtra(Constants.EXTRA_PREFILL_TEXT)
-                } else if (intent.hasExtra(Query.INTENT_JSON)) {
-                    Query(intent, luaModule = "from_intent").prefill
-                } else {
-                    ""
-                }
-                start_text = preFillString
-                // Avoid discarding changes on rotate
-                if (textInputField.text.isEmpty()) {
-                    textInputField.setText(preFillString)
-                }
-                // Listen to enter events, use IME_ACTION_NEXT for soft keyboards
-                // like Swype where ENTER keyCode is not generated.
-
-                if (Config.isCapitalizeTasks) {
-                    textInputField.inputType =  textInputField.inputType or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
-                }
-
-                setWordWrap(Config.isWordWrap)
-
-                val textIndex = 0
-                textInputField.setSelection(textIndex)
-
-                // Set button callbacks
-                btnContext.setOnClickListener { showListMenu() }
-                btnProject.setOnClickListener { showTagMenu() }
-                btnPrio.setOnClickListener { showPriorityMenu() }
-                btnDue.setOnClickListener { insertDate(DateType.DUE) }
-                btnThreshold.setOnClickListener { insertDate(DateType.THRESHOLD) }
+            start_text = preFillString
+            // Avoid discarding changes on rotate
+            if (textInputField.text.isEmpty()) {
+                textInputField.setText(preFillString)
             }
+            // Listen to enter events, use IME_ACTION_NEXT for soft keyboards
+            // like Swype where ENTER keyCode is not generated.
+
+            if (Config.isCapitalizeTasks) {
+                textInputField.inputType = textInputField.inputType or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+            }
+
+            setWordWrap(Config.isWordWrap)
+
+            val textIndex = 0
+            textInputField.setSelection(textIndex)
+
+            // Set button callbacks
+            btnContext.setOnClickListener { showListMenu() }
+            btnProject.setOnClickListener { showTagMenu() }
+            btnPrio.setOnClickListener { showPriorityMenu() }
+            btnDue.setOnClickListener { insertDate(DateType.DUE) }
+            btnThreshold.setOnClickListener { insertDate(DateType.THRESHOLD) }
         }
     }
 

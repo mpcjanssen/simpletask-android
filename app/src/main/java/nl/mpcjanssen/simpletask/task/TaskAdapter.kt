@@ -177,36 +177,35 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
     }
     internal var visibleLines = ArrayList<VisibleLine>()
 
-    internal fun setFilteredTasks(caller: Simpletask?, newQuery: Query) {
+    internal fun setFilteredTasks(caller: Simpletask, newQuery: Query) {
         textSize = Config.tasklistTextSize ?: textSize
         log.info(tag, "Text size = $textSize")
         query = newQuery
-        TodoList.todoQueue("setFilteredTasks") {
-            caller?.runOnUiThread {
-                caller.showListViewProgress(true)
-            }
-            log.info(tag, "setFilteredTasks called: $TodoList")
-            val sorts = newQuery.getSort(Config.defaultSorts)
-            val (visibleTasks, total) = TodoList.getSortedTasks(newQuery, sorts, Config.sortCaseSensitive)
-            countTotalTasks = total
 
-            val newVisibleLines = ArrayList<VisibleLine>()
+        caller.runOnUiThread {
+            caller.showListViewProgress(true)
+        }
+        log.info(tag, "setFilteredTasks called: $TodoList")
+        val sorts = newQuery.getSort(Config.defaultSorts)
+        val (visibleTasks, total) = TodoList.getSortedTasks(newQuery, sorts, Config.sortCaseSensitive)
+        countTotalTasks = total
 
-            newVisibleLines.addAll(addHeaderLines(visibleTasks, newQuery, getString(R.string.no_header)))
+        val newVisibleLines = ArrayList<VisibleLine>()
 
-            caller?.runOnUiThread {
-                // Replace the array in the main thread to prevent OutOfIndex exceptions
-                visibleLines = newVisibleLines
-                notifyDataSetChanged()
-                caller.showListViewProgress(false)
-                if (Config.lastScrollPosition != -1) {
-                    val manager = caller.listView?.layoutManager as LinearLayoutManager?
-                    val position = Config.lastScrollPosition
-                    val offset = Config.lastScrollOffset
-                    Logger.info(tag, "Restoring scroll offset $position, $offset")
-                    manager?.scrollToPositionWithOffset(position, offset )
-                    Config.lastScrollPosition = -1
-                }
+        newVisibleLines.addAll(addHeaderLines(visibleTasks, newQuery, getString(R.string.no_header)))
+
+        caller.runOnUiThread {
+            // Replace the array in the main thread to prevent OutOfIndex exceptions
+            visibleLines = newVisibleLines
+            notifyDataSetChanged()
+            caller.showListViewProgress(false)
+            if (Config.lastScrollPosition != -1) {
+                val manager = caller.listView?.layoutManager as LinearLayoutManager?
+                val position = Config.lastScrollPosition
+                val offset = Config.lastScrollOffset
+                Logger.info(tag, "Restoring scroll offset $position, $offset")
+                manager?.scrollToPositionWithOffset(position, offset)
+                Config.lastScrollPosition = -1
             }
         }
     }

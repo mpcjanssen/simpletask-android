@@ -18,7 +18,7 @@ open class ActionQueue(val qName: String) : Thread() {
         return mHandler?.hasMessages(0) ?: false
     }
 
-    fun add(description: String, r: Runnable) {
+    fun add(description: String, r: () -> Unit) {
         while (mHandler == null) {
 
             log.debug(TAG, "Queue handler is null, waiting")
@@ -30,11 +30,9 @@ open class ActionQueue(val qName: String) : Thread() {
             }
         }
         log.info(qName, "-> $description")
-        mHandler?.post(LoggingRunnable(qName,description, r))
+        mHandler?.post(LoggingRunnable(qName,description, Runnable(r)))
     }
 }
-
-object TodoActionQueue : ActionQueue("TLQ")
 
 object FileStoreActionQueue : ActionQueue("FSQ")
 

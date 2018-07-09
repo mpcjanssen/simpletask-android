@@ -10,7 +10,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import nl.mpcjanssen.simpletask.remote.FileStore
-import nl.mpcjanssen.simpletask.task.TodoList.todoQueue
 import nl.mpcjanssen.simpletask.util.*
 import java.io.File
 import java.io.IOException
@@ -88,7 +87,7 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
     }
 
     private fun exportLuaConfig (exportFile: File) {
-        todoQueue("Export Lua config") {
+        FileStoreActionQueue.add("Export Lua config") {
             Config.luaConfig = script
             try {
                 FileStore.writeFile(exportFile, Config.luaConfig)
@@ -98,10 +97,11 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
                 showToastLong(this, "Error exporting lua config")
             }
         }
+
     }
 
     private fun importLuaConfig (importFile: File) {
-        todoQueue("Import Lua config") {
+        FileStoreActionQueue.add("Import Lua config") {
             try {
                 FileStore.readFile(importFile.canonicalPath) { contents ->
                     showToastShort(this, getString(R.string.toast_lua_config_imported))
