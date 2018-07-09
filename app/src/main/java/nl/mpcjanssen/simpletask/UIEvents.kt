@@ -24,7 +24,9 @@ enum class Event {
     FONT_SIZE_CHANGED,
     UPDATE_PENDING_CHANGES,
 
-    CLEAR_FILTER
+    CLEAR_FILTER,
+
+    RENAMED_SAVED_FILTER
 }
 
 
@@ -42,7 +44,8 @@ fun Simpletask.updateUiForEvent(event: Event) {
                 updateFilterBar()
                 updateQuickFilterDrawer()
             }
-            Event.ADDED_SAVED_FILTER -> {
+            Event.ADDED_SAVED_FILTER,
+            Event.RENAMED_SAVED_FILTER  -> {
                 updateSavedFilterDrawer()
             }
             Event.TASK_LIST_CHANGED -> {

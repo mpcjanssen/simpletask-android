@@ -957,22 +957,18 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun exportFilters(exportFile: File) {
-        val queries = QueryStore.ids().map {
-            QueryStore.get(it)
-        }
-        val jsonFilters = queries.fold(JSONObject()) { acc, query ->
-            acc.put(query.name, query.query.saveInJSON())
-        }
-        val r = Runnable {
-            try {
-                FileStore.writeFile(exportFile, jsonFilters.toString(2))
-                showToastShort(this, R.string.saved_filters_exported)
-            } catch (e: Exception) {
-                log.error(TAG, "Export filters failed", e)
-                showToastLong(this, "Error exporting filters")
+        Config.jsonQueryStore?.let {
+            val r = Runnable {
+                try {
+                    FileStore.writeFile(exportFile, it)
+                    showToastShort(this, R.string.saved_filters_exported)
+                } catch (e: Exception) {
+                    log.error(TAG, "Export filters failed", e)
+                    showToastLong(this, "Error exporting filters")
+                }
             }
+            Thread(r).start()
         }
-        Thread(r).start()
     }
 
     /**
@@ -1041,7 +1037,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
             value?.let {
                 QueryStore.rename(squery, it)
-                updateSavedFilterDrawer()
+                updateUiForEvent(Event.RENAMED_SAVED_FILTER)
             } ?: showToastShort(applicationContext, R.string.filter_name_empty)
         }
 
