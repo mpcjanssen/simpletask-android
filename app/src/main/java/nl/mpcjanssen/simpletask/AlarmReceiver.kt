@@ -6,7 +6,6 @@ import android.content.Intent
 import android.support.v4.content.LocalBroadcastManager
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.broadcastFileSync
-import nl.mpcjanssen.simpletask.util.broadcastTasklistChanged
 
 class AlarmReceiver : BroadcastReceiver() {
 

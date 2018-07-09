@@ -282,7 +282,7 @@ object TodoList {
     }
 
     fun archive(todoFilename: String, doneFileName: String, tasks: List<Task>?, eol: String) {
-        log.debug(TAG, "Archive")
+        log.debug(TAG, "Archive ${tasks?.size ?: 0} tasks")
 
         val tasksToDelete = tasks ?: completedTasks
 

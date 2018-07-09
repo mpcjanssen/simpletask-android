@@ -65,6 +65,7 @@ class TodoApplication : MultiDexApplication() {
         val intentFilter = IntentFilter()
         intentFilter.addAction(Constants.BROADCAST_UPDATE_WIDGETS)
         intentFilter.addAction(Constants.BROADCAST_FILE_SYNC)
+        intentFilter.addAction(Constants.BROADCAST_TASKLIST_CHANGED)
 
         m_broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
