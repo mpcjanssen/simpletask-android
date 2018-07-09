@@ -69,7 +69,7 @@ object TodoList {
                 res.add(it.priority)
             }
             val ret = ArrayList(res)
-            Collections.sort(ret)
+            ret.sort()
             return ret
         }
 
