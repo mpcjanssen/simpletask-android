@@ -14,10 +14,6 @@ import java.util.*
 
 data class NamedQuery(val name: String, val query: Query) {
 
-    fun id() : String {
-        return Base64.encodeToString(name.toByteArray(), Base64.DEFAULT).trim()
-    }
-
     fun saveInPrefs(prefs: SharedPreferences) {
         query.saveInPrefs(prefs)
         prefs.edit().apply { putString(INTENT_TITLE,name) }.apply()
@@ -39,7 +35,7 @@ data class NamedQuery(val name: String, val query: Query) {
 /**
  * Active applyFilter, has methods for serialization in several formats
  */
-class Query(val luaModule: String) {
+data class Query(val luaModule: String) {
     private val log: Logger = Logger
     var priorities = ArrayList<Priority>()
     var contexts = ArrayList<String>()

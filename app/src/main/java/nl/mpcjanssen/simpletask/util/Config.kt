@@ -4,6 +4,7 @@ import me.smichel.android.KPreferences.Preferences
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.Task
+import org.json.JSONObject
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -259,6 +260,36 @@ object Config : Preferences(TodoApplication.app) {
         }
     var changesPending by BooleanPreference(R.string.changes_pending, false)
     var useUUIDs by BooleanPreference(R.string.use_uuids, false)
+
+    var jsonQueryStore by StringOrNullPreference(R.string.query_store, null)
+
+    var savedQueries : List<NamedQuery>
+    get() {
+        val queries = ArrayList<NamedQuery>()
+        val jsonString = jsonQueryStore
+        val jsonFilters = if (jsonString == null) {
+            val queries = LegacyQueryStore.ids().map {
+                LegacyQueryStore.get(it)
+            }
+            queries.fold(JSONObject()) { acc, query ->
+                acc.put(query.name, query.query.saveInJSON())
+            }
+        } else {
+            JSONObject(jsonString)
+        }
+        jsonFilters.keys().forEach { name ->
+            val json = jsonFilters.getJSONObject(name)
+            val newQuery = NamedQuery(name, Query(json, luaModule = "mainui"))
+            queries.add(newQuery)
+        }
+        return queries
+    }
+    set(queries) {
+        val jsonFilters = queries.fold(JSONObject()) { acc, query ->
+            acc.put(query.name, query.query.saveInJSON())
+        }
+        jsonQueryStore = jsonFilters.toString(2)
+    }
 
     fun getSortString(key: String): String {
         if (useTodoTxtTerms) {
