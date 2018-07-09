@@ -54,23 +54,23 @@ class Simpletask : ThemedNoActionBarActivity() {
         val URI_BASE = Uri.fromParts("Simpletask", "", null)!!
         val URI_SEARCH = Uri.withAppendedPath(URI_BASE, "search")!!
         private val TAG = "Simpletask"
+        // Drawer side
+        private val SAVED_FILTER_DRAWER = GravityCompat.END
+        private val QUICK_FILTER_DRAWER = GravityCompat.START
     }
-
+    val log = Logger
     private var options_menu: Menu? = null
 
     lateinit var taskAdapter: TaskAdapter
     private var m_broadcastReceiver: BroadcastReceiver? = null
     private var localBroadcastManager: LocalBroadcastManager? = null
 
-    // Drawer side
-    private val SAVED_FILTER_DRAWER = GravityCompat.END
-    private val QUICK_FILTER_DRAWER = GravityCompat.START
+
 
     private var m_drawerToggle: ActionBarDrawerToggle? = null
     private var m_savedInstanceState: Bundle? = null
     private var m_scrollPosition = 0
 
-    var log = Logger
     private val uiHandler = UiHandler()
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -324,19 +324,20 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     override fun onBackPressed() {
         handleMode(mapOf(
-                Mode.NAV_DRAWER to {
+                Mode.SAVED_FILTER_DRAWER to {
                     closeDrawer(SAVED_FILTER_DRAWER)
                 },
-                Mode.FILTER_DRAWER to {
+                Mode.QUICK_FILTER_DRAWER to {
                     closeDrawer(QUICK_FILTER_DRAWER)
                 }, Mode.SELECTION to {
             closeSelectionMode()
         }, Mode.MAIN to {
             if (!Config.backClearsFilter || !Config.mainQuery.hasFilter()) {
                 super.onBackPressed()
+            } else {
+                clearFilter()
+                uiHandler.forEvent(Event.CLEAR_FILTER)
             }
-            clearFilter()
-            onNewIntent(intent)
         }
         ))
     }
@@ -357,8 +358,12 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun closeSelectionMode() {
         TodoList.clearSelection()
-        invalidateOptionsMenu()
-        taskAdapter.setFilteredTasks(this, Config.mainQuery)
+        if (Config.hasKeepSelection) {
+            // Refilter tasks to remove selected tasks which don't match the current filter
+            uiHandler.forEvent(Event.FILTER_CHANGED)
+        } else {
+            uiHandler.forEvent(Event.CLEAR_SELECTION)
+        }
     }
 
     private fun selectedTasksAsString(): String {
@@ -494,11 +499,11 @@ class Simpletask : ThemedNoActionBarActivity() {
         val toggle = m_drawerToggle ?: return super.onCreateOptionsMenu(menu)
         val actionBar = supportActionBar ?: return super.onCreateOptionsMenu(menu)
         handleMode(mapOf(
-                Mode.NAV_DRAWER to {
+                Mode.SAVED_FILTER_DRAWER to {
                     inflater.inflate(R.menu.nav_drawer, menu)
                     setTitle(R.string.filter_saved_prompt)
                 },
-                Mode.FILTER_DRAWER to {
+                Mode.QUICK_FILTER_DRAWER to {
                     inflater.inflate(R.menu.filter_drawer, menu)
                     setTitle(R.string.title_filter_drawer)
                 },
@@ -614,8 +619,8 @@ class Simpletask : ThemedNoActionBarActivity() {
         log.debug(TAG, "Handle mode")
         runOnUiThread {
             when {
-                isDrawerOpen(SAVED_FILTER_DRAWER) -> actions[Mode.NAV_DRAWER]?.invoke()
-                isDrawerOpen(QUICK_FILTER_DRAWER) -> actions[Mode.FILTER_DRAWER]?.invoke()
+                isDrawerOpen(SAVED_FILTER_DRAWER) -> actions[Mode.SAVED_FILTER_DRAWER]?.invoke()
+                isDrawerOpen(QUICK_FILTER_DRAWER) -> actions[Mode.QUICK_FILTER_DRAWER]?.invoke()
                 TodoList.selectedTasks.isNotEmpty() -> actions[Mode.SELECTION]?.invoke()
                 else -> actions[Mode.MAIN]?.invoke()
             }
@@ -827,8 +832,8 @@ class Simpletask : ThemedNoActionBarActivity() {
         when (item.itemId) {
             androidId.home -> {
                 handleMode(mapOf(
-                        Mode.NAV_DRAWER to { closeDrawer(SAVED_FILTER_DRAWER) },
-                        Mode.FILTER_DRAWER to { closeDrawer(QUICK_FILTER_DRAWER) },
+                        Mode.SAVED_FILTER_DRAWER to { closeDrawer(SAVED_FILTER_DRAWER) },
+                        Mode.QUICK_FILTER_DRAWER to { closeDrawer(QUICK_FILTER_DRAWER) },
                         Mode.SELECTION to { closeSelectionMode() },
                         Mode.MAIN to { m_drawerToggle?.onOptionsItemSelected(item) }
                 ))
@@ -1131,6 +1136,9 @@ class Simpletask : ThemedNoActionBarActivity() {
                     Event.UPDATE_PENDING_CHANGES -> {
                         updateConnectivityIndicator()
                     }
+                    Event.CLEAR_SELECTION -> {
+                        invalidateOptionsMenu()
+                    }
                 }
             }
         }
@@ -1307,5 +1315,17 @@ enum class Event {
     RESUME,
     FONT_SIZE_CHANGED,
     UPDATE_PENDING_CHANGES,
-    CLEAR_FILTER
+    CLEAR_FILTER,
+    CLEAR_SELECTION
+}
+
+enum class Mode {
+    SAVED_FILTER_DRAWER, QUICK_FILTER_DRAWER, SELECTION, MAIN
+}
+
+enum class Action {
+    LINK,
+    SMS,
+    PHONE,
+    MAIL
 }
