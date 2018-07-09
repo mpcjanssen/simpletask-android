@@ -71,6 +71,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     private var m_scrollPosition = 0
 
     var log = Logger
+    private val uiHandler = UiHandler()
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -213,8 +214,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     log.info(TAG, "Tasklist changed, refiltering adapter")
                     taskAdapter.setFilteredTasks(this@Simpletask, Config.mainQuery)
                     runOnUiThread {
-                        updateFilterBar()
-                        updateQuickFilterDrawer()
+                        uiHandler.forEvent(Event.TASK_LIST_CHANGED)
                     }
                 } else if (receivedIntent.action == Constants.BROADCAST_HIGHLIGHT_SELECTION) {
                     log.info(TAG, "Highligh selection")
@@ -225,9 +225,9 @@ class Simpletask : ThemedNoActionBarActivity() {
                 } else if (receivedIntent.action == Constants.BROADCAST_SYNC_DONE) {
                     showListViewProgress(false)
                 } else if (receivedIntent.action == Constants.BROADCAST_STATE_INDICATOR) {
-                    updateUiForEvent(Event.UPDATE_PENDING_CHANGES)
+                    uiHandler.forEvent(Event.UPDATE_PENDING_CHANGES)
                 } else if (receivedIntent.action == Constants.BROADCAST_MAIN_FONTSIZE_CHANGED) {
-                    updateUiForEvent(Event.FONT_SIZE_CHANGED)
+                    uiHandler.forEvent(Event.FONT_SIZE_CHANGED)
                 } else if (receivedIntent.action == Constants.BROADCAST_THEME_CHANGED ||
                         receivedIntent.action == Constants.BROADCAST_DATEBAR_SIZE_CHANGED) {
                     recreate()
@@ -280,7 +280,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         log.info(TAG, "onResume")
         TodoList.reload(reason = "Main activity resume")
         handleIntent()
-        updateUiForEvent(Event.RESUME)
+        uiHandler.forEvent(Event.RESUME)
     }
 
     override fun onSearchRequested(): Boolean {
@@ -691,8 +691,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     val query = Config.mainQuery
                     query.search = newText
                     Config.mainQuery = query
-                    taskAdapter.setFilteredTasks(this@Simpletask, query)
-                    updateFilterBar()
+                    uiHandler.forEvent(Event.FILTER_CHANGED)
                 }
                 return true
             }
@@ -883,7 +882,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     try {
                         QueryStore.importFilters(importFile)
                         showToastShort(this, R.string.saved_filters_imported)
-                        updateUiForEvent(Event.IMPORTED_FILTERS)
+                        uiHandler.forEvent(Event.SAVED_FILTERS_IMPORTED)
 
                     } catch (e: Exception) {
                         // Need to catch generic exception because Dropbox errors don't inherit from IOException
@@ -971,7 +970,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             val value = input.text?.toString()?.takeIf { it.isNotBlank() }
             value?.let {
                 QueryStore.save(Config.mainQuery, it)
-                updateUiForEvent(Event.ADDED_SAVED_FILTER)
+                uiHandler.forEvent(Event.SAVED_FILTER_ADDED)
             }
             value ?: showToastShort(applicationContext, R.string.filter_name_empty)
         }
@@ -983,7 +982,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     private fun clearFilter() {
         Config.mainQuery = Config.mainQuery.clear()
         intent = Config.mainQuery.saveInIntent(intent)
-        updateUiForEvent(Event.CLEAR_FILTER)
+        uiHandler.forEvent(Event.CLEAR_FILTER)
     }
 
     fun createFilterShortcut(namedQuery: NamedQuery) {
@@ -994,12 +993,12 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun deleteSavedQuery(id: String) {
         QueryStore.delete(id)
-        updateSavedFilterDrawer()
+        uiHandler.forEvent(Event.SAVED_FILTER_DELETED)
     }
 
     private fun updateSavedQuery(oldQuery: NamedQuery, newQuery: Query) {
         QueryStore.save(newQuery, oldQuery.name)
-        updateSavedFilterDrawer()
+        uiHandler.forEvent(Event.SAVED_FILTER_UPDATED)
     }
 
     private fun renameSavedQuery(id: String) {
@@ -1019,7 +1018,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
             value?.let {
                 QueryStore.rename(squery, it)
-                updateUiForEvent(Event.RENAMED_SAVED_FILTER)
+                uiHandler.forEvent(Event.SAVED_FILTER_RENAMED)
             } ?: showToastShort(applicationContext, R.string.filter_name_empty)
         }
 
@@ -1078,6 +1077,186 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
     }
 
+    private inner class UiHandler () {
+        fun forEvent(event: Event) {
+            val tag = "Event"
+            log.debug(tag, "update UI for event ${event.name}")
+            runOnUiThread {
+                when (event) {
+                    Event.SAVED_FILTER_ITEM_CLICK -> {
+                        updateTaskList(Config.mainQuery) {
+                            updateFilterBar()
+                            updateQuickFilterDrawer()
+                        }
+                    }
+                    Event.QUICK_FILTER_ITEM_CLICK,
+                    Event.CLEAR_FILTER -> {
+                        updateTaskList(Config.mainQuery) {
+                            updateFilterBar()
+                            updateQuickFilterDrawer()
+                        }
+
+                    }
+                    Event.SAVED_FILTER_ADDED,
+                    Event.SAVED_FILTER_RENAMED,
+                    Event.SAVED_FILTER_UPDATED,
+                    Event.SAVED_FILTER_DELETED,
+                    Event.SAVED_FILTERS_IMPORTED -> {
+                        updateSavedFilterDrawer()
+                    }
+                    Event.TASK_LIST_CHANGED -> {
+                        updateTaskList(Config.mainQuery) {
+                            updateFilterBar()
+                            updateQuickFilterDrawer()
+                        }
+                    }
+                    Event.FILTER_CHANGED -> {
+                        updateTaskList(Config.mainQuery) {
+                            updateFilterBar()
+                            updateQuickFilterDrawer()
+                        }
+                    }
+                    Event.RESUME -> {
+                        updateFilterBar()
+                        updateSavedFilterDrawer()
+                        updateQuickFilterDrawer()
+                        updateConnectivityIndicator()
+                    }
+                    Event.FONT_SIZE_CHANGED -> {
+                        updateTaskList(Config.mainQuery) {
+                            updateFilterBar()
+                            updateQuickFilterDrawer()
+                        }
+                    }
+                    Event.UPDATE_PENDING_CHANGES -> {
+                        updateConnectivityIndicator()
+                    }
+                }
+            }
+        }
+
+        private fun updateFilterBar() {
+            actionbar.visibility = when {
+                Config.mainQuery.hasFilter() -> View.VISIBLE
+                else -> View.GONE
+            }
+            log.debug(TAG, "Update applyFilter bar")
+            val count = taskAdapter.countVisibleTasks
+            val total = taskAdapter.countTotalTasks
+            filter_text.text = Config.mainQuery.getTitle(
+                    count,
+                    total,
+                    getText(R.string.priority_prompt),
+                    Config.tagTerm,
+                    Config.listTerm,
+                    getText(R.string.search),
+                    getText(R.string.script),
+                    getText(R.string.title_filter_applied),
+                    getText(R.string.no_filter))
+        }
+
+        private fun updateSavedFilterDrawer() {
+            val idQueryPairs = QueryStore.ids().map { Pair(it, QueryStore.get(it)) }.toList()
+            val hasQueries = !idQueryPairs.isEmpty()
+            val queries = idQueryPairs.sortedBy { it.second.name }
+            val names = if (hasQueries) {
+                queries.map { it.second.name }
+            } else {
+                val result = ArrayList<String>()
+                result.add(getString(R.string.nav_drawer_hint))
+                result
+            }
+            nav_drawer.adapter = ArrayAdapter(this@Simpletask, R.layout.drawer_list_item, names)
+            if (hasQueries) {
+                nav_drawer.choiceMode = AbsListView.CHOICE_MODE_NONE
+                nav_drawer.isLongClickable = true
+                nav_drawer.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                    queries[position].let {
+                        val query = it.second.query
+                        Config.mainQuery = query
+                        taskAdapter.setFilteredTasks(this@Simpletask, query)
+                        runOnUiThread {
+                            closeDrawer(SAVED_FILTER_DRAWER)
+                            updateQuickFilterDrawer()
+                        }
+                    }
+
+                }
+                nav_drawer.onItemLongClickListener = OnItemLongClickListener { _, view, position, _ ->
+                    val query = queries[position]
+                    val popupMenu = PopupMenu(this@Simpletask, view)
+                    popupMenu.setOnMenuItemClickListener { item ->
+                        val menuId = item.itemId
+                        when (menuId) {
+                            R.id.menu_saved_filter_delete -> deleteSavedQuery(query.first)
+                            R.id.menu_saved_filter_shortcut -> createFilterShortcut(query.second)
+                            R.id.menu_saved_filter_rename -> renameSavedQuery(query.first)
+                            R.id.menu_saved_filter_update -> updateSavedQuery(query.second, Config.mainQuery)
+                            else -> {
+                            }
+                        }
+                        true
+                    }
+                    val inflater = popupMenu.menuInflater
+                    inflater.inflate(R.menu.saved_filter, popupMenu.menu)
+                    popupMenu.show()
+                    true
+                }
+            }
+        }
+
+        private fun updateTaskList(query: Query, afterOnUi: ()->Unit) {
+            runOnMainThread (Runnable {
+                taskAdapter.setFilteredTasks(this@Simpletask, query)
+                runOnUiThread(afterOnUi)
+            })
+        }
+
+        private fun updateQuickFilterDrawer() {
+            updateFilterBar()
+            val decoratedContexts = alfaSort(TodoList.contexts, Config.sortCaseSensitive, prefix = "-").map { "@$it" }
+            val decoratedProjects = alfaSort(TodoList.projects, Config.sortCaseSensitive, prefix = "-").map { "+$it" }
+            val drawerAdapter = DrawerAdapter(layoutInflater,
+                    Config.listTerm,
+                    decoratedContexts,
+                    Config.tagTerm,
+                    decoratedProjects)
+
+            filter_drawer.adapter = drawerAdapter
+            filter_drawer.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
+            filter_drawer.onItemClickListener = DrawerItemClickListener()
+
+            Config.mainQuery.contexts
+                    .map { drawerAdapter.getIndexOf("@$it") }
+                    .filter { it != -1 }
+                    .forEach { filter_drawer.setItemChecked(it, true) }
+
+            Config.mainQuery.projects
+                    .map { drawerAdapter.getIndexOf("+$it") }
+                    .filter { it != -1 }
+                    .forEach { filter_drawer.setItemChecked(it, true) }
+            filter_drawer.setItemChecked(drawerAdapter.contextHeaderPosition, Config.mainQuery.contextsNot)
+            filter_drawer.setItemChecked(drawerAdapter.projectsHeaderPosition, Config.mainQuery.projectsNot)
+            filter_drawer.deferNotifyDataSetChanged()
+        }
+
+        private fun updateConnectivityIndicator() {
+            // Show connectivity status indicator
+            // Red -> changes pending
+            // Yellow -> offline
+            if (Config.changesPending) {
+                pendingchanges.visibility = View.VISIBLE
+                offline.visibility = View.GONE
+            } else if (!FileStore.isOnline) {
+                pendingchanges.visibility = View.GONE
+                offline.visibility = View.VISIBLE
+            } else {
+                pendingchanges.visibility = View.GONE
+                offline.visibility = View.GONE
+            }
+        }
+    }
+
     private inner class DrawerItemClickListener : AdapterView.OnItemClickListener {
 
         override fun onItemClick(parent: AdapterView<*>, view: View, position: Int,
@@ -1111,130 +1290,22 @@ class Simpletask : ThemedNoActionBarActivity() {
             if (!Config.hasKeepSelection) {
                 TodoList.clearSelection()
             }
-            updateUiForEvent(Event.QUICK_FILTER_ITEM_CLICK)
+            uiHandler.forEvent(Event.QUICK_FILTER_ITEM_CLICK)
         }
-    }
+    } }
 
-    internal fun updateConnectivityIndicator() {
-        // Show connectivity status indicator
-        // Red -> changes pending
-        // Yellow -> offline
-        if (Config.changesPending) {
-            pendingchanges.visibility = View.VISIBLE
-            offline.visibility = View.GONE
-        } else if (!FileStore.isOnline) {
-            pendingchanges.visibility = View.GONE
-            offline.visibility = View.VISIBLE
-        } else {
-            pendingchanges.visibility = View.GONE
-            offline.visibility = View.GONE
-        }
-    }
-
-    internal fun updateFilterBar() {
-        actionbar.visibility = when {
-            Config.mainQuery.hasFilter() -> View.VISIBLE
-            else -> View.GONE
-        }
-        log.debug(TAG, "Update applyFilter bar")
-        val count = taskAdapter.countVisibleTasks
-        val total = taskAdapter.countTotalTasks
-        filter_text.text = Config.mainQuery.getTitle(
-                count,
-                total,
-                getText(R.string.priority_prompt),
-                Config.tagTerm,
-                Config.listTerm,
-                getText(R.string.search),
-                getText(R.string.script),
-                getText(R.string.title_filter_applied),
-                getText(R.string.no_filter))
-    }
-
-    internal fun updateSavedFilterDrawer() {
-        val idQueryPairs = QueryStore.ids().map { Pair(it, QueryStore.get(it)) }.toList()
-        val hasQueries = !idQueryPairs.isEmpty()
-        val queries = idQueryPairs.sortedBy { it.second.name }
-        val names = if (hasQueries) {
-            queries.map { it.second.name }
-        } else {
-            val result = ArrayList<String>()
-            result.add(getString(R.string.nav_drawer_hint))
-            result
-        }
-        nav_drawer.adapter = ArrayAdapter(this, R.layout.drawer_list_item, names)
-        if (hasQueries) {
-            nav_drawer.choiceMode = AbsListView.CHOICE_MODE_NONE
-            nav_drawer.isLongClickable = true
-            nav_drawer.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                queries[position].let {
-                    val query = it.second.query
-                    Config.mainQuery = query
-                    taskAdapter.setFilteredTasks(this, query)
-                    runOnUiThread {
-                        closeDrawer(SAVED_FILTER_DRAWER)
-                        updateQuickFilterDrawer()
-                    }
-                }
-
-            }
-            nav_drawer.onItemLongClickListener = OnItemLongClickListener { _, view, position, _ ->
-                val query = queries[position]
-                val popupMenu = PopupMenu(this@Simpletask, view)
-                popupMenu.setOnMenuItemClickListener { item ->
-                    val menuId = item.itemId
-                    when (menuId) {
-                        R.id.menu_saved_filter_delete -> deleteSavedQuery(query.first)
-                        R.id.menu_saved_filter_shortcut -> createFilterShortcut(query.second)
-                        R.id.menu_saved_filter_rename -> renameSavedQuery(query.first)
-                        R.id.menu_saved_filter_update -> updateSavedQuery(query.second, Config.mainQuery)
-                        else -> {
-                        }
-                    }
-                    true
-                }
-                val inflater = popupMenu.menuInflater
-                inflater.inflate(R.menu.saved_filter, popupMenu.menu)
-                popupMenu.show()
-                true
-            }
-        }
-    }
-
-    internal fun updateTaskList(query: Query, afterOnUi: ()->Unit) {
-        runOnMainThread (Runnable {
-            taskAdapter.setFilteredTasks(this@Simpletask, query)
-            runOnUiThread(afterOnUi)
-        })
-    }
-
-    internal fun updateQuickFilterDrawer() {
-        updateFilterBar()
-        val decoratedContexts = alfaSort(TodoList.contexts, Config.sortCaseSensitive, prefix = "-").map { "@$it" }
-        val decoratedProjects = alfaSort(TodoList.projects, Config.sortCaseSensitive, prefix = "-").map { "+$it" }
-        val drawerAdapter = DrawerAdapter(layoutInflater,
-                Config.listTerm,
-                decoratedContexts,
-                Config.tagTerm,
-                decoratedProjects)
-
-        filter_drawer.adapter = drawerAdapter
-        filter_drawer.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
-        filter_drawer.onItemClickListener = DrawerItemClickListener()
-
-        Config.mainQuery.contexts
-                .map { drawerAdapter.getIndexOf("@$it") }
-                .filter { it != -1 }
-                .forEach { filter_drawer.setItemChecked(it, true) }
-
-        Config.mainQuery.projects
-                .map { drawerAdapter.getIndexOf("+$it") }
-                .filter { it != -1 }
-                .forEach { filter_drawer.setItemChecked(it, true) }
-        filter_drawer.setItemChecked(drawerAdapter.contextHeaderPosition, Config.mainQuery.contextsNot)
-        filter_drawer.setItemChecked(drawerAdapter.projectsHeaderPosition, Config.mainQuery.projectsNot)
-        filter_drawer.deferNotifyDataSetChanged()
-    }
-
+enum class Event {
+    TASK_LIST_CHANGED,
+    FILTER_CHANGED,
+    QUICK_FILTER_ITEM_CLICK,
+    SAVED_FILTER_ITEM_CLICK,
+    SAVED_FILTER_ADDED,
+    SAVED_FILTER_UPDATED,
+    SAVED_FILTER_DELETED,
+    SAVED_FILTERS_IMPORTED,
+    SAVED_FILTER_RENAMED,
+    RESUME,
+    FONT_SIZE_CHANGED,
+    UPDATE_PENDING_CHANGES,
+    CLEAR_FILTER
 }
-
