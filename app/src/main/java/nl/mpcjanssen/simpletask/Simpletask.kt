@@ -872,8 +872,32 @@ class Simpletask : ThemedNoActionBarActivity() {
             R.id.priority -> prioritizeTasks(checkedTasks)
             R.id.update_lists -> updateLists(checkedTasks)
             R.id.update_tags -> updateTags(checkedTasks)
-            R.id.menu_export_filter_export -> exportFilters(File(Config.todoFile.parent, "saved_filters.txt"))
-            R.id.menu_export_filter_import -> importFilters(File(Config.todoFile.parent, "saved_filters.txt"))
+            R.id.menu_export_filter_export -> {
+                FileStoreActionQueue.add("Exporting filters") {
+                    try {
+                        QueryStore.exportFilters(File(Config.todoFile.parent, "saved_filters.txt"))
+                        showToastShort(this, R.string.saved_filters_exported)
+                    } catch (e: Exception) {
+                        Logger.error(TAG, "Export filters failed", e)
+                        showToastLong(this, "Error exporting filters")
+                    }
+                }
+            }
+            R.id.menu_export_filter_import -> {
+                FileStoreActionQueue.add("Importing filters") {
+                    val importFile = File(Config.todoFile.parent, "saved_filters.txt")
+                    try {
+                        QueryStore.importFilters(importFile)
+                        showToastShort(this, R.string.saved_filters_imported)
+                        updateUiForEvent(Event.IMPORTED_FILTERS)
+
+                    } catch (e: Exception) {
+                        // Need to catch generic exception because Dropbox errors don't inherit from IOException
+                        log.error(Simpletask.TAG, "Import filters, cant read file ${importFile.canonicalPath}", e)
+                        showToastLong(this, "Error reading file ${importFile.canonicalPath}")
+                    }
+                }
+            }
             else -> return super.onOptionsItemSelected(item)
         }
         return true
@@ -934,42 +958,9 @@ class Simpletask : ThemedNoActionBarActivity() {
     @Suppress("unused")
     fun onClearClick(@Suppress("UNUSED_PARAMETER") v: View) = clearFilter()
 
-    private fun importFilters(importFile: File) {
-        val r = Runnable {
-            try {
-                FileStore.readFile(importFile.canonicalPath) { contents ->
-                    val jsonFilters = JSONObject(contents)
-                    jsonFilters.keys().forEach { name ->
-                        val json = jsonFilters.getJSONObject(name)
-                        val newQuery = Query(json, luaModule = "mainui")
-                        QueryStore.save(newQuery, name)
-                    }
-                    updateUiForEvent(Event.IMPORTED_FILTERS)
-                    showToastShort(this, R.string.saved_filters_imported)
-                }
-            } catch (e: Exception) {
-                // Need to catch generic exception because Dropbox errors don't inherit from IOException
-                log.error(TAG, "Import filters, cant read file ${importFile.canonicalPath}", e)
-                showToastLong(this, "Error reading file ${importFile.canonicalPath}")
-            }
-        }
-        Thread(r).start()
-    }
 
-    private fun exportFilters(exportFile: File) {
-        Config.jsonQueryStore?.let {
-            val r = Runnable {
-                try {
-                    FileStore.writeFile(exportFile, it)
-                    showToastShort(this, R.string.saved_filters_exported)
-                } catch (e: Exception) {
-                    log.error(TAG, "Export filters failed", e)
-                    showToastLong(this, "Error exporting filters")
-                }
-            }
-            Thread(r).start()
-        }
-    }
+
+
 
     /**
      * Handle add applyFilter click *
@@ -1245,9 +1236,10 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
     }
 
-    internal fun updateTaskList(query: Query) {
+    internal fun updateTaskList(query: Query, afterOnUi: ()->Unit) {
         runOnMainThread (Runnable {
             taskAdapter.setFilteredTasks(this@Simpletask, query)
+            runOnUiThread(afterOnUi)
         })
     }
 

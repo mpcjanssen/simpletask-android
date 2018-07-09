@@ -23,9 +23,7 @@ enum class Event {
     IMPORTED_FILTERS,
     FONT_SIZE_CHANGED,
     UPDATE_PENDING_CHANGES,
-
     CLEAR_FILTER,
-
     RENAMED_SAVED_FILTER
 }
 
@@ -36,27 +34,34 @@ fun Simpletask.updateUiForEvent(event: Event) {
     runOnUiThread {
         when (event) {
             Event.SAVED_FILTER_ITEM_CLICK -> {
-                updateTaskList(Config.mainQuery)
-                updateFilterBar()
-                updateQuickFilterDrawer()
+                updateTaskList(Config.mainQuery) {
+                    updateFilterBar()
+                    updateQuickFilterDrawer()
+                }
             }
-            Event.QUICK_FILTER_ITEM_CLICK -> {
-                updateFilterBar()
-                updateQuickFilterDrawer()
+            Event.QUICK_FILTER_ITEM_CLICK,
+            Event.CLEAR_FILTER -> {
+                updateTaskList(Config.mainQuery) {
+                    updateFilterBar()
+                    updateQuickFilterDrawer()
+                }
+
             }
             Event.ADDED_SAVED_FILTER,
-            Event.RENAMED_SAVED_FILTER  -> {
+            Event.RENAMED_SAVED_FILTER -> {
                 updateSavedFilterDrawer()
             }
             Event.TASK_LIST_CHANGED -> {
-                updateTaskList(Config.mainQuery)
-                updateFilterBar()
-                updateQuickFilterDrawer()
+                updateTaskList(Config.mainQuery) {
+                    updateFilterBar()
+                    updateQuickFilterDrawer()
+                }
             }
             Event.FILTER_CHANGED -> {
-                updateTaskList(Config.mainQuery)
-                updateFilterBar()
-                updateQuickFilterDrawer()
+                updateTaskList(Config.mainQuery) {
+                    updateFilterBar()
+                    updateQuickFilterDrawer()
+                }
             }
             Event.RESUME -> {
                 updateFilterBar()
@@ -67,14 +72,14 @@ fun Simpletask.updateUiForEvent(event: Event) {
             Event.IMPORTED_FILTERS -> {
                 updateSavedFilterDrawer()
             }
-            Event.FONT_SIZE_CHANGED ->  TODO()
+            Event.FONT_SIZE_CHANGED -> {
+                updateTaskList(Config.mainQuery) {
+                    updateFilterBar()
+                    updateQuickFilterDrawer()
+                }
+            }
             Event.UPDATE_PENDING_CHANGES -> {
                 updateConnectivityIndicator()
-            }
-            Event.CLEAR_FILTER -> {
-                updateQuickFilterDrawer()
-                updateFilterBar()
-                updateTaskList(Config.mainQuery)
             }
         }
     }
