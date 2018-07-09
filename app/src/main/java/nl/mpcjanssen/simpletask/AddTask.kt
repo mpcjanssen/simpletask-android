@@ -90,8 +90,8 @@ class AddTask : ThemedActionBarActivity() {
         log.debug(TAG, "Fill addtask")
 
         val pendingTasks = TodoList.pendingEdits.map {
-            TodoList.todoItems.get(it).inFileFormat()
-        }
+            TodoList.todoItems.getOrNull(it)?.inFileFormat()
+        }.filterNotNull()
         runOnUiThread {
             val preFillString = if (pendingTasks.isNotEmpty()) {
                 setTitle(R.string.updatetask)

@@ -34,7 +34,7 @@ class FileDialog {
                     fileStore.loadFileList(ROOT_DIR, txtOnly)
                 } else {
                     Logger.error(TAG, "Can't load fileList from $ROOT_DIR), browser closed")
-                    showToastLong(act, "Can't retrieve filelist")
+                    showToastLong(act, "Can't retrieve file list")
                     null
                 }
             } finally {
@@ -42,7 +42,7 @@ class FileDialog {
                     loadingOverlay = showLoadingOverlay(act, loadingOverlay, false)
                 })
             } ?: return@Runnable
-            Logger.info(TAG, "Filelist from $startPath loaded")
+            Logger.info(TAG, "File list from $startPath loaded")
             val fileList = unsortedFileList.sortedWith(compareBy({ !it.isFolder }, { it.name })).toMutableList()
 
             if (startPath != ROOT_DIR) {
@@ -98,7 +98,7 @@ class FileDialog {
 
 
     companion object {
-        val TAG = "FileDialog"
+        const val TAG = "FileDialog"
         fun browseForNewFile(act: Activity, fileStore: FileStore, path: String, listener: FileSelectedListener, txtOnly: Boolean) {
             if (!FileStore.isOnline) {
                 showToastLong(act, "Device is offline")
