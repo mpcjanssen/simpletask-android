@@ -31,7 +31,6 @@ object Constants {
     // Constants for creating shortcuts
     const val INTENT_SELECTED_TASK_LINE = "SELECTED_TASK_LINE"
 
-    const val BROADCAST_ACTION_ARCHIVE = "ACTION_ARCHIVE"
     const val BROADCAST_ACTION_LOGOUT = "ACTION_LOGOUT"
     const val BROADCAST_TASKLIST_CHANGED = "TASKLIST_CHANGED"
     const val BROADCAST_UPDATE_WIDGETS = "UPDATE_WIDGETS"

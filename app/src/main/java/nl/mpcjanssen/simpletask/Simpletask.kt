@@ -41,7 +41,6 @@ import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.*
-import org.json.JSONObject
 import java.io.File
 import java.util.*
 import android.R.id as androidId
@@ -64,7 +63,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     private var localBroadcastManager: LocalBroadcastManager? = null
 
     // Drawer side
-    private val NAV_DRAWER = GravityCompat.END
+    private val SAVED_FILTER_DRAWER = GravityCompat.END
     private val QUICK_FILTER_DRAWER = GravityCompat.START
 
     private var m_drawerToggle: ActionBarDrawerToggle? = null
@@ -78,7 +77,6 @@ class Simpletask : ThemedNoActionBarActivity() {
         log.info(TAG, "onCreate")
         m_savedInstanceState = savedInstanceState
         val intentFilter = IntentFilter()
-        intentFilter.addAction(Constants.BROADCAST_ACTION_ARCHIVE)
         intentFilter.addAction(Constants.BROADCAST_ACTION_LOGOUT)
         intentFilter.addAction(Constants.BROADCAST_TASKLIST_CHANGED)
         intentFilter.addAction(Constants.BROADCAST_SYNC_START)
@@ -200,43 +198,39 @@ class Simpletask : ThemedNoActionBarActivity() {
 
         val broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, receivedIntent: Intent) {
-                if (receivedIntent.action == Constants.BROADCAST_ACTION_ARCHIVE) {
-                    archiveTasks()
-                } else {
-                    if (receivedIntent.action == Constants.BROADCAST_ACTION_LOGOUT) {
-                        log.info(TAG, "Logging out from Dropbox")
-                        finish()
-                        FileStoreActionQueue.add("Logout") {
-                            try {
-                                FileStore.logout()
-                            } catch (e: Exception) {
-                                log.error(TAG, "Error logging out.", e)
-                            }
-                            startLogin()
+                if (receivedIntent.action == Constants.BROADCAST_ACTION_LOGOUT) {
+                    log.info(TAG, "Logging out from Dropbox")
+                    finish()
+                    FileStoreActionQueue.add("Logout") {
+                        try {
+                            FileStore.logout()
+                        } catch (e: Exception) {
+                            log.error(TAG, "Error logging out.", e)
                         }
-                    } else if (receivedIntent.action == Constants.BROADCAST_TASKLIST_CHANGED) {
-                        log.info(TAG, "Tasklist changed, refiltering adapter")
-                        taskAdapter.setFilteredTasks(this@Simpletask, Config.mainQuery)
-                        runOnUiThread {
-                            updateFilterBar()
-                            updateQuickFilterDrawer()
-                        }
-                    }  else if (receivedIntent.action == Constants.BROADCAST_HIGHLIGHT_SELECTION) {
-                        log.info(TAG, "Highligh selection")
-                        taskAdapter.notifyDataSetChanged()
-                        invalidateOptionsMenu()
-                    } else if (receivedIntent.action == Constants.BROADCAST_SYNC_START) {
-                        showListViewProgress(true)
-                    } else if (receivedIntent.action == Constants.BROADCAST_SYNC_DONE) {
-                        showListViewProgress(false)
-                    } else if (receivedIntent.action == Constants.BROADCAST_STATE_INDICATOR) {
-                        updateUiForEvent(Event.UPDATE_PENDING_CHANGES)
-                    } else if (receivedIntent.action == Constants.BROADCAST_MAIN_FONTSIZE_CHANGED) {
-                        updateUiForEvent(Event.FONT_SIZE_CHANGED)
-                    } else if (receivedIntent.action == Constants.BROADCAST_THEME_CHANGED ||
-                            receivedIntent.action == Constants.BROADCAST_DATEBAR_SIZE_CHANGED) {
-                        recreate()
+                        startLogin()
                     }
+                } else if (receivedIntent.action == Constants.BROADCAST_TASKLIST_CHANGED) {
+                    log.info(TAG, "Tasklist changed, refiltering adapter")
+                    taskAdapter.setFilteredTasks(this@Simpletask, Config.mainQuery)
+                    runOnUiThread {
+                        updateFilterBar()
+                        updateQuickFilterDrawer()
+                    }
+                } else if (receivedIntent.action == Constants.BROADCAST_HIGHLIGHT_SELECTION) {
+                    log.info(TAG, "Highligh selection")
+                    taskAdapter.notifyDataSetChanged()
+                    invalidateOptionsMenu()
+                } else if (receivedIntent.action == Constants.BROADCAST_SYNC_START) {
+                    showListViewProgress(true)
+                } else if (receivedIntent.action == Constants.BROADCAST_SYNC_DONE) {
+                    showListViewProgress(false)
+                } else if (receivedIntent.action == Constants.BROADCAST_STATE_INDICATOR) {
+                    updateUiForEvent(Event.UPDATE_PENDING_CHANGES)
+                } else if (receivedIntent.action == Constants.BROADCAST_MAIN_FONTSIZE_CHANGED) {
+                    updateUiForEvent(Event.FONT_SIZE_CHANGED)
+                } else if (receivedIntent.action == Constants.BROADCAST_THEME_CHANGED ||
+                        receivedIntent.action == Constants.BROADCAST_DATEBAR_SIZE_CHANGED) {
+                    recreate()
                 }
             }
         }
@@ -255,7 +249,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 Config.latestChangelogShown = versionCode
             } else if (!Config.rightDrawerDemonstrated) {
                 Config.rightDrawerDemonstrated = true
-                openNavDrawer()
+                openSavedFilterDrawer()
             }
         }
 
@@ -331,7 +325,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     override fun onBackPressed() {
         handleMode(mapOf(
                 Mode.NAV_DRAWER to {
-                    closeDrawer(NAV_DRAWER)
+                    closeDrawer(SAVED_FILTER_DRAWER)
                 },
                 Mode.FILTER_DRAWER to {
                     closeDrawer(QUICK_FILTER_DRAWER)
@@ -620,7 +614,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         log.debug(TAG, "Handle mode")
         runOnUiThread {
             when {
-                isDrawerOpen(NAV_DRAWER) -> actions[Mode.NAV_DRAWER]?.invoke()
+                isDrawerOpen(SAVED_FILTER_DRAWER) -> actions[Mode.NAV_DRAWER]?.invoke()
                 isDrawerOpen(QUICK_FILTER_DRAWER) -> actions[Mode.FILTER_DRAWER]?.invoke()
                 TodoList.selectedTasks.isNotEmpty() -> actions[Mode.SELECTION]?.invoke()
                 else -> actions[Mode.MAIN]?.invoke()
@@ -640,10 +634,10 @@ class Simpletask : ThemedNoActionBarActivity() {
         drawer_layout?.closeDrawer(drawer)
     }
 
-    private fun openNavDrawer() {
+    private fun openSavedFilterDrawer() {
         closeDrawer(QUICK_FILTER_DRAWER)
-        if (!isDrawerOpen(NAV_DRAWER)) {
-            drawer_layout.openDrawer(NAV_DRAWER)
+        if (!isDrawerOpen(SAVED_FILTER_DRAWER)) {
+            drawer_layout.openDrawer(SAVED_FILTER_DRAWER)
         }
     }
 
@@ -834,7 +828,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         when (item.itemId) {
             androidId.home -> {
                 handleMode(mapOf(
-                        Mode.NAV_DRAWER to { closeDrawer(NAV_DRAWER) },
+                        Mode.NAV_DRAWER to { closeDrawer(SAVED_FILTER_DRAWER) },
                         Mode.FILTER_DRAWER to { closeDrawer(QUICK_FILTER_DRAWER) },
                         Mode.SELECTION to { closeSelectionMode() },
                         Mode.MAIN to { m_drawerToggle?.onOptionsItemSelected(item) }
@@ -959,9 +953,6 @@ class Simpletask : ThemedNoActionBarActivity() {
     fun onClearClick(@Suppress("UNUSED_PARAMETER") v: View) = clearFilter()
 
 
-
-
-
     /**
      * Handle add applyFilter click *
      */
@@ -1037,33 +1028,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         alert.show()
     }
 
-    internal fun updateQuickFilterDrawer() {
-        updateFilterBar()
-        val decoratedContexts = alfaSort(TodoList.contexts, Config.sortCaseSensitive, prefix = "-").map { "@$it" }
-        val decoratedProjects = alfaSort(TodoList.projects, Config.sortCaseSensitive, prefix = "-").map { "+$it" }
-        val drawerAdapter = DrawerAdapter(layoutInflater,
-                Config.listTerm,
-                decoratedContexts,
-                Config.tagTerm,
-                decoratedProjects)
 
-        filter_drawer.adapter = drawerAdapter
-        filter_drawer.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
-        filter_drawer.onItemClickListener = DrawerItemClickListener()
-
-        Config.mainQuery.contexts
-                .map { drawerAdapter.getIndexOf("@$it") }
-                .filter { it != -1 }
-                .forEach { filter_drawer.setItemChecked(it, true) }
-
-        Config.mainQuery.projects
-                .map { drawerAdapter.getIndexOf("+$it") }
-                .filter { it != -1 }
-                .forEach { filter_drawer.setItemChecked(it, true) }
-        filter_drawer.setItemChecked(drawerAdapter.contextHeaderPosition, Config.mainQuery.contextsNot)
-        filter_drawer.setItemChecked(drawerAdapter.projectsHeaderPosition, Config.mainQuery.projectsNot)
-        filter_drawer.deferNotifyDataSetChanged()
-    }
 
     fun startFilterActivity() {
         val i = Intent(this, FilterActivity::class.java)
@@ -1207,7 +1172,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     Config.mainQuery = query
                     taskAdapter.setFilteredTasks(this, query)
                     runOnUiThread {
-                        closeDrawer(NAV_DRAWER)
+                        closeDrawer(SAVED_FILTER_DRAWER)
                         updateQuickFilterDrawer()
                     }
                 }
@@ -1241,6 +1206,34 @@ class Simpletask : ThemedNoActionBarActivity() {
             taskAdapter.setFilteredTasks(this@Simpletask, query)
             runOnUiThread(afterOnUi)
         })
+    }
+
+    internal fun updateQuickFilterDrawer() {
+        updateFilterBar()
+        val decoratedContexts = alfaSort(TodoList.contexts, Config.sortCaseSensitive, prefix = "-").map { "@$it" }
+        val decoratedProjects = alfaSort(TodoList.projects, Config.sortCaseSensitive, prefix = "-").map { "+$it" }
+        val drawerAdapter = DrawerAdapter(layoutInflater,
+                Config.listTerm,
+                decoratedContexts,
+                Config.tagTerm,
+                decoratedProjects)
+
+        filter_drawer.adapter = drawerAdapter
+        filter_drawer.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
+        filter_drawer.onItemClickListener = DrawerItemClickListener()
+
+        Config.mainQuery.contexts
+                .map { drawerAdapter.getIndexOf("@$it") }
+                .filter { it != -1 }
+                .forEach { filter_drawer.setItemChecked(it, true) }
+
+        Config.mainQuery.projects
+                .map { drawerAdapter.getIndexOf("+$it") }
+                .filter { it != -1 }
+                .forEach { filter_drawer.setItemChecked(it, true) }
+        filter_drawer.setItemChecked(drawerAdapter.contextHeaderPosition, Config.mainQuery.contextsNot)
+        filter_drawer.setItemChecked(drawerAdapter.projectsHeaderPosition, Config.mainQuery.projectsNot)
+        filter_drawer.deferNotifyDataSetChanged()
     }
 
 }
