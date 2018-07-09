@@ -213,6 +213,10 @@ class Simpletask : ThemedNoActionBarActivity() {
                     } else if (receivedIntent.action == Constants.BROADCAST_TASKLIST_CHANGED) {
                         log.info(TAG, "Tasklist changed, refiltering adapter")
                         taskAdapter.setFilteredTasks(this@Simpletask, Config.mainQuery)
+                        runOnUiThread {
+                            updateFilterBar()
+                            updateQuickFilterDrawer()
+                        }
                     } else if (receivedIntent.action == Constants.BROADCAST_UPDATE_UI) {
                         log.info(TAG, "Updating UI because of broadcast")
                         refreshUI()
@@ -254,33 +258,38 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        when {
+            Intent.ACTION_SEARCH == intent.action -> {
+                val currentIntent = getIntent()
+                currentIntent.putExtra(SearchManager.QUERY, intent.getStringExtra(SearchManager.QUERY))
+                setIntent(currentIntent)
+                options_menu?.findItem(R.id.search)?.collapseActionView() ?: return
+
+            }
+            CalendarContract.ACTION_HANDLE_CUSTOM_EVENT == intent.action -> // Uri uri = Uri.parse(intent.getStringExtra(CalendarContract.EXTRA_CUSTOM_APP_URI));
+                log.warn(TAG, "Not implemented search")
+           // Only change intent if it actually contains a applyFilter
+        }
+        Config.lastScrollPosition = -1
+        log.info(TAG, "onNewIntent: $intent")
+
+    }
+
     override fun onResume() {
         super.onResume()
         log.info(TAG, "onResume")
         TodoList.reload(reason = "Main activity resume")
         handleIntent()
-        refreshUI()
-    }
-
-    private fun refreshUI() {
-        todoQueue("Refresh UI") {
+        TodoList.todoQueue("Queued UI update") {
             runOnUiThread {
-                updateConnectivityIndicator()
-                invalidateOptionsMenu()
-                updateFilterBar()
-                updateDrawers()
+                updateQuickFilterDrawer()
+                updateSavedFilterDrawer()
+                refreshUI()
             }
         }
-    }
-
-    private fun openLuaConfig() {
-        val i = Intent(this, ScriptConfigScreen::class.java)
-        startActivity(i)
-    }
-
-    private fun showHelp() {
-        val i = Intent(this, HelpScreen::class.java)
-        startActivity(i)
     }
 
     override fun onSearchRequested(): Boolean {
@@ -296,6 +305,77 @@ class Simpletask : ThemedNoActionBarActivity() {
         super.onPostCreate(savedInstanceState)
         // Sync the toggle state after onRestoreInstanceState has occurred.
         m_drawerToggle?.syncState()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        m_drawerToggle?.onConfigurationChanged(newConfig)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        m_broadcastReceiver?.let {
+            localBroadcastManager!!.unregisterReceiver(it)
+        }
+    }
+
+    override fun onPause() {
+        (listView?.layoutManager as LinearLayoutManager?)?.let { manager ->
+            val position = manager.findFirstVisibleItemPosition()
+            val firstItemView = manager.findViewByPosition(position)
+            val offset = firstItemView?.top ?: 0
+            Logger.info(TAG, "Saving scroll offset $position, $offset")
+            Config.lastScrollPosition = position
+            Config.lastScrollOffset = offset
+        }
+        super.onPause()
+    }
+
+    override fun onBackPressed() {
+        handleMode(mapOf(
+                Mode.NAV_DRAWER to {
+                    closeDrawer(NAV_DRAWER)
+                },
+                Mode.FILTER_DRAWER to {
+                    closeDrawer(QUICK_FILTER_DRAWER)
+                }, Mode.SELECTION to {
+            closeSelectionMode()
+        }, Mode.MAIN to {
+            if (!Config.backClearsFilter || !Config.mainQuery.hasFilter()) {
+                super.onBackPressed()
+            }
+            clearFilter()
+            onNewIntent(intent)
+        }
+        ))
+    }
+
+    private fun refreshUI() {
+        todoQueue("Refresh UI") {
+            runOnUiThread {
+                updateConnectivityIndicator()
+                invalidateOptionsMenu()
+            }
+        }
+    }
+
+    private fun openLuaConfig() {
+        val i = Intent(this, ScriptConfigScreen::class.java)
+        startActivity(i)
+    }
+
+    private fun showHelp() {
+        val i = Intent(this, HelpScreen::class.java)
+        startActivity(i)
+    }
+
+
+
+
+    private fun closeSelectionMode() {
+        TodoList.clearSelection()
+        invalidateOptionsMenu()
+        taskAdapter.setFilteredTasks(this, Config.mainQuery)
     }
 
     private fun selectedTasksAsString(): String {
@@ -314,10 +394,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         TodoList.selectTasks(selectedTasks)
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        m_drawerToggle?.onConfigurationChanged(newConfig)
-    }
+
 
     private fun handleIntent() {
         if (!TodoApplication.app.isAuthenticated) {
@@ -325,9 +402,6 @@ class Simpletask : ThemedNoActionBarActivity() {
             startLogin()
             return
         }
-
-        // Set the list's click listener
-        filter_drawer?.onItemClickListener = DrawerItemClickListener()
 
         drawer_layout?.let { drawerLayout ->
             m_drawerToggle = object : ActionBarDrawerToggle(this, /* host Activity */
@@ -466,25 +540,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         finish()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        m_broadcastReceiver?.let {
-            localBroadcastManager!!.unregisterReceiver(it)
-        }
-    }
 
-
-    override fun onPause() {
-        (listView?.layoutManager as LinearLayoutManager?)?.let { manager ->
-            val position = manager.findFirstVisibleItemPosition()
-            val firstItemView = manager.findViewByPosition(position)
-            val offset = firstItemView?.top ?: 0
-            Logger.info(TAG, "Saving scroll offset $position, $offset")
-            Config.lastScrollPosition = position
-            Config.lastScrollOffset = offset
-        }
-        super.onPause()
-    }
 
     @SuppressLint("Recycle")
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -998,68 +1054,15 @@ class Simpletask : ThemedNoActionBarActivity() {
         alert.show()
     }
 
-    override fun onBackPressed() {
-        handleMode(mapOf(
-                Mode.NAV_DRAWER to {
-                    closeDrawer(NAV_DRAWER)
-                },
-                Mode.FILTER_DRAWER to {
-                    closeDrawer(QUICK_FILTER_DRAWER)
-                }, Mode.SELECTION to {
-            closeSelectionMode()
-        }, Mode.MAIN to {
-            if (!Config.backClearsFilter || !Config.mainQuery.hasFilter()) {
-                super.onBackPressed()
-            }
-            clearFilter()
-            onNewIntent(intent)
-        }
-        ))
-    }
-
-    private fun closeSelectionMode() {
-        TodoList.clearSelection()
-        invalidateOptionsMenu()
-        taskAdapter.setFilteredTasks(this, Config.mainQuery)
-    }
-
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        when {
-            Intent.ACTION_SEARCH == intent.action -> {
-                val currentIntent = getIntent()
-                currentIntent.putExtra(SearchManager.QUERY, intent.getStringExtra(SearchManager.QUERY))
-                setIntent(currentIntent)
-                options_menu?.findItem(R.id.search)?.collapseActionView() ?: return
-
-            }
-            CalendarContract.ACTION_HANDLE_CUSTOM_EVENT == intent.action -> // Uri uri = Uri.parse(intent.getStringExtra(CalendarContract.EXTRA_CUSTOM_APP_URI));
-                log.warn(TAG, "Not implemented search")
-            intent.extras != null -> // Only change intent if it actually contains a applyFilter
-                setIntent(intent)
-        }
-        Config.lastScrollPosition = -1
-        log.info(TAG, "onNewIntent: $intent")
-
-    }
-
     private fun clearFilter() {
         Config.mainQuery = Config.mainQuery.clear()
         intent = Config.mainQuery.saveInIntent(intent)
         broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
         broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
-        updateFilterDrawer()
+        updateQuickFilterDrawer()
     }
 
-    private fun updateDrawers() {
-        todoQueue("Update drawers") {
-            runOnUiThread {
-                updateNavDrawer()
-            }
-        }
-    }
-
-    private fun updateNavDrawer() {
+    private fun updateSavedFilterDrawer() {
         val idQueryPairs = QueryStore.ids().map { Pair(it, QueryStore.get(it)) }.toList()
         val hasQueries = !idQueryPairs.isEmpty()
         val queries = idQueryPairs.sortedBy { it.second.name }
@@ -1079,8 +1082,10 @@ class Simpletask : ThemedNoActionBarActivity() {
                     val query = it.second.query
                     Config.mainQuery = query
                     taskAdapter.setFilteredTasks(this, query)
-                    closeDrawer(NAV_DRAWER)
-                    updateFilterDrawer()
+                    runOnUiThread {
+                        closeDrawer(NAV_DRAWER)
+                        updateQuickFilterDrawer()
+                    }
                 }
 
             }
@@ -1115,12 +1120,12 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun deleteSavedQuery(id: String) {
         QueryStore.delete(id)
-        updateNavDrawer()
+        updateSavedFilterDrawer()
     }
 
     private fun updateSavedQuery(oldQuery: NamedQuery, newQuery: Query) {
         QueryStore.save(newQuery, oldQuery.name)
-        updateNavDrawer()
+        updateSavedFilterDrawer()
     }
 
     private fun renameSavedQuery(id: String) {
@@ -1140,7 +1145,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
             value?.let {
                 QueryStore.rename(squery, it)
-                updateNavDrawer()
+                updateSavedFilterDrawer()
             } ?: showToastShort(applicationContext, R.string.filter_name_empty)
         }
 
@@ -1149,7 +1154,8 @@ class Simpletask : ThemedNoActionBarActivity() {
         alert.show()
     }
 
-    private fun updateFilterDrawer() {
+    private fun updateQuickFilterDrawer() {
+        updateFilterBar()
         val decoratedContexts = alfaSort(TodoList.contexts, Config.sortCaseSensitive, prefix = "-").map { "@$it" }
         val decoratedProjects = alfaSort(TodoList.projects, Config.sortCaseSensitive, prefix = "-").map { "+$it" }
         val drawerAdapter = DrawerAdapter(layoutInflater,
@@ -1257,9 +1263,10 @@ class Simpletask : ThemedNoActionBarActivity() {
             if (!Config.hasKeepSelection) {
                 TodoList.clearSelection()
             }
-
-            broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
-            broadcastRefreshUI(TodoApplication.app.localBroadCastManager)
+            taskAdapter.setFilteredTasks(this@Simpletask, query)
+            runOnUiThread {
+                updateFilterBar()
+            }
         }
     }
 
