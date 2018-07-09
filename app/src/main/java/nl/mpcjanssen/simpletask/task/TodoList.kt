@@ -185,7 +185,7 @@ object TodoList {
             todoItems
         } else {
             todoItems.reversed()
-        }
+        }.toList()
         val sortedItems = comp.comparator?.let { itemsToSort.sortedWith(it) } ?: itemsToSort
         val result = filter.applyFilter(sortedItems, showSelected = true)
         val end = SystemClock.elapsedRealtime()
