@@ -437,6 +437,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 interface TToken {
     val text: String
     val value: Any?
+    fun isAlpha()  = false
 }
 
 data class CompletedToken(override val value: Boolean) : TToken {
@@ -471,11 +472,31 @@ interface StringValueToken : TToken {
 
 data class CreateDateToken(override val text: String) : StringValueToken
 data class CompletedDateToken(override val text: String) : StringValueToken
-data class TextToken(override val text: String) : StringValueToken
-data class WhiteSpaceToken(override val text: String) : StringValueToken
-data class MailToken(override val text: String) : StringValueToken
-data class LinkToken(override val text: String) : StringValueToken
-data class PhoneToken(override val text: String) : StringValueToken
+data class TextToken(override val text: String) : StringValueToken {
+    override fun isAlpha(): Boolean {
+        return true
+    }
+}
+data class WhiteSpaceToken(override val text: String) : StringValueToken {
+    override fun isAlpha(): Boolean {
+        return true
+    }
+}
+data class MailToken(override val text: String) : StringValueToken {
+    override fun isAlpha(): Boolean {
+        return true
+    }
+}
+data class LinkToken(override val text: String) : StringValueToken {
+    override fun isAlpha(): Boolean {
+        return true
+    }
+}
+data class PhoneToken(override val text: String) : StringValueToken {
+    override fun isAlpha(): Boolean {
+        return true
+    }
+}
 
 
 // Key Value tokens
