@@ -36,9 +36,9 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                 "by_context" -> comp = { it.lists.sorted().firstOrNull() ?: "" }
                 "by_project" -> comp = { it.tags.sorted().firstOrNull() ?: "" }
                 "alphabetical" -> comp = if (caseSensitve) {
-                    { it -> it.showParts ({ it is TextToken }) }
+                    { it.showParts { it.isAlpha() } }
                 } else {
-                    { it -> it.showParts({ it is TextToken }).toLowerCase(Locale.getDefault()) }
+                    { it.showParts { it.isAlpha() }.toLowerCase(Locale.getDefault()) }
                 }
                 "by_prio" -> comp = { it.priority }
                 "completed" -> comp = { it.isCompleted() }
