@@ -561,11 +561,6 @@ class AddTask : ThemedActionBarActivity() {
                 text, 0, text.length)
     }
 
-    public override fun onPause() {
-
-        super.onPause()
-    }
-
     public override fun onDestroy() {
         super.onDestroy()
         m_broadcastReceiver?.let {
