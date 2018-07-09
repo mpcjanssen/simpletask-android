@@ -11,7 +11,6 @@ import com.dropbox.core.v2.files.WriteMode
 import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.remote.IFileStore.Companion.ROOT_DIR
-import nl.mpcjanssen.simpletask.task.TodoList.todoQueue
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.join
 import nl.mpcjanssen.simpletask.util.showToastLong
@@ -33,16 +32,16 @@ object FileStore : IFileStore {
 
     var accessToken by Config.StringOrNullPreference(OAUTH2_TOKEN)
 
-    var _dbxClient : DbxClientV2? = null
+    var _dbxClient: DbxClientV2? = null
 
-    val dbxClient : DbxClientV2
-            get()  {
-                val newclient = _dbxClient ?: initDbxClient()
-                _dbxClient = newclient
-                return newclient
+    val dbxClient: DbxClientV2
+        get() {
+            val newclient = _dbxClient ?: initDbxClient()
+            _dbxClient = newclient
+            return newclient
 
 
-    }
+        }
 
     private fun initDbxClient(): DbxClientV2 {
         val requestConfig = DbxRequestConfig.newBuilder("simpletask").build()
@@ -159,10 +158,9 @@ object FileStore : IFileStore {
             return
         }
         val toStore = contents.toByteArray(charset("UTF-8"))
-        todoQueue("Write to file ${file.canonicalPath}") {
-            val inStream = ByteArrayInputStream(toStore)
-            dbxClient.files().uploadBuilder(file.path).withMode(WriteMode.OVERWRITE).uploadAndFinish(`inStream`)
-        }
+        log.debug(TAG, "Write to file ${file.canonicalPath}")
+        val inStream = ByteArrayInputStream(toStore)
+        dbxClient.files().uploadBuilder(file.path).withMode(WriteMode.OVERWRITE).uploadAndFinish(inStream)
     }
 
     @Throws(IOException::class)
