@@ -214,9 +214,9 @@ class TodoApplication : MultiDexApplication() {
 
 
 object Backupper : BackupInterface {
-    override fun backup(name: String, lines: List<Task>) {
+    override fun backup(name: String, lines: List<String>) {
         val now = Date()
-        val fileToBackup = TodoFile(lines.map { it.inFileFormat() }.joinToString ("\n"), name, now)
+        val fileToBackup = TodoFile(lines.joinToString ("\n"), name, now)
         Daos.backup(fileToBackup)
     }
 }

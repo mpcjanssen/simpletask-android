@@ -233,7 +233,7 @@ object TodoList {
                         Config.cachedContents = remoteContents.contents.joinToString("\n")
                         Config.lastSeenRemoteId = remoteContents.remoteId
                         // Backup
-                        Backupper.backup(filename, items)
+                        Backupper.backup(filename, items.map { it.inFileFormat() })
                         notifyTasklistChanged(filename, false)
 
 
@@ -257,6 +257,7 @@ object TodoList {
         // Update cache
         Config.cachedContents = lines.joinToString("\n")
         if (backup) {
+            Backupper.backup(todoFileName, lines)
         }
         FileStoreActionQueue.add("Save") {
             try {
