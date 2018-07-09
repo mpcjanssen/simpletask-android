@@ -22,7 +22,7 @@ object TodoList {
 
     private var mLists: ArrayList<String>? = null
     private var mTags: ArrayList<String>? = null
-    val todoItems = ArrayList<Task>()
+    private val todoItems = ArrayList<Task>()
     val pendingEdits = ArrayList<Int>()
     internal val TAG = TodoList::class.java.simpleName
 
@@ -65,7 +65,7 @@ object TodoList {
     val priorities: ArrayList<Priority>
         get() {
             val res = HashSet<Priority>()
-            todoItems.forEach {
+            todoItems.iterator().forEach {
                 res.add(it.priority)
             }
             val ret = ArrayList(res)
@@ -80,7 +80,7 @@ object TodoList {
                 return lists
             }
             val res = HashSet<String>()
-            todoItems.toMutableList().forEach {
+            todoItems.iterator().forEach {
                 res.addAll(it.lists)
             }
             val newLists = ArrayList<String>()
@@ -96,7 +96,7 @@ object TodoList {
                 return tags
             }
             val res = HashSet<String>()
-            todoItems.toMutableList().forEach {
+            todoItems.iterator().forEach {
                 res.addAll(it.tags)
             }
             val newTags = ArrayList<String>()
@@ -147,13 +147,13 @@ object TodoList {
 
     var selectedTasks: List<Task> = ArrayList()
         get() {
-            return todoItems.filter { it.selected }
+            return todoItemsCopy.filter { it.selected }
         }
 
 
     var completedTasks: List<Task> = ArrayList()
         get() {
-            return todoItems.filter { it.isCompleted() }
+            return todoItemsCopy.filter { it.isCompleted() }
         }
 
     fun notifyTasklistChanged(todoName: String, save: Boolean) {
@@ -176,16 +176,20 @@ object TodoList {
         act.startActivity(intent)
     }
 
+    val todoItemsCopy
+            get() = todoItems.toList()
+
     fun getSortedTasks(filter: Query, sorts: ArrayList<String>, caseSensitive: Boolean): Pair<List<Task>, Int> {
         log.debug(TAG, "Getting sorted and filtered tasks")
         val start = SystemClock.elapsedRealtime()
         val comp = MultiComparator(sorts, TodoApplication.app.today, caseSensitive, filter.createIsThreshold, filter.luaModule)
-        val taskCount = todoItems.size
+        val listCopy = todoItemsCopy
+        val taskCount = listCopy.size
         val itemsToSort = if (comp.fileOrder) {
-            todoItems
+            listCopy
         } else {
-            todoItems.reversed()
-        }.toList()
+            listCopy.reversed()
+        }
         val sortedItems = comp.comparator?.let { itemsToSort.sortedWith(it) } ?: itemsToSort
         val result = filter.applyFilter(sortedItems, showSelected = true)
         val end = SystemClock.elapsedRealtime()
@@ -251,7 +255,7 @@ object TodoList {
 
     private fun save(fileStore: IFileStore, todoFileName: String, backup: Boolean, eol: String) {
         broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
-        val lines = todoItems.map {
+        val lines = todoItemsCopy.map {
             it.inFileFormat()
         }
         // Update cache
@@ -304,7 +308,7 @@ object TodoList {
     fun isSelected(item: Task): Boolean = item.selected
 
     fun numSelected(): Int {
-        return todoItems.count { it.selected }
+        return todoItemsCopy.count { it.selected }
     }
 
     fun selectTasks(items: List<Task>) {
@@ -330,7 +334,7 @@ object TodoList {
 
     fun clearSelection() {
         log.debug(TAG, "Clear selection")
-        todoItems.forEach { it.selected = false }
+        todoItems.iterator().forEach { it.selected = false }
         broadcastRefreshSelection(TodoApplication.app.localBroadCastManager)
 
     }
@@ -347,7 +351,7 @@ object TodoList {
     fun editTasks(from: Activity, tasks: List<Task>, prefill: String) {
         log.debug(TAG, "Edit tasks")
         for (task in tasks) {
-            val i = TodoList.todoItems.indexOf(task)
+            val i = todoItems.indexOf(task)
             if (i >= 0) {
                 pendingEdits.add(Integer.valueOf(i))
             }

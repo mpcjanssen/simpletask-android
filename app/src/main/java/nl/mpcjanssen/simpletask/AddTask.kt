@@ -90,7 +90,7 @@ class AddTask : ThemedActionBarActivity() {
         log.debug(TAG, "Fill addtask")
 
         val pendingTasks = TodoList.pendingEdits.map {
-            TodoList.todoItems.getOrNull(it)?.inFileFormat()
+            TodoList.todoItemsCopy.getOrNull(it)?.inFileFormat()
         }.filterNotNull()
         runOnUiThread {
             val preFillString = if (pendingTasks.isNotEmpty()) {
@@ -260,14 +260,15 @@ class AddTask : ThemedActionBarActivity() {
         val replaceCount = Math.min(updateSize, enteredTasks.size)
         for (i in 0 until replaceCount) {
             val taskIndex = TodoList.pendingEdits[0]
-            TodoList.todoItems[taskIndex].update(enteredTasks[0].text)
+            TodoList.todoItemsCopy[taskIndex].update(enteredTasks[0].text)
             enteredTasks.removeAt(0)
             TodoList.pendingEdits.removeAt(0)
         }
         // If tasks are left in pendingedits, they were removed
-        TodoList.pendingEdits.forEach { taskIndex ->
-            TodoList.todoItems.removeAt(taskIndex)
-        }
+        val tasksToDelete =  TodoList.pendingEdits.map {idx ->
+            TodoList.getTaskAt(idx)
+        }.filterNotNull()
+        TodoList.removeAll(tasksToDelete)
 
         val processedTasks: List<Task> = enteredTasks.map { task ->
             if (Config.hasPrependDate) {

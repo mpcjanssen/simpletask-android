@@ -393,7 +393,7 @@ object CalendarSync {
 
             log.debug(TAG, "Syncing due/threshold calendar reminders...")
             val evtmap = EvtMap(m_cr, calID)
-            val tasks = TodoList.todoItems
+            val tasks = TodoList.todoItemsCopy
             evtmap.mergeTasks(tasks)
             val stats = evtmap.apply(m_cr, calID)
             log.debug(TAG, "Sync finished: ${stats.inserts} inserted, ${stats.keeps} unchanged, ${stats.deletes} deleted")
