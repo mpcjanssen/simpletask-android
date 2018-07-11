@@ -733,7 +733,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     private fun completeTasks(tasks: List<Task>) {
         TodoList.complete(tasks, Config.hasKeepPrio, Config.hasAppendAtEnd)
         if (Config.isAutoArchive) {
-            archiveTasks()
+            archiveTasks(false)
         }
         TodoList.notifyTasklistChanged(Config.todoFileName, true)
     }
@@ -801,8 +801,8 @@ class Simpletask : ThemedNoActionBarActivity() {
         showConfirmationDialog(this, R.string.delete_task_message, delete, title)
     }
 
-    private fun archiveTasks() {
-        archiveTasks(null, false)
+    private fun archiveTasks(showDialog: Boolean) {
+        archiveTasks(null, showDialog)
     }
 
     private fun archiveTasks(tasks: List<Task>?, showDialog: Boolean = true) {
@@ -859,7 +859,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             R.id.sync -> {
                 broadcastFileSync(TodoApplication.app.localBroadCastManager)
             }
-            R.id.archive -> archiveTasks()
+            R.id.archive -> archiveTasks(true)
             R.id.open_file -> TodoApplication.app.browseForNewFile(this)
             R.id.history -> startActivity(Intent(this, HistoryScreen::class.java))
             R.id.btn_filter_add -> onAddFilterClick()
