@@ -48,7 +48,7 @@ class ItemDialogAdapter(
         items.reversed().forEach { item ->
             val i = mItems.indexOfFirst { it.item == item }
             if (i == -1) {
-                mItems.add(0, Item(item, true))
+                mItems.add(0, Item(item, false).apply { state = true })
                 notifyItemInserted(0)
             } else {
                 val oldItem = mItems.removeAt(i)
