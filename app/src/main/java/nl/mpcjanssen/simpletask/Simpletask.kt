@@ -1181,6 +1181,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 nav_drawer.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                     queries[position].let {
                         val query = it.second.query
+                        intent = query.saveInIntent(intent)
                         Config.mainQuery = query
                         taskAdapter.setFilteredTasks(this@Simpletask, query)
                         runOnUiThread {
