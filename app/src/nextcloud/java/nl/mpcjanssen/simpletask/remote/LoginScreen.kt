@@ -29,7 +29,14 @@ import nl.mpcjanssen.simpletask.util.Config
 class LoginScreen : AccountAuthenticatorActivity(), OnRemoteOperationListener {
     private val url: String
         get () {
-            return "https://${nextcloud_server_url.text}"
+            val entered_url = nextcloud_server_url.text.toString()
+            return if (entered_url.startsWith("http://", ignoreCase = true) ||
+                    entered_url.startsWith("https://", ignoreCase = true)) {
+                return entered_url
+
+            } else {
+                "https://${entered_url}"
+            }
         }
 
     override fun onRemoteOperationFinish(p0: RemoteOperation?, p1: RemoteOperationResult?) {
