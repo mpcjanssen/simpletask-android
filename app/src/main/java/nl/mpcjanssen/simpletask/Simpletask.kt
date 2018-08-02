@@ -437,7 +437,8 @@ class Simpletask : ThemedNoActionBarActivity() {
             }
             val newQuery = Query(currentIntent, "mainui")
             Config.mainQuery = newQuery
-            intent = newQuery.saveInIntent(intent)
+            // Query is saved clear action from intent
+            intent.action = ""
             newQuery
         } else {
             // Set previous filters and sort
