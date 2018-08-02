@@ -12,14 +12,14 @@
     <string name="set_preferences">设置</string>
     <string name="preferences">设置</string>
     <string name="added_task">已添加的任务</string>
-    <string name="archive">存档</string>
+    <string name="archive">归档</string>
     <string name="help">帮助</string>
     <string name="history">历史</string>
     <string name="debug_info">调试信息</string>
     <string name="log">日志</string>
     <string name="next">下一个</string>
     <string name="prev">上一个</string>
-    <string name="open_file">打开任务清单文件</string>
+    <string name="open_file">打开任务列表文件</string>
     <string name="sync">同步</string>
     <string name="changelist">选择清单</string>
     <string name="search">查找</string>
@@ -54,8 +54,8 @@
     <string name="preference_widget">窗口小部件</string>
     <string name="preference_other">其他</string>
 
-    <string name="ARCHIVE_settings_header">存档</string>
-    <string name="auto_archive_pref_title">自动存档</string>
+    <string name="ARCHIVE_settings_header">归档</string>
+    <string name="auto_archive_pref_title">自动归档</string>
     <string name="lua_open_config">Lua 配置</string>
 <string name="lua_config_share">分享</string>
     <string name="lua_config_export">保存并导出</string>
@@ -87,7 +87,7 @@
     <string name="line_breaks_pref_title">对 Windows 友好的换行符</string>
     <string name="line_breaks_pref_summary">使用对 Windows 友好的换行符</string>
     <string name="recur_from_original_date_pref_title">重复任务使用初始日期</string>
-    <string name="recur_from_original_date_pref_summary">在创建周期性任务时，增加任务中的初始日期。取消选中此项将以当前日期为基准增加。</string>
+    <string name="recur_from_original_date_pref_summary">在周期性任务再次创建时，增加任务中的初始日期。取消选中此项将以当前日期为基准增加。</string>
     <string name="lua_config_import_export">导入/导出 Lua 配置</string>
     <string name="lua_run">运行</string>
     <string name="manual_sync_pref_title">手动同步</string>
@@ -177,15 +177,15 @@
     <string name="insert_threshold">插入启动日期</string>
     <string name="widget_name_empty">窗口小部件未命名，无法添加</string>
     <string name="ARCHIVE_settings_summary">关于将已完成的任务存档到 done.txt 的设置</string>
-    <string name="archive_now_pref_title">立即存档</string>
+    <string name="archive_now_pref_title">立即归档</string>
     <string name="TODOTXTPATH_summary">保存 todo.txt 的 Dropbox 文件夹。</string>
     <string name="todotxt_settings_summary">应用程序的整体设置</string>
-    <string name="auto_archive_pref_summary">任务完成后立即存档。</string>
+    <string name="auto_archive_pref_summary">任务完成后立即归档。</string>
     <string name="share_task_show_edit_summary">在保存之前编辑记入事务的任务</string>
 
     <string name="local_file_root_summary">%s</string>
 
-    <string name="back_saves_summary">当按下返回键时，保存打开的任务清单或使用筛选器。</string>
+    <string name="back_saves_summary">当按下返回键时，保存打开的任务列表或使用筛选器。</string>
 
     <string name="calendar_sync_thresholds_title">启动日期提醒</string>
     <string name="calendar_reminder_days_summary">设置提醒的提前时间</string>
@@ -193,13 +193,13 @@
 
     <string name="show_hidden_summary">显示隐藏的 (h:1) 任务以便编辑。完成编辑后可重新取消选择。</string>
 
-    <string name="split_actionbar_pref_summary">使用分割操作栏，将菜单按钮置于屏幕底部。可关闭此项以显示更多的任务清单。</string>
+    <string name="split_actionbar_pref_summary">使用分割操作栏，将菜单按钮置于屏幕底部。可关闭此项以显示更多的任务列表。</string>
 
     <string name="show_edittext_hint_summary">在添加任务时显示提示。</string>
 
     <string name="show_complete_checkbox_summary">在任务前显示复选框以标识或取消完成状态。</string>
 
-    <string name="show_fast_scroll_summary">对较长的任务清单使用快速滚动</string>
+    <string name="show_fast_scroll_summary">对较长的任务列表使用快速滚动</string>
 
     <string name="show_calendarview_title">在输入日期时使用日历</string>
 
@@ -207,7 +207,7 @@
     <string name="use_create_backup_summary">排序时，如果没有设置启动日期就使用任务创建日期作为启动日期</string>
 
     <string name="todotxt_terms_title">使用 todo.txt 术语</string>
-    <string name="add_task_help">更新或将任务添加到任务清单。每行一条任务。<b>优先级</b>在每行起始，用 (.) 比如 (A) 表示（括号后面有空格）； <b>标签</b> 以 +标记（+号前面有空格），比如 +厨房； <b>清单</b>以 @标记（@前有空格），如 @在家。 注意这里的括号、+和@都是半角字符。一条任务可以包含任意个标签，也可以同时在多个清单上</string>
+    <string name="add_task_help">将任务更新或添加到任务列表。每行一条任务。<b>优先级</b>在每行起始，用 (.) 比如 (A) 表示（括号后面有空格）； <b>标签</b> 以 +标记（+号前面有空格），比如 +厨房； <b>清单</b>以 @标记（@前有空格），如 @在家。 注意这里的括号、+和@都是半角字符。一条任务可以包含任意个标签，也可以同时在多个清单上</string>
 
     <string name="prepend_date_pref_title">记录新任务的创建日期</string>
     <string name="swipe_complete_pref_title">滑动完成</string>
@@ -273,8 +273,8 @@
     <string name="login_cloudless">如果您没有 Dropbox 帐户，或者不想使用它来存储您的任务清单，您可以到 Play Store 下载 Simpletask Cloudless。 
 \nhttps://goo.gl/X1C55P</string>
 
-    <string name="delete_task_title">删除 %s 任务</string>
-    <string name="archive_task_title">存档 %s 任务</string>
+    <string name="delete_task_title">将删除 %s 条任务</string>
+    <string name="archive_task_title">将归档 %s 条任务</string>
     <string name="delete_task_message">这不能撤销。你确定吗？</string>
     <string name="cancel_changes">将丢失己做的更改。</string>
     <string name="tasktexthint">"\@讨论 +巴黎  +Hector 相关事宜 @Troy
