@@ -53,7 +53,7 @@ object FileStore : IFileStore {
         val account = accounts[0]
         val password = am.getPassword(account)
         val server = am.getUserData(account, "server_url")
-        val client = OwnCloudClientFactory.createOwnCloudClient(Uri.parse(server), ctx, true)
+        val client = OwnCloudClientFactory.createOwnCloudClient(Uri.parse(server), ctx, true, true)
         client.credentials = OwnCloudCredentialsFactory.newBasicCredentials(
                 account.name,
                 password
