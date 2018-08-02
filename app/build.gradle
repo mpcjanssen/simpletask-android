@@ -57,9 +57,7 @@ android {
         versionCode 3092
         multiDexEnabled true
         minSdkVersion 14
-        // target API 23 because anything newer breaks root:// links
-        //noinspection OldTargetApi
-        targetSdkVersion 23
+        targetSdkVersion 27
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         playAccountConfig = playAccountConfigs.defaultAccountConfig
     }
