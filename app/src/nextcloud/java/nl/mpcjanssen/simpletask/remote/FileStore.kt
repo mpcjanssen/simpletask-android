@@ -146,14 +146,11 @@ object FileStore : IFileStore {
 
     }
 
-
     @Throws(IOException::class)
     override fun appendTaskToFile(path: String, lines: List<String>, eol: String) {
         if (!isOnline) {
             throw IOException("Device is offline")
         }
-
-
         val cacheDir = mApp.applicationContext.cacheDir
 
         val op = DownloadRemoteFileOperation(path, cacheDir.canonicalPath)
