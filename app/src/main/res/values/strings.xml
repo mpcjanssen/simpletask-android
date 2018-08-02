@@ -476,4 +476,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="use_uuid_title">Assign a UUID to each task</string>
     <string name="nav_drawer_hint">Save the current filter\n
         using the save button</string>
+    <string name="invalid_certificate_msg">Server certificate is invalid. Do you want to continue?</string>
+    <string name="invalid_certificate_title">Invalid cert.</string>
 </resources>
