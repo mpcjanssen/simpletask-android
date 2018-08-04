@@ -1,10 +1,7 @@
 10.2.0
-------
 
-- Refactored UI updates and events. Should improve performance.
 - Add support for Nextcloud servers using self signed certificates.
-- Make https:// the default for Nextcloud but allow http.
-- Clear intent after starting with filter. Possible fix for #894.
+- Make https:// the default for Nextcloud, allow http.
 - Several translation updates.
 - Show confirmation dialog when manually archiving.
 - Extend the range of tokens included for alpha sort.
