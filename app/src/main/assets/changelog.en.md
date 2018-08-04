@@ -1,6 +1,21 @@
 ﻿Changelog
 =========
 
+10.2.0
+------
+
+- Refactored UI updates and events. Should improve performance.
+- Add support for Nextcloud servers using self signed certificates.
+- Make https:// the default for Nextcloud but allow http.
+- Clear intent after starting with filter. Possible fix for #894.
+- Several translation updates.
+- Show confirmation dialog when manually archiving.
+- Extend the range of tokens included for alpha sort.
+- Merged #906 (Strubbl), add more precise docu on hidden tasks
+- Store saved filters in preferences, this should fix most issues with saved filters.
+
+
+
 10.1.16
 -------
 
