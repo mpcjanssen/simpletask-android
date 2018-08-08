@@ -12,11 +12,11 @@ import android.support.design.widget.FloatingActionButton
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AlertDialog
 import android.text.InputType
-import android.view.*
-import android.view.inputmethod.EditorInfo
-import android.widget.AbsListView
+import android.view.Menu
+import android.view.MenuItem
+import android.view.Window
+import android.view.WindowManager
 import android.widget.ArrayAdapter
-import android.widget.EditText
 import android.widget.ListView
 import hirondelle.date4j.DateTime
 import kotlinx.android.synthetic.main.add_task.*
@@ -33,7 +33,6 @@ class AddTask : ThemedActionBarActivity() {
 
     // private val m_backup = ArrayList<Task>()
 
-    private lateinit var textInputField: EditText
     private var m_broadcastReceiver: BroadcastReceiver? = null
     private var localBroadcastManager: LocalBroadcastManager? = null
     private val log = Logger
@@ -78,11 +77,10 @@ class AddTask : ThemedActionBarActivity() {
         }
 
         // text
-        textInputField = findViewById<EditText>(R.id.taskText)
         setHint()
 
         if (share_text != null) {
-            textInputField.setText(share_text)
+            taskText.setText(share_text)
         }
 
         setTitle(R.string.addtask)
@@ -105,20 +103,15 @@ class AddTask : ThemedActionBarActivity() {
             }
             start_text = preFillString
             // Avoid discarding changes on rotate
-            if (textInputField.text.isEmpty()) {
-                textInputField.setText(preFillString)
-            }
-            // Listen to enter events, use IME_ACTION_NEXT for soft keyboards
-            // like Swype where ENTER keyCode is not generated.
-
-            if (Config.isCapitalizeTasks) {
-                textInputField.inputType = textInputField.inputType or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+            if (taskText.text.isEmpty()) {
+                taskText.setText(preFillString)
             }
 
-            setWordWrap(Config.isWordWrap)
+            setInputType()
+
 
             val textIndex = 0
-            textInputField.setSelection(textIndex)
+            taskText.setSelection(textIndex)
 
             // Set button callbacks
             btnContext.setOnClickListener { showListMenu() }
@@ -130,19 +123,19 @@ class AddTask : ThemedActionBarActivity() {
     }
 
     private fun addPrefilledTask() {
-        val position = textInputField.selectionStart
-        val remainingText = textInputField.text.toString().substring(position)
+        val position = taskText.selectionStart
+        val remainingText = taskText.text.toString().substring(position)
         val endOfLineDistance = remainingText.indexOf('\n')
         var endOfLine: Int
         if (endOfLineDistance == -1) {
-            endOfLine = textInputField.length()
+            endOfLine = taskText.length()
         } else {
             endOfLine = position + endOfLineDistance
         }
-        textInputField.setSelection(endOfLine)
+        taskText.setSelection(endOfLine)
         replaceTextAtSelection("\n", false)
 
-        val precedingText = textInputField.text.toString().substring(0, endOfLine)
+        val precedingText = taskText.text.toString().substring(0, endOfLine)
         val lineStart = precedingText.lastIndexOf('\n')
         val line: String
         if (lineStart != -1) {
@@ -160,11 +153,11 @@ class AddTask : ThemedActionBarActivity() {
         replaceTextAtSelection(join(tags, " "), true)
 
         endOfLine++
-        textInputField.setSelection(endOfLine)
+        taskText.setSelection(endOfLine)
     }
 
     fun setWordWrap(bool: Boolean) {
-        textInputField.setHorizontallyScrolling(!bool)
+        taskText.setHorizontallyScrolling(!bool)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -185,6 +178,17 @@ class AddTask : ThemedActionBarActivity() {
         return true
     }
 
+    fun setInputType() {
+        val basicType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+        if (Config.isCapitalizeTasks) {
+            taskText.inputType = basicType or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+        } else {
+            taskText.inputType = basicType
+        }
+        setWordWrap(Config.isWordWrap)
+
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
         // Respond to the action bar's Up/Home button
@@ -202,13 +206,7 @@ class AddTask : ThemedActionBarActivity() {
             }
             R.id.menu_capitalize_tasks -> {
                 Config.isCapitalizeTasks = !Config.isCapitalizeTasks
-                var inputFlags = textInputField.inputType
-                if (Config.isCapitalizeTasks) {
-                    inputFlags = inputFlags or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
-                } else {
-                    inputFlags = inputFlags and InputType.TYPE_TEXT_FLAG_CAP_SENTENCES.inv()
-                }
-                textInputField.setRawInputType(inputFlags)
+                setInputType()
                 item.isChecked = !item.isChecked
             }
             R.id.menu_show_edittext_hint -> {
@@ -232,17 +230,16 @@ class AddTask : ThemedActionBarActivity() {
 
     private fun setHint() {
         if (Config.isShowEditTextHint) {
-            textInputField.setHint(R.string.tasktexthint)
+            taskText.setHint(R.string.tasktexthint)
         } else {
-            textInputField.hint = null
+            taskText.hint = null
         }
     }
 
     private fun saveTasksAndClose() {
         val todoList = TodoList
         // strip line breaks
-        textInputField = findViewById<EditText>(R.id.taskText)
-        val input: String = textInputField.text.toString()
+        val input: String = taskText.text.toString()
 
         // Don't add empty tasks
         if (input.trim { it <= ' ' }.isEmpty()) {
@@ -290,7 +287,7 @@ class AddTask : ThemedActionBarActivity() {
             TodoList.clearPendingEdits()
             finish()
         }
-        if (confirmation && (textInputField.text.toString() != start_text)) {
+        if (confirmation && (taskText.text.toString() != start_text)) {
             showConfirmationDialog(this, R.string.cancel_changes, close, null)
         } else {
             close.onClick(null, 0)
@@ -388,7 +385,7 @@ class AddTask : ThemedActionBarActivity() {
             } else {
                 tasks.add(task)
             }
-            textInputField.setText(tasks.joinToString("\n") { it.text })
+            taskText.setText(tasks.joinToString("\n") { it.text })
         }
     }
 
@@ -407,7 +404,7 @@ class AddTask : ThemedActionBarActivity() {
     }
 
     private fun getTasks(): MutableList<Task> {
-        val input = textInputField.text.toString()
+        val input = taskText.text.toString()
         return input.split("\r\n|\r|\n".toRegex()).map(::Task).toMutableList()
     }
 
@@ -440,7 +437,7 @@ class AddTask : ThemedActionBarActivity() {
             } else {
                 tasks.add(task)
             }
-            textInputField.setText(tasks.joinToString("\n") { it.text })
+            taskText.setText(tasks.joinToString("\n") { it.text })
         }
     }
 
@@ -453,22 +450,22 @@ class AddTask : ThemedActionBarActivity() {
     }
 
     fun getCurrentCursorLine(): Int {
-        val selectionStart = textInputField.selectionStart
+        val selectionStart = taskText.selectionStart
         if (selectionStart == -1) {
             return -1
         }
 
-        val chars = textInputField.text.subSequence(0, selectionStart)
+        val chars = taskText.text.subSequence(0, selectionStart)
         val line = (0..chars.length - 1).count { chars[it] == '\n' }
         return line
     }
 
     private fun replaceDueDate(newDueDate: CharSequence) {
         // save current selection and length
-        val start = textInputField.selectionStart
-        val length = textInputField.text.length
+        val start = taskText.selectionStart
+        val length = taskText.text.length
         val lines = ArrayList<String>()
-        Collections.addAll(lines, *textInputField.text.toString().split("\\n".toRegex()).toTypedArray())
+        Collections.addAll(lines, *taskText.text.toString().split("\\n".toRegex()).toTypedArray())
 
         // For some reason the currentLine can be larger than the amount of lines in the EditText
         // Check for this case to prevent any array index out of bounds errors
@@ -480,17 +477,17 @@ class AddTask : ThemedActionBarActivity() {
             val t = Task(lines[currentLine])
             t.dueDate = newDueDate.toString()
             lines[currentLine] = t.inFileFormat()
-            textInputField.setText(join(lines, "\n"))
+            taskText.setText(join(lines, "\n"))
         }
         restoreSelection(start, length, false)
     }
 
     private fun replaceThresholdDate(newThresholdDate: CharSequence) {
         // save current selection and length
-        val start = textInputField.selectionStart
-        val length = textInputField.text.length
+        val start = taskText.selectionStart
+        val length = taskText.text.length
         val lines = ArrayList<String>()
-        Collections.addAll(lines, *textInputField.text.toString().split("\\n".toRegex()).toTypedArray())
+        Collections.addAll(lines, *taskText.text.toString().split("\\n".toRegex()).toTypedArray())
 
         // For some reason the currentLine can be larger than the amount of lines in the EditText
         // Check for this case to prevent any array index out of bounds errors
@@ -502,14 +499,14 @@ class AddTask : ThemedActionBarActivity() {
             val t = Task(lines[currentLine])
             t.thresholdDate = newThresholdDate.toString()
             lines[currentLine] = t.inFileFormat()
-            textInputField.setText(join(lines, "\n"))
+            taskText.setText(join(lines, "\n"))
         }
         restoreSelection(start, length, false)
     }
 
     private fun restoreSelection(location: Int, oldLength: Int, moveCursor: Boolean) {
         var newLocation = location
-        val newLength = textInputField.text.length
+        val newLength = taskText.text.length
         val deltaLength = newLength - oldLength
         // Check if we want the cursor to move by delta (for priority changes)
         // or not (for due and threshold changes
@@ -520,17 +517,17 @@ class AddTask : ThemedActionBarActivity() {
         // Don't go out of bounds
         newLocation = Math.min(newLocation, newLength)
         newLocation = Math.max(0, newLocation)
-        textInputField.setSelection(newLocation, newLocation)
+        taskText.setSelection(newLocation, newLocation)
     }
 
     private fun replacePriority(newPriority: CharSequence) {
         // save current selection and length
-        val start = textInputField.selectionStart
-        val end = textInputField.selectionEnd
+        val start = taskText.selectionStart
+        val end = taskText.selectionEnd
         log.debug(TAG, "Current selection: $start-$end")
-        val length = textInputField.text.length
+        val length = taskText.text.length
         val lines = ArrayList<String>()
-        Collections.addAll(lines, *textInputField.text.toString().split("\\n".toRegex()).toTypedArray())
+        Collections.addAll(lines, *taskText.text.toString().split("\\n".toRegex()).toTypedArray())
 
         // For some reason the currentLine can be larger than the amount of lines in the EditText
         // Check for this case to prevent any array index out of bounds errors
@@ -543,22 +540,22 @@ class AddTask : ThemedActionBarActivity() {
             log.debug(TAG, "Changing priority from " + t.priority.toString() + " to " + newPriority.toString())
             t.priority = Priority.toPriority(newPriority.toString())
             lines[currentLine] = t.inFileFormat()
-            textInputField.setText(join(lines, "\n"))
+            taskText.setText(join(lines, "\n"))
         }
         restoreSelection(start, length, true)
     }
 
     private fun replaceTextAtSelection(newText: CharSequence, spaces: Boolean) {
         var text = newText
-        val start = textInputField.selectionStart
-        val end = textInputField.selectionEnd
+        val start = taskText.selectionStart
+        val end = taskText.selectionEnd
         if (start == end && start != 0 && spaces) {
             // no selection prefix with space if needed
-            if (textInputField.text[start - 1] != ' ') {
+            if (taskText.text[start - 1] != ' ') {
                 text = " " + text
             }
         }
-        textInputField.text.replace(Math.min(start, end), Math.max(start, end),
+        taskText.text.replace(Math.min(start, end), Math.max(start, end),
                 text, 0, text.length)
     }
 
