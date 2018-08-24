@@ -116,6 +116,12 @@ class LoginScreen : AccountAuthenticatorActivity() {
             )
             val op = ReadRemoteFolderOperation(File("/").canonicalPath)
             val res: RemoteOperationResult = op.execute(client)
+            Logger.debug(TAG, res.toString())
+            Logger.debug(TAG, res.logMessage)
+            Logger.debug(TAG, res.exception?.localizedMessage?:"No exception")
+            Logger.debug(TAG, res.httpCode.toString())
+            Logger.debug(TAG, res.data.joinToString (" "){ it.toString()})
+
             if (res.isSuccess ) {
                 Logger.debug(TAG, "Logged in to Nextcloud: ${client.ownCloudVersion}")
                 finishLogin()
