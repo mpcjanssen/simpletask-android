@@ -41,7 +41,7 @@ android {
     playAccountConfigs {
         defaultAccountConfig {
             serviceAccountEmail = storeServiceAccount
-            pk12File = file(storeP12File)
+            pk12File = new File(System.getenv("HOME"), storeP12File)
         }
     }
     //noinspection GroovyMissingReturnStatement
@@ -162,7 +162,7 @@ dependencies {
 if (project.hasProperty('storeFile') &&
         project.hasProperty('storePassword') &&
         project.hasProperty('keyPassword')) {
-    android.signingConfigs.release.storeFile = file(storeFile)
+    android.signingConfigs.release.storeFile = new File(System.getenv("HOME"),storeFile)
     android.signingConfigs.release.storePassword = storePassword
     android.signingConfigs.release.keyPassword = keyPassword
 } else {
