@@ -29,7 +29,11 @@ private val s1 = System.currentTimeMillis().toString()
  */
 object FileStore : IFileStore {
     override val isAuthenticated: Boolean
-        get() = !AccountManager.get(mApp.applicationContext).getAccountsByType(getString(R.string.account_type)).isEmpty()
+        get() {
+            val accounts = AccountManager.get(mApp.applicationContext).getAccountsByType(getString(R.string.account_type))
+            Logger.debug(TAG, "isAuthenticated found ${accounts.size} Simpletask accounts")
+            return !accounts.isEmpty()
+        }
 
     override fun logout() {
         val am = AccountManager.get(mApp.applicationContext)
