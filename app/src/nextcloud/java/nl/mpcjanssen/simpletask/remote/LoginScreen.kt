@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.annotation.StringRes
 import android.support.v4.content.LocalBroadcastManager
+import android.util.Log
 import android.widget.Toast
 import com.owncloud.android.lib.common.OwnCloudClientFactory
 import com.owncloud.android.lib.common.OwnCloudClientManagerFactory
@@ -94,11 +95,12 @@ class LoginScreen : AccountAuthenticatorActivity() {
         val am = AccountManager.get(this)
         val bundle = Bundle()
         bundle.putString("server_url", url)
-        am.addAccountExplicitly(
+        val res = am.addAccountExplicitly(
                 Account(nextcloud_username.text.toString(), m_app.getString(R.string.account_type)),
                 nextcloud_password.text.toString(),
                 bundle
         )
+        Logger.debug(TAG, "Add account returned $res")
         switchToTodolist()
     }
 
