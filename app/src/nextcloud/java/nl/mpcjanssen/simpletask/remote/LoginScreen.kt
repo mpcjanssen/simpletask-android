@@ -1,28 +1,16 @@
 package nl.mpcjanssen.simpletask.remote
 
-import android.accounts.Account
-import android.accounts.AccountAuthenticatorActivity
-import android.accounts.AccountManager
+
 import android.content.*
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.support.annotation.StringRes
 import android.support.v4.content.LocalBroadcastManager
-import android.util.Log
-import android.widget.Toast
 import com.owncloud.android.lib.common.OwnCloudClientFactory
-import com.owncloud.android.lib.common.OwnCloudClientManagerFactory
 import com.owncloud.android.lib.common.OwnCloudCredentialsFactory
 import com.owncloud.android.lib.common.network.CertificateCombinedException
 import com.owncloud.android.lib.common.network.NetworkUtils
-import com.owncloud.android.lib.common.operations.OnRemoteOperationListener
-import com.owncloud.android.lib.common.operations.RemoteOperation
 import com.owncloud.android.lib.common.operations.RemoteOperationResult
 import com.owncloud.android.lib.resources.files.ReadRemoteFolderOperation
-import com.owncloud.android.lib.resources.files.RemoveRemoteFileOperation
-import com.owncloud.android.lib.resources.users.GetRemoteUserInfoOperation
 import kotlinx.android.synthetic.nextcloud.login.*
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.util.Config
@@ -32,7 +20,7 @@ import nl.mpcjanssen.simpletask.util.showToastLong
 import java.io.File
 
 
-class LoginScreen : AccountAuthenticatorActivity() {
+class LoginScreen : ThemedActionBarActivity() {
     private val url: String
         get () {
             val entered_url = nextcloud_server_url.text.toString()
@@ -44,6 +32,10 @@ class LoginScreen : AccountAuthenticatorActivity() {
                 "https://${entered_url}"
             }
         }
+
+    private val log: Logger = Logger
+
+    private val mApp = TodoApplication.app
 
 
 
@@ -92,15 +84,14 @@ class LoginScreen : AccountAuthenticatorActivity() {
     }
 
     private fun finishLogin() {
-        val am = AccountManager.get(this)
-        val bundle = Bundle()
-        bundle.putString("server_url", url)
-        val res = am.addAccountExplicitly(
-                Account(nextcloud_username.text.toString(), m_app.getString(R.string.account_type)),
-                nextcloud_password.text.toString(),
-                bundle
-        )
-        Logger.debug(TAG, "Add account returned $res")
+        var username by Config.StringOrNullPreference(FileStore.NEXTCLOUD_USER)
+        var password by Config.StringOrNullPreference(FileStore.NEXTCLOUD_PASS)
+        var serverUrl by Config.StringOrNullPreference(FileStore.NEXTCLOUD_URL)
+        username = nextcloud_username.text.toString()
+        password = nextcloud_password.text.toString()
+        serverUrl = url
+        Logger.debug(TAG, "Saved credentials for ${username@serverUrl}")
+
         switchToTodolist()
     }
 
@@ -160,3 +151,4 @@ class LoginScreen : AccountAuthenticatorActivity() {
         internal val TAG = LoginScreen::class.java.simpleName
     }
 }
+
