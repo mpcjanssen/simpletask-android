@@ -1,20 +1,15 @@
 package nl.mpcjanssen.simpletask.remote
 
-import android.accounts.AccountManager
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.Uri
 import com.owncloud.android.lib.common.OwnCloudClientFactory
 import com.owncloud.android.lib.common.OwnCloudCredentialsFactory
 import com.owncloud.android.lib.common.operations.RemoteOperationResult
 import com.owncloud.android.lib.resources.files.*
-import nl.mpcjanssen.simpletask.Constants
 import nl.mpcjanssen.simpletask.Logger
-import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.TodoApplication
-import nl.mpcjanssen.simpletask.util.getString
+import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.join
 import nl.mpcjanssen.simpletask.util.showToastLong
 import java.io.File
@@ -28,18 +23,24 @@ private val s1 = System.currentTimeMillis().toString()
  * FileStore implementation backed by Nextcloud
  */
 object FileStore : IFileStore {
+
+    internal val NEXTCLOUD_USER = "ncUser"
+    internal val NEXTCLOUD_PASS = "ncPass"
+    internal val NEXTCLOUD_URL = "ncURL"
+
+    var username by Config.StringOrNullPreference(NEXTCLOUD_USER)
+    var password by Config.StringOrNullPreference(NEXTCLOUD_PASS)
+    var serverUrl by Config.StringOrNullPreference(NEXTCLOUD_URL)
+
     override val isAuthenticated: Boolean
         get() {
-            val accounts = AccountManager.get(mApp.applicationContext).getAccountsByType(getString(R.string.account_type))
-            Logger.debug(TAG, "isAuthenticated found ${accounts.size} Simpletask accounts")
-            return !accounts.isEmpty()
+            return username!=null
         }
 
     override fun logout() {
-        val am = AccountManager.get(mApp.applicationContext)
-        am.getAccountsByType(getString((R.string.account_type))).forEach {
-            am.removeAccount(it, null, null)
-        }
+        username = null
+        password = null
+        serverUrl = null
     }
 
     private val TAG = "FileStore"
@@ -52,14 +53,9 @@ object FileStore : IFileStore {
 
     private val mNextcloud by lazy {
         val ctx = mApp.applicationContext
-        val am = AccountManager.get(ctx)
-        val accounts = am.getAccountsByType(getString((R.string.account_type)))
-        val account = accounts[0]
-        val password = am.getPassword(account)
-        val server = am.getUserData(account, "server_url")
-        val client = OwnCloudClientFactory.createOwnCloudClient(Uri.parse(server), ctx, true, true)
+        val client = OwnCloudClientFactory.createOwnCloudClient(Uri.parse(serverUrl), ctx, true, true)
         client.credentials = OwnCloudCredentialsFactory.newBasicCredentials(
-                account.name,
+                username,
                 password
         )
         client
