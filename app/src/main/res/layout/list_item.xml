@@ -89,6 +89,14 @@ You should have received a copy of the GNU General Public License along with Tod
                 android:paddingBottom="4dip"
                 android:layout_weight="1"
                 />
+            <TextView
+                android:id="@+id/taskrecurence"
+                android:focusable="false"
+                android:layout_width="0sp"
+                android:layout_height="wrap_content"
+                android:paddingLeft="4dip"
+                android:paddingBottom="4dip"
+                android:layout_weight="1"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

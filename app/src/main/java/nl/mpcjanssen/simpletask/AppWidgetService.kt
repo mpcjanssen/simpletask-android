@@ -110,6 +110,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
                 is ThresholdDateToken -> false
                 is ListToken -> !currentFilter.hideLists
                 is TagToken -> !currentFilter.hideTags
+                is RecurrenceToken -> false
                 else -> true
             }
         }
@@ -151,6 +152,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         val relAge = getRelativeAge(task, TodoApplication.app)
         val relDue = getRelativeDueDate(task, TodoApplication.app)
         val relThres = getRelativeThresholdDate(task, TodoApplication.app)
+        val recPatt = getRecurrencePattern(task, TodoApplication.app)
         var anyDateShown = false
         if (!relAge.isNullOrEmpty() && !filter.hideCreateDate) {
             rv.setTextViewText(R.id.taskage, relAge)
@@ -170,6 +172,12 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         } else {
             rv.setTextViewText(R.id.taskthreshold, "")
         }
+        if (!recPatt.isNullOrEmpty()) {
+            anyDateShown = true
+            rv.setTextViewText(R.id.taskrecurence, recPatt)
+        } else {
+            rv.setTextViewText(R.id.taskrecurence, "")
+        }
         if (!anyDateShown || task.isCompleted() || !extended_widget) {
             rv.setViewVisibility(R.id.datebar, View.GONE)
             //rv.setViewPadding(R.prefName.tasktext,
@@ -188,6 +196,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         rv.setTextColor(R.id.taskage, ContextCompat.getColor(TodoApplication.app, R.color.gray67))
         rv.setTextColor(R.id.taskdue, ContextCompat.getColor(TodoApplication.app, R.color.gray67))
         rv.setTextColor(R.id.taskthreshold, ContextCompat.getColor(TodoApplication.app, R.color.gray67))
+        rv.setTextColor(R.id.taskrecurence, ContextCompat.getColor(TodoApplication.app, R.color.gray67))
     }
 
     private fun itemForDarkTheme(rv: RemoteViews) {
@@ -195,6 +204,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         rv.setTextColor(R.id.taskage, ContextCompat.getColor(TodoApplication.app, R.color.gray67))
         rv.setTextColor(R.id.taskdue, ContextCompat.getColor(TodoApplication.app, R.color.gray67))
         rv.setTextColor(R.id.taskthreshold, ContextCompat.getColor(TodoApplication.app, R.color.gray67))
+        rv.setTextColor(R.id.taskrecurence, ContextCompat.getColor(TodoApplication.app, R.color.gray67))
     }
 
     override fun getViewAt(position: Int): RemoteViews? {

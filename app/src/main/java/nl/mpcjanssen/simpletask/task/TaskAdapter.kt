@@ -72,6 +72,7 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         val taskAge = view.taskage
         val taskDue = view.taskdue
         val taskThreshold = view.taskthreshold
+        val taskRecurrence = view.taskrecurence
 
         if (Config.showCompleteCheckbox) {
             view.checkBox.visibility = View.VISIBLE
@@ -92,6 +93,7 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
                 is ThresholdDateToken -> !Config.hasExtendedTaskView
                 is ListToken -> !query.hideLists
                 is TagToken -> !query.hideTags
+                is RecurrenceToken -> false
                 else -> true
             }
         }
@@ -121,6 +123,7 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         taskAge.textSize = textSize * Config.dateBarRelativeSize
         taskDue.textSize = textSize * Config.dateBarRelativeSize
         taskThreshold.textSize = textSize * Config.dateBarRelativeSize
+        taskRecurrence.textSize = textSize * Config.dateBarRelativeSize
 
         val cb = view.checkBox
         taskText.text = ss
@@ -144,6 +147,7 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         val relAge = getRelativeAge(task, TodoApplication.app)
         val relDue = getRelativeDueDate(task, TodoApplication.app)
         val relativeThresholdDate = getRelativeThresholdDate(task, TodoApplication.app)
+        val recurrencePattern = getRecurrencePattern(task, TodoApplication.app)
         if (!relAge.isNullOrEmpty() && !query.hideCreateDate) {
             taskAge.text = relAge
             taskAge.visibility = View.VISIBLE
@@ -165,6 +169,13 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         } else {
             taskThreshold.text = ""
             taskThreshold.visibility = View.GONE
+        }
+        if (recurrencePattern != null) {
+            taskRecurrence.text = recurrencePattern
+            taskRecurrence.visibility = View.VISIBLE
+        } else {
+            taskRecurrence.text = ""
+            taskRecurrence.visibility = View.GONE
         }
         // Set selected state
         // log.debug(tag, "Setting selected state ${TodoList.isSelected(item)}")

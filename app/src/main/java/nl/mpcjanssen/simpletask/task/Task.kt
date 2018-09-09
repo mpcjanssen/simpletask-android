@@ -121,8 +121,15 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             }
         }
 
-    var recurrencePattern: String? = null
+    var recurrencePattern: String?
         get() = getFirstToken<RecurrenceToken>()?.valueStr
+        set(pattern) {
+            if (pattern.isNullOrEmpty()) {
+                tokens = tokens.filter { it !is RecurrenceToken }
+            } else {
+                upsertToken(RecurrenceToken(pattern!!))
+            }
+        }
 
     var tags: SortedSet<String> = emptySet<String>().toSortedSet()
         get() {

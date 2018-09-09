@@ -601,6 +601,11 @@ fun getRelativeThresholdDate(task: Task, app: TodoApplication): String? {
     return getRelativeDate(app, "T: ", date).toString()
 }
 
+fun getRecurrencePattern(task: Task, app: TodoApplication): String? {
+    val pattern = task.recurrencePattern ?: return null
+    return SpannableString("Rec: " + pattern).toString()
+}
+
 fun getRelativeDueDate(task: Task, app: TodoApplication): SpannableString? {
     val date = task.dueDate ?: return null
     return getRelativeDate(app, "Due: ", date)
