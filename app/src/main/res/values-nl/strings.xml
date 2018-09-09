@@ -109,7 +109,7 @@
     <string name="resume_sync_pref_title">Synchroniseren hervatten</string>
     <string name="resume_sync_pref_summary">Synchroniseren met Dropbox bij openen van de app.</string>
     <string name="font_size_delta_pref_title">Aangepaste lettertypegrootte</string>
-    <string name="datebar_relative_size_summary">Relatieve datumbalkgrootte</string>
+    <string name="datebar_relative_size_summary">Relatieve grootte datumlijn</string>
     <string name="font_size_delta_pref_summary">Wijzig de lettertypegrootte.</string>
     <string name="theme_pref_title">Thema</string>
     <string name="theme_pref_summary">Wijzig het gebruikte applicatiethema.</string>
@@ -125,9 +125,9 @@
 
     <string name="menu_capitalize_tasks">Van hoofdletters voorzien</string>
     <string name="back_saves_pref_title">Terugknop</string>
-    <string name="back_saves_summary">De ingevoerde todo\'s opslaan of het filter toepassen na het drukken op de terugknop.</string>
+    <string name="back_saves_summary">De geopende takenlijkst opslaan of het filter toepassen na het drukken op de terugknop.</string>
 
-    <string name="show_txt_only_pref_title">Alleen txt-bestanden weergeven</string>
+    <string name="show_txt_only_pref_title">Alleen TXT-bestanden weergeven</string>
     <string name="show_txt_only_summary">Alleen .txt-bestanden weergeven in het bestandsselectievenster.</string>
 
     <string name="calendar_sync_screen_title">Meldingen</string>
@@ -169,22 +169,22 @@
     <string name="show_empty_lists_summary">Kop weergeven, zelfs als alle taken eronder verborgen zijn.</string>
 
     <string name="split_actionbar_pref_title">Gesplitste actiebalk gebruiken</string>
-    <string name="split_actionbar_pref_summary">Gesplitste actiebalk gebruiken zodat de menuknoppen onderaan het scherm worden weergegeven. Schakel dit uit als u meer ruimte voor de nog-te-doen-lijst wilt.</string>
+    <string name="split_actionbar_pref_summary">Gesplitste actiebalk gebruiken zodat de menuknoppen onderaan het scherm worden weergegeven. Schakel dit uit als u meer ruimte voor de takenlijst wilt.</string>
 
     <string name="show_edittext_hint_title">Tips weergeven</string>
-    <string name="show_edittext_hint_summary">Tips weergeven tijdens het toevoegen van taen. Schakel dit uit als het u afleidt.</string>
+    <string name="show_edittext_hint_summary">Tips weergeven tijdens het toevoegen van taken.</string>
 
     <string name="show_complete_checkbox_title">Afvinkvakjes weergeven</string>
-    <string name="show_complete_checkbox_summary">Vakje weergeven naast de taken om ze af of uit te vinken.</string>
+    <string name="show_complete_checkbox_summary">Vakje weergeven naast taken om ze af of uit te vinken.</string>
 
     <string name="show_confirmation_dialogs_title">Bevestigingsdialoogvensters</string>
     <string name="show_confirmation_dialogs_summary">Om bevestiging vragen alvorens taken te archiveren of verwijderen</string>
 
-    <string name="show_todo_path_title">Pad naar todo-bestand weergeven</string>
+    <string name="show_todo_path_title">Toon pad van todo-bestand</string>
     <string name="show_todo_path_summary">Mappen inkorten naar eerste letter</string>
 
     <string name="show_fast_scroll_title">Snel scrollen</string>
-    <string name="show_fast_scroll_summary">Gebruik snel scrollen als de todo-lijst langer wordt</string>
+    <string name="show_fast_scroll_summary">Gebruik snel scrollen voor langere todo-lijsten</string>
 
     <string name="show_calendarview_title">Kalender gebruiken voor datuminvoer</string>
 
@@ -198,16 +198,16 @@
     <string name="todotxt_terms_summary">Context en project in plaats van lijst en label</string>
 
     <string name="about_settings_header">Over</string>
-    <string name="about_settings_summary">Applicatie-informatie</string>
+    <string name="about_settings_summary">App-informatie</string>
     <string name="visit_website_title">Hulp</string>
-    <string name="visit_website_summary">Bezoek de Simpletask-website</string>
-    <string name="visit_website_data">http://mpcjanssen.nl/pages/simpletask.html</string>
+    <string name="visit_website_summary">Bezoek de website</string>
+    <string name="visit_website_data">https://mpcjanssen.nl/</string>
 
     <string name="visit_tracker_title">Ideeën aandragen of een fout (bug) melden</string>
     <string name="visit_tracker_summary">Draag ideeën of verbeteringen aan of rapporteer een probleem.</string>
-    <string name="visit_tracker_data">http://mpcjanssen.nl/redmine/projects/simpletask-android/issues/</string>
+    <string name="visit_tracker_data">https://github.com/mpcjanssen/simpletask-android/issues</string>
     <string name="preference_title_debug_info">Foutopsporingslog weergeven</string>
-    <string name="preference_summary_debug_info">Bekijk en deel de applicatieversie en -log.</string>
+    <string name="preference_summary_debug_info">Bekijk en deel de appversie en -log.</string>
 
     <string name="sync_dialog_title">Handmatige synchronisatie</string>
     <string name="sync_dialog_msg">Wilt u uw todo.txt-bestand uploaden of downloaden?</string>
@@ -224,9 +224,9 @@
     <string name="login_screen_button">Inloggen op Dropbox</string>
     <string name="login_folder_screen_button">Inloggen op Dropbox
 (maptoegang voor app)</string>
-    <string name="login_cloudless">Als u geen Dropbox-account heeft of u wilt Dropbox niet gebruiken om uw nog-te-doen-lijst naar op te slaan, dan kunt u Simpletask Cloudless downloaden uit de Play Store.
-\n
-\nhttp://goo.gl/X1C55P</string>
+    <string name="login_cloudless">Als u geen Dropbox-account heeft of u wilt Dropbox niet gebruiken om uw takenlijst naar op te slaan, dan kunt u Simpletask Cloudless downloaden uit de Play Store. 
+\n 
+\nhttps://goo.gl/X1C55P</string>
 
     <string name="delete_task_title">%s ta(a)k(en) verwijderen</string>
     <string name="archive_task_title">%s ta(a)k(en) acrhiveren</string>
@@ -243,22 +243,22 @@
 
     <string name="clone_tags">Automatisch invullen</string>
     <string name="word_wrap">Woordomslag</string>
-    <string name="search_hint">Zoeken...</string>
+    <string name="search_hint">Zoeken…</string>
 
     <string name="sort_help">Gebruik slepen-en-neerzetten om de sorteervolgorde te wijzigen. Druk op de items om de sorteerrichting te wijzigen.</string>
     <string name="file_order">Bestandsvolgorde (ongesorteerd)</string>
     <string name="alphabetical">Op alfabet</string>
-    <string name="by_prio">Op prioriteit</string>
-    <string name="by_project">Op label</string>
-    <string name="by_context">Op lijst</string>
-    <string name="by_project_todotxt">Op project</string>
-    <string name="by_context_todotxt">Op context</string>
+    <string name="by_prio">Prioriteit</string>
+    <string name="by_project">Label</string>
+    <string name="by_context">Lijst</string>
+    <string name="by_project_todotxt">Project</string>
+    <string name="by_context_todotxt">Context</string>
     <string name="completed">Op voltooiing</string>
-    <string name="by_creation_date">Op creatiedatum</string>
+    <string name="by_creation_date">Aanmaakdatum</string>
     <string name="in_future">Op toekomstige drempeldatum</string>
-    <string name="by_due_date">Op vervaldatum</string>
-    <string name="by_threshold_date">Op drempeldatum</string>
-    <string name="by_completion_date">Op voltooidatum</string>
+    <string name="by_due_date">Vervaldatum</string>
+    <string name="by_threshold_date">Drempeldatum</string>
+    <string name="by_completion_date">Voltooidatum</string>
 	
     <string name="filter_select_all">Alles selecteren</string>
     <string name="filter_clear_all">Filter wissen</string>
@@ -299,24 +299,24 @@
     <string name="separator">Scheidingsteken</string>
 
     <string name="shortcut_addtask_name">Taak toevoegen</string>
-    <string name="share_addtask_name">Toevoegen aan Simpletask</string>
+    <string name="share_addtask_name">Simpletask het</string>
 
     <string name="none">geen</string>
     <string name="keep">behouden</string>
     <string name="all">alles</string>
 
     <string name="dates_days_ago">%d dagen geleden</string>
-    <string name="dates_one_day_ago">1 dag geleden</string>
+    <string name="dates_one_day_ago">gisteren</string>
     <string name="dates_years_ago">%d jaar geleden</string>
-    <string name="dates_one_year_ago">1 jaar geleden</string>
+    <string name="dates_one_year_ago">vorig jaar</string>
     <string name="dates_months_ago">%d maanden geleden</string>
-    <string name="dates_one_month_ago">1 maand geleden</string>
+    <string name="dates_one_month_ago">vorige maand</string>
     <string name="dates_weeks_ago">%d weken geleden</string>
-    <string name="dates_one_week_ago">1 week geleden</string>
+    <string name="dates_one_week_ago">vorige week</string>
 
-    <string name="dates_one_week">1 week</string>
-    <string name="dates_two_weeks">2 weken</string>
-    <string name="dates_one_month">1 maand</string>
+    <string name="dates_one_week">een week</string>
+    <string name="dates_two_weeks">twee weken</string>
+    <string name="dates_one_month">een maand</string>
 
     <string name="dates_today">vandaag</string>
     <string name="date_pick">datum kiezen</string>
@@ -348,7 +348,7 @@
     <string name="filter_import_export">Filters importeren/exporteren</string>
 
     <string name="donate_title">Doneren</string>
-    <string name="donate_summary">Doneer als u Simpletask waardeert. LET OP: doneren is geheel vrijblijvend; Simpletask zal altijd gratis blijven.</string>
+    <string name="donate_summary">U gratis aangeboden en bovendien vrije software. Veel hard werk is er in gestoken, en omdat u de keuze heeft, wordt elke schenking sterk gewaardeerd.</string>
     <string name="donated_summary">Bedankt voor uw donatie.</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Andersom sorteren</string>
@@ -356,13 +356,13 @@
     <string name="calendar_disp_name">Simpletask-herinneringen</string>
     <string name="calendar_sync_desc_due">Vervaldatum-herinnering; automatisch gegenereerd door Simpletask</string>
     <string name="calendar_sync_desc_thre">Drempeldatum-herinnering; automatisch gegenereerd door Simpletask</string>
-    <string name="calendar_exists_warning">Waarschuwing: er bestaat al een kalender met deze naam. Bezig met overschrijven...</string>
+    <string name="calendar_exists_warning">Waarschuwing: er bestaat al een kalender met deze naam. Bezig met overschrijven…</string>
     <string name="calendar_write_error">Fout: het schrijven van de kalender is mislukt</string>
 
     <string name="click_to_copy">Druk om te kopiëren naar het klembord.</string>
 
     <string name="share_history">Bekijk en deel de interne todo.txt-geschiedenisdatabase voor herstel.</string>
-    <string name="share_history_title">Todo-geschiedenis</string>
+    <string name="share_history_title">Taakgeschiedenis</string>
 
     <string name="hello_world">Hallo wereld!</string>
     <string name="action_settings">Instellingen</string>
@@ -373,8 +373,8 @@
 
     <string name="name">Naam</string>
     <string name="date">Datum</string>
-    <string name="back_clears_filter_title">Terug wist filter</string>
-    <string name="back_clears_filter_summary">Terugknop wist het filter alvorens de applicatie af te sluiten.</string>
+    <string name="back_clears_filter_title">\"Terug\" wist filter</string>
+    <string name="back_clears_filter_summary">Terugknop wist het filter alvorens de app af te sluiten.</string>
     <string name="experimental_title">Experimenteel</string>
     <string name="experimental_summary">Experimentele mogelijkheden inschakelen</string>
 
@@ -391,30 +391,36 @@
 
 
     <string name="task_text_ellipsizing_none">Geen: Hele lange taaktekst</string>
-    <string name="task_text_ellipsizing_start">Begin: ...taaktekst</string>
-    <string name="task_text_ellipsizing_middle">Midden: Erg... tekst</string>
-    <string name="task_text_ellipsizing_end">Einde: Hele lange...</string>
+    <string name="task_text_ellipsizing_start">Begin: …taaktekst</string>
+    <string name="task_text_ellipsizing_middle">Midden: Erg… tekst</string>
+    <string name="task_text_ellipsizing_end">Einde: Hele lange…</string>
     <string name="task_text_ellipsizing_marquee">Selectiekader: Hele lange ta</string>
 
-    <string name="filter_tab_header_prio">PRIO</string>
-    <string name="filter_tab_header_other">OVERIG</string>
-    <string name="filter_tab_header_sort">SORTEREN</string>
-    <string name="filter_tab_header_script">SCRIPT</string>
+    <string name="filter_tab_header_prio">Prio</string>
+    <string name="filter_tab_header_other">Overig</string>
+    <string name="filter_tab_header_sort">Sorteren</string>
+    <string name="filter_tab_header_script">Script</string>
 
     <string name="script_tab_script_from_file">Script uit bestand</string>
     <string name="script_tab_use_script">Script gebruiken</string>
-    <string name="script_tab_test">TEST</string>
+    <string name="script_tab_test">Test</string>
     <string name="script_tab_test_task">Testtaak</string>
     <string name="script_tab_script">Script</string>
-    <string name="script_tab_true_task_shown">True, tekst zal worden weergegeven</string>
-    <string name="script_tab_false_task_not_shown">False, tekst zal niet worden weergegeven</string>
+    <string name="script_tab_true_task_shown">Weergegeven</string>
+    <string name="script_tab_false_task_not_shown">Niet weergegeven</string>
 
     <string name="action_pop_up_call">Bellen:</string>
     <string name="action_pop_up_sms">SMS:</string>
 
-    <string name="quick_filter_tag_header_inverted">OMGEKEERD</string>
+    <string name="quick_filter_tag_header_inverted">Omgekeerd</string>
     <string name="saved_filters_exported">Filters zijn geëxporteerd</string>
     <string name="toast_lua_config_imported">Lua-configuratie is geïmporteerd</string>
 
     <string name="saved_filters_imported">Filters zijn geïmporteerd</string>
-    </resources>
+    <string name="cancel_changes">Wijzigingen zullen verloren gaan.</string>
+    <string name="by_lua">Lua Script</string>
+
+    <string name="use_uuid_title">Wijs een UUID toe aan elke taak</string>
+    <string name="nav_drawer_hint">Het huidig filter opslaan
+\n met de Save knop</string>
+</resources>
