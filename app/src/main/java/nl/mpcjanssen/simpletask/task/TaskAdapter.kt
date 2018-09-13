@@ -2,6 +2,7 @@ package nl.mpcjanssen.simpletask.task
 
 import android.graphics.Color
 import android.graphics.Paint
+import android.support.constraint.ConstraintSet
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -29,6 +30,9 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
     override fun getItemCount(): Int {
         return visibleLines.size + 1
     }
+
+    var wrapRecurrence: Boolean = false
+    var wrapThreshold: Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val view = when (viewType) {
@@ -68,6 +72,7 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         val line = visibleLines[position]
         val task = line.task ?: return
         val view = holder.itemView
+        val dateBar = view.datebar
         val taskText = view.tasktext
         val taskAge = view.taskage
         val taskDue = view.taskdue
@@ -144,6 +149,10 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         }
         cb.isChecked = completed
 
+        taskDue.addOnLayoutChangeListener(OnLayoutChangeCountLines())
+        taskThreshold.addOnLayoutChangeListener(OnLayoutChangeCountLines())
+        taskRecurrence.addOnLayoutChangeListener(OnLayoutChangeCountLines())
+
         val relAge = getRelativeAge(task, TodoApplication.app)
         val relDue = getRelativeDueDate(task, TodoApplication.app)
         val relativeThresholdDate = getRelativeThresholdDate(task, TodoApplication.app)
@@ -177,6 +186,32 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
             taskRecurrence.text = ""
             taskRecurrence.visibility = View.GONE
         }
+
+        if (wrapRecurrence && wrapThreshold) {
+            val set = ConstraintSet()
+            set.clone(dateBar)
+
+            set.connect(taskDue.id, ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT)
+
+            set.connect(taskThreshold.id, ConstraintSet.LEFT, taskDue.id, ConstraintSet.LEFT)
+            set.connect(taskThreshold.id, ConstraintSet.TOP, taskDue.id, ConstraintSet.BOTTOM)
+
+            set.connect(taskRecurrence.id, ConstraintSet.LEFT, taskDue.id, ConstraintSet.LEFT)
+            set.connect(taskRecurrence.id, ConstraintSet.TOP, taskThreshold.id, ConstraintSet.BOTTOM)
+
+            set.applyTo(dateBar)
+        } else if (wrapRecurrence && !wrapThreshold) {
+            val set = ConstraintSet()
+            set.clone(dateBar)
+
+            set.connect(taskThreshold.id, ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT)
+
+            set.connect(taskRecurrence.id, ConstraintSet.LEFT, taskDue.id, ConstraintSet.LEFT)
+            set.connect(taskRecurrence.id, ConstraintSet.TOP, taskDue.id, ConstraintSet.BOTTOM)
+
+            set.applyTo(dateBar)
+        }
+
         // Set selected state
         // log.debug(tag, "Setting selected state ${TodoList.isSelected(item)}")
         view.isActivated = TodoList.isSelected(task)
@@ -271,6 +306,27 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
 
             taskText.maxLines = 1
             taskText.setHorizontallyScrolling(true)
+        }
+    }
+
+    inner class OnLayoutChangeCountLines : View.OnLayoutChangeListener {
+
+        override fun onLayoutChange(
+            v: View?,
+            left: Int,
+            top: Int,
+            right: Int,
+            bottom: Int,
+            oldLeft: Int,
+            oldTop: Int,
+            oldRight: Int,
+            oldBottom: Int
+        ) {
+            v?.removeOnLayoutChangeListener(this)
+            if ((v as TextView).lineCount > 1) {
+                if (!wrapRecurrence) wrapRecurrence = true
+                else if (!wrapThreshold) wrapThreshold = true
+            }
         }
     }
 }

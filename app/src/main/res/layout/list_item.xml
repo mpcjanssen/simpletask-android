@@ -26,6 +26,7 @@ You should have received a copy of the GNU General Public License along with Tod
 <!--suppress ALL -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:orientation="horizontal"
@@ -56,7 +57,7 @@ You should have received a copy of the GNU General Public License along with Tod
             android:paddingRight="4dip"
             android:paddingTop="4dip"
             />
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:orientation="horizontal"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
@@ -69,7 +70,8 @@ You should have received a copy of the GNU General Public License along with Tod
                 android:layout_height="wrap_content"
                 android:paddingLeft="0dip"
                 android:paddingBottom="4dip"
-                android:layout_weight="1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/taskdue"
                 />
             <TextView
                 android:id="@+id/taskdue"
@@ -78,7 +80,9 @@ You should have received a copy of the GNU General Public License along with Tod
                 android:layout_height="wrap_content"
                 android:paddingLeft="4dip"
                 android:paddingBottom="4dip"
-                android:layout_weight="1"
+                android:layout_toRightOf="@id/taskage"
+                app:layout_constraintLeft_toRightOf="@id/taskage"
+                app:layout_constraintRight_toLeftOf="@id/taskthreshold"
                 />
             <TextView
                 android:id="@+id/taskthreshold"
@@ -87,7 +91,9 @@ You should have received a copy of the GNU General Public License along with Tod
                 android:layout_height="wrap_content"
                 android:paddingLeft="4dip"
                 android:paddingBottom="4dip"
-                android:layout_weight="1"
+                android:layout_toRightOf="@id/taskdue"
+                app:layout_constraintLeft_toRightOf="@id/taskdue"
+                app:layout_constraintRight_toLeftOf="@id/taskrecurence"
                 />
             <TextView
                 android:id="@+id/taskrecurence"
@@ -96,7 +102,9 @@ You should have received a copy of the GNU General Public License along with Tod
                 android:layout_height="wrap_content"
                 android:paddingLeft="4dip"
                 android:paddingBottom="4dip"
-                android:layout_weight="1"/>
-        </LinearLayout>
+                app:layout_constraintLeft_toRightOf="@id/taskthreshold"
+                app:layout_constraintRight_toRightOf="parent"
+                />
+        </android.support.constraint.ConstraintLayout>
     </LinearLayout>
 </LinearLayout>
