@@ -76,8 +76,6 @@ object Config : Preferences(TodoApplication.app) {
 
     var isWordWrap by BooleanPreference(R.string.word_wrap_key, true)
 
-    var isShowEditTextHint by BooleanPreference(R.string.show_edittext_hint, true)
-
     var isCapitalizeTasks by BooleanPreference(R.string.capitalize_tasks, true)
 
     val showTodoPath by BooleanPreference(R.string.show_todo_path, false)

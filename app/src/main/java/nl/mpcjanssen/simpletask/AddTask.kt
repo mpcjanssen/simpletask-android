@@ -76,9 +76,6 @@ class AddTask : ThemedActionBarActivity() {
             addPrefilledTask()
         }
 
-        // text
-        setHint()
-
         if (share_text != null) {
             taskText.setText(share_text)
         }
@@ -169,9 +166,6 @@ class AddTask : ThemedActionBarActivity() {
         val menuWordWrap = menu.findItem(R.id.menu_word_wrap)
         menuWordWrap.isChecked = Config.isWordWrap
 
-        val menuShowHint = menu.findItem(R.id.menu_show_edittext_hint)
-        menuShowHint.isChecked = Config.isShowEditTextHint
-
         val menuCapitalizeTasks = menu.findItem(R.id.menu_capitalize_tasks)
         menuCapitalizeTasks.isChecked = Config.isCapitalizeTasks
 
@@ -209,11 +203,6 @@ class AddTask : ThemedActionBarActivity() {
                 setInputType()
                 item.isChecked = !item.isChecked
             }
-            R.id.menu_show_edittext_hint -> {
-                Config.isShowEditTextHint = !Config.isShowEditTextHint
-                setHint()
-                item.isChecked = !item.isChecked
-            }
             R.id.menu_help -> {
                 showHelp()
             }
@@ -226,14 +215,6 @@ class AddTask : ThemedActionBarActivity() {
         val i = Intent(this, HelpScreen::class.java)
         i.putExtra(Constants.EXTRA_HELP_PAGE, getText(R.string.help_add_task))
         startActivity(i)
-    }
-
-    private fun setHint() {
-        if (Config.isShowEditTextHint) {
-            taskText.setHint(R.string.tasktexthint)
-        } else {
-            taskText.hint = null
-        }
     }
 
     private fun saveTasksAndClose() {
