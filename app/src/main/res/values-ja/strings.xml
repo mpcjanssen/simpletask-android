@@ -419,4 +419,6 @@
 <string name="nav_drawer_hint">保存ボタンを使用して
 \n現在のフィルターを保存</string>
 <string name="cancel_changes">変更は失われます。</string>
-    </resources>
+    <string name="invalid_certificate_msg">サーバー証明書が正しくありません。続行しますか?</string>
+    <string name="invalid_certificate_title">無効な証明書です。</string>
+</resources>
