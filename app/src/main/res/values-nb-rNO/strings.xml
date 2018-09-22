@@ -11,7 +11,7 @@
     <string name="main_no_items">Ingen gjøremål å vise.</string>
     <string name="set_preferences">Innstillinger</string>
     <string name="preferences">Innstillinger</string>
-    <string name="archive">Arkiv</string>
+    <string name="archive">Arkiver</string>
     <string name="help">Hjelp</string>
     <string name="history">Historikk</string>
     <string name="debug_info">Feilrettingsinfo</string>
@@ -309,7 +309,7 @@
 
     <string name="preference_other">Annet</string>
 
-    <string name="ARCHIVE_settings_header">Arkiver</string>
+    <string name="ARCHIVE_settings_header">Arkivering</string>
     <string name="ARCHIVE_settings_summary">Innstillinger for arkivering av fullførte gjøremål i done.txt</string>
     <string name="auto_archive_pref_title">Automatisk arkivering</string>
     <string name="auto_archive_pref_summary">Arkiver gjøremål umiddelbart ved fullføring.</string>
@@ -415,4 +415,6 @@
     <string name="use_uuid_title">Tildel hver oppgave en UUID</string>
     <string name="nav_drawer_hint">Lagre nåværende filter
 \nved bruk av \"Lagre\"-knappen</string>
+<string name="invalid_certificate_msg">Tjenersertifikatet er ugyldig. Ønsker du å fortsette?</string>
+    <string name="invalid_certificate_title">Ugyldig sertifikat.</string>
 </resources>
