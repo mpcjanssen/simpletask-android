@@ -446,4 +446,6 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="use_uuid_title">Asignar una UUID a cada tarea</string>
     <string name="nav_drawer_hint">Guarde el filtro actual
 \npresionando el botón de guardar</string>
+<string name="invalid_certificate_msg">El certificado del servidor no es válido. ¿Desea continuar?</string>
+    <string name="invalid_certificate_title">Certificado no válido.</string>
 </resources>
