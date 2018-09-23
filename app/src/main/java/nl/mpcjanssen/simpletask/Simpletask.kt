@@ -79,6 +79,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         m_savedInstanceState = savedInstanceState
         val intentFilter = IntentFilter()
         intentFilter.addAction(Constants.BROADCAST_ACTION_LOGOUT)
+        intentFilter.addAction(Constants.BROADCAST_AUTH_FAILED)
         intentFilter.addAction(Constants.BROADCAST_TASKLIST_CHANGED)
         intentFilter.addAction(Constants.BROADCAST_SYNC_START)
         intentFilter.addAction(Constants.BROADCAST_THEME_CHANGED)
@@ -231,6 +232,8 @@ class Simpletask : ThemedNoActionBarActivity() {
                 } else if (receivedIntent.action == Constants.BROADCAST_THEME_CHANGED ||
                         receivedIntent.action == Constants.BROADCAST_DATEBAR_SIZE_CHANGED) {
                     recreate()
+                } else if (receivedIntent.action == Constants.BROADCAST_AUTH_FAILED) {
+                    startLogin()
                 }
             }
         }
@@ -277,6 +280,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     override fun onResume() {
         super.onResume()
+
         log.info(TAG, "onResume")
         TodoList.reload(reason = "Main activity resume")
         handleIntent()

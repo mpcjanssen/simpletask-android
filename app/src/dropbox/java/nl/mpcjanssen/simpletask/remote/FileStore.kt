@@ -2,18 +2,19 @@ package nl.mpcjanssen.simpletask.remote
 
 import android.content.Context
 import android.net.ConnectivityManager
+import com.dropbox.core.DbxException
 import com.dropbox.core.DbxRequestConfig
+import com.dropbox.core.InvalidAccessTokenException
 import com.dropbox.core.v2.DbxClientV2
 import com.dropbox.core.v2.files.DownloadErrorException
 import com.dropbox.core.v2.files.FileMetadata
 import com.dropbox.core.v2.files.FolderMetadata
 import com.dropbox.core.v2.files.WriteMode
 import nl.mpcjanssen.simpletask.Logger
+import nl.mpcjanssen.simpletask.Simpletask
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.remote.IFileStore.Companion.ROOT_DIR
-import nl.mpcjanssen.simpletask.util.Config
-import nl.mpcjanssen.simpletask.util.join
-import nl.mpcjanssen.simpletask.util.showToastLong
+import nl.mpcjanssen.simpletask.util.*
 import java.io.*
 import kotlin.reflect.KClass
 
@@ -50,7 +51,26 @@ object FileStore : IFileStore {
 
 
     override val isAuthenticated: Boolean
-        get() = accessToken != null
+        get() {
+            val token = accessToken
+            if (token == null) {
+                return false
+            } else {
+                FileStoreActionQueue.add ("Verify token") {
+                    try {
+                        val accountMail = dbxClient.users().currentAccount.email
+                        log.debug(TAG, "Authenticated for $accountMail")
+                    } catch (e: InvalidAccessTokenException) {
+                        log.warn(TAG, "Invalid access token")
+                        accessToken = null
+                        broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+                    } catch (e: DbxException) {
+                        log.warn(TAG, "Dropbox API error", e)
+                    }
+                }
+                return true // for now
+            }
+        }
 
     override fun logout() {
         _dbxClient?.auth()?.tokenRevoke()
@@ -59,8 +79,14 @@ object FileStore : IFileStore {
     }
 
     override fun getRemoteVersion(filename: String): String {
-        val data = dbxClient.files().getMetadata(filename) as FileMetadata
-        return data.rev
+        try {
+            val data = dbxClient.files().getMetadata(filename) as FileMetadata
+            return data.rev
+        } catch (e: InvalidAccessTokenException) {
+            broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+            accessToken = null
+            return ""
+        }
     }
 
     override val isOnline: Boolean
