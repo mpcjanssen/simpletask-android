@@ -71,10 +71,6 @@ class AddTask : ThemedActionBarActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
 
-        val fab = findViewById<FloatingActionButton>(R.id.fab)
-        fab?.setOnClickListener {
-            addPrefilledTask()
-        }
 
         if (share_text != null) {
             taskText.setText(share_text)
@@ -116,6 +112,9 @@ class AddTask : ThemedActionBarActivity() {
             btnPrio.setOnClickListener { showPriorityMenu() }
             btnDue.setOnClickListener { insertDate(DateType.DUE) }
             btnThreshold.setOnClickListener { insertDate(DateType.THRESHOLD) }
+            btnNext.setOnClickListener { addPrefilledTask() }
+            btnSave.setOnClickListener { saveTasksAndClose() }
+
         }
     }
 
@@ -188,9 +187,6 @@ class AddTask : ThemedActionBarActivity() {
         // Respond to the action bar's Up/Home button
             android.R.id.home -> {
                 finishEdit(confirmation = true)
-            }
-            R.id.menu_save -> {
-                saveTasksAndClose()
             }
             R.id.menu_word_wrap -> {
                 val newVal = !Config.isWordWrap
