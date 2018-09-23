@@ -5,12 +5,6 @@
     >
 
     <item
-        android:id="@+id/menu_save"
-        android:title="@string/save_task"
-        android:icon="@drawable/ic_save_white_24dp"
-        app:showAsAction="always"
-        />
-    <item
         android:id="@+id/menu_word_wrap"
         android:title="@string/word_wrap"
         android:checkable="true"
