@@ -201,7 +201,10 @@ object TodoList {
     fun reload(reason: String = "") {
         log.debug(TAG, "Reload: $reason")
         broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
-        if (!FileStore.isAuthenticated) return
+        if (!FileStore.isAuthenticated) {
+            broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
+            return
+        }
         val filename = Config.todoFileName
         if (Config.changesPending && FileStore.isOnline) {
             log.info(TAG, "Not loading, changes pending")

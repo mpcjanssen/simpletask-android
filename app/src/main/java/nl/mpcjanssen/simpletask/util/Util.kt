@@ -707,6 +707,10 @@ fun broadcastTasklistChanged(broadcastManager: LocalBroadcastManager) {
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_TASKLIST_CHANGED))
 }
 
+fun broadcastAuthFailed(broadcastManager: LocalBroadcastManager) {
+    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_AUTH_FAILED))
+}
+
 fun broadcastRefreshSelection(broadcastManager: LocalBroadcastManager) {
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_HIGHLIGHT_SELECTION))
 }
