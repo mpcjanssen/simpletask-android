@@ -423,4 +423,6 @@
     <string name="use_uuid_title">Wijs een UUID toe aan elke taak</string>
     <string name="nav_drawer_hint">Het huidig filter opslaan
 \n met de Save knop</string>
+<string name="invalid_certificate_msg">Ongeldig server certificaat. Doorgaan?</string>
+    <string name="invalid_certificate_title">Ongeldig cert.</string>
 </resources>
