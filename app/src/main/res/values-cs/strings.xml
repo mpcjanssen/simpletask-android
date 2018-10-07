@@ -415,4 +415,6 @@
 
     <string name="back_clears_filter_title">„Zpět“ vyčistí filtr</string>
     <string name="back_clears_filter_summary">Tlačítko zpět před ukončením aplikace vyčistí filtr.</string>
-    </resources>
+    <string name="invalid_certificate_msg">Certifikát serveru není platný. Chcete pokračovat i tak?</string>
+    <string name="invalid_certificate_title">Neplatný cert.</string>
+</resources>
