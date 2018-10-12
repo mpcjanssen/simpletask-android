@@ -1,5 +1,22 @@
-﻿Changelog
-=========
+﻿# Changelog
+
+## 10.2.1
+
+### Changed
+
+- Updated translations for Dutch, Japanese, Spanish, Norwegian,
+- Use toolbar in AddTask instead of a FAB.
+
+### Fixed
+
+- Obey capitalisation setting in Add Task.
+- Remove AddTask hint for #924.
+- Improve authentication detection for #925.
+
+### Removed
+
+- Don't use Android Account Manager for Nextcloud credentials. 
+  It sometimes fails for some unknown reasons.
 
 10.2.0
 ------
