@@ -2,6 +2,7 @@ package nl.mpcjanssen.simpletask
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.util.Config
 import org.json.JSONObject
@@ -71,10 +72,10 @@ object LegacyQueryStore {
             val ids = prefsXml.listFiles { dir, name -> name.startsWith(ID_PREFIX) }
                     .map { it.relativeTo(prefsXml).name }
                     .map { it -> it.substringBeforeLast(".xml") }
-            Logger.debug(TAG, "Saved applyFilter ids: $ids")
+            Log.d(TAG, "Saved applyFilter ids: $ids")
             return ids
         } else {
-            Logger.warn(TAG, "No pref_xml folder ${prefsXml.path}")
+            Log.w(TAG, "No pref_xml folder ${prefsXml.path}")
             return emptyList()
         }
     }
@@ -95,7 +96,7 @@ object LegacyQueryStore {
         val prefsXml = File(TodoApplication.app.filesDir, "$prefsPath/$id.xml")
         val deleted = prefsXml.delete()
         if (!deleted) {
-            Logger.warn(TAG, "Failed to delete saved query: $id")
+            Log.w(TAG, "Failed to delete saved query: $id")
         }
     }
 

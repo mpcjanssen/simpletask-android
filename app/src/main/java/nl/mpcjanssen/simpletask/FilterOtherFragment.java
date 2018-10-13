@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,26 +23,24 @@ public class FilterOtherFragment extends Fragment {
     private CheckBox cbHideCreateDate;
     private CheckBox cbHideHidden;
     private CheckBox cbCreateAsThreshold;
-    private Logger log;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        log = Logger.INSTANCE;
-        log.debug(TAG, "onCreate() this:" + this);
+        Log.d(TAG, "onCreate() this:" + this);
     }
 
     @Override
     public void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-        log.debug(TAG, "onDestroy() this:" + this);
+        Log.d(TAG, "onDestroy() this:" + this);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        log.debug(TAG, "onSaveInstanceState() this:" + this);
+        Log.d(TAG, "onSaveInstanceState() this:" + this);
         outState.putBoolean(Query.INTENT_HIDE_COMPLETED_FILTER, getHideCompleted());
         outState.putBoolean(Query.INTENT_HIDE_FUTURE_FILTER, getHideFuture());
         outState.putBoolean(Query.INTENT_HIDE_LISTS_FILTER, getHideLists());
@@ -53,11 +52,11 @@ public class FilterOtherFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        log.debug(TAG, "onCreateView() this:" + this + " savedInstance:" + savedInstanceState);
+        Log.d(TAG, "onCreateView() this:" + this + " savedInstance:" + savedInstanceState);
 
         Bundle arguments = getArguments();
 
-        log.debug(TAG, "Fragment bundle:" + this + " arguments:" + arguments);
+        Log.d(TAG, "Fragment bundle:" + this + " arguments:" + arguments);
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.other_filter,
                 container, false);
 

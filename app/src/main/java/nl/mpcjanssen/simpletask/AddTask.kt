@@ -8,10 +8,10 @@ package nl.mpcjanssen.simpletask
 import android.app.DatePickerDialog
 import android.content.*
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AlertDialog
 import android.text.InputType
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.Window
@@ -35,7 +35,6 @@ class AddTask : ThemedActionBarActivity() {
 
     private var m_broadcastReceiver: BroadcastReceiver? = null
     private var localBroadcastManager: LocalBroadcastManager? = null
-    private val log = Logger
 
     /*
         Deprecated functions still work fine.
@@ -43,7 +42,7 @@ class AddTask : ThemedActionBarActivity() {
      */
     @Suppress("DEPRECATION")
     public override fun onCreate(savedInstanceState: Bundle?) {
-        log.debug(TAG, "onCreate()")
+        Log.d(TAG, "onCreate()")
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
         super.onCreate(savedInstanceState)
 
@@ -78,7 +77,7 @@ class AddTask : ThemedActionBarActivity() {
 
         setTitle(R.string.addtask)
 
-        log.debug(TAG, "Fill addtask")
+        Log.d(TAG, "Fill addtask")
 
         val pendingTasks = TodoList.pendingEdits.map {
             TodoList.todoItemsCopy.getOrNull(it)?.inFileFormat()
@@ -220,7 +219,7 @@ class AddTask : ThemedActionBarActivity() {
 
         // Don't add empty tasks
         if (input.trim { it <= ' ' }.isEmpty()) {
-            log.info(TAG, "Not adding empty line")
+            Log.i(TAG, "Not adding empty line")
             finish()
             return
         }
@@ -230,7 +229,7 @@ class AddTask : ThemedActionBarActivity() {
         val enteredTasks = getTasks().dropLastWhile { it.text.isEmpty() }.toMutableList()
 
         val updateSize = TodoList.pendingEdits.size
-        log.info(TAG, "Saving ${enteredTasks.size} tasks, updating ${updateSize} tasks")
+        Log.i(TAG, "Saving ${enteredTasks.size} tasks, updating ${updateSize} tasks")
         val replaceCount = Math.min(updateSize, enteredTasks.size)
         for (i in 0 until replaceCount) {
             val taskIndex = TodoList.pendingEdits[0]
@@ -501,7 +500,7 @@ class AddTask : ThemedActionBarActivity() {
         // save current selection and length
         val start = taskText.selectionStart
         val end = taskText.selectionEnd
-        log.debug(TAG, "Current selection: $start-$end")
+        Log.d(TAG, "Current selection: $start-$end")
         val length = taskText.text.length
         val lines = ArrayList<String>()
         Collections.addAll(lines, *taskText.text.toString().split("\\n".toRegex()).toTypedArray())
@@ -514,7 +513,7 @@ class AddTask : ThemedActionBarActivity() {
         }
         if (currentLine != -1) {
             val t = Task(lines[currentLine])
-            log.debug(TAG, "Changing priority from " + t.priority.toString() + " to " + newPriority.toString())
+            Log.d(TAG, "Changing priority from " + t.priority.toString() + " to " + newPriority.toString())
             t.priority = Priority.toPriority(newPriority.toString())
             lines[currentLine] = t.inFileFormat()
             taskText.setText(join(lines, "\n"))

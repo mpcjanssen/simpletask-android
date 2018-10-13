@@ -2,6 +2,7 @@ package nl.mpcjanssen.simpletask.util
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 
 
 open class ActionQueue(val qName: String) : Thread() {
@@ -21,7 +22,7 @@ open class ActionQueue(val qName: String) : Thread() {
     fun add(description: String, r: () -> Unit) {
         while (mHandler == null) {
 
-            log.debug(TAG, "Queue handler is null, waiting")
+            Log.d(TAG, "Queue handler is null, waiting")
 
             try {
                 Thread.sleep(100)
@@ -29,7 +30,7 @@ open class ActionQueue(val qName: String) : Thread() {
                 e.printStackTrace()
             }
         }
-        log.info(qName, "-> $description")
+        Log.i(qName, "-> $description")
         mHandler?.post(LoggingRunnable(qName,description, Runnable(r)))
     }
 }
@@ -43,7 +44,7 @@ class LoggingRunnable(val queuName : String, val description: String, val runnab
     }
 
     override fun run() {
-        log.info(queuName, "<- $description")
+        Log.i(queuName, "<- $description")
         runnable.run()
     }
 }

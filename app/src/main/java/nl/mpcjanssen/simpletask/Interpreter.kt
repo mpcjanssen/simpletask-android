@@ -1,6 +1,7 @@
 package nl.mpcjanssen.simpletask
 
 
+import android.util.Log
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TextToken
 import nl.mpcjanssen.simpletask.util.*
@@ -11,7 +12,6 @@ import java.util.*
 
 object Interpreter : AbstractInterpreter() {
     private val globals = JsePlatform.standardGlobals()!!
-    private val log = Logger
     val tag = "LuaInterp"
 
     private val TODOLIB = readAsset(TodoApplication.app.assets, "lua/todolib.lua")
@@ -23,7 +23,7 @@ object Interpreter : AbstractInterpreter() {
         try {
             evalScript(null, Config.luaConfig)
         } catch (e: LuaError) {
-            nl.mpcjanssen.simpletask.util.log.warn(Config.TAG, "Lua execution failed " + e.message)
+            Log.w(Config.TAG, "Lua execution failed " + e.message)
             showToastLong(TodoApplication.app, "${getString(R.string.lua_error)}:  ${e.message}")
         }
 
@@ -50,7 +50,7 @@ object Interpreter : AbstractInterpreter() {
                 val result = onFilter.call(args.arg1(), args.arg(2), args.arg(3))
                 return Pair(result.toboolean(), result.toString())
             } catch (e: LuaError) {
-                log.debug(TAG, "Lua execution failed " + e.message)
+                Log.d(TAG, "Lua execution failed " + e.message)
             }
         }
         return Pair(true, "true")
@@ -61,7 +61,7 @@ object Interpreter : AbstractInterpreter() {
             val module = globals.get(moduleName).checktable() ?: globals
             !module.get(ON_FILTER_NAME).isnil()
         } catch (e: LuaError) {
-            Logger.error(TAG, "Lua error: ${e.message} )")
+            Log.e(TAG, "Lua error: ${e.message} )")
             false
         }
     }
@@ -71,7 +71,7 @@ object Interpreter : AbstractInterpreter() {
             val module = globals.get(moduleName).checktable() ?: globals
             !module.get(ON_SORT_NAME).isnil()
         } catch (e: LuaError) {
-            Logger.error(TAG, "Lua error: ${e.message} )")
+            Log.e(TAG, "Lua error: ${e.message} )")
             false
         }
     }
@@ -81,7 +81,7 @@ object Interpreter : AbstractInterpreter() {
             val module = globals.get(moduleName).checktable() ?: globals
             !module.get(ON_GROUP_NAME).isnil()
         } catch (e: LuaError) {
-            Logger.error(TAG, "Lua error: ${e.message} )")
+            Log.e(TAG, "Lua error: ${e.message} )")
             false
         }
     }
@@ -90,7 +90,7 @@ object Interpreter : AbstractInterpreter() {
         val module = try {
             globals.get(moduleName).checktable()
         } catch (e: LuaError) {
-            Logger.error(TAG, "Lua error: ${e.message} )")
+            Log.e(TAG, "Lua error: ${e.message} )")
             LuaValue.NIL
         }
         if (module == LuaValue.NIL) {
@@ -103,7 +103,7 @@ object Interpreter : AbstractInterpreter() {
                 val result = callback.call(args.arg1(), args.arg(2), args.arg(3))
                 return result.tojstring()
             } catch (e: LuaError) {
-                log.debug(TAG, "Lua execution failed " + e.message)
+                Log.d(TAG, "Lua execution failed " + e.message)
             }
         }
         return ""
@@ -113,7 +113,7 @@ object Interpreter : AbstractInterpreter() {
         val module = try {
             globals.get(moduleName).checktable()
         } catch (e: LuaError) {
-            Logger.error(TAG, "Lua error: ${e.message} )")
+            Log.e(TAG, "Lua error: ${e.message} )")
             LuaValue.NIL
         }
         if (module == LuaValue.NIL) {
@@ -126,7 +126,7 @@ object Interpreter : AbstractInterpreter() {
                 val result = callback.call(args.arg1(), args.arg(2), args.arg(3))
                 return result.tojstring()
             } catch (e: LuaError) {
-                log.debug(TAG, "Lua execution failed " + e.message)
+                Log.d(TAG, "Lua execution failed " + e.message)
             }
         }
         return null
@@ -136,7 +136,7 @@ object Interpreter : AbstractInterpreter() {
         val module = try {
             globals.get(moduleName).checktable()
         } catch (e: LuaError) {
-            Logger.error(TAG, "Lua error: ${e.message} )")
+            Log.e(TAG, "Lua error: ${e.message} )")
             LuaValue.NIL
         }
         if (module == LuaValue.NIL) {
@@ -149,7 +149,7 @@ object Interpreter : AbstractInterpreter() {
                 val result = callback.call(args.arg1(), args.arg(2), args.arg(3))
                 return result.tojstring()
             } catch (e: LuaError) {
-                log.debug(TAG, "Lua execution failed " + e.message)
+                Log.d(TAG, "Lua execution failed " + e.message)
             }
         }
         return null
@@ -163,7 +163,7 @@ object Interpreter : AbstractInterpreter() {
                 val result = callback.call(args.arg1(), args.arg(2), args.arg(3))
                 return Task(result.tojstring())
             } catch (e: LuaError) {
-                log.debug(TAG, "Lua execution failed " + e.message)
+                Log.d(TAG, "Lua execution failed " + e.message)
             }
         }
         return null
@@ -173,7 +173,7 @@ object Interpreter : AbstractInterpreter() {
         val module = try {
             globals.get(moduleName).checktable()
         } catch (e: LuaError) {
-            Logger.error(TAG, "Lua error: ${e.message} )")
+            Log.e(TAG, "Lua error: ${e.message} )")
             LuaValue.NIL
         }
         if (module == LuaValue.NIL) {
@@ -185,7 +185,7 @@ object Interpreter : AbstractInterpreter() {
                 val result = onFilter.invoke(LuaString.valueOf(input), LuaString.valueOf(search), LuaBoolean.valueOf(caseSensitive)).arg1()
                 return result.toboolean()
             } catch (e: LuaError) {
-                log.debug(TAG, "Lua execution failed " + e.message)
+                Log.d(TAG, "Lua execution failed " + e.message)
             }
         }
         return null
@@ -267,7 +267,7 @@ object Interpreter : AbstractInterpreter() {
             try {
                 return unpackResult(function.call())
             } catch (e: LuaError) {
-                log.debug(TAG, "Lua execution failed " + e.message)
+                Log.d(TAG, "Lua execution failed " + e.message)
             }
         }
         return null
@@ -287,7 +287,7 @@ object Interpreter : AbstractInterpreter() {
 class LuaToastShort : OneArgFunction() {
     override fun call(text: LuaValue?): LuaValue? {
         val string = text?.tojstring() ?: ""
-        log.info(Interpreter.tag, "Toasted: \"$string\"")
+        Log.i(Interpreter.tag, "Toasted: \"$string\"")
         showToastShort(TodoApplication.app, string)
         return LuaValue.NIL
     }
@@ -296,7 +296,7 @@ class LuaToastShort : OneArgFunction() {
 class LuaLog : OneArgFunction() {
     override fun call(text: LuaValue?): LuaValue? {
         val string = text?.tojstring() ?: ""
-        log.info(Interpreter.tag, string)
+        Log.i(Interpreter.tag, string)
         return LuaValue.NIL
     }
 }

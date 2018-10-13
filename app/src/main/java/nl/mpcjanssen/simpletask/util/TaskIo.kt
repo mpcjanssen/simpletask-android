@@ -30,6 +30,7 @@
 @file:JvmName("TaskIo")
 package nl.mpcjanssen.simpletask.util
 
+import android.util.Log
 import java.io.*
 
 @Throws(IOException::class)
@@ -42,7 +43,7 @@ fun writeToFile(lines: List<String>, eol: String, file: File, append: Boolean) {
     try {
         createParentDirectory(file)
     } catch (e: IOException) {
-        nl.mpcjanssen.simpletask.Logger.warn("TaskIO", "Couldn't create directory of ${file.absolutePath}", e)
+        Log.w("TaskIO", "Couldn't create directory of ${file.absolutePath}", e)
         throw e
     }
     val str = FileOutputStream(file, append)

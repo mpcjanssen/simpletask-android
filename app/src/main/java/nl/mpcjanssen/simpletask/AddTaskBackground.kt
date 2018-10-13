@@ -31,6 +31,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.Config
@@ -39,12 +40,10 @@ import nl.mpcjanssen.simpletask.util.todayAsString
 import java.io.IOException
 
 class AddTaskBackground : Activity() {
-    private var log = Logger
     val TAG = "AddTaskBackground"
 
     public override fun onCreate(instance: Bundle?) {
-        log = Logger
-        log.debug(TAG, "onCreate()")
+        Log.d(TAG, "onCreate()")
         super.onCreate(instance)
 
         val intent = intent
@@ -53,7 +52,7 @@ class AddTaskBackground : Activity() {
         val append_text = Config.shareAppendText
         if (intent.type.startsWith("text/")) {
             if (Intent.ACTION_SEND == action) {
-                log.debug(TAG, "Share")
+                Log.d(TAG, "Share")
                 var share_text = ""
                 if (TodoApplication.atLeastAPI(21) && intent.hasExtra(Intent.EXTRA_STREAM)) {
                     val uri = intent.extras.get(Intent.EXTRA_STREAM) as Uri?
@@ -77,18 +76,18 @@ class AddTaskBackground : Activity() {
                 noteToSelf(intent, append_text)
 
             } else if (Constants.INTENT_BACKGROUND_TASK == action) {
-                log.debug(TAG, "Adding background task")
+                Log.d(TAG, "Adding background task")
                 if (intent.hasExtra(Constants.EXTRA_BACKGROUND_TASK)) {
                     addBackgroundTask(intent.getStringExtra(Constants.EXTRA_BACKGROUND_TASK), append_text)
                 } else {
-                    log.warn(TAG, "Task was not in extras")
+                    Log.w(TAG, "Task was not in extras")
                 }
 
             }
         } else {
             val imageUri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
             imageUri?.let {
-                log.info(TAG, "Added link to content: $imageUri")
+                Log.i(TAG, "Added link to content: $imageUri")
                 addBackgroundTask(imageUri.toString(), append_text)
             }
         }
@@ -97,14 +96,14 @@ class AddTaskBackground : Activity() {
     private fun noteToSelf(intent: Intent, append_text: String) {
         val task = intent.getStringExtra(Intent.EXTRA_TEXT)
         if (intent.hasExtra(Intent.EXTRA_STREAM)) {
-            log.debug(TAG, "Voice note added.")
+            Log.d(TAG, "Voice note added.")
         }
         addBackgroundTask(task, append_text)
     }
 
     private fun addBackgroundTask(sharedText: String, appendText: String) {
         val todoList = TodoList
-        log.debug(TAG, "Adding background tasks to todolist $todoList")
+        Log.d(TAG, "Adding background tasks to todolist $todoList")
 
         val rawLines = sharedText.split("\r\n|\r|\n".toRegex()).filterNot(String::isBlank)
         val lines = if (appendText.isBlank()) { rawLines } else {

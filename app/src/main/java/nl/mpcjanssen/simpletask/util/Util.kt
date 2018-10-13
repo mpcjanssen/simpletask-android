@@ -1,27 +1,3 @@
-/**
- * This file is part of Todo.txt Touch, an Android app for managing your todo.txt file (http://todotxt.com).
-
- * Copyright (c) 2009-2012 Todo.txt contributors (http://todotxt.com)
-
- * LICENSE:
-
- * Todo.txt Touch is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
- * later version.
-
- * Todo.txt Touch is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
- * details.
-
- * You should have received a copy of the GNU General Public License along with Todo.txt Touch.  If not, see
- * //www.gnu.org/licenses/>.
-
- * @author Todo.txt contributors @yahoogroups.com>
- * *
- * @license http://www.gnu.org/licenses/gpl.html
- * *
- * @copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
- */
 @file:JvmName("Util")
 
 package nl.mpcjanssen.simpletask.util
@@ -48,6 +24,7 @@ import android.text.InputType
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.view.KeyEvent
 import android.view.Window
@@ -68,7 +45,6 @@ import java.util.*
 import java.util.regex.Pattern
 
 val TAG = "Util"
-val log = Logger
 val todayAsString: String
     get() = DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT)
 
@@ -141,7 +117,6 @@ interface InputDialogListener {
 
 @Throws(TodoException::class)
 fun createParentDirectory(dest: File?) {
-    val log = Logger
     if (dest == null) {
         throw TodoException("createParentDirectory: dest is null")
     }
@@ -150,7 +125,7 @@ fun createParentDirectory(dest: File?) {
         createParentDirectory(dir)
         if (!dir.exists()) {
             if (!dir.mkdirs()) {
-                log.error(TAG, "Could not create dirs: " + dir.absolutePath)
+                Log.e(TAG, "Could not create dirs: " + dir.absolutePath)
                 throw TodoException("Could not create dirs: " + dir.absolutePath)
             }
         }
@@ -436,7 +411,7 @@ fun createCachedFile(context: Context, fileName: String,
 fun copyFile(sourceFile: File, destFile: File) {
 
     if (destFile.createNewFile()) {
-        log.debug(TAG, "Destination file created {}" + destFile.absolutePath)
+        Log.d(TAG, "Destination file created {}" + destFile.absolutePath)
     }
 
     var source: FileChannel? = null
@@ -509,7 +484,7 @@ fun shareText(act: Activity, subject: String, text: String) {
             val fileUri = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/" + Constants.SHARE_FILE_NAME)
             shareIntent.putExtra(android.content.Intent.EXTRA_STREAM, fileUri)
         } catch (e: Exception) {
-            log.warn(TAG, "Failed to create file for sharing")
+            Log.w(TAG, "Failed to create file for sharing")
         }
 
     }
@@ -554,7 +529,7 @@ fun markdownAssetAsHtml(ctxt: Context, name: String): String {
         markdown = readAsset(ctxt.assets, name)
     } catch (e: IOException) {
         val fallbackAsset = name.replace("\\.[a-z]{2}\\.md$".toRegex(), ".en.md")
-        log.warn(TAG, "Failed to load markdown asset: $name falling back to $fallbackAsset")
+        Log.w(TAG, "Failed to load markdown asset: $name falling back to $fallbackAsset")
         try {
             markdown = readAsset(ctxt.assets, fallbackAsset)
         } catch (e: IOException) {
@@ -689,17 +664,17 @@ fun String.toDateTime(): DateTime? {
 }
 
 fun broadcastFileSync(broadcastManager: LocalBroadcastManager) {
-    log.info(TAG, "Sending file changed broadcast")
+    Log.i(TAG, "Sending file changed broadcast")
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_FILE_SYNC))
 }
 
 fun broadcastFileSyncStart(broadcastManager: LocalBroadcastManager) {
-    log.info(TAG, "Sending file sync start broadcast")
+    Log.i(TAG, "Sending file sync start broadcast")
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_SYNC_START))
 }
 
 fun broadcastFileSyncDone(broadcastManager: LocalBroadcastManager) {
-    log.info(TAG, "Sending file sync done changed broadcast")
+    Log.i(TAG, "Sending file sync done changed broadcast")
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_SYNC_DONE))
 }
 
@@ -716,7 +691,7 @@ fun broadcastRefreshSelection(broadcastManager: LocalBroadcastManager) {
 }
 
 fun broadcastRefreshWidgets(broadcastManager: LocalBroadcastManager) {
-    log.info(TAG, "Sending widget refresh broadcast")
+    Log.i(TAG, "Sending widget refresh broadcast")
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_WIDGETS))
 }
 

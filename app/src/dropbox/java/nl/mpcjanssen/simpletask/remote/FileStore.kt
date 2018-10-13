@@ -2,6 +2,7 @@ package nl.mpcjanssen.simpletask.remote
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.util.Log
 import com.dropbox.core.DbxException
 import com.dropbox.core.DbxRequestConfig
 import com.dropbox.core.InvalidAccessTokenException
@@ -10,8 +11,6 @@ import com.dropbox.core.v2.files.DownloadErrorException
 import com.dropbox.core.v2.files.FileMetadata
 import com.dropbox.core.v2.files.FolderMetadata
 import com.dropbox.core.v2.files.WriteMode
-import nl.mpcjanssen.simpletask.Logger
-import nl.mpcjanssen.simpletask.Simpletask
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.remote.IFileStore.Companion.ROOT_DIR
 import nl.mpcjanssen.simpletask.util.*
@@ -26,8 +25,6 @@ object FileStore : IFileStore {
 
     private val TAG = "FileStore"
     private val OAUTH2_TOKEN = "dropboxV2Token"
-
-    private val log: Logger = Logger
 
     private val mApp = TodoApplication.app
 
@@ -59,13 +56,13 @@ object FileStore : IFileStore {
                 FileStoreActionQueue.add ("Verify token") {
                     try {
                         val accountMail = dbxClient.users().currentAccount.email
-                        log.debug(TAG, "Authenticated for $accountMail")
+                        Log.d(TAG, "Authenticated for $accountMail")
                     } catch (e: InvalidAccessTokenException) {
-                        log.warn(TAG, "Invalid access token")
+                        Log.w(TAG, "Invalid access token")
                         accessToken = null
                         broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
                     } catch (e: DbxException) {
-                        log.warn(TAG, "Dropbox API error", e)
+                        Log.w(TAG, "Dropbox API error", e)
                     }
                 }
                 return true // for now
@@ -102,7 +99,7 @@ object FileStore : IFileStore {
         // our local changes, instead we upload local and handle any conflicts
         // on the dropbox side.
 
-        log.info(TAG, "Loading file from Dropbox: " + path)
+        Log.i(TAG, "Loading file from Dropbox: " + path)
         if (!isAuthenticated) {
             throw IOException("Not authenticated")
         }
@@ -111,7 +108,7 @@ object FileStore : IFileStore {
         val download = dbxClient.files().download(path)
         val openFileStream = download.inputStream
         val fileInfo = download.result
-        log.info(TAG, "The file's rev is: " + fileInfo.rev)
+        Log.i(TAG, "The file's rev is: " + fileInfo.rev)
 
         val reader = BufferedReader(InputStreamReader(openFileStream, "UTF-8"))
 
@@ -129,13 +126,13 @@ object FileStore : IFileStore {
     @Synchronized
     @Throws(IOException::class)
     override fun saveTasksToFile(path: String, lines: List<String>, eol: String): String {
-        log.info(TAG, "Saving ${lines.size} tasks to Dropbox.")
+        Log.i(TAG, "Saving ${lines.size} tasks to Dropbox.")
         val contents = join(lines, eol) + eol
 
         var rev = Config.lastSeenRemoteId
         val toStore = contents.toByteArray(charset("UTF-8"))
         val `in` = ByteArrayInputStream(toStore)
-        log.info(TAG, "Saving to file " + path)
+        Log.i(TAG, "Saving to file " + path)
         val uploadBuilder = dbxClient.files().uploadBuilder(path)
         uploadBuilder.withAutorename(true).withMode(if (rev != null) WriteMode.update(rev) else null)
         val uploaded = uploadBuilder.uploadAndFinish(`in`)
@@ -145,7 +142,7 @@ object FileStore : IFileStore {
         if (newName != path) {
             // The file was written under another name
             // Usually this means the was a conflict.
-            log.info(TAG, "Filename was changed remotely. New name is: " + newName)
+            Log.i(TAG, "Filename was changed remotely. New name is: " + newName)
             showToastLong(mApp, "Filename was changed remotely. New name is: " + newName)
             mApp.switchTodoFile(newName)
         }
@@ -165,10 +162,10 @@ object FileStore : IFileStore {
             }
             download.close()
             val currentRev = download.result.rev
-            log.info(TAG, "The file's rev is: $currentRev")
+            Log.i(TAG, "The file's rev is: $currentRev")
             currentRev
         } catch (e: DownloadErrorException) {
-            log.info(TAG, "$path doesn't exist. Creating instead of appending")
+            Log.i(TAG, "$path doesn't exist. Creating instead of appending")
             null
         }
         // Then append
@@ -180,11 +177,11 @@ object FileStore : IFileStore {
 
     override fun writeFile(file: File, contents: String) {
         if (!isAuthenticated) {
-            log.error(TAG, "Not authenticated, file ${file.canonicalPath} not written.")
+            Log.e(TAG, "Not authenticated, file ${file.canonicalPath} not written.")
             return
         }
         val toStore = contents.toByteArray(charset("UTF-8"))
-        log.debug(TAG, "Write to file ${file.canonicalPath}")
+        Log.d(TAG, "Write to file ${file.canonicalPath}")
         val inStream = ByteArrayInputStream(toStore)
         dbxClient.files().uploadBuilder(file.path).withMode(WriteMode.OVERWRITE).uploadAndFinish(inStream)
     }
@@ -196,7 +193,7 @@ object FileStore : IFileStore {
         }
 
         val download = dbxClient.files().download(file)
-        log.info(TAG, "The file's rev is: " + download.result.rev)
+        Log.i(TAG, "The file's rev is: " + download.result.rev)
 
         val reader = BufferedReader(InputStreamReader(download.inputStream, "UTF-8"))
         val readFile = ArrayList<String>()
@@ -231,7 +228,7 @@ object FileStore : IFileStore {
                 }
             }
         } catch (e: Throwable) {
-            log.error(TAG, "Couldn't load file list, ", e)
+            Log.e(TAG, "Couldn't load file list, ", e)
         }
         return fileList
     }

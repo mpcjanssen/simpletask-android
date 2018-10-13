@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,31 +17,30 @@ class FilterScriptFragment : Fragment() {
     private var cbUseScript: CheckBox? = null
     private var txtTestTask: EditText? = null
     private var spnCallback: Spinner? = null
-    private val log: Logger = Logger
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        log.debug(TAG, "onCreate() this:" + this)
+        Log.d(TAG, "onCreate() this:" + this)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        log.debug(TAG, "onDestroy() this:" + this)
+        Log.d(TAG, "onDestroy() this:" + this)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        log.debug(TAG, "onSaveInstanceState() this:" + this)
+        Log.d(TAG, "onSaveInstanceState() this:" + this)
         outState.putString(Query.INTENT_SCRIPT_FILTER, script)
         outState.putString(Query.INTENT_SCRIPT_TEST_TASK_FILTER, testTask)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        log.debug(TAG, "onCreateView() this:" + this)
+        Log.d(TAG, "onCreateView() this:" + this)
 
         val arguments = arguments
-        log.debug(TAG, "Fragment bundle:" + this)
+        Log.d(TAG, "Fragment bundle:" + this)
         val layout = inflater.inflate(R.layout.script_filter,
                 container, false) as LinearLayout
 
@@ -58,7 +58,7 @@ class FilterScriptFragment : Fragment() {
                 val callbackToTest = selectedCallback
                 val t = Task(testTask)
                 try {
-                    log.info(TAG, "Running $callbackToTest test Lua callback in module $environment")
+                    Log.i(TAG, "Running $callbackToTest test Lua callback in module $environment")
                     val script = script
 
                     val snackBar = Snackbar.make(act.findViewById(android.R.id.content), "", Snackbar.LENGTH_LONG)
@@ -72,7 +72,7 @@ class FilterScriptFragment : Fragment() {
 
 
                 } catch (e: Exception) {
-                    log.debug(TAG, "Lua execution failed " + e.message)
+                    Log.d(TAG, "Lua execution failed " + e.message)
                     createAlertDialog(act, R.string.lua_error, e.message ?: "").show()
                 }
             }

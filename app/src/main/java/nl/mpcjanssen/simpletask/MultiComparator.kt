@@ -1,5 +1,6 @@
 package nl.mpcjanssen.simpletask
 
+import android.util.Log
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TextToken
 import java.util.*
@@ -10,8 +11,6 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
     var fileOrder = true
 
     init {
-        val log = Logger
-
         label@ for (sort in sorts) {
             val parts = sort.split(Query.SORT_SEPARATOR.toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
             var reverse = false
@@ -60,7 +59,7 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                     }
                 }
                 else -> {
-                    log.warn("MultiComparator", "Unknown sort: $sort")
+                    Log.w("MultiComparator", "Unknown sort: $sort")
                     continue@label
                 }
             }

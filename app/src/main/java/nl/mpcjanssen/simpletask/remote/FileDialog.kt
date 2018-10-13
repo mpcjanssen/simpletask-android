@@ -4,7 +4,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.DialogInterface
 import android.support.v7.app.AlertDialog
-import nl.mpcjanssen.simpletask.Logger
+import android.util.Log
 import nl.mpcjanssen.simpletask.remote.IFileStore.Companion.PARENT_DIR
 import nl.mpcjanssen.simpletask.remote.IFileStore.Companion.ROOT_DIR
 import nl.mpcjanssen.simpletask.util.ListenerList
@@ -28,12 +28,12 @@ class FileDialog {
                 })
                 fileStore.loadFileList(startPath, txtOnly)
             } catch (e: Throwable) {
-                Logger.warn(TAG, "Can't load fileList from $startPath")
+                Log.w(TAG, "Can't load fileList from $startPath")
                 if (startPath != ROOT_DIR) {
-                    Logger.warn(TAG, "Trying root")
+                    Log.w(TAG, "Trying root")
                     fileStore.loadFileList(ROOT_DIR, txtOnly)
                 } else {
-                    Logger.error(TAG, "Can't load fileList from $ROOT_DIR), browser closed")
+                    Log.e(TAG, "Can't load fileList from $ROOT_DIR), browser closed")
                     showToastLong(act, "Can't retrieve file list")
                     null
                 }
@@ -42,7 +42,7 @@ class FileDialog {
                     loadingOverlay = showLoadingOverlay(act, loadingOverlay, false)
                 })
             } ?: return@Runnable
-            Logger.info(TAG, "File list from $startPath loaded")
+            Log.i(TAG, "File list from $startPath loaded")
             val fileList = unsortedFileList.sortedWith(compareBy({ !it.isFolder }, { it.name })).toMutableList()
 
             if (startPath != ROOT_DIR) {
@@ -61,11 +61,11 @@ class FileDialog {
 
                     val fileEntry = fileList.find { fileNameChosen == it.name }
                     if (fileEntry == null) {
-                        Logger.warn(TAG, "Selected file was $fileEntry")
+                        Log.w(TAG, "Selected file was $fileEntry")
                         dialog.dismiss()
                         return@OnClickListener
                     }
-                    Logger.info(TAG, "Selected entry ${fileEntry.name}, folder: ${fileEntry.isFolder}")
+                    Log.i(TAG, "Selected entry ${fileEntry.name}, folder: ${fileEntry.isFolder}")
 
                     val newPath = File(startPath, fileEntry.name).path
                     if (fileEntry.isFolder) {
@@ -102,7 +102,7 @@ class FileDialog {
         fun browseForNewFile(act: Activity, fileStore: FileStore, path: String, listener: FileSelectedListener, txtOnly: Boolean) {
             if (!FileStore.isOnline) {
                 showToastLong(act, "Device is offline")
-                Logger.info(TAG, "Device is offline, browser closed")
+                Log.i(TAG, "Device is offline, browser closed")
                 return
             }
             val dialog = FileDialog()
@@ -110,7 +110,7 @@ class FileDialog {
             try {
                 dialog.createFileDialog(act, fileStore, path, txtOnly)
             } catch (e: Exception) {
-                Logger.error(TAG, "Browsing for new file failed", e)
+                Log.e(TAG, "Browsing for new file failed", e)
             }
         }
     }

@@ -37,6 +37,7 @@ import android.content.*
 import android.os.SystemClock
 import android.support.multidex.MultiDexApplication
 import android.support.v4.content.LocalBroadcastManager
+import android.util.Log
 import nl.mpcjanssen.simpletask.dao.Daos
 import nl.mpcjanssen.simpletask.dao.gen.TodoFile
 import nl.mpcjanssen.simpletask.remote.BackupInterface
@@ -69,7 +70,7 @@ class TodoApplication : MultiDexApplication() {
 
         m_broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
-                Logger.info(TAG, "Received broadcast ${intent.action}")
+                Log.i(TAG, "Received broadcast ${intent.action}")
                 when {
                     intent.action == Constants.BROADCAST_TASKLIST_CHANGED -> {
                         CalendarSync.syncLater()
@@ -77,7 +78,7 @@ class TodoApplication : MultiDexApplication() {
                         updateWidgets()
                     }
                     intent.action == Constants.BROADCAST_UPDATE_WIDGETS -> {
-                        Logger.info(TAG, "Refresh widgets from broadcast")
+                        Log.i(TAG, "Refresh widgets from broadcast")
                         redrawWidgets()
                         updateWidgets()
                     }
@@ -88,9 +89,9 @@ class TodoApplication : MultiDexApplication() {
         FileStoreActionQueue.start()
 
         localBroadCastManager.registerReceiver(m_broadcastReceiver, intentFilter)
-        Logger.info(TAG, "onCreate()")
-        Logger.info(TAG, "Created todolist $TodoList")
-        Logger.info(TAG, "Started ${appVersion(this)}")
+        Log.i(TAG, "onCreate()")
+        Log.i(TAG, "Created todolist $TodoList")
+        Log.i(TAG, "Started ${appVersion(this)}")
         scheduleOnNewDay()
         scheduleRepeating()
     }
@@ -101,7 +102,7 @@ class TodoApplication : MultiDexApplication() {
         // Handle all uncaught exceptions for logging.
         // After that call the default uncaught exception handler
         Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
-            Logger.error(TAG, "Uncaught exception", throwable)
+            Log.e(TAG, "Uncaught exception", throwable)
             androidUncaughtExceptionHandler.uncaughtException(thread, throwable)
         }
     }
@@ -119,7 +120,7 @@ class TodoApplication : MultiDexApplication() {
         calendar.set(Calendar.MINUTE, 2)
         calendar.set(Calendar.SECOND, 0)
 
-        Logger.info(TAG, "Scheduling daily UI updateCache alarm, first at ${calendar.time}")
+        Log.i(TAG, "Scheduling daily UI updateCache alarm, first at ${calendar.time}")
         val intent = Intent(this, AlarmReceiver::class.java)
         intent.putExtra(Constants.ALARM_REASON_EXTRA, Constants.ALARM_NEW_DAY)
         val pi = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
@@ -131,7 +132,7 @@ class TodoApplication : MultiDexApplication() {
     private fun scheduleRepeating() {
         // Schedules background reload
 
-        Logger.info(TAG, "Scheduling task list reload")
+        Log.i(TAG, "Scheduling task list reload")
         val intent = Intent(this, AlarmReceiver::class.java)
         intent.putExtra(Constants.ALARM_REASON_EXTRA, Constants.ALARM_RELOAD)
         val pi = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
@@ -142,7 +143,7 @@ class TodoApplication : MultiDexApplication() {
     }
 
     override fun onTerminate() {
-        Logger.info(TAG, "De-registered receiver")
+        Log.i(TAG, "De-registered receiver")
         localBroadCastManager.unregisterReceiver(m_broadcastReceiver)
         super.onTerminate()
     }
@@ -153,7 +154,7 @@ class TodoApplication : MultiDexApplication() {
     }
 
     fun loadTodoList(reason: String) {
-        Logger.info(TAG, "Loading todolist")
+        Log.i(TAG, "Loading todolist")
         TodoList.reload(reason = reason)
     }
 
@@ -161,14 +162,14 @@ class TodoApplication : MultiDexApplication() {
         val mgr = AppWidgetManager.getInstance(applicationContext)
         for (appWidgetId in mgr.getAppWidgetIds(ComponentName(applicationContext, MyAppWidgetProvider::class.java))) {
             mgr.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widgetlv)
-            Logger.info(TAG, "Updating widget: $appWidgetId")
+            Log.i(TAG, "Updating widget: $appWidgetId")
         }
     }
 
     fun redrawWidgets() {
         val appWidgetManager = AppWidgetManager.getInstance(applicationContext)
         val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(this, MyAppWidgetProvider::class.java))
-        Logger.info(TAG, "Redrawing widgets ")
+        Log.i(TAG, "Redrawing widgets ")
         if (appWidgetIds.isNotEmpty()) {
             MyAppWidgetProvider().onUpdate(this, appWidgetManager, appWidgetIds)
         }

@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
@@ -35,7 +36,6 @@ class FilterActivity : ThemedNoActionBarActivity() {
 
     private var pager: ViewPager? = null
     private var m_menu: Menu? = null
-    private var log = Logger
     private var pagerAdapter: ScreenSlidePagerAdapter? = null
     private var scriptFragment: FilterScriptFragment? = null
     private var m_page = 0
@@ -50,7 +50,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        log.info(TAG, "Called with intent: " + intent.toString())
+        Log.i(TAG, "Called with intent: " + intent.toString())
         m_app = application as TodoApplication
 
         setContentView(R.layout.filter)
@@ -162,7 +162,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
             }
 
             override fun onPageSelected(position: Int) {
-                log.info(TAG, "Page $position selected")
+                Log.i(TAG, "Page $position selected")
                 m_page = position
             }
         })
@@ -287,7 +287,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
     private fun updateWidget() {
         updateFilterFromFragments()
         val widgetId = intent.getIntExtra(Constants.EXTRA_WIDGET_ID, 0)
-        log.info(TAG, "Saving settings for widget $widgetId")
+        Log.i(TAG, "Saving settings for widget $widgetId")
         val preferences = applicationContext.getSharedPreferences("" + widgetId, Context.MODE_PRIVATE)
         mFilter.saveInPrefs(preferences)
         broadcastRefreshWidgets(m_app.localBroadCastManager)

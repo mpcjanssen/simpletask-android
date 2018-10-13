@@ -1,5 +1,6 @@
 package nl.mpcjanssen.simpletask.util
 
+import android.util.Log
 import me.smichel.android.KPreferences.Preferences
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.remote.FileStore
@@ -243,13 +244,13 @@ object Config : Preferences(TodoApplication.app) {
     var todoList: List<Task>?
         get() = cachedContents?.let {
             val lines = it.lines()
-            log.info(TAG, "Getting ${lines.size} items todoList from cache")
+            Log.i(TAG, "Getting ${lines.size} items todoList from cache")
             ArrayList<Task>().apply {
                 addAll(lines.map { line -> Task(line) })
             }
         }
         set(items) {
-            log.info(TAG, "Updating todoList cache with ${items?.size} items")
+            Log.i(TAG, "Updating todoList cache with ${items?.size} items")
             if (items == null) {
                 prefs.edit().remove(getString(R.string.cached_todo_file)).apply()
             } else {

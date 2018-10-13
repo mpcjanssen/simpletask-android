@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
@@ -21,7 +22,6 @@ class HelpScreen : ThemedActionBarActivity() {
     private val history = Stack<String>()
 
     private var wvHelp: WebView? = null
-    private var log: Logger? = null
 
     private fun loadDesktop(wv: WebView, url: String) {
         wv.settings.userAgentString = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.45 Safari/535.19"
@@ -29,7 +29,7 @@ class HelpScreen : ThemedActionBarActivity() {
     }
 
     override fun onBackPressed() {
-        log!!.debug(TAG, "History " + history + "empty: " + history.empty())
+        Log.d(TAG, "History " + history + "empty: " + history.empty())
         history.pop()
         if (!history.empty()) {
             showMarkdownAsset(wvHelp!!, this, history.pop())
@@ -40,7 +40,6 @@ class HelpScreen : ThemedActionBarActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        log = Logger
         var page = "index." + getText(R.string.help_locale).toString() + ".md"
         val i = intent
         if (i.hasExtra(Constants.EXTRA_HELP_PAGE)) {
@@ -67,7 +66,7 @@ class HelpScreen : ThemedActionBarActivity() {
             // Replacement is API >= 21 only
             @Suppress("OverridingDeprecatedMember")
             override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                log!!.debug(TAG, "Loading url: " + url)
+                Log.d(TAG, "Loading url: " + url)
                 if (url.startsWith("https://www.paypal.com")) {
                     // Paypal links don't work in the mobile browser so this hack is needed
                     loadDesktop(view, url)
@@ -104,7 +103,7 @@ class HelpScreen : ThemedActionBarActivity() {
     }
 
     fun showMarkdownAsset(wv: WebView, ctxt: Context, name: String) {
-        log!!.debug(TAG, "Loading asset $name into $wv($ctxt)")
+        Log.d(TAG, "Loading asset $name into $wv($ctxt)")
         val html = markdownAssetAsHtml(ctxt, name)
         history.push(name)
         wv.loadDataWithBaseURL(BASE_URL, html, "text/html", "UTF-8", "file:///android_asset/index." + getText(R.string.help_locale) + ".md")

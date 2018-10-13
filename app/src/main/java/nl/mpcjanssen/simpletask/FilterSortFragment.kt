@@ -3,6 +3,7 @@ package nl.mpcjanssen.simpletask
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,7 +37,6 @@ class FilterSortFragment : Fragment() {
     }
 
     private val onRemove = DragSortListView.RemoveListener { which -> adapter.remove(adapter.getItem(which)) }
-    private var log: Logger? = null
 
     private // this DSLV xml declaration does not call for the use
             // of the default DragSortController; therefore,
@@ -46,7 +46,6 @@ class FilterSortFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        log = Logger
 
         val arguments = arguments
         if (originalItems == null) {
@@ -56,7 +55,7 @@ class FilterSortFragment : Fragment() {
                 originalItems = arguments?.getStringArrayList(FilterActivity.FILTER_ITEMS)?: ArrayList()
             }
         }
-        log!!.debug(TAG, "Created view with: " + originalItems!!)
+        Log.d(TAG, "Created view with: " + originalItems)
         m_app = TodoApplication.app
 
         // Set the proper theme

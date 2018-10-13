@@ -6,6 +6,7 @@ package nl.mpcjanssen.simpletask
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
@@ -16,14 +17,11 @@ import java.io.IOException
 
 class ScriptConfigScreen : ThemedActionBarActivity() {
 
-    private val log = Logger
-    private lateinit var m_app : TodoApplication
     private lateinit var scriptEdit : EditText
     private var m_menu: Menu? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        m_app = application as TodoApplication
         setContentView(R.layout.lua_config)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -81,7 +79,7 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
         try {
             Interpreter.evalScript(null, script)
         } catch (e: Exception) {
-            log.debug(FilterScriptFragment.TAG, "Lua execution failed " + e.message)
+            Log.d(FilterScriptFragment.TAG, "Lua execution failed " + e.message)
             createAlertDialog(this, R.string.lua_error, e.message ?: "").show()
         }
     }
@@ -93,7 +91,7 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
                 FileStore.writeFile(exportFile, Config.luaConfig)
                 showToastShort(this, "Lua config exported")
             } catch (e: Exception) {
-                log.error(TAG, "Export lua config failed", e)
+                Log.e(TAG, "Export lua config failed", e)
                 showToastLong(this, "Error exporting lua config")
             }
         }
@@ -111,7 +109,7 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
                 }
 
             } catch (e: IOException) {
-                log.error(TAG, "Import lua config, cant read file ${importFile.canonicalPath}", e)
+                Log.e(TAG, "Import lua config, cant read file ${importFile.canonicalPath}", e)
                 showToastLong(this, "Error reading file ${importFile.canonicalPath}")
             }
         }
