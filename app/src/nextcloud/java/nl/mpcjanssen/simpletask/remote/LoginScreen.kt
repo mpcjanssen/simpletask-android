@@ -11,6 +11,7 @@ import com.owncloud.android.lib.common.network.CertificateCombinedException
 import com.owncloud.android.lib.common.network.NetworkUtils
 import com.owncloud.android.lib.common.operations.RemoteOperationResult
 import com.owncloud.android.lib.resources.files.ReadRemoteFolderOperation
+import com.owncloud.android.lib.resources.status.GetRemoteStatusOperation
 import kotlinx.android.synthetic.nextcloud.login.*
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.util.Config
@@ -37,6 +38,8 @@ class LoginScreen : ThemedActionBarActivity() {
     var username by Config.StringOrNullPreference(FileStore.NEXTCLOUD_USER)
     var password by Config.StringOrNullPreference(FileStore.NEXTCLOUD_PASS)
     var serverUrl by Config.StringOrNullPreference(FileStore.NEXTCLOUD_URL)
+
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,7 +70,7 @@ class LoginScreen : ThemedActionBarActivity() {
         password = nextcloud_password.text.toString()
         serverUrl = url
         Log.d(TAG, "Saved credentials for $username")
-
+        FileStore.resetClient()
         switchToTodolist()
     }
 
@@ -81,11 +84,12 @@ class LoginScreen : ThemedActionBarActivity() {
             )
             val op = ReadRemoteFolderOperation(File("/").canonicalPath)
             val res: RemoteOperationResult = op.execute(client)
-            Log.d(TAG, res.toString())
             Log.d(TAG, res.logMessage)
             Log.d(TAG, res.exception?.localizedMessage?:"No exception")
             Log.d(TAG, res.httpCode.toString())
-            Log.d(TAG, res.data.joinToString (" "){ it.toString()})
+            res.data?.let {
+                Log.d(TAG, it.joinToString(" "))
+            }
 
             if (res.isSuccess ) {
                 Log.d(TAG, "Logged in to Nextcloud: ${client.ownCloudVersion}")
