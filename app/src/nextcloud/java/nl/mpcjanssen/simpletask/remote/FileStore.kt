@@ -32,11 +32,11 @@ object FileStore : IFileStore {
     var username by Config.StringOrNullPreference(NEXTCLOUD_USER)
     var password by Config.StringOrNullPreference(NEXTCLOUD_PASS)
     var serverUrl by Config.StringOrNullPreference(NEXTCLOUD_URL)
-    var mNextcloud : OwnCloudClient = getClient()
+    var mNextcloud : OwnCloudClient? = getClient()
 
     override val isAuthenticated: Boolean
         get() {
-            return username != null
+            return username != null && mNextcloud != null
         }
 
     override fun logout() {
@@ -51,14 +51,17 @@ object FileStore : IFileStore {
 
     private val mApp = TodoApplication.app
 
-    private fun getClient () : OwnCloudClient {
-        val ctx = TodoApplication.app.applicationContext
-        val client = OwnCloudClientFactory.createOwnCloudClient(Uri.parse(serverUrl), ctx, true, true)
-        client.credentials = OwnCloudCredentialsFactory.newBasicCredentials(
-                username,
-                password
-        )
-        return client
+    private fun getClient () : OwnCloudClient? {
+        serverUrl?.let { url ->
+            val ctx = TodoApplication.app.applicationContext
+            val client = OwnCloudClientFactory.createOwnCloudClient(Uri.parse(url), ctx, true, true)
+            client.credentials = OwnCloudCredentialsFactory.newBasicCredentials(
+                    username,
+                    password
+            )
+            return client
+        }
+        return null
     }
 
     fun resetClient() {
