@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.util.Log
+import com.owncloud.android.lib.common.OwnCloudClient
 import com.owncloud.android.lib.common.OwnCloudClientFactory
 import com.owncloud.android.lib.common.OwnCloudCredentialsFactory
 import com.owncloud.android.lib.common.operations.RemoteOperationResult
@@ -31,10 +32,11 @@ object FileStore : IFileStore {
     var username by Config.StringOrNullPreference(NEXTCLOUD_USER)
     var password by Config.StringOrNullPreference(NEXTCLOUD_PASS)
     var serverUrl by Config.StringOrNullPreference(NEXTCLOUD_URL)
+    var mNextcloud : OwnCloudClient = getClient()
 
     override val isAuthenticated: Boolean
         get() {
-            return username!=null
+            return username != null
         }
 
     override fun logout() {
@@ -49,14 +51,18 @@ object FileStore : IFileStore {
 
     private val mApp = TodoApplication.app
 
-    private val mNextcloud by lazy {
-        val ctx = mApp.applicationContext
+    private fun getClient () : OwnCloudClient {
+        val ctx = TodoApplication.app.applicationContext
         val client = OwnCloudClientFactory.createOwnCloudClient(Uri.parse(serverUrl), ctx, true, true)
         client.credentials = OwnCloudCredentialsFactory.newBasicCredentials(
                 username,
                 password
         )
-        client
+        return client
+    }
+
+    fun resetClient() {
+        mNextcloud = getClient()
     }
 
     override fun getRemoteVersion(filename: String): String {
