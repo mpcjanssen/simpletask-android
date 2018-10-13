@@ -4,18 +4,17 @@ import android.content.Context
 import android.content.res.TypedArray
 import android.preference.Preference
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
-import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.R
 
 class SeekBarPreference : Preference, OnSeekBarChangeListener {
 
     private val TAG = javaClass.name
-    private val log: Logger
 
     private var mMaxValue = 100
     private var mMinValue = 0
@@ -27,12 +26,10 @@ class SeekBarPreference : Preference, OnSeekBarChangeListener {
     private var mStatusText: TextView? = null
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        log = Logger
         initPreference(context, attrs)
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {
-        log = Logger
         initPreference(context, attrs)
     }
 
@@ -57,7 +54,7 @@ class SeekBarPreference : Preference, OnSeekBarChangeListener {
             if (newInterval != null)
                 mInterval = Integer.parseInt(newInterval)
         } catch (e: Exception) {
-            log.error(TAG, "Invalid interval value", e)
+            Log.e(TAG, "Invalid interval value", e)
         }
 
     }
@@ -85,7 +82,7 @@ class SeekBarPreference : Preference, OnSeekBarChangeListener {
                         ViewGroup.LayoutParams.WRAP_CONTENT)
             }
         } catch (ex: Exception) {
-            log.error(TAG, "Error binding view: " + ex.toString())
+            Log.e(TAG, "Error binding view: " + ex.toString())
         }
 
         //if dependency is false from the beginning, disable the seek bar
@@ -114,7 +111,7 @@ class SeekBarPreference : Preference, OnSeekBarChangeListener {
             unitsRight.text = mUnitsRight
 
         } catch (e: Exception) {
-            log.error(TAG, "Error updating seek bar preference", e)
+            Log.e(TAG, "Error updating seek bar preference", e)
         }
 
     }
@@ -164,7 +161,7 @@ class SeekBarPreference : Preference, OnSeekBarChangeListener {
             try {
                 temp = defaultValue as Int
             } catch (ex: Exception) {
-                log.error(TAG, "Invalid default value: " + defaultValue.toString())
+                Log.e(TAG, "Invalid default value: " + defaultValue.toString())
             }
 
             persistInt(temp)

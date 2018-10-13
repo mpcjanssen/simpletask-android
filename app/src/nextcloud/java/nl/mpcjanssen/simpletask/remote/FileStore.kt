@@ -3,11 +3,11 @@ package nl.mpcjanssen.simpletask.remote
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Uri
+import android.util.Log
 import com.owncloud.android.lib.common.OwnCloudClientFactory
 import com.owncloud.android.lib.common.OwnCloudCredentialsFactory
 import com.owncloud.android.lib.common.operations.RemoteOperationResult
 import com.owncloud.android.lib.resources.files.*
-import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.join
@@ -45,8 +45,6 @@ object FileStore : IFileStore {
 
     private val TAG = "FileStore"
 
-    private val log: Logger = Logger
-
     private var mOnline: Boolean = false
 
     private val mApp = TodoApplication.app
@@ -80,7 +78,7 @@ object FileStore : IFileStore {
         // If we load a file and changes are pending, we do not want to overwrite
         // our local changes, instead we try to upload local
 
-        log.info(TAG, "Loading file from Nextcloud: " + path)
+        Log.i(TAG, "Loading file from Nextcloud: " + path)
         if (!isAuthenticated) {
             throw IOException("Not authenticated")
         }
@@ -113,7 +111,7 @@ object FileStore : IFileStore {
 
         val timestamp = timeStamp()
 
-        log.info(TAG, "Saving to file " + path)
+        Log.i(TAG, "Saving to file " + path)
         val cacheDir = mApp.applicationContext.cacheDir
         val tmpFile = File(cacheDir, "tmp.txt")
         tmpFile.writeText(contents)
@@ -176,7 +174,7 @@ object FileStore : IFileStore {
 
     override fun writeFile(file: File, contents: String) {
         if (!isAuthenticated) {
-            log.error(TAG, "Not authenticated, file ${file.canonicalPath} not written.")
+            Log.e(TAG, "Not authenticated, file ${file.canonicalPath} not written.")
             throw IOException("Not authenticated")
         }
 
@@ -185,7 +183,7 @@ object FileStore : IFileStore {
         tmpFile.writeText(contents)
         val op = UploadRemoteFileOperation(tmpFile.absolutePath, file.canonicalPath, "text/plain", timeStamp())
         val result = op.execute(mNextcloud)
-        log.info(TAG, "Wrote file to ${file.path}, result ${result.isSuccess}")
+        Log.i(TAG, "Wrote file to ${file.path}, result ${result.isSuccess}")
 
     }
 

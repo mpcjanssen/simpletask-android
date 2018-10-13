@@ -8,6 +8,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.Menu
 import android.widget.ScrollView
 import android.widget.TextView
@@ -21,7 +22,6 @@ import java.util.*
 
 class HistoryScreen : ThemedActionBarActivity() {
 
-    private var log: Logger? = null
     private var m_cursor: Cursor? = null
     private var toolbar_menu: Menu? = null
     private var mScroll = 0
@@ -29,7 +29,6 @@ class HistoryScreen : ThemedActionBarActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        log = Logger
         m_app = application as TodoApplication
 
         initCursor()
@@ -68,7 +67,7 @@ class HistoryScreen : ThemedActionBarActivity() {
             val fileUri = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/" + dataBase.name)
             shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri)
         } catch (e: Exception) {
-            log!!.warn(TAG, "Failed to create file for sharing", e)
+            Log.w(TAG, "Failed to create file for sharing", e)
         }
 
         startActivity(Intent.createChooser(shareIntent, "Share History Database"))
@@ -121,7 +120,7 @@ class HistoryScreen : ThemedActionBarActivity() {
     }
 
     private fun clearDatabase() {
-        log!!.info(TAG, "Clearing history database")
+       Log.i(TAG, "Clearing history database")
         Daos.backupDao.deleteAll()
         initCursor()
         displayCurrent()

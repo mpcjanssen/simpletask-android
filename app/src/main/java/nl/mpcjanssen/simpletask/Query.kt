@@ -3,7 +3,7 @@ package nl.mpcjanssen.simpletask
 import android.app.SearchManager
 import android.content.Intent
 import android.content.SharedPreferences
-import android.util.Base64
+import android.util.Log
 
 import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.join
@@ -36,7 +36,6 @@ data class NamedQuery(val name: String, val query: Query) {
  * Active applyFilter, has methods for serialization in several formats
  */
 data class Query(val luaModule: String) {
-    private val log: Logger = Logger
     var priorities = ArrayList<Priority>()
     var contexts = ArrayList<String>()
     var projects = ArrayList<String>()
@@ -246,7 +245,7 @@ data class Query(val luaModule: String) {
             Interpreter.clearOnFilter(luaModule)
             Interpreter.evalScript(luaModule, code)
         } catch (e: Exception) {
-            log.debug(TAG, "Lua execution failed " + e.message)
+            Log.d(TAG, "Lua execution failed " + e.message)
         }
     }
 
@@ -291,7 +290,7 @@ data class Query(val luaModule: String) {
                 return@filter true
             }
         } catch (e: Exception) {
-            log.debug(TAG, "Lua execution failed " + e.message)
+            Log.d(TAG, "Lua execution failed " + e.message)
         }
         return ArrayList()
     }

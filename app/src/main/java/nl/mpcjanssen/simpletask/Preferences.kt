@@ -35,6 +35,7 @@ import android.preference.*
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
+import android.util.Log
 import android.view.MenuItem
 import nl.mpcjanssen.simpletask.util.Config
 import java.util.*
@@ -58,12 +59,12 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
         m_broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, receivedIntent: Intent) {
                 if (receivedIntent.action == Constants.BROADCAST_THEME_CHANGED) {
-                    Logger.info(TAG, "Reloading preference screen with fragment ${intent.getStringExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT)}")
+                    Log.i(TAG, "Reloading preference screen with fragment ${intent.getStringExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT)}")
                     recreate()
                 }
             }
         }
-        Logger.info(TAG, "Registering broadcast receiver")
+        Log.i(TAG, "Registering broadcast receiver")
         localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter)
     }
 

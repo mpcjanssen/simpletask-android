@@ -5,11 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceFragment
 import android.support.v4.content.LocalBroadcastManager
+import android.util.Log
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.util.showConfirmationDialog
 
 class FlavourPrefFragment : PreferenceFragment() {
-    private val log = Logger
     private val TAG = "FlavourPrefFragment"
     private lateinit var app: TodoApplication
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +19,7 @@ class FlavourPrefFragment : PreferenceFragment() {
 
         val nextcloudPref = findPreference("logout_nextcloud")
         nextcloudPref.setOnPreferenceClickListener {
-            log.info(TAG, "Logging out from Nextcloud")
+            Log.i(TAG, "Logging out from Nextcloud")
             showConfirmationDialog(activity, R.string.nextcloud_logout_message,
                     DialogInterface.OnClickListener { dialogInterface, i ->
                         FileStore.logout()

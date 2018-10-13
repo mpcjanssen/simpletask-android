@@ -1,13 +1,8 @@
 package nl.mpcjanssen.simpletask.dao
 
 import android.database.Cursor
-import de.greenrobot.dao.converter.PropertyConverter
-import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.dao.gen.*
-import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.util.shortAppVersion
-import java.text.SimpleDateFormat
 
 import java.util.*
 

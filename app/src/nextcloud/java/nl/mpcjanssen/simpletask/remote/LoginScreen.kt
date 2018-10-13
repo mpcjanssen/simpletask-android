@@ -4,7 +4,7 @@ package nl.mpcjanssen.simpletask.remote
 import android.content.*
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.content.LocalBroadcastManager
+import android.util.Log
 import com.owncloud.android.lib.common.OwnCloudClientFactory
 import com.owncloud.android.lib.common.OwnCloudCredentialsFactory
 import com.owncloud.android.lib.common.network.CertificateCombinedException
@@ -33,35 +33,19 @@ class LoginScreen : ThemedActionBarActivity() {
             }
         }
 
-    private val log: Logger = Logger
-
     private val mApp = TodoApplication.app
-
-
-
-    private lateinit var m_app: TodoApplication
-    private lateinit var m_broadcastReceiver: BroadcastReceiver
-    private lateinit var localBroadcastManager: LocalBroadcastManager
+    var username by Config.StringOrNullPreference(FileStore.NEXTCLOUD_USER)
+    var password by Config.StringOrNullPreference(FileStore.NEXTCLOUD_PASS)
+    var serverUrl by Config.StringOrNullPreference(FileStore.NEXTCLOUD_URL)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        m_app = application as TodoApplication
+        if (TodoApplication.app.isAuthenticated) {
+            switchToTodolist()
+        }
         setTheme(Config.activeTheme)
         setContentView(R.layout.login)
-        localBroadcastManager = LocalBroadcastManager.getInstance(this)
-
-        val intentFilter = IntentFilter()
-        intentFilter.addAction("nl.mpcjanssen.simpletask.ACTION_LOGIN")
-        m_broadcastReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                val i = Intent(context, Simpletask::class.java)
-                startActivity(i)
-                finish()
-            }
-        }
-        localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter)
 
         login.setOnClickListener {
             startLogin()
@@ -70,11 +54,6 @@ class LoginScreen : ThemedActionBarActivity() {
         logging.setOnClickListener {
             startActivity(Intent(this, DebugInfoScreen::class.java))
         }
-
-        if (m_app.isAuthenticated) {
-            switchToTodolist()
-        }
-
     }
 
     private fun switchToTodolist() {
@@ -84,21 +63,14 @@ class LoginScreen : ThemedActionBarActivity() {
     }
 
     private fun finishLogin() {
-        var username by Config.StringOrNullPreference(FileStore.NEXTCLOUD_USER)
-        var password by Config.StringOrNullPreference(FileStore.NEXTCLOUD_PASS)
-        var serverUrl by Config.StringOrNullPreference(FileStore.NEXTCLOUD_URL)
         username = nextcloud_username.text.toString()
         password = nextcloud_password.text.toString()
         serverUrl = url
-        Logger.debug(TAG, "Saved credentials for ${username@serverUrl}")
+        Log.d(TAG, "Saved credentials for $username")
 
         switchToTodolist()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        localBroadcastManager.unregisterReceiver(m_broadcastReceiver)
-    }
 
     internal fun startLogin() {
         FileStoreActionQueue.add("login") {
@@ -109,43 +81,40 @@ class LoginScreen : ThemedActionBarActivity() {
             )
             val op = ReadRemoteFolderOperation(File("/").canonicalPath)
             val res: RemoteOperationResult = op.execute(client)
-            Logger.debug(TAG, res.toString())
-            Logger.debug(TAG, res.logMessage)
-            Logger.debug(TAG, res.exception?.localizedMessage?:"No exception")
-            Logger.debug(TAG, res.httpCode.toString())
-            Logger.debug(TAG, res.data.joinToString (" "){ it.toString()})
+            Log.d(TAG, res.toString())
+            Log.d(TAG, res.logMessage)
+            Log.d(TAG, res.exception?.localizedMessage?:"No exception")
+            Log.d(TAG, res.httpCode.toString())
+            Log.d(TAG, res.data.joinToString (" "){ it.toString()})
 
             if (res.isSuccess ) {
-                Logger.debug(TAG, "Logged in to Nextcloud: ${client.ownCloudVersion}")
+                Log.d(TAG, "Logged in to Nextcloud: ${client.ownCloudVersion}")
                 finishLogin()
             } else if (res.isSslRecoverableException){
-                Logger.debug(TAG, "Invalid certificate")
+                Log.d(TAG, "Invalid certificate")
                 try {
                     val okListener = DialogInterface.OnClickListener { dialog, which ->
                         val ex = res.exception as CertificateCombinedException
                         val cert = ex.serverCertificate
                         NetworkUtils.addCertToKnownServersStore(cert, this);
                         showToastLong(this, "Certificate saved")
-                        Logger.debug(TAG, "Server certificate saved");
+                        Log.d(TAG, "Server certificate saved");
                         finishLogin()
                     }
                     showConfirmationDialog(this, R.string.invalid_certificate_msg, okListener, R.string.invalid_certificate_title )
 
                 } catch (e: Exception) {
 
-                    Logger.debug(TAG, "Server certificate could not be saved in the known-servers trust store ", e);
+                    Log.d(TAG, "Server certificate could not be saved in the known-servers trust store ", e);
                     showToastLong(this, "Failed to store certificate")
                 }
             } else {
                 showToastLong(this, "Login failed: ${res.code.name}")
-                Logger.debug(TAG, "Login failed: ${res.code.name}")
+                Log.d(TAG, "Login failed: ${res.code.name}")
             }
         }
 
     }
-
-
-
 
     companion object {
         internal val TAG = LoginScreen::class.java.simpleName

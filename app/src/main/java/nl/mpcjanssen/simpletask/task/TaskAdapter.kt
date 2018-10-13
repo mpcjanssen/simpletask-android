@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.SpannableString
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -128,7 +129,7 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         handleEllipsis(taskText)
 
         if (completed) {
-            // log.info( "Striking through " + task.getText());
+            // Log.i( "Striking through " + task.getText());
             taskText.paintFlags = taskText.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             taskAge.paintFlags = taskAge.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             cb.setOnClickListener { unCompleteAction(task) }
@@ -167,7 +168,7 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
             taskThreshold.visibility = View.GONE
         }
         // Set selected state
-        // log.debug(tag, "Setting selected state ${TodoList.isSelected(item)}")
+        // Log.d(tag, "Setting selected state ${TodoList.isSelected(item)}")
         view.isActivated = TodoList.isSelected(task)
 
         // Set click listeners
@@ -179,13 +180,13 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
 
     internal fun setFilteredTasks(caller: Simpletask, newQuery: Query) {
         textSize = Config.tasklistTextSize ?: textSize
-        log.info(tag, "Text size = $textSize")
+        Log.i(tag, "Text size = $textSize")
         query = newQuery
 
         caller.runOnUiThread {
             caller.showListViewProgress(true)
         }
-        log.info(tag, "setFilteredTasks called: $TodoList")
+        Log.i(tag, "setFilteredTasks called: $TodoList")
         val sorts = newQuery.getSort(Config.defaultSorts)
         val (visibleTasks, total) = TodoList.getSortedTasks(newQuery, sorts, Config.sortCaseSensitive)
         countTotalTasks = total
@@ -203,7 +204,7 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
                 val manager = caller.listView?.layoutManager as LinearLayoutManager?
                 val position = Config.lastScrollPosition
                 val offset = Config.lastScrollOffset
-                Logger.info(tag, "Restoring scroll offset $position, $offset")
+                Log.i(tag, "Restoring scroll offset $position, $offset")
                 manager?.scrollToPositionWithOffset(position, offset)
                 Config.lastScrollPosition = -1
             }
@@ -253,7 +254,7 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
                 "middle" -> TextUtils.TruncateAt.MIDDLE
                 "marquee" -> TextUtils.TruncateAt.MARQUEE
                 else -> {
-                    log.warn(tag, "Unrecognized preference value for task text ellipsis: {} ! $ellipsizePref")
+                    Log.w(tag, "Unrecognized preference value for task text ellipsis: {} ! $ellipsizePref")
                     return@ellipsis
                 }
             }

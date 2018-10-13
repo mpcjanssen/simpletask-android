@@ -30,6 +30,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.webkit.MimeTypeMap
@@ -58,7 +59,6 @@ class Simpletask : ThemedNoActionBarActivity() {
         private val SAVED_FILTER_DRAWER = GravityCompat.END
         private val QUICK_FILTER_DRAWER = GravityCompat.START
     }
-    val log = Logger
     private var options_menu: Menu? = null
 
     lateinit var taskAdapter: TaskAdapter
@@ -75,7 +75,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        log.info(TAG, "onCreate")
+        Log.i(TAG, "onCreate")
         m_savedInstanceState = savedInstanceState
         val intentFilter = IntentFilter()
         intentFilter.addAction(Constants.BROADCAST_ACTION_LOGOUT)
@@ -145,7 +145,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                         build.setItems(titleArray) { _, which ->
                             val actionIntent: Intent
                             val url = links[which]
-                            log.info(Simpletask.TAG, "" + actions[which] + ": " + url)
+                            Log.i(Simpletask.TAG, "" + actions[which] + ": " + url)
                             when (actions[which]) {
                                 Action.LINK -> when {
                                     url.startsWith("todo://") -> {
@@ -167,7 +167,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                                         actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                                         startActivity(actionIntent)
                                     } catch (e: ActivityNotFoundException) {
-                                        log.info(Simpletask.TAG, "No handler for task action $url")
+                                        Log.i(Simpletask.TAG, "No handler for task action $url")
                                         showToastLong(TodoApplication.app, "No handler for $url")
                                     }
                                 }
@@ -201,24 +201,24 @@ class Simpletask : ThemedNoActionBarActivity() {
         val broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, receivedIntent: Intent) {
                 if (receivedIntent.action == Constants.BROADCAST_ACTION_LOGOUT) {
-                    log.info(TAG, "Logging out from Dropbox")
+                    Log.i(TAG, "Logging out from Dropbox")
                     finish()
                     FileStoreActionQueue.add("Logout") {
                         try {
                             FileStore.logout()
                         } catch (e: Exception) {
-                            log.error(TAG, "Error logging out.", e)
+                            Log.e(TAG, "Error logging out.", e)
                         }
                         startLogin()
                     }
                 } else if (receivedIntent.action == Constants.BROADCAST_TASKLIST_CHANGED) {
-                    log.info(TAG, "Tasklist changed, refiltering adapter")
+                    Log.i(TAG, "Tasklist changed, refiltering adapter")
                     taskAdapter.setFilteredTasks(this@Simpletask, Config.mainQuery)
                     runOnUiThread {
                         uiHandler.forEvent(Event.TASK_LIST_CHANGED)
                     }
                 } else if (receivedIntent.action == Constants.BROADCAST_HIGHLIGHT_SELECTION) {
-                    log.info(TAG, "Highligh selection")
+                    Log.i(TAG, "Highligh selection")
                     taskAdapter.notifyDataSetChanged()
                     invalidateOptionsMenu()
                 } else if (receivedIntent.action == Constants.BROADCAST_SYNC_START) {
@@ -270,18 +270,18 @@ class Simpletask : ThemedNoActionBarActivity() {
 
             }
             CalendarContract.ACTION_HANDLE_CUSTOM_EVENT == intent.action -> // Uri uri = Uri.parse(intent.getStringExtra(CalendarContract.EXTRA_CUSTOM_APP_URI));
-                log.warn(TAG, "Not implemented search")
+                Log.w(TAG, "Not implemented search")
            // Only change intent if it actually contains a applyFilter
         }
         Config.lastScrollPosition = -1
-        log.info(TAG, "onNewIntent: $intent")
+        Log.i(TAG, "onNewIntent: $intent")
 
     }
 
     override fun onResume() {
         super.onResume()
 
-        log.info(TAG, "onResume")
+        Log.i(TAG, "onResume")
         TodoList.reload(reason = "Main activity resume")
         handleIntent()
         uiHandler.forEvent(Event.RESUME)
@@ -319,7 +319,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             val position = manager.findFirstVisibleItemPosition()
             val firstItemView = manager.findViewByPosition(position)
             val offset = firstItemView?.top ?: 0
-            Logger.info(TAG, "Saving scroll offset $position, $offset")
+            Log.i(TAG, "Saving scroll offset $position, $offset")
             Config.lastScrollPosition = position
             Config.lastScrollOffset = offset
         }
@@ -390,7 +390,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun handleIntent() {
         if (!TodoApplication.app.isAuthenticated) {
-            log.info(TAG, "handleIntent: not authenticated")
+            Log.i(TAG, "handleIntent: not authenticated")
             startLogin()
             return
         }
@@ -430,13 +430,13 @@ class Simpletask : ThemedNoActionBarActivity() {
         // Show search or applyFilter results
         val currentIntent = intent
         val query = if (Constants.INTENT_START_FILTER == currentIntent.action) {
-            log.info(TAG, "handleIntent")
+            Log.i(TAG, "handleIntent")
             currentIntent.extras?.let { extras ->
                 extras.keySet().map { Pair(it, extras[it]) }.forEach { (key, value) ->
                     val debugString = value?.let { v ->
                         "$v (${v.javaClass.name})"
                     } ?: "<null>"
-                    log.debug(TAG, "$key $debugString")
+                    Log.d(TAG, "$key $debugString")
                 }
             }
             val newQuery = Query(currentIntent, "mainui")
@@ -446,14 +446,14 @@ class Simpletask : ThemedNoActionBarActivity() {
             newQuery
         } else {
             // Set previous filters and sort
-            log.info(TAG, "handleIntent: from m_prefs state")
+            Log.i(TAG, "handleIntent: from m_prefs state")
             Config.mainQuery
         }
 
 
         showListViewProgress(true)
         if (currentIntent.hasExtra(Constants.INTENT_SELECTED_TASK_LINE)) {
-            log.debug(TAG, "Selection from intent")
+            Log.d(TAG, "Selection from intent")
             val position = currentIntent.getIntExtra(Constants.INTENT_SELECTED_TASK_LINE, -1)
             currentIntent.removeExtra(Constants.INTENT_SELECTED_TASK_LINE)
             setIntent(currentIntent)
@@ -478,7 +478,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         // next scroll to the first selected item
 
 
-        log.debug(TAG, "Scroll selection")
+        Log.d(TAG, "Scroll selection")
         val selection = TodoList.selectedTasks
         if (selection.isNotEmpty()) {
             val selectedTask = selection[0]
@@ -497,7 +497,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     @SuppressLint("Recycle")
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        log.info(TAG, "Recreating options menu")
+        Log.i(TAG, "Recreating options menu")
         this.options_menu = menu
 
         val inflater = menuInflater
@@ -554,7 +554,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     }
 
                     cbItem.setOnMenuItemClickListener { _ ->
-                        log.info(TAG, "Clicked on completion checkbox, state: $cbState")
+                        Log.i(TAG, "Clicked on completion checkbox, state: $cbState")
                         when (cbState) {
                             false -> completeTasks(selectedTasks)
                             true -> uncompleteTasks(selectedTasks)
@@ -621,7 +621,7 @@ class Simpletask : ThemedNoActionBarActivity() {
      * if this returns either _DRAWER, m_drawerLayout!!. calls are safe to make
      */
     private fun handleMode(actions: Map<Mode, () -> Any?>) {
-        log.debug(TAG, "Handle mode")
+        Log.d(TAG, "Handle mode")
         runOnUiThread {
             when {
                 isDrawerOpen(SAVED_FILTER_DRAWER) -> actions[Mode.SAVED_FILTER_DRAWER]?.invoke()
@@ -634,7 +634,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun isDrawerOpen(drawer: Int): Boolean {
         if (drawer_layout == null) {
-            log.warn(TAG, "Layout was null")
+            Log.w(TAG, "Layout was null")
             return false
         }
         return drawer_layout.isDrawerOpen(drawer)
@@ -832,7 +832,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        log.info(TAG, "onMenuItemSelected: " + item.itemId)
+        Log.i(TAG, "onMenuItemSelected: " + item.itemId)
         val checkedTasks = TodoList.selectedTasks
         when (item.itemId) {
             androidId.home -> {
@@ -881,7 +881,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                         QueryStore.exportFilters(File(Config.todoFile.parent, "saved_filters.txt"))
                         showToastShort(this, R.string.saved_filters_exported)
                     } catch (e: Exception) {
-                        Logger.error(TAG, "Export filters failed", e)
+                        Log.e(TAG, "Export filters failed", e)
                         showToastLong(this, "Error exporting filters")
                     }
                 }
@@ -896,7 +896,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
                     } catch (e: Exception) {
                         // Need to catch generic exception because Dropbox errors don't inherit from IOException
-                        log.error(Simpletask.TAG, "Import filters, cant read file ${importFile.canonicalPath}", e)
+                        Log.e(Simpletask.TAG, "Import filters, cant read file ${importFile.canonicalPath}", e)
                         showToastLong(this, "Error reading file ${importFile.canonicalPath}")
                     }
                 }
@@ -944,7 +944,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun startAddTaskActivity() {
-        log.info(TAG, "Starting addTask activity")
+        Log.i(TAG, "Starting addTask activity")
 
         TodoList.editTasks(this, TodoList.selectedTasks, Config.mainQuery.prefill)
     }
@@ -1090,7 +1090,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     private inner class UiHandler () {
         fun forEvent(event: Event) {
             val tag = "Event"
-            log.debug(tag, "update UI for event ${event.name}")
+            Log.d(tag, "update UI for event ${event.name}")
             runOnUiThread {
                 when (event) {
                     Event.SAVED_FILTER_ITEM_CLICK -> {
@@ -1153,7 +1153,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 Config.mainQuery.hasFilter() -> View.VISIBLE
                 else -> View.GONE
             }
-            log.debug(TAG, "Update applyFilter bar")
+            Log.d(TAG, "Update applyFilter bar")
             val count = taskAdapter.countVisibleTasks
             val total = taskAdapter.countTotalTasks
             filter_text.text = Config.mainQuery.getTitle(

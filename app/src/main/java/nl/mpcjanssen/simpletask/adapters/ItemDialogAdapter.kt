@@ -1,11 +1,11 @@
 package nl.mpcjanssen.simpletask.adapters
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.buildware.widget.indeterm.IndeterminateCheckBox
-import nl.mpcjanssen.simpletask.Logger
 import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.util.*
@@ -90,7 +90,7 @@ class ItemDialogAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // - get element from your dataset at this position
         val item = mItems[position]
-        Logger.info("ItemAdapter", "onBindViewHolder $position : $item, was:${item.initialState}")
+        Log.i("ItemAdapter", "onBindViewHolder $position : $item, was:${item.initialState}")
 
         // - replace the contents of the view with that element
         holder.mCheckBox.setOnStateChangedListener(null)
@@ -98,7 +98,7 @@ class ItemDialogAdapter(
         holder.mCheckBox.setIndeterminateUsed(item.initialState==null)
         holder.mCheckBox.state = item.state
         holder.mCheckBox.setOnStateChangedListener { _, b ->
-            Logger.info("ItemAdapter", "state chaged $position:$item, new state: $b")
+            Log.i("ItemAdapter", "state chaged $position:$item, new state: $b")
             item.state = b
         }
     }
