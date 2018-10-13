@@ -415,4 +415,6 @@
     <string name="back_clears_filter_title">Дугме \"Назад\" чисти филтере</string>
     <string name="back_clears_filter_summary">Дугме за назад чисти филтер пре изласка из апликације.</string>
     <string name="lua_config_import_export">Увези/извези Луа конфигурацију</string>
-    </resources>
+    <string name="invalid_certificate_msg">Сертификат са сервера није исправан. Да ли желите да наставите\?</string>
+    <string name="invalid_certificate_title">Неисправан серт.</string>
+</resources>
