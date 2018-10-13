@@ -5,6 +5,7 @@
 
 ### Fixed
 
+- Crash when Nextcloud login fails.
 - Obey capitalisation setting in Add Task.
 - Remove AddTask hint for #924.
 - Improve authentication detection for #925.
@@ -13,3 +14,5 @@
 
 - Don't use Android Account Manager for Nextcloud credentials. 
   It sometimes fails for some unknown reasons.
+
+

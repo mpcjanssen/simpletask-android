@@ -1,5 +1,11 @@
 ﻿# Changelog
 
+## 10.2.2
+
+### Fixed
+
+- Crash when Nextcloud login fails.
+
 ## 10.2.1
 
 ### Changed
