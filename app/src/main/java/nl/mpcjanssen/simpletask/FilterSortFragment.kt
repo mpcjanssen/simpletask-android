@@ -84,7 +84,7 @@ class FilterSortFragment : Fragment() {
             } else {
                 sortDirection = parts[0]
                 sortType = parts[1]
-                if (sortDirection.isNullOrEmpty() || sortDirection != Query.REVERSED_SORT) {
+                if (sortDirection.isEmpty() || sortDirection != Query.REVERSED_SORT) {
                     sortDirection = Query.NORMAL_SORT
                 }
             }

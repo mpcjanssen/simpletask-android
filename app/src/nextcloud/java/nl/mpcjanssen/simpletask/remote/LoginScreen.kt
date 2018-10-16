@@ -100,16 +100,16 @@ class LoginScreen : ThemedActionBarActivity() {
                     val okListener = DialogInterface.OnClickListener { dialog, which ->
                         val ex = res.exception as CertificateCombinedException
                         val cert = ex.serverCertificate
-                        NetworkUtils.addCertToKnownServersStore(cert, this);
+                        NetworkUtils.addCertToKnownServersStore(cert, this)
                         showToastLong(this, "Certificate saved")
-                        Log.d(TAG, "Server certificate saved");
+                        Log.d(TAG, "Server certificate saved")
                         finishLogin()
                     }
                     showConfirmationDialog(this, R.string.invalid_certificate_msg, okListener, R.string.invalid_certificate_title )
 
                 } catch (e: Exception) {
 
-                    Log.d(TAG, "Server certificate could not be saved in the known-servers trust store ", e);
+                    Log.d(TAG, "Server certificate could not be saved in the known-servers trust store ", e)
                     showToastLong(this, "Failed to store certificate")
                 }
             } else {
