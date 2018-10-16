@@ -11,7 +11,6 @@ import com.owncloud.android.lib.common.network.CertificateCombinedException
 import com.owncloud.android.lib.common.network.NetworkUtils
 import com.owncloud.android.lib.common.operations.RemoteOperationResult
 import com.owncloud.android.lib.resources.files.ReadRemoteFolderOperation
-import com.owncloud.android.lib.resources.status.GetRemoteStatusOperation
 import kotlinx.android.synthetic.nextcloud.login.*
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.util.Config
@@ -24,19 +23,18 @@ import java.io.File
 class LoginScreen : ThemedActionBarActivity() {
     private val url: String
         get () {
-            val entered_url = nextcloud_server_url.text.toString().trimEnd('/')
-            return if (entered_url.startsWith("http://", ignoreCase = true) ||
-                    entered_url.startsWith("https://", ignoreCase = true)) {
-                return entered_url
+            val enteredUrl = nextcloud_server_url.text.toString().trimEnd('/')
+            return if (enteredUrl.startsWith("http://", ignoreCase = true) ||
+                    enteredUrl.startsWith("https://", ignoreCase = true)) {
+                return enteredUrl
             } else {
-                "https://${entered_url}"
+                "https://$enteredUrl"
             }
         }
 
-    private val mApp = TodoApplication.app
-    var username by Config.StringOrNullPreference(FileStore.NEXTCLOUD_USER)
-    var password by Config.StringOrNullPreference(FileStore.NEXTCLOUD_PASS)
-    var serverUrl by Config.StringOrNullPreference(FileStore.NEXTCLOUD_URL)
+    private var username by Config.StringOrNullPreference(FileStore.NEXTCLOUD_USER)
+    private var password by Config.StringOrNullPreference(FileStore.NEXTCLOUD_PASS)
+    private var serverUrl by Config.StringOrNullPreference(FileStore.NEXTCLOUD_URL)
 
 
 
@@ -74,7 +72,7 @@ class LoginScreen : ThemedActionBarActivity() {
     }
 
 
-    internal fun startLogin() {
+    private fun startLogin() {
         FileStoreActionQueue.add("login") {
             val client = OwnCloudClientFactory.createOwnCloudClient(Uri.parse(url), this, true, true)
             client.credentials = OwnCloudCredentialsFactory.newBasicCredentials(
@@ -90,30 +88,34 @@ class LoginScreen : ThemedActionBarActivity() {
                 Log.d(TAG, it.joinToString(" "))
             }
 
-            if (res.isSuccess ) {
-                Log.d(TAG, "Logged in to Nextcloud: ${client.ownCloudVersion}")
-                finishLogin()
-            } else if (res.isSslRecoverableException){
-                Log.d(TAG, "Invalid certificate")
-                try {
-                    val okListener = DialogInterface.OnClickListener { dialog, which ->
-                        val ex = res.exception as CertificateCombinedException
-                        val cert = ex.serverCertificate
-                        NetworkUtils.addCertToKnownServersStore(cert, this)
-                        showToastLong(this, "Certificate saved")
-                        Log.d(TAG, "Server certificate saved")
-                        finishLogin()
-                    }
-                    showConfirmationDialog(this, R.string.invalid_certificate_msg, okListener, R.string.invalid_certificate_title )
-
-                } catch (e: Exception) {
-
-                    Log.d(TAG, "Server certificate could not be saved in the known-servers trust store ", e)
-                    showToastLong(this, "Failed to store certificate")
+            when {
+                res.isSuccess -> {
+                    Log.d(TAG, "Logged in to Nextcloud: ${client.ownCloudVersion}")
+                    finishLogin()
                 }
-            } else {
-                showToastLong(this, "Login failed: ${res.code.name}")
-                Log.d(TAG, "Login failed: ${res.code.name}")
+                res.isSslRecoverableException -> {
+                    Log.d(TAG, "Invalid certificate")
+                    try {
+                        val okListener = DialogInterface.OnClickListener { _, _ ->
+                            val ex = res.exception as CertificateCombinedException
+                            val cert = ex.serverCertificate
+                            NetworkUtils.addCertToKnownServersStore(cert, this)
+                            showToastLong(this, "Certificate saved")
+                            Log.d(TAG, "Server certificate saved")
+                            finishLogin()
+                        }
+                        showConfirmationDialog(this, R.string.invalid_certificate_msg, okListener, R.string.invalid_certificate_title )
+
+                    } catch (e: Exception) {
+
+                        Log.d(TAG, "Server certificate could not be saved in the known-servers trust store ", e)
+                        showToastLong(this, "Failed to store certificate")
+                    }
+                }
+                else -> {
+                    showToastLong(this, "Login failed: ${res.code.name}")
+                    Log.d(TAG, "Login failed: ${res.code.name}")
+                }
             }
         }
 
