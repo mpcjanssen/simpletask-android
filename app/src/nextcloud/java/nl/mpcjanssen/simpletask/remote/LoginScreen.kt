@@ -24,11 +24,10 @@ import java.io.File
 class LoginScreen : ThemedActionBarActivity() {
     private val url: String
         get () {
-            val entered_url = nextcloud_server_url.text.toString()
+            val entered_url = nextcloud_server_url.text.toString().trimEnd('/')
             return if (entered_url.startsWith("http://", ignoreCase = true) ||
                     entered_url.startsWith("https://", ignoreCase = true)) {
                 return entered_url
-
             } else {
                 "https://${entered_url}"
             }
