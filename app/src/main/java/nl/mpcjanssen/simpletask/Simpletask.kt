@@ -44,6 +44,7 @@ import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.*
 import java.io.File
 import java.util.*
+import kotlin.collections.ArrayList
 import android.R.id as androidId
 
 class Simpletask : ThemedNoActionBarActivity() {
@@ -802,7 +803,6 @@ class Simpletask : ThemedNoActionBarActivity() {
             TodoList.notifyTasklistChanged(Config.todoFileName, true)
             invalidateOptionsMenu()
         }
-
         showConfirmationDialog(this, R.string.delete_task_message, delete, title)
     }
 
@@ -810,19 +810,27 @@ class Simpletask : ThemedNoActionBarActivity() {
         archiveTasks(null, showDialog)
     }
 
-    private fun archiveTasks(tasks: List<Task>?, showDialog: Boolean = true) {
+    private fun archiveTasks(checkedTasks: List<Task>?, showDialog: Boolean = true) {
+        val tasksToArchive = ArrayList<Task>()
+        if (checkedTasks == null) {
+            tasksToArchive.addAll(taskAdapter.visibleTasks.filter { it.isCompleted() })
+        } else {
+            tasksToArchive.addAll(checkedTasks)
+        }
         val archiveAction = {
             if (Config.todoFileName == Config.doneFileName) {
                 showToastShort(this, "You have the done.txt file opened.")
             }
-            TodoList.archive(Config.todoFileName, Config.doneFileName, tasks, Config.eol)
+            TodoList.archive(Config.todoFileName, Config.doneFileName, tasksToArchive, Config.eol)
             invalidateOptionsMenu()
         }
-
+        val numTasks = tasksToArchive.size
+        if (numTasks == 0) {
+            showToastLong(this, R.string.no_tasks_to_archive)
+            return
+        }
         if (showDialog) {
-            val numTasks = (tasks ?: TodoList.completedTasks).size.toString()
-            val title = getString(R.string.archive_task_title)
-                    .replaceFirst(Regex("%s"), numTasks)
+            val title = getString(R.string.archive_task_title).replaceFirst(Regex("%s"), numTasks.toString())
             val archive = DialogInterface.OnClickListener { _, _ -> archiveAction() }
             showConfirmationDialog(this, R.string.delete_task_message, archive, title)
         } else {

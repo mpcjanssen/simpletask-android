@@ -289,16 +289,14 @@ object TodoList {
         }
     }
 
-    fun archive(todoFilename: String, doneFileName: String, tasks: List<Task>?, eol: String) {
-        Log.d(TAG, "Archive ${tasks?.size ?: 0} tasks")
-
-        val tasksToDelete = tasks ?: completedTasks
+    fun archive(todoFilename: String, doneFileName: String, tasks: List<Task>, eol: String) {
+        Log.d(TAG, "Archive ${tasks.size} tasks")
 
         FileStoreActionQueue.add("Append to file") {
             broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
             try {
-                FileStore.appendTaskToFile(doneFileName, tasksToDelete.map { it.text }, eol)
-                removeAll(tasksToDelete)
+                FileStore.appendTaskToFile(doneFileName, tasks.map { it.text }, eol)
+                removeAll(tasks)
                 notifyTasklistChanged(todoFilename, true)
             } catch (e: Exception) {
                 Log.e(TAG, "Task archiving failed", e)

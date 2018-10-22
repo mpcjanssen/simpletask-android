@@ -214,6 +214,13 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         }
     }
 
+    val visibleTasks: List<Task>
+        get() {
+            return visibleLines
+                    .filterNot { it.header }
+                    .map { (it as TaskLine).task }
+        }
+
     val countVisibleTasks: Int
         get() {
             return visibleLines.count { !it.header }

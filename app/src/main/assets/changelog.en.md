@@ -1,5 +1,11 @@
 ﻿# Changelog
 
+## Unreleased
+
+### Changed
+
+- Only archive visible or selected tasks #131.
+
 ## 10.2.3
 
 ### Fixed
