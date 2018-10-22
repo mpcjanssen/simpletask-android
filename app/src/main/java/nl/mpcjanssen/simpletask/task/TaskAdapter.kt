@@ -6,7 +6,10 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.SpannableString
+import android.text.Spanned
+import android.text.Spanned.*
 import android.text.TextUtils
+import android.text.style.StrikethroughSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -124,22 +127,22 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         taskThreshold.textSize = textSize * Config.dateBarRelativeSize
 
         val cb = view.checkBox
-        taskText.text = ss
-        taskText.textSize = textSize
-        handleEllipsis(taskText)
+
 
         if (completed) {
             // Log.i( "Striking through " + task.getText());
-            taskText.paintFlags = taskText.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            ss.setSpan(StrikethroughSpan(), 0 , ss.length, SPAN_INCLUSIVE_INCLUSIVE)
             taskAge.paintFlags = taskAge.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             cb.setOnClickListener { unCompleteAction(task) }
         } else {
-            taskText.paintFlags = taskText.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             taskAge.paintFlags = taskAge.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
 
             cb.setOnClickListener { completeAction(task) }
 
         }
+        taskText.text = ss
+        taskText.textSize = textSize
+        handleEllipsis(taskText)
         cb.isChecked = completed
 
         val relAge = getRelativeAge(task, TodoApplication.app)
