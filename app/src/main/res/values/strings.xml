@@ -478,4 +478,7 @@ You should have received a copy of the GNU General Public License along with Tod
         using the save button</string>
     <string name="invalid_certificate_msg">Server certificate is invalid. Do you want to continue?</string>
     <string name="invalid_certificate_title">Invalid cert.</string>
+
+    <string name="no_tasks_to_archive">No tasks to archive.</string>
+
 </resources>
