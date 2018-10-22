@@ -6,7 +6,6 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.SpannableString
-import android.text.Spanned
 import android.text.Spanned.*
 import android.text.TextUtils
 import android.text.style.StrikethroughSpan
@@ -257,7 +256,7 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         val ellipsizeKey = TodoApplication.app.getString(R.string.task_text_ellipsizing_pref_key)
         val ellipsizePref = Config.prefs.getString(ellipsizeKey, noEllipsizeValue)
 
-        if (noEllipsizeValue != ellipsizePref) ellipsis@ {
+        if (noEllipsizeValue != ellipsizePref) {
             taskText.ellipsize = when (ellipsizePref) {
                 "start" -> TextUtils.TruncateAt.START
                 "end" -> TextUtils.TruncateAt.END
@@ -265,10 +264,9 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
                 "marquee" -> TextUtils.TruncateAt.MARQUEE
                 else -> {
                     Log.w(tag, "Unrecognized preference value for task text ellipsis: {} ! $ellipsizePref")
-                    return@ellipsis
+                    TextUtils.TruncateAt.MIDDLE
                 }
             }
-
             taskText.maxLines = 1
             taskText.setHorizontallyScrolling(true)
         }
