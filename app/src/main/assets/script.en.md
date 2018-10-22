@@ -149,12 +149,6 @@ Called for every task before it is added.
 * If there is a Lua error in the callback, the original task text is saved.
 * You should define the `onAdd` callback in the main Lua configuration as it is not filter specific. Defining it in a filter will not work.
 
-### Notes
-
-* If there is a Lua error in the callback, it behaves as if it had returned `""`
-* Considering this function is called a lot (for every task in the list) it should be fast. If it is too slow Simpletask might give ANRs.
-* You should define the `onDisplay` function in the filter (not in the configuration). Defining it in the main configuration will not work, if the Filter script is empty, the `onDisplay` function will be undefined.
-
 ### `onTextSearch (taskText, searchText, caseSensitive) -> boolean`
 
 Called for every task as when searching for text.
