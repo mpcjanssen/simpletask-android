@@ -200,7 +200,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     }
 
     fun deferThresholdDate(deferString: String, deferFromDate: String) {
-        if (deferString.matches(MATCH_SINGLE_DATE)) {
+        if (MATCH_SINGLE_DATE.reset(deferString).matches()) {
             thresholdDate = deferString
             return
         }
@@ -219,7 +219,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     }
 
     fun deferDueDate(deferString: String, deferFromDate: String) {
-        if (deferString.matches(MATCH_SINGLE_DATE)) {
+        if (MATCH_SINGLE_DATE.reset(deferString).matches()) {
             dueDate = deferString
             return
         }
@@ -316,18 +316,20 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         private val MATCH_LIST = Pattern.compile("@(\\S+)").matcher("")
         private val MATCH_TAG = Pattern.compile("\\+(\\S+)").matcher("")
         private val MATCH_HIDDEN = Pattern.compile("[Hh]:([01])").matcher("")
-        private val MATCH_UUID = Regex("[Uu][Uu][Ii][Dd]:([A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12})")
-        private val MATCH_DUE = Regex("[Dd][Uu][Ee]:(\\d{4}-\\d{2}-\\d{2})")
-        private val MATCH_THRESHOLD = Regex("[Tt]:(\\d{4}-\\d{2}-\\d{2})")
-        private val MATCH_RECURRENCE = Regex("[Rr][Ee][Cc]:((\\+?)\\d+[dDwWmMyYbB])")
-        private val MATCH_EXT = Regex("(.+):(.+)")
+        private val MATCH_UUID = Pattern
+                .compile("[Uu][Uu][Ii][Dd]:([A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12})")
+                .matcher("")
+        private val MATCH_DUE = Pattern.compile("[Dd][Uu][Ee]:(\\d{4}-\\d{2}-\\d{2})").matcher("")
+        private val MATCH_THRESHOLD = Pattern.compile("[Tt]:(\\d{4}-\\d{2}-\\d{2})").matcher("")
+        private val MATCH_RECURRENCE = Pattern.compile("[Rr][Ee][Cc]:((\\+?)\\d+[dDwWmMyYbB])").matcher("")
+        private val MATCH_EXT = Pattern.compile("(.+):(.+)").matcher("")
         private val MATCH_PRIORITY = Regex("\\(([A-Z])\\)")
-        private val MATCH_SINGLE_DATE = Regex("\\d{4}-\\d{2}-\\d{2}")
-        private val MATCH_PHONE_NUMBER = Regex("[+]?[0-9,#()-]{4,}")
-        private val MATCH_URI = Regex("[a-z]+://(\\S+)")
-        private val MATCH_MAIL = Regex("[a-zA-Z0-9\\+\\._%\\-]{1,256}" + "@"
+        private val MATCH_SINGLE_DATE = Pattern.compile("\\d{4}-\\d{2}-\\d{2}").matcher("")
+        private val MATCH_PHONE_NUMBER = Pattern.compile("[+]?[0-9,#()-]{4,}").matcher("")
+        private val MATCH_URI = Pattern.compile("[a-z]+://(\\S+)").matcher("")
+        private val MATCH_MAIL = Pattern.compile("[a-zA-Z0-9\\+\\._%\\-]{1,256}" + "@"
                 + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" + "(" + "\\."
-                + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" + ")+")
+                + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" + ")+").matcher("")
 
 //        fun parse(text: String): ArrayList<TToken> {
 //            val tokens = ArrayList<TToken>()
@@ -343,13 +345,17 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                 tokens.add(CompletedToken(true))
                 lexemes = lexemes.drop(1)
                 var nextToken = lexemes.getOrElse(0, { "" })
-                MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
-                    tokens.add(CompletedDateToken(lexemes.first()))
-                    lexemes = lexemes.drop(1)
-                    nextToken = lexemes.getOrElse(0, { "" })
-                    MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
-                        tokens.add(CreateDateToken(lexemes.first()))
+                MATCH_SINGLE_DATE.reset(nextToken).apply {
+                    if (matches()) {
+                        tokens.add(CompletedDateToken(lexemes.first()))
                         lexemes = lexemes.drop(1)
+                        nextToken = lexemes.getOrElse(0, { "" })
+                        MATCH_SINGLE_DATE.reset(nextToken).apply {
+                            if (matches()) {
+                                tokens.add(CreateDateToken(lexemes.first()))
+                                lexemes = lexemes.drop(1)
+                            }
+                        }
                     }
                 }
             }
@@ -361,9 +367,11 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             }
 
             nextToken = lexemes.getOrElse(0, { "" })
-            MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
-                tokens.add(CreateDateToken(lexemes.first()))
-                lexemes = lexemes.drop(1)
+            MATCH_SINGLE_DATE.reset(nextToken)?.apply {
+                if (matches()) {
+                    tokens.add(CreateDateToken(lexemes.first()))
+                    lexemes = lexemes.drop(1)
+                }
             }
 
             lexemes.forEach { lexeme ->
@@ -382,45 +390,60 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                 MATCH_HIDDEN.reset(lexeme)?.apply {
                     if (matches()) {
                         tokens.add(HiddenToken(group(1)))
+                        return@forEach
                     }
-                    return@forEach
                 }
                 // Match phone numbers before tags to support +31.....
                 // This will make tags which can also be interpreted as phone numbers not possible
-//                MATCH_PHONE_NUMBER.matchEntire(lexeme)?.let {
-//                    tokens.add(PhoneToken(lexeme))
-//                    return@forEach
-//                }
+                MATCH_PHONE_NUMBER.reset(lexeme).apply {
+                    if (matches()) {
+                        tokens.add(PhoneToken(lexeme))
+                        return@forEach
+                    }
+                }
 
-//                MATCH_DUE.matchEntire(lexeme)?.let {
-//                    tokens.add(DueDateToken(it.groupValues[1]))
-//                    return@forEach
-//                }
-//                MATCH_THRESHOLD.matchEntire(lexeme)?.let {
-//                    tokens.add(ThresholdDateToken(it.groupValues[1]))
-//                    return@forEach
-//                }
-
-//                MATCH_UUID.matchEntire(lexeme)?.let {
-//                    tokens.add(UUIDToken(it.groupValues[1]))
-//                    return@forEach
-//                }
-//                MATCH_RECURRENCE.matchEntire(lexeme)?.let {
-//                    tokens.add(RecurrenceToken(it.groupValues[1]))
-//                    return@forEach
-//                }
-//                MATCH_URI.matchEntire(lexeme)?.let {
-//                    tokens.add(LinkToken(lexeme))
-//                    return@forEach
-//                }
-//                MATCH_MAIL.matchEntire(lexeme)?.let {
-//                    tokens.add(MailToken(lexeme))
-//                    return@forEach
-//                }
-//                MATCH_EXT.matchEntire(lexeme)?.let {
-//                    tokens.add(ExtToken(it.groupValues[1], it.groupValues[2]))
-//                    return@forEach
-//                }
+                MATCH_DUE.reset(lexeme).apply {
+                    if (matches()) {
+                        tokens.add(DueDateToken(group(1)))
+                        return@forEach
+                    }
+                }
+                MATCH_THRESHOLD.reset(lexeme).apply {
+                    if (matches()) {
+                        tokens.add(ThresholdDateToken(group(1)))
+                        return@forEach
+                    }
+                }
+                MATCH_RECURRENCE.reset(lexeme).apply {
+                    if (matches()) {
+                        tokens.add(RecurrenceToken(group(1)))
+                        return@forEach
+                    }
+                }
+                MATCH_UUID.reset(lexeme).apply {
+                    if(matches()) {
+                        tokens.add(UUIDToken(group(1)))
+                        return@forEach
+                    }
+                }
+                MATCH_URI.reset(lexeme).apply {
+                    if (matches()) {
+                        tokens.add(LinkToken(lexeme))
+                        return@forEach
+                    }
+                }
+                MATCH_MAIL.reset(lexeme).apply {
+                    if (matches()) {
+                        tokens.add(MailToken(lexeme))
+                        return@forEach
+                    }
+                }
+                MATCH_EXT.reset(lexeme).apply {
+                    if (matches()) {
+                        tokens.add(ExtToken(group(1), group(2)))
+                        return@forEach
+                    }
+                }
                 if (lexeme.isBlank()) {
                     tokens.add(WhiteSpaceToken(lexeme))
                 } else {
