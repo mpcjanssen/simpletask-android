@@ -2,9 +2,14 @@
 
 ## Unreleased
 
+###
+
+- Re-use regexp matchers for #934. Should also fix random native crashes.
+
 ### Changed
 
 - Only archive visible or selected tasks #131.
+
 
 ## 10.2.3
 
