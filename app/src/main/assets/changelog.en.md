@@ -1,8 +1,8 @@
 ﻿# Changelog
 
-## Unreleased
+## 10.2.4
 
-###
+### Fixed
 
 - Re-use regexp matchers for #934. Should also fix random native crashes.
 

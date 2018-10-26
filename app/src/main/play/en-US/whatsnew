@@ -1,18 +1,11 @@
-### Changed
-
-- Updated translations for Dutch, Japanese, Spanish, Norwegian,
-- Use toolbar in AddTask instead of a FAB.
+## 10.2.4
 
 ### Fixed
 
-- Crashes with Nextcloud NPE.
-- Obey capitalisation setting in Add Task.
-- Remove AddTask hint for #924.
-- Improve authentication detection for #925.
+- Re-use regexp matchers for #934. Should also fix random native crashes.
 
-### Removed
+### Changed
 
-- Don't use Android Account Manager for Nextcloud credentials. 
-  It sometimes fails for some unknown reasons.
+- Only archive visible or selected tasks #131.
 
 
