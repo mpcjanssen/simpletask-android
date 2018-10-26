@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 10.2.5
+
+### Fixed
+
+- Synchronize re-use of matchers as it's not thread safe
+
+### Changed
+
+- Prevent creating unnecessary objects for reduced memory usage.
+
+
 ## 10.2.4
 
 ### Fixed

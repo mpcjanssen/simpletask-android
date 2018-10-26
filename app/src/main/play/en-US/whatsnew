@@ -1,11 +1,11 @@
-## 10.2.4
+## 10.2.5
 
 ### Fixed
 
-- Re-use regexp matchers for #934. Should also fix random native crashes.
+- Synchronize re-use of matchers as it's not thread safe.
 
 ### Changed
 
-- Only archive visible or selected tasks #131.
+- Prevent creating unnecessary objects for reduced memory usage.
 
 
