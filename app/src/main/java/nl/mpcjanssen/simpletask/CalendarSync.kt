@@ -5,8 +5,8 @@
  * LICENSE:
 
  * Simpletask is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
- * later version.
+ * License as published by the Free Software Foundation, either txtVersion 2 of the License, or (at your option) any
+ * later txtVersion.
 
  * Simpletask is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
@@ -222,7 +222,7 @@ private class EvtMap private constructor() : HashMap<EvtKey, LinkedList<Evt>>() 
             // Check due date:
             var dt = task.dueDate?.toDateTime()
             if (Config.isSyncDues && dt != null) {
-                text = task.showParts(CalendarSync.TASK_TOKENS)
+                text = task.showForCalendar()
                 val evt = Evt(dt, text, TodoApplication.app.getString(R.string.calendar_sync_desc_due))
                 mergeEvt(evt)
             }
@@ -230,7 +230,7 @@ private class EvtMap private constructor() : HashMap<EvtKey, LinkedList<Evt>>() 
             // Check threshold date:
             dt = task.thresholdDate?.toDateTime()
             if (Config.isSyncThresholds && dt != null) {
-                if (text == null) text = task.showParts(CalendarSync.TASK_TOKENS)
+                if (text == null) text = task.showForCalendar()
                 val evt = Evt(dt, text, TodoApplication.app.getString(R.string.calendar_sync_desc_thre))
                 mergeEvt(evt)
             }
@@ -259,6 +259,10 @@ private class EvtMap private constructor() : HashMap<EvtKey, LinkedList<Evt>>() 
     }
 }
 
+fun Task.showForCalendar() : String {
+    return showParts(showText = true)
+}
+
 object CalendarSync {
 
     private val ACCOUNT_NAME = "Simpletask Calendar"
@@ -276,13 +280,6 @@ object CalendarSync {
     private val TAG = "CalendarSync"
 
     val UTC: TimeZone = TimeZone.getTimeZone("UTC")
-    val TASK_TOKENS: (TToken) -> Boolean = {
-        when (it) {
-            is CompletedToken, is CreateDateToken, is CompletedDateToken, is PriorityToken, is ThresholdDateToken,
-            is DueDateToken, is HiddenToken, is RecurrenceToken -> false
-            else -> true
-        }
-    }
 
     private class SyncRunnable : Runnable {
         override fun run() {

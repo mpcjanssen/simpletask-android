@@ -2,7 +2,6 @@ package nl.mpcjanssen.simpletask
 
 import android.util.Log
 import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TextToken
 import java.util.*
 
 class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boolean, createAsBackup: Boolean, moduleName: String? = null) {
@@ -32,12 +31,12 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                     fileOrder = !reverse
                     break@label
                 }
-                "by_context" -> comp = { it.lists.sorted().firstOrNull() ?: "" }
-                "by_project" -> comp = { it.tags.sorted().firstOrNull() ?: "" }
+                "by_context" -> comp = { it.lists?.sorted()?.firstOrNull() ?: "" }
+                "by_project" -> comp = { it.tags?.sorted()?.firstOrNull() ?: "" }
                 "alphabetical" -> comp = if (caseSensitve) {
-                    { it.showParts { it.isAlpha() } }
+                    { it.showParts(showText = true) }
                 } else {
-                    { it.showParts { it.isAlpha() }.toLowerCase(Locale.getDefault()) }
+                    { it.showParts (showText = true).toLowerCase(Locale.getDefault()) }
                 }
                 "by_prio" -> comp = { it.priority }
                 "completed" -> comp = { it.isCompleted() }

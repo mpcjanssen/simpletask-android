@@ -105,7 +105,7 @@ class HistoryScreen : ThemedActionBarActivity() {
                     if (m_cursor!!.count == 0) {
                         showToastShort(this@HistoryScreen, "Nothing to share")
                     } else {
-                        shareText(this@HistoryScreen, "Old todo version", currentFileContents)
+                        shareText(this@HistoryScreen, "Old todo txtVersion", currentFileContents)
                     }
                     return@OnMenuItemClickListener true
                 }

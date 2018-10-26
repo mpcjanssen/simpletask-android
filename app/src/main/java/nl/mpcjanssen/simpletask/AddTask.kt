@@ -25,6 +25,7 @@ import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 class AddTask : ThemedActionBarActivity() {
     private var start_text: String = ""
@@ -38,7 +39,7 @@ class AddTask : ThemedActionBarActivity() {
 
     /*
         Deprecated functions still work fine.
-        For now keep using the old version, will updated if it breaks.
+        For now keep using the old txtVersion, will updated if it breaks.
      */
     @Suppress("DEPRECATION")
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -139,13 +140,15 @@ class AddTask : ThemedActionBarActivity() {
             line = precedingText
         }
         val t = Task(line)
-        val tags = t.lists
-                .map { "@" + it }
-                .toMutableSet()
-        for (prj in t.tags) {
-            tags.add("+" + prj)
+        val prefillItems = ArrayList<String>()
+        t.lists?.let {
+            prefillItems.addAll(it.map { "@" + it })
         }
-        replaceTextAtSelection(join(tags, " "), true)
+        t.tags?.let {
+            prefillItems.addAll(it.map { "+" + it })
+        }
+
+        replaceTextAtSelection(join(prefillItems, " "), true)
 
         endOfLine++
         taskText.setSelection(endOfLine)
@@ -284,7 +287,7 @@ class AddTask : ThemedActionBarActivity() {
         val d = createDeferDialog(this, titleId, object : InputDialogListener {
             /*
                 Deprecated functions still work fine.
-                For now keep using the old version, will updated if it breaks.
+                For now keep using the old txtVersion, will updated if it breaks.
             */
             @Suppress("DEPRECATION")
             override fun onClick(input: String) {
@@ -342,8 +345,8 @@ class AddTask : ThemedActionBarActivity() {
         if (tasks.size == 0) {
             tasks.add(Task(""))
         }
-        tasks.forEach {
-            items.addAll(it.tags)
+        tasks.forEach {task ->
+            task.tags?.let { items.addAll(it) }
         }
         val idx = getCurrentCursorLine()
         val task = getTasks().getOrElse(idx) { Task("") }
@@ -393,8 +396,8 @@ class AddTask : ThemedActionBarActivity() {
         if (tasks.size == 0) {
             tasks.add(Task(""))
         }
-        tasks.forEach {
-            items.addAll(it.lists)
+        tasks.forEach { task ->
+            task.lists?.let { items.addAll(it) }
         }
 
         val idx = getCurrentCursorLine()

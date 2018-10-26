@@ -80,8 +80,8 @@ object TodoList {
                 return lists
             }
             val res = HashSet<String>()
-            todoItems.iterator().forEach {
-                res.addAll(it.lists)
+            todoItems.forEach { task ->
+                task.lists?.let { res.addAll(it) }
             }
             val newLists = ArrayList<String>()
             newLists.addAll(res)
@@ -96,8 +96,8 @@ object TodoList {
                 return tags
             }
             val res = HashSet<String>()
-            todoItems.iterator().forEach {
-                res.addAll(it.tags)
+            todoItems.forEach { task ->
+                task.tags?.let { res.addAll(it) }
             }
             val newTags = ArrayList<String>()
             newTags.addAll(res)
@@ -216,13 +216,13 @@ object TodoList {
                     val newerVersion = FileStore.getRemoteVersion(Config.todoFileName)
                     newerVersion != Config.lastSeenRemoteId
                 } catch (e: Throwable) {
-                    Log.e(TAG, "Can't determine remote file version", e)
+                    Log.e(TAG, "Can't determine remote file txtVersion", e)
                     false
                 }
                 if (needSync) {
-                    Log.i(TAG, "Remote version is different, sync")
+                    Log.i(TAG, "Remote txtVersion is different, sync")
                 } else {
-                    Log.i(TAG, "Remote version is same, load from cache")
+                    Log.i(TAG, "Remote txtVersion is same, load from cache")
                 }
                 val cachedList = Config.todoList
                 if (cachedList == null || needSync) {

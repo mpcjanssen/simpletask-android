@@ -26,7 +26,7 @@ import android.view.ViewGroup;
 // taken from v4 rev. 10 ResourceCursorAdapter.java
 
 /**
- * Static library support version of the framework's {@link android.widget.ResourceCursorAdapter}.
+ * Static library support txtVersion of the framework's {@link android.widget.ResourceCursorAdapter}.
  * Used to write apps that run on platforms prior to Android 3.0.  When running
  * on Android 3.0 or above, this implementation is still used; it does not try
  * to switch to the framework's implementation.  See the framework SDK
