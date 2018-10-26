@@ -125,28 +125,28 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     var recurrencePattern: String? = null
         get() = getFirstToken<RecurrenceToken>()?.valueStr
 
-    var tags: SortedSet<String> = emptySet<String>().toSortedSet()
+    var tags: Set<String> = emptySet<String>()
         get() {
-            return tokens.filter { it is TagToken }.map { it -> (it as TagToken).value }.toSortedSet()
+            return tokens.filter { it is TagToken }.map { it -> (it as TagToken).value }.toSet()
         }
 
-    var lists: SortedSet<String> = emptySet<String>().toSortedSet()
+    var lists: Set<String> = emptySet<String>().toSortedSet()
         get() {
-            return tokens.filter { it is ListToken }.map { it -> (it as ListToken).value }.toSortedSet()
+            return tokens.filter { it is ListToken }.map { it -> (it as ListToken).value }.toSet()
         }
 
     var links: Set<String> = emptySet()
         get() {
-            return tokens.filter { it is LinkToken }.map { it -> (it as LinkToken).text }.toSortedSet()
+            return tokens.filter { it is LinkToken }.map { it -> (it as LinkToken).text }.toSet()
         }
 
     var phoneNumbers: Set<String> = emptySet()
         get() {
-            return tokens.filter { it is PhoneToken }.map { it -> (it as PhoneToken).text }.toSortedSet()
+            return tokens.filter { it is PhoneToken }.map { it -> (it as PhoneToken).text }.toSet()
         }
     var mailAddresses: Set<String> = emptySet()
         get() {
-            return tokens.filter { it is MailToken }.map { it -> (it as MailToken).text }.toSortedSet()
+            return tokens.filter { it is MailToken }.map { it -> (it as MailToken).text }.toSet()
         }
     var selected: Boolean = false
 
