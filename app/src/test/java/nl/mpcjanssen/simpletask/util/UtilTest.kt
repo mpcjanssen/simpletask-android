@@ -11,9 +11,7 @@ class UtilTest : TestCase() {
         tasks.add(Task("@Home h:1"))
         tasks.add(Task("@Work h:1"))
         tasks.add(Task("@College h:1"))
-
-        assertEquals(6, addHeaderLines(tasks, ArrayList(listOf("by_context")) , "none", false, null).size)
-
+        val headers = addHeaderLines(tasks, ArrayList(listOf("by_context")) , "none", false, null)
+        assertEquals(6, headers.size)
     }
-
 }
