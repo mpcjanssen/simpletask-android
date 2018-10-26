@@ -99,20 +99,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         val extended_widget = Config.prefs.getBoolean("widget_extended", true)
         val task = item
 
-        val tokensToShowFilter: (it: TToken) -> Boolean = {
-            when (it) {
-                is UUIDToken -> false
-                is CreateDateToken -> false
-                is CompletedToken -> false
-                is CompletedDateToken -> false
-                is DueDateToken -> false
-                is ThresholdDateToken -> false
-                is ListToken -> !currentFilter.hideLists
-                is TagToken -> !currentFilter.hideTags
-                else -> true
-            }
-        }
-        val txt = Interpreter.onDisplayCallback(currentFilter.luaModule, task) ?: task.showParts(tokensToShowFilter).trim { it <= ' ' }
+        val txt = Interpreter.onDisplayCallback(currentFilter.luaModule, task) ?: task.showParts(showText = true).trim { it <= ' ' }
         val ss = SpannableString(txt)
 
         if (Config.isDarkWidgetTheme) {
@@ -121,13 +108,17 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
             itemForLightTheme(rv)
         }
         val colorizeStrings = ArrayList<String>()
-        for (context in task.lists) {
-            colorizeStrings.add("@" + context)
+        task.lists?.let {
+            for (context in it) {
+                colorizeStrings.add("@" + context)
+            }
         }
         setColor(ss, Color.GRAY, colorizeStrings)
         colorizeStrings.clear()
-        for (project in task.tags) {
-            colorizeStrings.add("+" + project)
+        task.tags?.let {
+            for (project in it) {
+                colorizeStrings.add("+" + project)
+            }
         }
         setColor(ss, Color.GRAY, colorizeStrings)
 

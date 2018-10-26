@@ -5,8 +5,8 @@
  * LICENSE:
 
  * Simpletas is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
- * later version.
+ * License as published by the Free Software Foundation, either txtVersion 2 of the License, or (at your option) any
+ * later txtVersion.
 
  * Simpletask is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
@@ -53,7 +53,7 @@ class TimePreference @JvmOverloads constructor(ctx: Context, attrs: AttributeSet
 
     /*
         Picker handling changed in new versions of Android.
-        For now keep using the old version, will updated if it breaks.
+        For now keep using the old txtVersion, will updated if it breaks.
      */
     @Suppress("DEPRECATION")
     override fun onBindDialogView(v: View) {
@@ -66,7 +66,7 @@ class TimePreference @JvmOverloads constructor(ctx: Context, attrs: AttributeSet
 
     /*
     Picker handling changed in new versions of Android.
-    For now keep using the old version, will updated if it breaks.
+    For now keep using the old txtVersion, will updated if it breaks.
  */
     @Suppress("DEPRECATION")
     override fun onDialogClosed(positiveResult: Boolean) {

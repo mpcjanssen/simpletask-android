@@ -3,7 +3,6 @@ package nl.mpcjanssen.simpletask
 
 import android.util.Log
 import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TextToken
 import nl.mpcjanssen.simpletask.util.*
 import org.luaj.vm2.*
 import org.luaj.vm2.lib.OneArgFunction
@@ -215,7 +214,7 @@ object Interpreter : AbstractInterpreter() {
         fieldTable.set("threshold", dateStringToLuaLong(t.thresholdDate))
         fieldTable.set("createdate", dateStringToLuaLong(t.createDate))
         fieldTable.set("completiondate", dateStringToLuaLong(t.completionDate))
-        fieldTable.set("text", t.showParts({ it is TextToken }))
+        fieldTable.set("text", t.showParts(showText = true))
 
         val recPat = t.recurrencePattern
         if (recPat != null) {
@@ -248,12 +247,12 @@ object Interpreter : AbstractInterpreter() {
         return LuaValue.NIL
     }
 
-    private fun javaListToLuaTable(javaList: Iterable<String>): LuaValue {
-        val size = javaList.count()
+    private fun javaListToLuaTable(javaList: Iterable<String>?): LuaValue {
         val luaTable = LuaValue.tableOf()
-        if (size == 0) return luaTable
-        for (item in javaList) {
-            luaTable.set(item, LuaValue.TRUE)
+        javaList?.let {
+            for (item in javaList) {
+                luaTable.set(item, LuaValue.TRUE)
+            }
         }
         return luaTable
     }

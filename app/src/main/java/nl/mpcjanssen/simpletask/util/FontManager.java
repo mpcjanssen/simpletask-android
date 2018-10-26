@@ -59,10 +59,10 @@ class TTFAnalyzer
             // See http://developer.apple.com/fonts/ttrefman/rm06/Chap6.html
             m_file = new RandomAccessFile( fontFilename, "r" );
 
-            // Read the version first
+            // Read the txtVersion first
             int version = readDword();
 
-            // The version must be either 'true' (0x74727565) or 0x00010000
+            // The txtVersion must be either 'true' (0x74727565) or 0x00010000
             if ( version != 0x74727565 && version != 0x00010000 )
                 return null;
 

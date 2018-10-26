@@ -6,8 +6,8 @@
  * LICENSE:
 
  * Todo.txt Touch is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
- * later version.
+ * License as published by the Free Software Foundation, either txtVersion 2 of the License, or (at your option) any
+ * later txtVersion.
 
  * Todo.txt Touch is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
@@ -37,11 +37,11 @@ class ByContextFilter(
     }
 
     private fun filter(input: Task): Boolean {
-        val match = input.lists.any { contexts.contains(it) }
+        val match = input.lists?.any { contexts.contains(it) } ?: false
         /*
          * Match tasks without context if applyFilter contains "-"
 		 */
-        return match || input.lists.size == 0 && contexts.contains("-")
+        return match || input.lists?.size == 0 && contexts.contains("-")
 
     }
 }

@@ -371,7 +371,7 @@ data class Query(val luaModule: String) {
             val jsonFromIntent = intent.getStringExtra(INTENT_JSON)
             initFromJSON(JSONObject(jsonFromIntent))
         } else {
-            // Older non JSON version of applyFilter. Use legacy loading
+            // Older non JSON txtVersion of applyFilter. Use legacy loading
             val prios: String?
             val projects: String?
             val contexts: String?
@@ -426,7 +426,7 @@ data class Query(val luaModule: String) {
         if (jsonFromPref != null) {
             initFromJSON(JSONObject(jsonFromPref))
         } else {
-            // Older non JSON version of applyFilter. Use legacy loading
+            // Older non JSON txtVersion of applyFilter. Use legacy loading
             m_sorts = ArrayList<String>()
             m_sorts!!.addAll(Arrays.asList(*prefs.getString(INTENT_SORT_ORDER, "")!!.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
             contexts = ArrayList(prefs.getStringSet(

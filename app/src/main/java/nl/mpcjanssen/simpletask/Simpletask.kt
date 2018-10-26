@@ -116,17 +116,17 @@ class Simpletask : ThemedNoActionBarActivity() {
                     val links = ArrayList<String>()
                     val actions = ArrayList<Action>()
                     val t = it
-                    for (link in t.links) {
+                    for (link in t.links ?: emptyList<String>()) {
                         actions.add(Action.LINK)
                         links.add(link)
                     }
-                    for (number in t.phoneNumbers) {
+                    for (number in t.phoneNumbers ?: emptyList<String>()) {
                         actions.add(Action.PHONE)
                         links.add(number)
                         actions.add(Action.SMS)
                         links.add(number)
                     }
-                    for (mail in t.mailAddresses) {
+                    for (mail in t.mailAddresses ?: emptyList<String>()) {
                         actions.add(Action.MAIL)
                         links.add(mail)
                     }

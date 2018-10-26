@@ -85,29 +85,19 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         if (!Config.hasExtendedTaskView) {
             view.datebar.visibility = View.GONE
         }
-        val tokensToShowFilter: (it: TToken) -> Boolean = {
-            when (it) {
-                is UUIDToken -> false
-                is CreateDateToken -> false
-                is CompletedToken -> false
-                is CompletedDateToken -> !Config.hasExtendedTaskView
-                is DueDateToken -> !Config.hasExtendedTaskView
-                is ThresholdDateToken -> !Config.hasExtendedTaskView
-                is ListToken -> !query.hideLists
-                is TagToken -> !query.hideTags
-                else -> true
-            }
-        }
-        val txt = Interpreter.onDisplayCallback(query.luaModule, task) ?: task.showParts(tokensToShowFilter)
+
+        val txt = Interpreter.onDisplayCallback(query.luaModule, task) ?: task.showParts(showText = true)
         val ss = SpannableString(txt)
 
-        val contexts = task.lists
-        val colorizeStrings = contexts.mapTo(ArrayList()) { "@$it" }
-        setColor(ss, Color.GRAY, colorizeStrings)
-        colorizeStrings.clear()
-        val projects = task.tags
-        projects.mapTo(colorizeStrings) { "+$it" }
-        setColor(ss, Color.GRAY, colorizeStrings)
+        task.lists?.let { lists ->
+            val colorizeStrings = lists.mapTo(ArrayList()) { "@$it" }
+            setColor(ss, Color.GRAY, colorizeStrings)
+            colorizeStrings.clear()
+        }
+        task.tags?.let { tags ->
+            val colorizeStrings = tags.mapTo(ArrayList()) { "@$it" }
+            setColor(ss, Color.GRAY, colorizeStrings)
+        }
 
         val priorityColor: Int
         val priority = task.priority

@@ -35,7 +35,7 @@ interface IFileStore {
 
     val isOnline: Boolean
 
-    // Retrieve the remote file version
+    // Retrieve the remote file txtVersion
     fun getRemoteVersion(filename: String): String?
 
     // Return the default todo.txt path
