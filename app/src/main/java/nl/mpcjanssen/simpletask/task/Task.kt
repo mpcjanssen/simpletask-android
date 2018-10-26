@@ -48,7 +48,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
     val text: String
         get() {
-            return tokens.map { it.text }.joinToString(" ")
+            return tokens.joinToString(" ") { it.text }
         }
 
     val extensions: List<Pair<String, String>>
@@ -125,14 +125,26 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     var recurrencePattern: String? = null
         get() = getFirstToken<RecurrenceToken>()?.valueStr
 
-    var tags: Set<String> = emptySet<String>()
+    var tags: Set<String>? = null
         get() {
-            return tokens.filter { it is TagToken }.map { it -> (it as TagToken).value }.toSet()
+            tokens.filter { it is TagToken }.run {
+                if (size > 0) {
+                    return map { it -> (it as TagToken).value }.toSet()
+                } else {
+                    return null
+                }
+            }
         }
 
-    var lists: Set<String> = emptySet<String>().toSortedSet()
+    var lists: Set<String>? = null
         get() {
-            return tokens.filter { it is ListToken }.map { it -> (it as ListToken).value }.toSet()
+            tokens.filter { it is TagToken }.run {
+                if (size > 0) {
+                    return map { it -> (it as TagToken).value }.toSet()
+                } else {
+                    return null
+                }
+            }
         }
 
     var links: Set<String> = emptySet()
@@ -263,17 +275,20 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
     fun getHeader(sort: String, empty: String, createIsThreshold: Boolean): String {
         if (sort.contains("by_context")) {
-            if (lists.size > 0) {
-                return lists.first()
-            } else {
-                return empty
+            lists?.run {
+                if (size > 0) {
+                    return first()
+                }
             }
+            return empty
+
         } else if (sort.contains("by_project")) {
-            if (tags.size > 0) {
-                return tags.first()
-            } else {
-                return empty
+            tags?.run {
+                if (size > 0) {
+                    return first()
+                }
             }
+            return empty
         } else if (sort.contains("by_threshold_date")) {
             if (createIsThreshold) {
                 return thresholdDate ?: createDate ?: empty
@@ -293,7 +308,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
  */
     fun addList(listName: String) {
         listName.split(Regex("\\s+")).forEach {
-            if (!lists.contains(it)) {
+            if (lists?.contains(it)!=true) {
                 tokens += ListToken("@" + it)
             }
         }
@@ -304,8 +319,8 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     */
     fun addTag(tagName: String) {
         tagName.split(Regex("\\s+")).forEach {
-            if (!tags.contains(it)) {
-                tokens += TagToken("+" + it)
+            if (tags?.contains(it)!=true) {
+                tokens += TagToken("+$it")
             }
         }
     }

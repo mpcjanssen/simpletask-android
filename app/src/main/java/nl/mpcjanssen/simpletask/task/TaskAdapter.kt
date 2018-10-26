@@ -101,13 +101,8 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         val txt = Interpreter.onDisplayCallback(query.luaModule, task) ?: task.showParts(tokensToShowFilter)
         val ss = SpannableString(txt)
 
-        val contexts = task.lists
-        val colorizeStrings = contexts.mapTo(ArrayList()) { "@$it" }
-        setColor(ss, Color.GRAY, colorizeStrings)
-        colorizeStrings.clear()
-        val projects = task.tags
-        projects.mapTo(colorizeStrings) { "+$it" }
-        setColor(ss, Color.GRAY, colorizeStrings)
+        task.lists?.mapTo(ArrayList()) { "@$it" }?.let { setColor(ss, Color.GRAY, it) }
+        task.tags?.mapTo(ArrayList()) { "+$it" }?.let { setColor(ss, Color.GRAY, it) }
 
         val priorityColor: Int
         val priority = task.priority

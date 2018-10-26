@@ -15,13 +15,13 @@ import java.util.*
 class ItemDialogAdapter(
         tasks: List<Task>,
         allItems: Collection<String>,
-        retrieveFromTask: (Task) -> Set<String>
+        retrieveFromTask: (Task) -> Set<String>?
 ) : RecyclerView.Adapter<ItemDialogAdapter.ViewHolder>() {
 
     private val mItems: MutableList<Item>
 
     init {
-        val checkedTaskItems = tasks.map { retrieveFromTask(it) }
+        val checkedTaskItems = tasks.map { retrieveFromTask(it) ?: emptySet() }
 
         val onAny = checkedTaskItems.reduce { a, b -> a union b }
         val onAll = checkedTaskItems.reduce { a, b -> a intersect b }

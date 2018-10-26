@@ -248,12 +248,10 @@ object Interpreter : AbstractInterpreter() {
         return LuaValue.NIL
     }
 
-    private fun javaListToLuaTable(javaList: Iterable<String>): LuaValue {
-        val size = javaList.count()
+    private fun javaListToLuaTable(javaList: Iterable<String>?): LuaValue {
         val luaTable = LuaValue.tableOf()
-        if (size == 0) return luaTable
-        for (item in javaList) {
-            luaTable.set(item, LuaValue.TRUE)
+        javaList?.forEach {
+            luaTable.set(it, LuaValue.TRUE)
         }
         return luaTable
     }

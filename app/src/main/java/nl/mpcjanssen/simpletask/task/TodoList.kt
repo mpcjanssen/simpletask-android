@@ -20,8 +20,8 @@ import kotlin.collections.ArrayList
  */
 object TodoList {
 
-    private var mLists: ArrayList<String>? = null
-    private var mTags: ArrayList<String>? = null
+    private var mLists: MutableList<String>? = null
+    private var mTags: MutableList<String>? = null
     private val todoItems = ArrayList<Task>()
     val pendingEdits = ArrayList<Int>()
     internal val TAG = TodoList::class.java.simpleName
@@ -73,36 +73,36 @@ object TodoList {
             return ret
         }
 
-    val contexts: ArrayList<String>
+    val contexts: List<String>
         get() {
             val lists = mLists
             if (lists != null) {
                 return lists
             }
             val res = HashSet<String>()
-            todoItems.iterator().forEach {
-                res.addAll(it.lists)
+            todoItems.forEach { t ->
+                t.lists?.let {res.addAll(it)}
+
             }
-            val newLists = ArrayList<String>()
-            newLists.addAll(res)
+            val newLists = res.toMutableList()
             mLists = newLists
             return newLists
         }
 
-    val projects: ArrayList<String>
+    val projects: List<String>
         get() {
             val tags = mTags
             if (tags != null) {
                 return tags
             }
             val res = HashSet<String>()
-            todoItems.iterator().forEach {
-                res.addAll(it.tags)
+            todoItems.forEach { t ->
+                t.tags?.let {res.addAll(it)}
+
             }
-            val newTags = ArrayList<String>()
-            newTags.addAll(res)
-            mTags = newTags
-            return newTags
+            val newLists = res.toMutableList()
+            mLists = newLists
+            return newLists
         }
 
     fun uncomplete(items: List<Task>) {
