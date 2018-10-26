@@ -24,7 +24,7 @@ class DrawerAdapter(private val m_inflater: LayoutInflater,
         internal set
 
     init {
-        this.items = ArrayList<String>()
+        this.items = ArrayList()
         this.items.add(contextHeader)
         contextHeaderPosition = 0
         this.items.addAll(alfaSort(contexts))

@@ -338,119 +338,121 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 //        }
 
         fun parse(text: String): ArrayList<TToken> {
-            var lexemes = text.lex()
-            val tokens = ArrayList<TToken>()
+            synchronized(this) {
+                var lexemes = text.lex()
+                val tokens = ArrayList<TToken>()
 
-            if (lexemes.take(1) == listOf("x")) {
-                tokens.add(CompletedToken(true))
-                lexemes = lexemes.drop(1)
-                var nextToken = lexemes.getOrElse(0, { "" })
-                MATCH_SINGLE_DATE.reset(nextToken).apply {
-                    if (matches()) {
-                        tokens.add(CompletedDateToken(lexemes.first()))
-                        lexemes = lexemes.drop(1)
-                        nextToken = lexemes.getOrElse(0, { "" })
-                        MATCH_SINGLE_DATE.reset(nextToken).apply {
-                            if (matches()) {
-                                tokens.add(CreateDateToken(lexemes.first()))
-                                lexemes = lexemes.drop(1)
+                if (lexemes.take(1) == listOf("x")) {
+                    tokens.add(CompletedToken(true))
+                    lexemes = lexemes.drop(1)
+                    var nextToken = lexemes.getOrElse(0, { "" })
+                    MATCH_SINGLE_DATE.reset(nextToken).apply {
+                        if (matches()) {
+                            tokens.add(CompletedDateToken(lexemes.first()))
+                            lexemes = lexemes.drop(1)
+                            nextToken = lexemes.getOrElse(0, { "" })
+                            MATCH_SINGLE_DATE.reset(nextToken).apply {
+                                if (matches()) {
+                                    tokens.add(CreateDateToken(lexemes.first()))
+                                    lexemes = lexemes.drop(1)
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            var nextToken = lexemes.getOrElse(0, { "" })
-            MATCH_PRIORITY.matchEntire(nextToken)?.let {
-                tokens.add(PriorityToken(nextToken))
-                lexemes = lexemes.drop(1)
-            }
-
-            nextToken = lexemes.getOrElse(0, { "" })
-            MATCH_SINGLE_DATE.reset(nextToken)?.apply {
-                if (matches()) {
-                    tokens.add(CreateDateToken(lexemes.first()))
+                var nextToken = lexemes.getOrElse(0, { "" })
+                MATCH_PRIORITY.matchEntire(nextToken)?.let {
+                    tokens.add(PriorityToken(nextToken))
                     lexemes = lexemes.drop(1)
                 }
-            }
 
-            lexemes.forEach { lexeme ->
-                MATCH_LIST.reset(lexeme).apply {
+                nextToken = lexemes.getOrElse(0, { "" })
+                MATCH_SINGLE_DATE.reset(nextToken)?.apply {
                     if (matches()) {
-                        tokens.add(ListToken(lexeme))
-                        return@forEach
-                    }
-                }
-                MATCH_TAG.reset(lexeme).apply {
-                    if (matches()) {
-                        tokens.add(TagToken(lexeme))
-                        return@forEach
-                    }
-                }
-                MATCH_HIDDEN.reset(lexeme)?.apply {
-                    if (matches()) {
-                        tokens.add(HiddenToken(group(1)))
-                        return@forEach
-                    }
-                }
-                // Match phone numbers before tags to support +31.....
-                // This will make tags which can also be interpreted as phone numbers not possible
-                MATCH_PHONE_NUMBER.reset(lexeme).apply {
-                    if (matches()) {
-                        tokens.add(PhoneToken(lexeme))
-                        return@forEach
+                        tokens.add(CreateDateToken(lexemes.first()))
+                        lexemes = lexemes.drop(1)
                     }
                 }
 
-                MATCH_DUE.reset(lexeme).apply {
-                    if (matches()) {
-                        tokens.add(DueDateToken(group(1)))
-                        return@forEach
+                lexemes.forEach { lexeme ->
+                    MATCH_LIST.reset(lexeme).apply {
+                        if (matches()) {
+                            tokens.add(ListToken(lexeme))
+                            return@forEach
+                        }
+                    }
+                    MATCH_TAG.reset(lexeme).apply {
+                        if (matches()) {
+                            tokens.add(TagToken(lexeme))
+                            return@forEach
+                        }
+                    }
+                    MATCH_HIDDEN.reset(lexeme)?.apply {
+                        if (matches()) {
+                            tokens.add(HiddenToken(group(1)))
+                            return@forEach
+                        }
+                    }
+                    // Match phone numbers before tags to support +31.....
+                    // This will make tags which can also be interpreted as phone numbers not possible
+                    MATCH_PHONE_NUMBER.reset(lexeme).apply {
+                        if (matches()) {
+                            tokens.add(PhoneToken(lexeme))
+                            return@forEach
+                        }
+                    }
+
+                    MATCH_DUE.reset(lexeme).apply {
+                        if (matches()) {
+                            tokens.add(DueDateToken(group(1)))
+                            return@forEach
+                        }
+                    }
+                    MATCH_THRESHOLD.reset(lexeme).apply {
+                        if (matches()) {
+                            tokens.add(ThresholdDateToken(group(1)))
+                            return@forEach
+                        }
+                    }
+                    MATCH_RECURRENCE.reset(lexeme).apply {
+                        if (matches()) {
+                            tokens.add(RecurrenceToken(group(1)))
+                            return@forEach
+                        }
+                    }
+                    MATCH_UUID.reset(lexeme).apply {
+                        if (matches()) {
+                            tokens.add(UUIDToken(group(1)))
+                            return@forEach
+                        }
+                    }
+                    MATCH_URI.reset(lexeme).apply {
+                        if (matches()) {
+                            tokens.add(LinkToken(lexeme))
+                            return@forEach
+                        }
+                    }
+                    MATCH_MAIL.reset(lexeme).apply {
+                        if (matches()) {
+                            tokens.add(MailToken(lexeme))
+                            return@forEach
+                        }
+                    }
+                    MATCH_EXT.reset(lexeme).apply {
+                        if (matches()) {
+                            tokens.add(ExtToken(group(1), group(2)))
+                            return@forEach
+                        }
+                    }
+                    if (lexeme.isBlank()) {
+                        tokens.add(WhiteSpaceToken(lexeme))
+                    } else {
+                        tokens.add(TextToken(lexeme))
                     }
                 }
-                MATCH_THRESHOLD.reset(lexeme).apply {
-                    if (matches()) {
-                        tokens.add(ThresholdDateToken(group(1)))
-                        return@forEach
-                    }
-                }
-                MATCH_RECURRENCE.reset(lexeme).apply {
-                    if (matches()) {
-                        tokens.add(RecurrenceToken(group(1)))
-                        return@forEach
-                    }
-                }
-                MATCH_UUID.reset(lexeme).apply {
-                    if(matches()) {
-                        tokens.add(UUIDToken(group(1)))
-                        return@forEach
-                    }
-                }
-                MATCH_URI.reset(lexeme).apply {
-                    if (matches()) {
-                        tokens.add(LinkToken(lexeme))
-                        return@forEach
-                    }
-                }
-                MATCH_MAIL.reset(lexeme).apply {
-                    if (matches()) {
-                        tokens.add(MailToken(lexeme))
-                        return@forEach
-                    }
-                }
-                MATCH_EXT.reset(lexeme).apply {
-                    if (matches()) {
-                        tokens.add(ExtToken(group(1), group(2)))
-                        return@forEach
-                    }
-                }
-                if (lexeme.isBlank()) {
-                    tokens.add(WhiteSpaceToken(lexeme))
-                } else {
-                    tokens.add(TextToken(lexeme))
-                }
+                return tokens
             }
-            return tokens
         }
     }
 }
