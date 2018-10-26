@@ -75,7 +75,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         val sorts = currentFilter.getSort(Config.defaultSorts)
 
         val newVisibleTasks = ArrayList<Task>()
-        val (tasks, count) = TodoList.getSortedTasks(currentFilter, sorts, Config.sortCaseSensitive)
+        val (tasks, _) = TodoList.getSortedTasks(currentFilter, sorts, Config.sortCaseSensitive)
         newVisibleTasks.addAll(tasks)
         Log.d(TAG, "Widget $widgetId: setFilteredTasks returned ${newVisibleTasks.size} tasks")
         visibleTasks = newVisibleTasks
@@ -121,13 +121,13 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
             itemForLightTheme(rv)
         }
         val colorizeStrings = ArrayList<String>()
-        for (context in task.lists) {
-            colorizeStrings.add("@" + context)
+        task.lists?.forEach {
+            colorizeStrings.add("@" + it)
         }
         setColor(ss, Color.GRAY, colorizeStrings)
         colorizeStrings.clear()
-        for (project in task.tags) {
-            colorizeStrings.add("+" + project)
+        task.tags?.forEach {
+            colorizeStrings.add("+" + it)
         }
         setColor(ss, Color.GRAY, colorizeStrings)
 

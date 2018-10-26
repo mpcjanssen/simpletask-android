@@ -139,13 +139,15 @@ class AddTask : ThemedActionBarActivity() {
             line = precedingText
         }
         val t = Task(line)
-        val tags = t.lists
-                .map { "@" + it }
-                .toMutableSet()
-        for (prj in t.tags) {
-            tags.add("+" + prj)
+        val prefillItems = mutableListOf<String>()
+        t.lists?.let {lists ->
+            prefillItems.addAll(lists.map { "@$it" })
         }
-        replaceTextAtSelection(join(tags, " "), true)
+        t.tags?.let {tags ->
+            prefillItems.addAll(tags.map { "+$it" })
+        }
+
+        replaceTextAtSelection(join(prefillItems, " "), true)
 
         endOfLine++
         taskText.setSelection(endOfLine)
@@ -342,8 +344,8 @@ class AddTask : ThemedActionBarActivity() {
         if (tasks.size == 0) {
             tasks.add(Task(""))
         }
-        tasks.forEach {
-            items.addAll(it.tags)
+        tasks.forEach {task ->
+            task.tags?.let {items.addAll(it)}
         }
         val idx = getCurrentCursorLine()
         val task = getTasks().getOrElse(idx) { Task("") }
@@ -393,8 +395,8 @@ class AddTask : ThemedActionBarActivity() {
         if (tasks.size == 0) {
             tasks.add(Task(""))
         }
-        tasks.forEach {
-            items.addAll(it.lists)
+        tasks.forEach {task ->
+            task.lists?.let {items.addAll(it)}
         }
 
         val idx = getCurrentCursorLine()

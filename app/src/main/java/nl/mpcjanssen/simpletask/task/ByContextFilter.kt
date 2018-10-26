@@ -37,11 +37,10 @@ class ByContextFilter(
     }
 
     private fun filter(input: Task): Boolean {
-        val match = input.lists.any { contexts.contains(it) }
+        val match = input.lists?.any { contexts.contains(it) } ?: false
         /*
          * Match tasks without context if applyFilter contains "-"
 		 */
-        return match || input.lists.size == 0 && contexts.contains("-")
-
+        return match || input.lists?.size == 0 && contexts.contains("-")
     }
 }

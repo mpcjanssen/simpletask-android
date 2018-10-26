@@ -300,7 +300,7 @@ fun Activity.updateItemsDialog(
         title: String,
         tasks: List<Task>,
         allItems: Collection<String>,
-        retrieveFromTask: (Task) -> Set<String>,
+        retrieveFromTask: (Task) -> Set<String>?,
         addToTask: (Task, String) -> Unit,
         removeFromTask: (Task, String) -> Unit,
         positiveButtonListener: () -> Unit
