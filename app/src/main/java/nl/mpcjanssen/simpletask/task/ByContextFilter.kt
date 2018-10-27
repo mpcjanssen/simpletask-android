@@ -41,6 +41,6 @@ class ByContextFilter(
         /*
          * Match tasks without context if applyFilter contains "-"
 		 */
-        return match || input.lists?.size == 0 && contexts.contains("-")
+        return match || input.lists == null && contexts.contains("-")
     }
 }
