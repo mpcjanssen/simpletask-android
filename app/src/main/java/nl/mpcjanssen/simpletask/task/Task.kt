@@ -130,7 +130,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         get() {
             tokens.filter { it is TagToken }.run {
                 if (size > 0) {
-                    return alfaSort ( map { it -> (it as TagToken).value }).toSet()
+                    return map { it -> (it as TagToken).value }.toSortedSet()
                 } else {
                     return null
                 }
@@ -141,7 +141,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         get() {
             tokens.filter { it is ListToken }.run {
                 if (size > 0) {
-                    return alfaSort(map { it -> (it as ListToken).value }).toSet()
+                    return map { it -> (it as ListToken).value }.toSortedSet()
                 } else {
                     return null
                 }
