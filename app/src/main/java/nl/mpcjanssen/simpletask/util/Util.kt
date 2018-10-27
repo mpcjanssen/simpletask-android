@@ -441,7 +441,7 @@ fun alfaSort(
         items: Collection<String>,
         caseSensitive: Boolean = Config.sortCaseSensitive,
         prefix: String? = null
-): Collection<String> {
+): ArrayList<String> {
     val sorted = items.sortedWith ( compareBy<String> {
         if (caseSensitive) it else it.toLowerCase(Locale.getDefault())
     })

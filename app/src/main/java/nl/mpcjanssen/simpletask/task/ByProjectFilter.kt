@@ -43,6 +43,6 @@ class ByProjectFilter(
         /*
          * Match tasks without project if applyFilter contains "-"
 		 */
-        return match || (input.tags?.size == 0 && projects.contains("-"))
+        return match || (input.tags == null  && projects.contains("-"))
     }
 }
