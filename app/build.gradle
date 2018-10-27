@@ -180,6 +180,14 @@ task cleanPublish(type: GradleBuild) {
     setTasks(["clean", "publishNextcloudRelease", "publishCloudlessRelease", "publishDropboxRelease"])
 }
 
+
+task publish(type: GradleBuild) {
+    group = 'deployment'
+    description = 'Build and deploy all versions to Google Play'
+
+    setTasks(["publishNextcloudRelease", "publishCloudlessRelease", "publishDropboxRelease"])
+}
+
 allprojects {
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile) {
