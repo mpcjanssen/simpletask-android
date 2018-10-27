@@ -100,9 +100,9 @@ object TodoList {
                 t.tags?.let {res.addAll(it)}
 
             }
-            val newLists = res.toMutableList()
-            mLists = newLists
-            return newLists
+            val newTags = res.toMutableList()
+            mTags = newTags
+            return newTags
         }
 
     fun uncomplete(items: List<Task>) {
