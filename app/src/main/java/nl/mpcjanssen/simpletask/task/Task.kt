@@ -1,6 +1,7 @@
 package nl.mpcjanssen.simpletask.task
 
 import nl.mpcjanssen.simpletask.util.addInterval
+import nl.mpcjanssen.simpletask.util.alfaSort
 import java.util.*
 import java.util.regex.Pattern
 
@@ -129,7 +130,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         get() {
             tokens.filter { it is TagToken }.run {
                 if (size > 0) {
-                    return map { it -> (it as TagToken).value }.toSet()
+                    return alfaSort ( map { it -> (it as TagToken).value }).toSet()
                 } else {
                     return null
                 }
@@ -140,7 +141,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         get() {
             tokens.filter { it is ListToken }.run {
                 if (size > 0) {
-                    return map { it -> (it as ListToken).value }.toSet()
+                    return alfaSort(map { it -> (it as ListToken).value }).toSet()
                 } else {
                     return null
                 }
