@@ -1,5 +1,11 @@
 ﻿# Changelog
 
+## 10.2.6
+
+### Fixed
+
+- Navigation and tags/list issues #936 and #937.
+
 ## 10.2.5
 
 ### Fixed
