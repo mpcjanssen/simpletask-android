@@ -33,8 +33,22 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                     fileOrder = !reverse
                     break@label
                 }
-                "by_context" -> comp = { it.lists?.let { alfaSort(it).firstOrNull() } ?: "" }
-                "by_project" -> comp = { it.lists?.let { alfaSort(it).firstOrNull() } ?: "" }
+                "by_context" -> comp = {
+                    val txt = it.lists?.let { alfaSort(it).firstOrNull() } ?: ""
+                    if (caseSensitve) {
+                        txt
+                    } else {
+                        txt.toLowerCase(Locale.getDefault())
+                    }
+                }
+                "by_project" -> comp = {
+                    val txt = it.lists?.let { alfaSort(it).firstOrNull() } ?: ""
+                    if (caseSensitve) {
+                        txt
+                    } else {
+                        txt.toLowerCase(Locale.getDefault())
+                    }
+                }
                 "alphabetical" -> comp = if (caseSensitve) {
                     { it.showParts { it.isAlpha() } }
                 } else {
