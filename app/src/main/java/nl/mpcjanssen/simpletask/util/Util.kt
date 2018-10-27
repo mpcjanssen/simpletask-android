@@ -443,7 +443,7 @@ fun alfaSort(
         prefix: String? = null
 ): ArrayList<String> {
     val sorted = items.sortedWith ( compareBy<String> {
-        if (caseSensitive) it.toLowerCase(Locale.getDefault()) else it
+        if (caseSensitive) it else it.toLowerCase(Locale.getDefault())
     })
     if (prefix != null) {
         val result = ArrayList<String>(sorted.size+1)
