@@ -1,11 +1,8 @@
-## 10.2.5
+## 10.2.6
 
 ### Fixed
 
-- Synchronize re-use of matchers as it's not thread safe.
+- Navigation and tags/list issues #936 and #937.
 
-### Changed
-
-- Prevent creating unnecessary objects for reduced memory usage.
 
 
