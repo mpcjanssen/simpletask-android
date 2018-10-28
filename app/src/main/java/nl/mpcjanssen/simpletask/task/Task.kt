@@ -126,22 +126,22 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     var recurrencePattern: String? = null
         get() = getFirstToken<RecurrenceToken>()?.valueStr
 
-    var tags: Set<String>? = null
+    var tags: SortedSet<String>? = null
         get() {
             tokens.filter { it is TagToken }.run {
                 if (size > 0) {
-                    return map { it -> (it as TagToken).value }.toSortedSet()
+                    return (map { it -> (it as TagToken).value }).toSortedSet()
                 } else {
                     return null
                 }
             }
         }
 
-    var lists: Set<String>? = null
+    var lists: SortedSet<String>? = null
         get() {
             tokens.filter { it is ListToken }.run {
                 if (size > 0) {
-                    return map { it -> (it as ListToken).value }.toSortedSet()
+                    return (map { it -> (it as ListToken).value }).toSortedSet()
                 } else {
                     return null
                 }
