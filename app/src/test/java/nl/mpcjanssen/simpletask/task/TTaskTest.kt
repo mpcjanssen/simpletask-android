@@ -100,4 +100,14 @@ class TaskTest : TestCase() {
         val test = "h:1"
         Assert.assertEquals(test, Task(test).inFileFormat())
     }
+
+
+    fun testSortedTagsAndLists() {
+        val task1 = "Test +b +a"
+        val task2 = "Test +a +b"
+        Assert.assertArrayEquals(Task(task1).tags!!.toTypedArray(), Task(task2).tags!!.toTypedArray())
+        val task3 = "Test @b @a"
+        val task4 = "Test @a @b"
+        Assert.assertArrayEquals(Task(task3).lists!!.toTypedArray(), Task(task4).lists!!.toTypedArray())
+    }
 }
