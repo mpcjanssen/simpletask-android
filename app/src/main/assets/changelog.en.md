@@ -1,5 +1,11 @@
 ﻿# Changelog
 
+## Unreleased
+
+### Fixed
+
+Update state of completion checkbox when task list changes for #942.
+
 ## 10.2.6
 
 ### Fixed
