@@ -494,6 +494,17 @@ class Simpletask : ThemedNoActionBarActivity() {
         finish()
     }
 
+    private fun updateCompletionCheckboxState() {
+        val cbItem = toolbar.menu.findItem(R.id.multicomplete_checkbox)
+        val selectedTasks = TodoList.selectedTasks
+        val count = selectedTasks.count()
+        val completedCount = selectedTasks.count { it.isCompleted() }
+        when (completedCount) {
+            0 -> cbItem.setIcon(R.drawable.ic_check_box_outline_blank_white_24dp)
+            count -> cbItem.setIcon(R.drawable.ic_check_box_white_24dp)
+            else -> cbItem.setIcon(R.drawable.ic_indeterminate_check_box_white_24dp)
+        }
+    }
 
 
     @SuppressLint("Recycle")
@@ -533,6 +544,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     inflater.inflate(R.menu.task_context, toolbar.menu)
 
                     val cbItem = toolbar.menu.findItem(R.id.multicomplete_checkbox)
+
                     val selectedTasks = TodoList.selectedTasks
                     val initialCompleteTasks = ArrayList<Task>()
                     val initialIncompleteTasks = ArrayList<Task>()
@@ -1126,6 +1138,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                         updateTaskList(Config.mainQuery) {
                             updateFilterBar()
                             updateQuickFilterDrawer()
+                            updateCompletionCheckboxState()
                         }
                     }
                     Event.FILTER_CHANGED -> {
