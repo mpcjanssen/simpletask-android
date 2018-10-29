@@ -74,7 +74,7 @@ Update state of completion checkbox when task list changes for #942.
 - Several translation updates.
 - Show confirmation dialog when manually archiving.
 - Extend the range of tokens included for alpha sort.
-- Merged #906 (Strubbl), add more precise docu on hidden tasks
+- Merged #906 (Strubbl), add more precise documentation on hidden tasks
 - Store saved filters in preferences, this should fix most issues with saved filters.
 
 
@@ -1133,7 +1133,7 @@ Update state of completion checkbox when task list changes for #942.
 5.2.0
 -----
 
-- (Experimental) Included Javascript engine to allow advanced filtering. See [Javascript](./javascript.md) for usage.
+- (Experimental) Included Javascript engine to allow advanced filtering. See Javascript for usage.
 - Don't use `removeAll` in task stores. Fixes #112.
 - Return to filter activity when switching to another app and back instead of to the main screen.
 
@@ -1660,7 +1660,7 @@ Update state of completion checkbox when task list changes for #942.
 
 -   Add checkbox when adding multiple tasks to copy tags and lists from the previous line.
 -   Better handling of {Enter} in the Add Task screen. It will always insert a new line regardless of position in the current line.
--   Add Intent to create task for automation tools such as tasker see [help](intents.md).
+-   Add Intent to create task for automation tools such as tasker see [help](intents.en.md).
 -   Make application intents package specific so you can install different simpletask versions at the same time.
 -   Integrate cloudless build so all versions are based on same source code
 -   Add Archive to context menu so you don't have to go to preferences to archive your tasks
@@ -1674,8 +1674,8 @@ Update state of completion checkbox when task list changes for #942.
 2.7.1
 -----
 
--   Added black theme for widgets. Widget and app theme can be configured seperately.
--   Remove custom font size deltas, it kills perfomance (and thus battery). Will be re-added if there is a better way.
+-   Added black theme for widgets. Widget and app theme can be configured separately.
+-   Remove custom font size deltas, it kills performance (and thus battery). Will be re-added if there is a better way.
 
 2.7.0
 -----
@@ -1683,7 +1683,7 @@ Update state of completion checkbox when task list changes for #942.
 -   Support for a Holo Dark theme. Can be configured from the Preferences.
 -   Added grouping by threshold date and priority.
 -   Demonstrate Navigation drawers on first run.
--   Properly initialize side drawes after first sync with Dropbox.
+-   Properly initialize side drawers after first sync with Dropbox.
 -   Do not reset preferences to default after logging out of Dropbox and logging in again.
 -   Fixed some sorting issues caused by bug in Alphabetical sort.
 -   Refactored header functionality so it will be easier to add new groupings.
