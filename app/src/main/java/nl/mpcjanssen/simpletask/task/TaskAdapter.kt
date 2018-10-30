@@ -208,9 +208,9 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         }
     }
 
-    val visibleTasks: List<Task>
+    val visibleTasks: Sequence<Task>
         get() {
-            return visibleLines
+            return visibleLines.asSequence()
                     .filterNot { it.header }
                     .map { (it as TaskLine).task }
         }
