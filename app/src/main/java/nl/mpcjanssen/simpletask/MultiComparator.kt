@@ -42,7 +42,7 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                     }
                 }
                 "by_project" -> comp = {
-                    val txt = it.lists?.let { alfaSort(it).firstOrNull() } ?: ""
+                    val txt = it.tags?.let { alfaSort(it).firstOrNull() } ?: ""
                     if (caseSensitve) {
                         txt
                     } else {
