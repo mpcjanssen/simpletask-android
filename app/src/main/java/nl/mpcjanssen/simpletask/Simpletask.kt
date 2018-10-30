@@ -871,7 +871,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             R.id.context_delete -> deleteTasks(checkedTasks)
             R.id.context_select_all -> selectAllTasks()
             R.id.share -> {
-                val shareText = TodoList.todoItemsCopy.map(Task::inFileFormat).joinToString(separator = "\n")
+                val shareText = TodoList.todoItemsCopy.joinToString(separator = "\n", transform = Task::inFileFormat)
                 shareText(this@Simpletask, "Simpletask list", shareText)
             }
             R.id.context_share -> {
@@ -1190,7 +1190,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
 
         private fun updateSavedFilterDrawer() {
-            val idQueryPairs = QueryStore.ids().map { Pair(it, QueryStore.get(it)) }.toList()
+            val idQueryPairs = QueryStore.ids().mapTo(mutableListOf()) { Pair(it, QueryStore.get(it)) }
             val hasQueries = !idQueryPairs.isEmpty()
             val queries = idQueryPairs.sortedBy { it.second.name }
             val names = if (hasQueries) {
@@ -1261,12 +1261,12 @@ class Simpletask : ThemedNoActionBarActivity() {
             filter_drawer.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
             filter_drawer.onItemClickListener = DrawerItemClickListener()
 
-            Config.mainQuery.contexts
+            Config.mainQuery.contexts.asSequence()
                     .map { drawerAdapter.getIndexOf("@$it") }
                     .filter { it != -1 }
                     .forEach { filter_drawer.setItemChecked(it, true) }
 
-            Config.mainQuery.projects
+            Config.mainQuery.projects.asSequence()
                     .map { drawerAdapter.getIndexOf("+$it") }
                     .filter { it != -1 }
                     .forEach { filter_drawer.setItemChecked(it, true) }
