@@ -1,7 +1,6 @@
 package nl.mpcjanssen.simpletask.task
 
 import nl.mpcjanssen.simpletask.util.addInterval
-import nl.mpcjanssen.simpletask.util.alfaSort
 import java.util.*
 import java.util.regex.Pattern
 
@@ -54,10 +53,10 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
     val extensions: List<Pair<String, String>>
         get() {
-            return tokens.filter { it is KeyValueToken }.map {
+            return tokens.asSequence().filter { it is KeyValueToken }.map {
                 val token = it as KeyValueToken
                 Pair(token.key, token.valueStr)
-            }
+            }.toList()
         }
 
     var completionDate: String? = null
@@ -114,12 +113,10 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     var priority: Priority
         get() = getFirstToken<PriorityToken>()?.value ?: Priority.NONE
         set(prio) {
-            if (prio == Priority.NONE) {
-                tokens = tokens.filter { it !is PriorityToken }
-            } else if (tokens.any { it is PriorityToken }) {
-                upsertToken(PriorityToken(prio.fileFormat))
-            } else {
-                tokens = listOf(PriorityToken(prio.fileFormat)) + tokens
+            when {
+                prio == Priority.NONE -> tokens = tokens.filter { it !is PriorityToken }
+                tokens.any { it is PriorityToken } -> upsertToken(PriorityToken(prio.fileFormat))
+                else -> tokens = listOf(PriorityToken(prio.fileFormat)) + tokens
             }
         }
 
@@ -129,10 +126,10 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     var tags: SortedSet<String>? = null
         get() {
             tokens.filter { it is TagToken }.run {
-                if (size > 0) {
-                    return (map { it -> (it as TagToken).value }).toSortedSet()
+                return if (size > 0) {
+                    (map { it -> (it as TagToken).value }).toSortedSet()
                 } else {
-                    return null
+                    null
                 }
             }
         }
@@ -140,26 +137,26 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     var lists: SortedSet<String>? = null
         get() {
             tokens.filter { it is ListToken }.run {
-                if (size > 0) {
-                    return (map { it -> (it as ListToken).value }).toSortedSet()
+                return if (size > 0) {
+                    (map { it -> (it as ListToken).value }).toSortedSet()
                 } else {
-                    return null
+                    null
                 }
             }
         }
 
     var links: Set<String> = emptySet()
         get() {
-            return tokens.filter { it is LinkToken }.map { it -> (it as LinkToken).text }.toSet()
+            return tokens.asSequence().filter { it is LinkToken }.map { it -> (it as LinkToken).text }.toSet()
         }
 
     var phoneNumbers: Set<String> = emptySet()
         get() {
-            return tokens.filter { it is PhoneToken }.map { it -> (it as PhoneToken).text }.toSet()
+            return tokens.asSequence().filter { it is PhoneToken }.map { it -> (it as PhoneToken).text }.toSet()
         }
     var mailAddresses: Set<String> = emptySet()
         get() {
-            return tokens.filter { it is MailToken }.map { it -> (it as MailToken).text }.toSet()
+            return tokens.asSequence().filter { it is MailToken }.map { it -> (it as MailToken).text }.toSet()
         }
     var selected: Boolean = false
 
@@ -221,11 +218,10 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             thresholdDate = null
             return
         }
-        val olddate: String?
-        if (deferFromDate.isEmpty()) {
-            olddate = thresholdDate
+        val olddate: String? = if (deferFromDate.isEmpty()) {
+            thresholdDate
         } else {
-            olddate = deferFromDate
+            deferFromDate
         }
         val newDate = addInterval(olddate, deferString)
         thresholdDate = newDate?.format(DATE_FORMAT)
@@ -240,11 +236,10 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             dueDate = null
             return
         }
-        val olddate: String?
-        if (deferFromDate.isEmpty()) {
-            olddate = dueDate
+        val olddate: String? = if (deferFromDate.isEmpty()) {
+            dueDate
         } else {
-            olddate = deferFromDate
+            deferFromDate
         }
         val newDate = addInterval(olddate, deferString)
         dueDate = newDate?.format(DATE_FORMAT)
@@ -269,39 +264,38 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     }
 
     fun showParts(filter: (TToken) -> Boolean): String {
-        return tokens.filter(filter)
-                .map { it.text }
-                .joinToString(" ")
+        return tokens.asSequence().filter(filter)
+                .joinToString(" ") { it.text }
     }
 
     fun getHeader(sort: String, empty: String, createIsThreshold: Boolean): String {
-        if (sort.contains("by_context")) {
-            lists?.run {
-                if (size > 0) {
-                    return first()
+        when {
+            sort.contains("by_context") -> {
+                lists?.run {
+                    if (size > 0) {
+                        return first()
+                    }
                 }
-            }
-            return empty
+                return empty
 
-        } else if (sort.contains("by_project")) {
-            tags?.run {
-                if (size > 0) {
-                    return first()
+            }
+            sort.contains("by_project") -> {
+                tags?.run {
+                    if (size > 0) {
+                        return first()
+                    }
                 }
+                return empty
             }
-            return empty
-        } else if (sort.contains("by_threshold_date")) {
-            if (createIsThreshold) {
-                return thresholdDate ?: createDate ?: empty
+            sort.contains("by_threshold_date") -> return if (createIsThreshold) {
+                thresholdDate ?: createDate ?: empty
             } else {
-                return thresholdDate ?: empty
+                thresholdDate ?: empty
             }
-        } else if (sort.contains("by_prio")) {
-            return priority.code
-        } else if (sort.contains("by_due_date")) {
-            return dueDate ?: empty
+            sort.contains("by_prio") -> return priority.code
+            sort.contains("by_due_date") -> return dueDate ?: empty
+            else -> return ""
         }
-        return ""
     }
 
     /* Adds the task to list Listname
@@ -310,7 +304,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     fun addList(listName: String) {
         listName.split(Regex("\\s+")).forEach {
             if (lists?.contains(it)!=true) {
-                tokens += ListToken("@" + it)
+                tokens += ListToken("@$it")
             }
         }
     }
@@ -361,12 +355,12 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                 if (lexemes.take(1) == listOf("x")) {
                     tokens.add(CompletedToken(true))
                     lexemes = lexemes.drop(1)
-                    var nextToken = lexemes.getOrElse(0, { "" })
+                    var nextToken = lexemes.getOrElse(0) { "" }
                     MATCH_SINGLE_DATE.reset(nextToken).apply {
                         if (matches()) {
                             tokens.add(CompletedDateToken(lexemes.first()))
                             lexemes = lexemes.drop(1)
-                            nextToken = lexemes.getOrElse(0, { "" })
+                            nextToken = lexemes.getOrElse(0) { "" }
                             MATCH_SINGLE_DATE.reset(nextToken).apply {
                                 if (matches()) {
                                     tokens.add(CreateDateToken(lexemes.first()))
@@ -377,13 +371,13 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                     }
                 }
 
-                var nextToken = lexemes.getOrElse(0, { "" })
+                var nextToken = lexemes.getOrElse(0) { "" }
                 MATCH_PRIORITY.matchEntire(nextToken)?.let {
                     tokens.add(PriorityToken(nextToken))
                     lexemes = lexemes.drop(1)
                 }
 
-                nextToken = lexemes.getOrElse(0, { "" })
+                nextToken = lexemes.getOrElse(0) { "" }
                 MATCH_SINGLE_DATE.reset(nextToken)?.apply {
                     if (matches()) {
                         tokens.add(CreateDateToken(lexemes.first()))
