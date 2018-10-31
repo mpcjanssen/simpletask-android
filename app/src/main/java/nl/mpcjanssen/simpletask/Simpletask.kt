@@ -495,7 +495,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun updateCompletionCheckboxState() {
-        val cbItem = toolbar.menu.findItem(R.id.multicomplete_checkbox)
+        val cbItem = toolbar.menu.findItem(R.id.multicomplete_checkbox) ?: return
         val selectedTasks = TodoList.selectedTasks
         val count = selectedTasks.count()
         val completedCount = selectedTasks.count { it.isCompleted() }
