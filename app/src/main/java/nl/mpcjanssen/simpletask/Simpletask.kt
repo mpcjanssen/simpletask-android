@@ -500,9 +500,31 @@ class Simpletask : ThemedNoActionBarActivity() {
         val count = selectedTasks.count()
         val completedCount = selectedTasks.count { it.isCompleted() }
         when (completedCount) {
-            0 -> cbItem.setIcon(R.drawable.ic_check_box_outline_blank_white_24dp)
-            count -> cbItem.setIcon(R.drawable.ic_check_box_white_24dp)
-            else -> cbItem.setIcon(R.drawable.ic_indeterminate_check_box_white_24dp)
+            0 -> {
+                cbItem.setIcon(R.drawable.ic_check_box_outline_blank_white_24dp)
+                cbItem.setOnMenuItemClickListener { completeTasks(selectedTasks) ; true }
+            }
+            count -> {
+                cbItem.setIcon(R.drawable.ic_check_box_white_24dp)
+                cbItem.setOnMenuItemClickListener { uncompleteTasks(selectedTasks) ; true }
+            }
+            else -> {
+                cbItem.setIcon(R.drawable.ic_indeterminate_check_box_white_24dp)
+                cbItem.setOnMenuItemClickListener {
+                    val popup = PopupMenu(this, toolbar)
+                    val menuInflater = popup.menuInflater
+                    menuInflater.inflate(R.menu.completion_popup, popup.menu)
+                    popup.show()
+                    popup.setOnMenuItemClickListener popup@{ item ->
+                        val menuId = item.itemId
+                        when (menuId) {
+                            R.id.complete -> completeTasks(selectedTasks)
+                            R.id.uncomplete -> uncompleteTasks(selectedTasks)
+                        }
+                        return@popup true
+                    } ; true
+                }
+            }
         }
     }
 
@@ -543,55 +565,11 @@ class Simpletask : ThemedNoActionBarActivity() {
                     toolbar.menu.clear()
                     inflater.inflate(R.menu.task_context, toolbar.menu)
 
-                    val cbItem = toolbar.menu.findItem(R.id.multicomplete_checkbox)
 
-                    val selectedTasks = TodoList.selectedTasks
-                    val initialCompleteTasks = ArrayList<Task>()
-                    val initialIncompleteTasks = ArrayList<Task>()
-
-                    val first: Boolean? = selectedTasks.getOrNull(0)?.isCompleted()
-
-                    val cbState: Boolean? = selectedTasks.fold(first) { stateSoFar, task ->
-                        val completed = task.isCompleted()
-                        if (completed) {
-                            initialCompleteTasks.add(task)
-                        } else {
-                            initialIncompleteTasks.add(task)
-                        }
-                        stateSoFar?.takeIf { it == completed }
-                    }
-                    when (cbState) {
-                        null -> cbItem.setIcon(R.drawable.ic_indeterminate_check_box_white_24dp)
-                        false -> cbItem.setIcon(R.drawable.ic_check_box_outline_blank_white_24dp)
-                        true -> cbItem.setIcon(R.drawable.ic_check_box_white_24dp)
-                    }
-
-                    cbItem.setOnMenuItemClickListener { _ ->
-                        Log.i(TAG, "Clicked on completion checkbox, state: $cbState")
-                        when (cbState) {
-                            false -> completeTasks(selectedTasks)
-                            true -> uncompleteTasks(selectedTasks)
-                            null -> {
-                                val popup = PopupMenu(this, toolbar)
-                                val menuInflater = popup.menuInflater
-                                menuInflater.inflate(R.menu.completion_popup, popup.menu)
-                                popup.show()
-                                popup.setOnMenuItemClickListener popup@{ item ->
-                                    val menuId = item.itemId
-                                    when (menuId) {
-                                        R.id.complete -> completeTasks(selectedTasks)
-                                        R.id.uncomplete -> uncompleteTasks(selectedTasks)
-                                    }
-                                    return@popup true
-                                }
-                            }
-                        }
-                        return@setOnMenuItemClickListener true
-                    }
-
+                    updateCompletionCheckboxState()
                     selection_fab.visibility = View.VISIBLE
                     selection_fab.setOnClickListener {
-                        createCalendarAppointment(selectedTasks)
+                        createCalendarAppointment(TodoList.selectedTasks)
                     }
                 },
 
