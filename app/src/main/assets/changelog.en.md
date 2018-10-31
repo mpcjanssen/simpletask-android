@@ -1,5 +1,11 @@
 ﻿# Changelog
 
+## Unreleased
+
+### Fixed
+
+- Properly handle multiple clicks on completion context item when `keep selection` is enabled for #942.
+
 ## 10.2.9
 
 ### Fixed
