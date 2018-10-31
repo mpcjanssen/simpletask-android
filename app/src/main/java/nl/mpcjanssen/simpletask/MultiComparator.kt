@@ -2,7 +2,6 @@ package nl.mpcjanssen.simpletask
 
 import android.util.Log
 import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TextToken
 import nl.mpcjanssen.simpletask.util.alfaSort
 import java.util.*
 
@@ -13,7 +12,7 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
 
     init {
         label@ for (sort in sorts) {
-            val parts = sort.split(Query.SORT_SEPARATOR.toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
+            val parts = sort.split(Query.SORT_SEPARATOR.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             var reverse = false
             val sortType: String
             if (parts.size == 1) {
@@ -33,16 +32,16 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                     fileOrder = !reverse
                     break@label
                 }
-                "by_context" -> comp = {
-                    val txt = it.lists?.let { alfaSort(it).firstOrNull() } ?: ""
+                "by_context" -> comp = { t ->
+                    val txt = t.lists?.let { alfaSort(it).firstOrNull() } ?: ""
                     if (caseSensitve) {
                         txt
                     } else {
                         txt.toLowerCase(Locale.getDefault())
                     }
                 }
-                "by_project" -> comp = {
-                    val txt = it.tags?.let { alfaSort(it).firstOrNull() } ?: ""
+                "by_project" -> comp = { t ->
+                    val txt = t.tags?.let { alfaSort(it).firstOrNull() } ?: ""
                     if (caseSensitve) {
                         txt
                     } else {
@@ -50,9 +49,9 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                     }
                 }
                 "alphabetical" -> comp = if (caseSensitve) {
-                    { it.showParts { it.isAlpha() } }
+                    { it.showParts { p -> p.isAlpha() } }
                 } else {
-                    { it.showParts { it.isAlpha() }.toLowerCase(Locale.getDefault()) }
+                    { it.showParts { p -> p.isAlpha() }.toLowerCase(Locale.getDefault()) }
                 }
                 "by_prio" -> comp = { it.priority }
                 "completed" -> comp = { it.isCompleted() }
@@ -78,10 +77,10 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                     continue@label
                 }
             }
-            if (reverse) {
-                comparator = comparator?.thenByDescending(comp) ?: compareByDescending(comp)
+            comparator = if (reverse) {
+                comparator?.thenByDescending(comp) ?: compareByDescending(comp)
             } else {
-                comparator = comparator?.thenBy(comp) ?: compareBy(comp)
+                comparator?.thenBy(comp) ?: compareBy(comp)
             }
         }
     }
