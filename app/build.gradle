@@ -53,8 +53,8 @@ android {
     }
 
     defaultConfig {
-        versionName '10.2.8'
-        versionCode 3209
+        versionName '10.2.9'
+        versionCode 3210
         multiDexEnabled true
         minSdkVersion 14
         targetSdkVersion 27

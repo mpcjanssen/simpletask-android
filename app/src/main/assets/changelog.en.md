@@ -1,5 +1,11 @@
 ﻿# Changelog
 
+## 10.2.9
+
+### Fixed
+
+- Crash when (un)completing a task.
+
 ## 10.2.8
 
 ### Fixed
