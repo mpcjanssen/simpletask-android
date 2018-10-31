@@ -1,10 +1,23 @@
 ﻿# Changelog
 
-## Unreleased
+## 10.2.8
 
 ### Fixed
 
-Update state of completion checkbox when task list changes for #942.
+- Update state of completion checkbox when task list changes for #942.
+- Tags sorting.
+
+## 10.2.7
+
+### Fixed
+
+- NONE filter
+- Grouping on tags and lists
+
+### Changed
+
+- More consistently apply case sensitive sorting.
+
 
 ## 10.2.6
 
