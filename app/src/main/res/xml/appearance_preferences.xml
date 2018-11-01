@@ -68,4 +68,10 @@
         android:summary="%s"
         android:title="@string/task_text_ellipsizing_pref_title"
         />
+    <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/use_list_and_tags_icons"
+            android:title="@string/use_list_and_tags_icons_title"
+            android:summary="@string/use_list_and_tags_icons_summary"
+    />
 </PreferenceScreen>
