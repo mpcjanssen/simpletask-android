@@ -143,10 +143,10 @@ class FilterScriptFragment : Fragment() {
     val useScript: Boolean
         get() {
             val arguments = arguments
-            if (cbUseScript == null) {
-                return arguments?.getBoolean(Query.INTENT_USE_SCRIPT_FILTER, false) ?: false
+            return if (cbUseScript == null) {
+                arguments?.getBoolean(Query.INTENT_USE_SCRIPT_FILTER, false) ?: false
             } else {
-                return cbUseScript?.isChecked ?: false
+                cbUseScript?.isChecked ?: false
             }
         }
 
@@ -159,10 +159,10 @@ class FilterScriptFragment : Fragment() {
     var script: String
         get() {
             val arguments = arguments
-            if (txtScript == null) {
-                return arguments?.getString(Query.INTENT_SCRIPT_FILTER, "") ?: ""
+            return if (txtScript == null) {
+                arguments?.getString(Query.INTENT_SCRIPT_FILTER, "") ?: ""
             } else {
-                return txtScript!!.text.toString()
+                txtScript!!.text.toString()
             }
         }
         set(script) {
@@ -172,10 +172,10 @@ class FilterScriptFragment : Fragment() {
     val testTask: String
         get() {
             val arguments = arguments
-            if (txtTestTask == null) {
-                return arguments?.getString(Query.INTENT_SCRIPT_TEST_TASK_FILTER, "") ?: ""
+            return if (txtTestTask == null) {
+                arguments?.getString(Query.INTENT_SCRIPT_TEST_TASK_FILTER, "") ?: ""
             } else {
-                return txtTestTask!!.text.toString()
+                txtTestTask!!.text.toString()
             }
         }
 

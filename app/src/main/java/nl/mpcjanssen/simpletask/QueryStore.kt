@@ -68,15 +68,15 @@ object LegacyQueryStore {
     fun ids() : List<String> {
         val prefsPath = "../shared_prefs"
         val prefsXml = File(TodoApplication.app.filesDir, "$prefsPath/")
-        if (prefsXml.exists() && prefsXml.isDirectory) {
+        return if (prefsXml.exists() && prefsXml.isDirectory) {
             val ids = prefsXml.listFiles { _, name -> name.startsWith(ID_PREFIX) }
                     .map { it.relativeTo(prefsXml).name }
                     .map { it -> it.substringBeforeLast(".xml") }
             Log.d(TAG, "Saved applyFilter ids: $ids")
-            return ids
+            ids
         } else {
             Log.w(TAG, "No pref_xml folder ${prefsXml.path}")
-            return emptyList()
+            emptyList()
         }
     }
 

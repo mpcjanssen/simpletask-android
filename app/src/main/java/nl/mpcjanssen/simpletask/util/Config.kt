@@ -51,19 +51,19 @@ object Config : Preferences(TodoApplication.app) {
 
     val listTerm: String
         get() {
-            if (useTodoTxtTerms) {
-                return getString(R.string.context_prompt_todotxt)
+            return if (useTodoTxtTerms) {
+                getString(R.string.context_prompt_todotxt)
             } else {
-                return getString(R.string.context_prompt)
+                getString(R.string.context_prompt)
             }
         }
 
     val tagTerm: String
         get() {
-            if (useTodoTxtTerms) {
-                return getString(R.string.project_prompt_todotxt)
+            return if (useTodoTxtTerms) {
+                getString(R.string.project_prompt_todotxt)
             } else {
-                return getString(R.string.project_prompt)
+                getString(R.string.project_prompt)
             }
         }
 
@@ -90,11 +90,11 @@ object Config : Preferences(TodoApplication.app) {
         get() = if (_windowsEOL) "\r\n" else "\n"
 
     fun hasDonated(): Boolean {
-        try {
+        return return try {
             TodoApplication.app.packageManager.getInstallerPackageName("nl.mpcjanssen.simpletask.donate")
-            return true
+            true
         } catch (e: IllegalArgumentException) {
-            return false
+            false
         }
     }
 
@@ -198,10 +198,10 @@ object Config : Preferences(TodoApplication.app) {
                 setTodoFile(name)
             }
             val todoFile = File(name)
-            try {
-                return todoFile.canonicalPath
+            return try {
+                todoFile.canonicalPath
             } catch (e: IOException) {
-                return FileStore.getDefaultPath()
+                FileStore.getDefaultPath()
             }
 
         }

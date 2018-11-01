@@ -225,15 +225,15 @@ fun addBusinessDays(originalDate: DateTime, days: Int): DateTime {
     var date = originalDate
     var amount = days
     while (amount > 0) {
-        when (date.weekDay) {
+        date = when (date.weekDay) {
             6 -> { // Friday
-                date = date.plusDays(3)
+                date.plusDays(3)
             }
             7 -> { // Saturdau
-                date = date.plusDays(2)
+                date.plusDays(2)
             }
             else -> {
-                date = date.plusDays(1)
+                date.plusDays(1)
             }
 
         }
@@ -276,7 +276,7 @@ fun addInterval(date: DateTime?, interval: String): DateTime? {
 fun getCheckedItems(listView: ListView, checked: Boolean): ArrayList<String> {
     val checks = listView.checkedItemPositions
     val items = ArrayList<String>()
-    for (i in 0..checks.size() - 1) {
+    for (i in 0 until checks.size()) {
         val item = listView.adapter.getItem(checks.keyAt(i)) as String
         if (checks.valueAt(i) && checked) {
             items.add(item)
@@ -441,13 +441,13 @@ fun alfaSort(
     val sorted = items.sortedWith ( compareBy<String> {
         if (caseSensitive) it else it.toLowerCase(Locale.getDefault())
     })
-    if (prefix != null) {
+    return if (prefix != null) {
         val result = ArrayList<String>(sorted.size+1)
         result.add(prefix)
         result.addAll(sorted)
-        return result
+        result
     } else {
-        return ArrayList(sorted)
+        ArrayList(sorted)
     }
 }
 
@@ -521,15 +521,15 @@ fun showChangelogOverlay(act: Activity): Dialog? {
 
 fun markdownAssetAsHtml(ctxt: Context, name: String): String {
     var markdown: String
-    try {
-        markdown = readAsset(ctxt.assets, name)
+    markdown = try {
+        readAsset(ctxt.assets, name)
     } catch (e: IOException) {
         val fallbackAsset = name.replace("\\.[a-z]{2}\\.md$".toRegex(), ".en.md")
         Log.w(TAG, "Failed to load markdown asset: $name falling back to $fallbackAsset")
         try {
-            markdown = readAsset(ctxt.assets, fallbackAsset)
+            readAsset(ctxt.assets, fallbackAsset)
         } catch (e: IOException) {
-            markdown = "$name and fallback $fallbackAsset not found."
+            "$name and fallback $fallbackAsset not found."
         }
     }
     // Change issue numbers to links
@@ -651,10 +651,10 @@ fun initTaskWithFilter(task: Task, mFilter: Query) {
 
 fun String.toDateTime(): DateTime? {
     val date: DateTime?
-    if (DateTime.isParseable(this)) {
-        date = DateTime(this)
+    date = if (DateTime.isParseable(this)) {
+        DateTime(this)
     } else {
-        date = null
+        null
     }
     return date
 }

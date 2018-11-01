@@ -49,13 +49,13 @@ class FilterSortFragment : Fragment() {
 
         val arguments = arguments
         if (originalItems == null) {
-            if (savedInstanceState != null) {
-                originalItems = savedInstanceState.getStringArrayList(STATE_SELECTED)
+            originalItems = if (savedInstanceState != null) {
+                savedInstanceState.getStringArrayList(STATE_SELECTED)
             } else {
-                originalItems = arguments?.getStringArrayList(FilterActivity.FILTER_ITEMS)?: ArrayList()
+                arguments?.getStringArrayList(FilterActivity.FILTER_ITEMS)?: ArrayList()
             }
         }
-        Log.d(TAG, "Created view with: " + originalItems)
+        Log.d(TAG, "Created view with: $originalItems")
         m_app = TodoApplication.app
 
         // Set the proper theme
@@ -113,10 +113,10 @@ class FilterSortFragment : Fragment() {
         lv!!.adapter = adapter
         lv!!.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             var direction = directions[position]
-            if (direction == Query.REVERSED_SORT) {
-                direction = Query.NORMAL_SORT
+            direction = if (direction == Query.REVERSED_SORT) {
+                Query.NORMAL_SORT
             } else {
-                direction = Query.REVERSED_SORT
+                Query.REVERSED_SORT
             }
             directions.removeAt(position)
             directions.add(position, direction)
@@ -139,7 +139,7 @@ class FilterSortFragment : Fragment() {
         get() {
             val multiSort = ArrayList<String>()
             when {
-                lv != null -> for (i in 0..adapter.count - 1) {
+                lv != null -> for (i in 0 until adapter.count) {
                     multiSort.add(directions[i] + Query.SORT_SEPARATOR + adapter.getSortType(i))
                 }
                 originalItems != null -> multiSort.addAll(originalItems as ArrayList<String>)
