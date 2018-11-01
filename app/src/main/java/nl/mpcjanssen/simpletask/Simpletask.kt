@@ -564,6 +564,12 @@ class Simpletask : ThemedNoActionBarActivity() {
                     toolbar.visibility = View.VISIBLE
                     toolbar.menu.clear()
                     inflater.inflate(R.menu.task_context, toolbar.menu)
+                    if (!Config.useListAndTagIcons) {
+                        toolbar.menu?.apply {
+                            findItem(R.id.update_lists)?.setIcon(R.drawable.ic_action_todotxt_lists)
+                            findItem(R.id.update_tags)?.setIcon(R.drawable.ic_action_todotxt_tags)
+                        }
+                    }
 
 
                     updateCompletionCheckboxState()

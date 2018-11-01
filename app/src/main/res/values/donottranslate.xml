@@ -178,5 +178,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="ui_last_scroll_position"        translatable="false">ui_last_scroll_position</string>
     <string name="ui_last_scroll_offset"          translatable="false">ui_last_scroll_offset</string>
     <string name="changes_pending" translatable="false">changes_pending</string>
+    <string name="use_list_and_tags_icons" translatable="false">use_list_and_tags_icons</string>
     <string name="query_store" translatable="false">query_store</string>
 </resources>

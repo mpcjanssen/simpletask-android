@@ -178,6 +178,8 @@ object Config : Preferences(TodoApplication.app) {
 
     val hasShareTaskShowsEdit by BooleanPreference(R.string.share_task_show_edit, false)
 
+    val useListAndTagIcons by BooleanPreference(R.string.use_list_and_tags_icons, true)
+
     val hasExtendedTaskView by BooleanPreference(R.string.taskview_extended_pref_key, true)
 
     val showCompleteCheckbox by BooleanPreference(R.string.ui_complete_checkbox, true)

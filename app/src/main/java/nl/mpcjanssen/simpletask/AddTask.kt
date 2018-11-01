@@ -69,6 +69,11 @@ class AddTask : ThemedActionBarActivity() {
         setContentView(R.layout.add_task)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
+        if (!Config.useListAndTagIcons) {
+            btnContext.setImageResource(R.drawable.ic_action_todotxt_lists)
+            btnProject.setImageResource(R.drawable.ic_action_todotxt_tags)
+
+        }
 
 
         if (share_text != null) {
