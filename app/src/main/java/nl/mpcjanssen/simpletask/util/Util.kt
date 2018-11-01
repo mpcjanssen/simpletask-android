@@ -422,12 +422,8 @@ fun copyFile(sourceFile: File, destFile: File) {
         destination = FileOutputStream(destFile).channel
         destination!!.transferFrom(source, 0, source!!.size())
     } finally {
-        if (source != null) {
-            source.close()
-        }
-        if (destination != null) {
-            destination.close()
-        }
+        source?.close()
+        destination?.close()
     }
 }
 

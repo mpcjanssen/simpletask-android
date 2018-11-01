@@ -82,7 +82,7 @@ class TaskTest : TestCase() {
 
         val text = t.tokens.filter {
             it is TextToken
-        }.map { it.text }.joinToString(" ")
+        }.joinToString(" ") { it.text }
         assertEquals("morgen", text)
     }
 

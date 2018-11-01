@@ -16,8 +16,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.Window
 import android.view.WindowManager
-import android.widget.ArrayAdapter
-import android.widget.ListView
 import hirondelle.date4j.DateTime
 import kotlinx.android.synthetic.main.add_task.*
 import nl.mpcjanssen.simpletask.task.Priority
@@ -27,13 +25,13 @@ import nl.mpcjanssen.simpletask.util.*
 import java.util.*
 
 class AddTask : ThemedActionBarActivity() {
-    private var start_text: String = ""
+    private var startText: String = ""
 
-    private val share_text: String? = null
+    private val shareText: String? = null
 
     // private val m_backup = ArrayList<Task>()
 
-    private var m_broadcastReceiver: BroadcastReceiver? = null
+    private var mBroadcastReceiver: BroadcastReceiver? = null
     private var localBroadcastManager: LocalBroadcastManager? = null
 
     /*
@@ -64,7 +62,7 @@ class AddTask : ThemedActionBarActivity() {
             }
         }
         localBroadcastManager!!.registerReceiver(broadcastReceiver, intentFilter)
-        m_broadcastReceiver = broadcastReceiver
+        mBroadcastReceiver = broadcastReceiver
         window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
         setContentView(R.layout.add_task)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -76,29 +74,28 @@ class AddTask : ThemedActionBarActivity() {
         }
 
 
-        if (share_text != null) {
-            taskText.setText(share_text)
+        if (shareText != null) {
+            taskText.setText(shareText)
         }
 
         setTitle(R.string.addtask)
 
         Log.d(TAG, "Fill addtask")
 
-        val pendingTasks = TodoList.pendingEdits.map {
+        val pendingTasks = TodoList.pendingEdits.mapNotNull {
             TodoList.todoItemsCopy.getOrNull(it)?.inFileFormat()
-        }.filterNotNull()
+        }
         runOnUiThread {
-            val preFillString = if (pendingTasks.isNotEmpty()) {
-                setTitle(R.string.updatetask)
-                join(pendingTasks, "\n")
-            } else if (intent.hasExtra(Constants.EXTRA_PREFILL_TEXT)) {
-                intent.getStringExtra(Constants.EXTRA_PREFILL_TEXT)
-            } else if (intent.hasExtra(Query.INTENT_JSON)) {
-                Query(intent, luaModule = "from_intent").prefill
-            } else {
-                ""
+            val preFillString = when {
+                pendingTasks.isNotEmpty() -> {
+                    setTitle(R.string.updatetask)
+                    join(pendingTasks, "\n")
+                }
+                intent.hasExtra(Constants.EXTRA_PREFILL_TEXT) -> intent.getStringExtra(Constants.EXTRA_PREFILL_TEXT)
+                intent.hasExtra(Query.INTENT_JSON) -> Query(intent, luaModule = "from_intent").prefill
+                else -> ""
             }
-            start_text = preFillString
+            startText = preFillString
             // Avoid discarding changes on rotate
             if (taskText.text.isEmpty()) {
                 taskText.setText(preFillString)
@@ -127,10 +124,10 @@ class AddTask : ThemedActionBarActivity() {
         val remainingText = taskText.text.toString().substring(position)
         val endOfLineDistance = remainingText.indexOf('\n')
         var endOfLine: Int
-        if (endOfLineDistance == -1) {
-            endOfLine = taskText.length()
+        endOfLine = if (endOfLineDistance == -1) {
+            taskText.length()
         } else {
-            endOfLine = position + endOfLineDistance
+            position + endOfLineDistance
         }
         taskText.setSelection(endOfLine)
         replaceTextAtSelection("\n", false)
@@ -138,10 +135,10 @@ class AddTask : ThemedActionBarActivity() {
         val precedingText = taskText.text.toString().substring(0, endOfLine)
         val lineStart = precedingText.lastIndexOf('\n')
         val line: String
-        if (lineStart != -1) {
-            line = precedingText.substring(lineStart, endOfLine)
+        line = if (lineStart != -1) {
+            precedingText.substring(lineStart, endOfLine)
         } else {
-            line = precedingText
+            precedingText
         }
         val t = Task(line)
         val prefillItems = mutableListOf<String>()
@@ -158,7 +155,7 @@ class AddTask : ThemedActionBarActivity() {
         taskText.setSelection(endOfLine)
     }
 
-    fun setWordWrap(bool: Boolean) {
+    private fun setWordWrap(bool: Boolean) {
         taskText.setHorizontallyScrolling(!bool)
     }
 
@@ -177,7 +174,7 @@ class AddTask : ThemedActionBarActivity() {
         return true
     }
 
-    fun setInputType() {
+    private fun setInputType() {
         val basicType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
         if (Config.isCapitalizeTasks) {
             taskText.inputType = basicType or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
@@ -236,7 +233,7 @@ class AddTask : ThemedActionBarActivity() {
         val enteredTasks = getTasks().dropLastWhile { it.text.isEmpty() }.toMutableList()
 
         val updateSize = TodoList.pendingEdits.size
-        Log.i(TAG, "Saving ${enteredTasks.size} tasks, updating ${updateSize} tasks")
+        Log.i(TAG, "Saving ${enteredTasks.size} tasks, updating $updateSize tasks")
         val replaceCount = Math.min(updateSize, enteredTasks.size)
         for (i in 0 until replaceCount) {
             val taskIndex = TodoList.pendingEdits[0]
@@ -245,9 +242,9 @@ class AddTask : ThemedActionBarActivity() {
             TodoList.pendingEdits.removeAt(0)
         }
         // If tasks are left in pendingedits, they were removed
-        val tasksToDelete =  TodoList.pendingEdits.map {idx ->
+        val tasksToDelete = TodoList.pendingEdits.mapNotNull { idx ->
             TodoList.getTaskAt(idx)
-        }.filterNotNull()
+        }
         TodoList.removeAll(tasksToDelete)
 
         val processedTasks: List<Task> = enteredTasks.map { task ->
@@ -270,7 +267,7 @@ class AddTask : ThemedActionBarActivity() {
             TodoList.clearPendingEdits()
             finish()
         }
-        if (confirmation && (taskText.text.toString() != start_text)) {
+        if (confirmation && (taskText.text.toString() != startText)) {
             showConfirmationDialog(this, R.string.cancel_changes, close, null)
         } else {
             close.onClick(null, 0)
@@ -357,7 +354,7 @@ class AddTask : ThemedActionBarActivity() {
 
         updateItemsDialog(
                 Config.tagTerm,
-                listOf<Task>(task),
+                listOf(task),
                 ArrayList(items),
                 Task::tags,
                 Task::addTag,
@@ -375,7 +372,7 @@ class AddTask : ThemedActionBarActivity() {
     private fun showPriorityMenu() {
         val builder = AlertDialog.Builder(this)
         val priorities = Priority.values()
-        val priorityCodes = priorities.mapTo(ArrayList<String>()) { it.code }
+        val priorityCodes = priorities.mapTo(ArrayList()) { it.code }
 
         builder.setItems(priorityCodes.toArray<String>(arrayOfNulls<String>(priorityCodes.size))
         ) { _, which -> replacePriority(priorities[which].code) }
@@ -388,7 +385,7 @@ class AddTask : ThemedActionBarActivity() {
 
     private fun getTasks(): MutableList<Task> {
         val input = taskText.text.toString()
-        return input.split("\r\n|\r|\n".toRegex()).map(::Task).toMutableList()
+        return input.split("\r\n|\r|\n".toRegex()).asSequence().map(::Task).toMutableList()
     }
 
     private fun showListMenu() {
@@ -409,7 +406,7 @@ class AddTask : ThemedActionBarActivity() {
 
         updateItemsDialog(
                 Config.listTerm,
-                listOf<Task>(task),
+                listOf(task),
                 ArrayList(items),
                 Task::lists,
                 Task::addList,
@@ -424,23 +421,14 @@ class AddTask : ThemedActionBarActivity() {
         }
     }
 
-    private fun initListViewSelection(lv: ListView, lvAdapter: ArrayAdapter<String>, selectedItems: Set<String>) {
-        for (i in 0..lvAdapter.count - 1) {
-            selectedItems
-                    .filter { it == lvAdapter.getItem(i) }
-                    .forEach { lv.setItemChecked(i, true) }
-        }
-    }
-
-    fun getCurrentCursorLine(): Int {
+    private fun getCurrentCursorLine(): Int {
         val selectionStart = taskText.selectionStart
         if (selectionStart == -1) {
             return -1
         }
 
         val chars = taskText.text.subSequence(0, selectionStart)
-        val line = (0..chars.length - 1).count { chars[it] == '\n' }
-        return line
+        return (0 until chars.length).count { chars[it] == '\n' }
     }
 
     private fun replaceDueDate(newDueDate: CharSequence) {
@@ -535,7 +523,7 @@ class AddTask : ThemedActionBarActivity() {
         if (start == end && start != 0 && spaces) {
             // no selection prefix with space if needed
             if (taskText.text[start - 1] != ' ') {
-                text = " " + text
+                text = " $text"
             }
         }
         taskText.text.replace(Math.min(start, end), Math.max(start, end),
@@ -544,12 +532,12 @@ class AddTask : ThemedActionBarActivity() {
 
     public override fun onDestroy() {
         super.onDestroy()
-        m_broadcastReceiver?.let {
+        mBroadcastReceiver?.let {
             localBroadcastManager?.unregisterReceiver(it)
         }
     }
 
     companion object {
-        private val TAG = "AddTask"
+        private const val TAG = "AddTask"
     }
 }

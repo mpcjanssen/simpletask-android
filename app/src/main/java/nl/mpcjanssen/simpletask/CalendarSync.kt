@@ -89,8 +89,8 @@ private class Evt(
 
     infix fun equals(other: Evt) =
             dtStart == other.dtStart &&
-                    title.equals(other.title) &&
-                    description.equals(other.description) &&
+                    title == other.title &&
+                    description == other.description &&
                     remMinutes == other.remMinutes
 
     @TargetApi(16)
@@ -246,9 +246,11 @@ private class EvtMap private constructor() : HashMap<EvtKey, LinkedList<Evt>>() 
 
         for (list in values) {
             for (evt in list) {
-                if (evt.status == EvtStatus.INSERT) ins++
-                else if (evt.status == EvtStatus.KEEP) kps++
-                else if (evt.status == EvtStatus.DELETE) dels++
+                when {
+                    evt.status == EvtStatus.INSERT -> ins++
+                    evt.status == EvtStatus.KEEP -> kps++
+                    evt.status == EvtStatus.DELETE -> dels++
+                }
 
                 evt.addOp(ops, calID)
             }
@@ -353,12 +355,11 @@ object CalendarSync {
         val args = arrayOf(CAL_NAME)
         try {
             val ret = m_cr.delete(CAL_URI, selection, args)
-            if (ret == 0)
-                Log.d(TAG, "No calendar to remove")
-            else if (ret == 1)
-                Log.d(TAG, "Calendar removed")
-            else
-                Log.e(TAG, "Unexpected return value while removing calendar: " + ret)
+            when (ret) {
+                0 -> Log.d(TAG, "No calendar to remove")
+                1 -> Log.d(TAG, "Calendar removed")
+                else -> Log.e(TAG, "Unexpected return value while removing calendar: " + ret)
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Error while removing calendar", e)
         }

@@ -125,7 +125,7 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
 
         // Remove calendar preferences for older devices
         if (!TodoApplication.atLeastAPI(16)) {
-            target.addAll(allHeaders.filter { !it.fragment.equals(CalendarPrefFragment::class.java.name) })
+            target.addAll(allHeaders.filter { it.fragment != CalendarPrefFragment::class.java.name })
         } else {
             target.addAll(allHeaders)
         }
