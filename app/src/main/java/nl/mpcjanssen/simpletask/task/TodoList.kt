@@ -150,12 +150,6 @@ object TodoList {
             return todoItemsCopy.filter { it.selected }
         }
 
-
-    var completedTasks: List<Task> = ArrayList()
-        get() {
-            return todoItemsCopy.filter { it.isCompleted() }
-        }
-
     fun notifyTasklistChanged(todoName: String, save: Boolean) {
         Log.d(TAG, "Notified changed")
         if (save) {
@@ -169,7 +163,7 @@ object TodoList {
         broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
     }
 
-    fun startAddTaskActivity(act: Activity, prefill: String) {
+    private fun startAddTaskActivity(act: Activity, prefill: String) {
         Log.d(TAG, "Start add/edit task activity")
         val intent = Intent(act, AddTask::class.java)
         intent.putExtra(Constants.EXTRA_PREFILL_TEXT, prefill)

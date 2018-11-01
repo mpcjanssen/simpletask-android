@@ -187,13 +187,13 @@ class FilterActivity : ThemedNoActionBarActivity() {
                 return true
             }
             R.id.menu_filter_action -> {
-                if (asWidgetConfigure) {
-                    askWidgetName()
-                } else if (asWidgetReConfigure) {
-                    updateWidget()
-                    finish()
-                } else {
-                    applyFilter()
+                when {
+                    asWidgetConfigure -> askWidgetName()
+                    asWidgetReConfigure -> {
+                        updateWidget()
+                        finish()
+                    }
+                    else -> applyFilter()
                 }
             }
             R.id.menu_filter_load_script -> openScript { contents ->

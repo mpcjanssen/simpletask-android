@@ -457,7 +457,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             Log.d(TAG, "Selection from intent")
             val position = currentIntent.getIntExtra(Constants.INTENT_SELECTED_TASK_LINE, -1)
             currentIntent.removeExtra(Constants.INTENT_SELECTED_TASK_LINE)
-            setIntent(currentIntent)
+            intent = currentIntent
             if (position > -1) {
                 val itemAtPosition = TodoList.getTaskAt(position)
                 itemAtPosition?.let {
