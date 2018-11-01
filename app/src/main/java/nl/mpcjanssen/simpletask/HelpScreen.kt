@@ -66,7 +66,7 @@ class HelpScreen : ThemedActionBarActivity() {
             // Replacement is API >= 21 only
             @Suppress("OverridingDeprecatedMember")
             override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                Log.d(TAG, "Loading url: " + url)
+                Log.d(TAG, "Loading url: $url")
                 if (url.startsWith("https://www.paypal.com")) {
                     // Paypal links don't work in the mobile browser so this hack is needed
                     loadDesktop(view, url)
@@ -76,15 +76,15 @@ class HelpScreen : ThemedActionBarActivity() {
                     }
                     return true
                 }
-                if (url.startsWith("http://") || url.startsWith("https://")) {
+                return if (url.startsWith("http://") || url.startsWith("https://")) {
                     view.settings.userAgentString = null
                     openUrl(url)
-                    return true
+                    true
                 } else if (url.endsWith(".md")) {
                     showMarkdownAsset(view, this@HelpScreen, url.replace(BASE_URL, ""))
-                    return true
+                    true
                 } else {
-                    return false
+                    false
                 }
             }
         }
