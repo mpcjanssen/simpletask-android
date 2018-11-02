@@ -87,13 +87,13 @@ class TimePreference @JvmOverloads constructor(ctx: Context, attrs: AttributeSet
     }
 
     override fun onSetInitialValue(restoreValue: Boolean, defaultValue: Any?) {
-        m_minutes = if (restoreValue) {
-            getPersistedInt(0)
+        if (restoreValue) {
+            m_minutes = getPersistedInt(0)
         } else {
             if (defaultValue == null) {
-                0
+                m_minutes = 0
             } else {
-                defaultValue as Int
+                m_minutes = defaultValue as Int
             }
         }
     }

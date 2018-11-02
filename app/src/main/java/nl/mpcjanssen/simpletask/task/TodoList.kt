@@ -239,7 +239,7 @@ object TodoList {
 
 
                     } catch (e: Exception) {
-                        Log.e(TAG, "TodoList load failed: {}$filename", e)
+                        Log.e(TAG, "TodoList load failed: {}" + filename, e)
                         showToastShort(TodoApplication.app, "Loading of todo file failed")
                     }
 
