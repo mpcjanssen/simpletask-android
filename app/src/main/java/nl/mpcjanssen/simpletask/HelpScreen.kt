@@ -139,7 +139,7 @@ class HelpScreen : ThemedActionBarActivity() {
             }
             R.id.menu_donate -> {
                 val i = Intent(Intent.ACTION_VIEW)
-                i.data = Uri.parse("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=mpc%2ejanssen%40gmail%2ecom&lc=NL&item_name=mpcjanssen%2enl&item_number=Simpletask&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted")
+                i.data = Uri.parse("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=mpc%2ejanssen%40gmail%2ecom&item_name=mpcjanssen%2enl&item_number=Simpletask&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted")
                 startActivity(i)
                 return true
             }
