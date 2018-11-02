@@ -96,7 +96,7 @@ android {
             //noinspection GroovyAssignabilityCheck
             signingConfig signingConfigs.release
             setMinifyEnabled(true)
-            proguardFiles getDefaultProguardFile('proguard-android.txt')
+            proguardFile "proguard.txt"
             manifestPlaceholders = [providerBuildType: "release"]
         }
     }
