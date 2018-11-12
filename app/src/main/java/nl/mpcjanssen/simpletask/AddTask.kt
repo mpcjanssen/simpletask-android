@@ -82,9 +82,7 @@ class AddTask : ThemedActionBarActivity() {
 
         Log.d(TAG, "Fill addtask")
 
-        val pendingTasks = TodoList.pendingEdits.mapNotNull {
-            TodoList.todoItemsCopy.getOrNull(it)?.inFileFormat()
-        }
+        val pendingTasks = TodoList.pendingEdits.map { it.inFileFormat() }
         runOnUiThread {
             val preFillString = when {
                 pendingTasks.isNotEmpty() -> {
@@ -229,36 +227,20 @@ class AddTask : ThemedActionBarActivity() {
         }
 
         // Update the TodoList with changes
-        // Create new tasks
-        val enteredTasks = getTasks().dropLastWhile { it.text.isEmpty() }.toMutableList()
-
-        val updateSize = TodoList.pendingEdits.size
-        Log.i(TAG, "Saving ${enteredTasks.size} tasks, updating $updateSize tasks")
-        val replaceCount = Math.min(updateSize, enteredTasks.size)
-        for (i in 0 until replaceCount) {
-            val taskIndex = TodoList.pendingEdits[0]
-            TodoList.todoItemsCopy[taskIndex].update(enteredTasks[0].text)
-            enteredTasks.removeAt(0)
-            TodoList.pendingEdits.removeAt(0)
-        }
-        // If tasks are left in pendingedits, they were removed
-        val tasksToDelete = TodoList.pendingEdits.mapNotNull { idx ->
-            TodoList.getTaskAt(idx)
-        }
-        TodoList.removeAll(tasksToDelete)
-
-        val processedTasks: List<Task> = enteredTasks.map { task ->
+        val enteredTasks = getTasks().dropLastWhile { it.text.isEmpty() }.map { task ->
             if (Config.hasPrependDate) {
                 Task(task.text, todayAsString)
             } else {
                 task
             }
         }
-
-        todoList.add(processedTasks, Config.hasAppendAtEnd)
+        val origTasks = TodoList.pendingEdits
+        Log.i(TAG, "Saving ${enteredTasks.size} tasks, updating $origTasks tasks")
+        TodoList.update(origTasks, enteredTasks, Config.hasAppendAtEnd)
 
         // Save
-        todoList.notifyTasklistChanged(Config.todoFileName, true)
+        todoList.notifyTasklistChanged(Config.todoFileName, true, false)
+
         finishEdit(confirmation = false)
     }
 
