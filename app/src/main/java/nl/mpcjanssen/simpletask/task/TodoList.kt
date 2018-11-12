@@ -143,19 +143,17 @@ object TodoList {
     }
 
     fun update(org: List<Task>, updated: List<Task>, addAtEnd: Boolean) {
-
-        val combined = org.zip(updated)
-        val smallestSize = combined.size
-        removeAll(org.toMutableList().drop(smallestSize))
-        add(updated.toMutableList().drop(smallestSize), addAtEnd)
-        combined.forEach { (orgTask, updatedTask) ->
+        val smallestSize = org.zip(updated) { orgTask, updatedTask ->
             val idx = todoItems.indexOf(orgTask)
             if (idx != -1) {
                 todoItems[idx] = updatedTask
             } else {
                 todoItems.add(updatedTask)
             }
-        }
+            1
+        }.size
+        removeAll(org.toMutableList().drop(smallestSize))
+        add(updated.toMutableList().drop(smallestSize), addAtEnd)
     }
 
     var selectedTasks: List<Task> = ArrayList()
