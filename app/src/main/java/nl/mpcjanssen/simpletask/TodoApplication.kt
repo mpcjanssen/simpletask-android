@@ -57,6 +57,12 @@ class TodoApplication : MultiDexApplication() {
 
     override fun onCreate() {
         app = this
+
+        if (Config.forceEnglish) {
+            val conf = resources.configuration
+            conf.locale = Locale.ENGLISH
+            resources.updateConfiguration(conf, resources.displayMetrics)
+        }
         super.onCreate()
 
         localBroadCastManager = LocalBroadcastManager.getInstance(this)

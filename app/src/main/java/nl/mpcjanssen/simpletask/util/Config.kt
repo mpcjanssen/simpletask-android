@@ -260,6 +260,7 @@ object Config : Preferences(TodoApplication.app) {
             }
         }
     var changesPending by BooleanPreference(R.string.changes_pending, false)
+    var forceEnglish by BooleanPreference(R.string.force_english, false)
     var useUUIDs by BooleanPreference(R.string.use_uuids, false)
 
     fun legacyQueryStoreJson() : String   {
