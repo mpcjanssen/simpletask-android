@@ -20,7 +20,7 @@
     <string name="log">Histórico</string>
     <string name="next">Próximo</string>
     <string name="prev">Anterior</string>
-    <string name="open_file">Abrir arquivo \"todo.txt\"</string>
+    <string name="open_file">Abrir ficheiro de lista de tarefas</string>
     <string name="sync">Sincronizar</string>
     <string name="changelist">Escolher lista</string>
     <string name="search">Procurar</string>
@@ -51,7 +51,7 @@
     <string name="ok">Ok</string>
     <string name="cancel">Cancelar</string>
     <string name="clear_filter">Limpar filtro</string>
-    <string name="write_failed">Falha na gravação do arquivo. As mudanças NÃO foram salvas!</string>
+    <string name="write_failed">Falha na gravação do ficheiro. As mudanças NÃO foram salvas.</string>
 
     <string name="tasktexthint">\@discutir +macartismo com +Pepe @altruísmo
 \nDizer ao +Pepe para discursar sobre @altruísmo
@@ -87,7 +87,7 @@
     <string name="archive_now_pref_summary">Mover tarefas completadas de todo.txt para done.txt.</string>
     <string name="dropbox_logout_pref_title">Sair</string>
     <string name="dropbox_logout_pref_summary">Sair do Dropbox.</string>
-    <string name="TODOTXTPATH_title">Local do arquivo</string>
+    <string name="TODOTXTPATH_title">Local do ficheiro</string>
     <string name="TODOTXTPATH_summary">Pasta do todo.txt no Dropbox.</string>
     <string name="TODOTXTPATH_defaultPath">/todo</string>
     <string name="DROPBOX_settings_header">Dropbox</string>
@@ -170,8 +170,8 @@ Desmarque para atualizar datas de criação relativamente a hoje.</string>
 
     <string name="taskview_extended_pref_title">Exibir datas numa outra linha</string>
 
-    <string name="append_tasks_at_end_title">Anexar ao arquivo</string>
-    <string name="append_tasks_at_end_summary">Inserir novas tarefas no fim do arquivo</string>
+    <string name="append_tasks_at_end_title">Anexar ao ficheiro</string>
+    <string name="append_tasks_at_end_summary">Inserir novas tarefas no fim do ficheiro</string>
 
     <string name="color_due_pref_title">Colorir prazos</string>
     <string name="color_due_pref_summary">Colorir prazos e datas limiares</string>
@@ -194,7 +194,7 @@ Desmarque para atualizar datas de criação relativamente a hoje.</string>
     <string name="show_confirmation_dialogs_title">Diálogos de confirmação</string>
     <string name="show_confirmation_dialogs_summary">Perguntar antes de arquivar ou apagar tarefas</string>
 
-    <string name="show_todo_path_title">Exibir caminho para o arquivo \"todo.txt\"</string>
+    <string name="show_todo_path_title">Mostrar onde o ficheiro \"TODO\" é armazenado</string>
     <string name="show_todo_path_summary">Representar pastas pela primeira letra</string>
 
     <string name="show_fast_scroll_title">Rolagem rápida</string>
@@ -233,8 +233,8 @@ Desmarque para atualizar datas de criação relativamente a hoje.</string>
 
     <!-- sync conflict dialog -->
     <string name="sync_conflict_dialog_title">Conflito de arquivos</string>
-    <string name="sync_conflict_dialog_msg">Opa! Há uma nova versão do arquivo todo.txt no Dropbox.
-\nPretende carregar o arquivo local ou o remoto?</string>
+    <string name="sync_conflict_dialog_msg">Opa! Há uma nova versão do ficheiro todo.txt no Dropbox. 
+\nPretende carregar o ficheiro local ou o remoto\?</string>
 
     <!-- login -->
     <string name="first_title_word">Simpletask</string>
@@ -249,8 +249,8 @@ Desmarque para atualizar datas de criação relativamente a hoje.</string>
     <string name="delete_task_message">Impossível desfazer. Tem certeza?</string>
     <string name="logout_message">Certifique-se de que todas as mudanças foram sincronizadas no Dropbox ou que toda a lista de tarefas foi compartilhada.
 \n Mudanças não sincronizadas serão perdidas após deslogar.</string>
-     <string name="dropbox_open">Certifique-se de que as alterações foram sincronizadas no Dropbox ou inteiramente compartilhadas, se não houver conexão com o Dropbox.
-\n Alterações não sincronizadas serão perdidas após abrir-se um outro arquivo.</string>
+     <string name="dropbox_open">Certifique-se de que as alterações foram sincronizadas no Dropbox ou inteiramente compartilhadas, se não houver conexão com o Dropbox. 
+\n Alterações não sincronizadas serão perdidas após abrir-se um outro ficheiro.</string>
     <string name="delete_task_confirm">Apagar</string>
 
     <!-- search -->
@@ -260,7 +260,7 @@ Desmarque para atualizar datas de criação relativamente a hoje.</string>
 
     <!-- sort -->
     <string name="sort_help">Arrastar e soltar para mudar a ordem. Clicar nos itens para mudar a ordem.</string>
-    <string name="file_order">Ordem no arquivo (sem ordem)</string>
+    <string name="file_order">Ordem no ficheiro (sem ordem)</string>
     <string name="alphabetical">Alfabética</string>
     <string name="by_prio">Por prioridade</string>
     <string name="by_project">Por etiqueta</string>
@@ -423,7 +423,7 @@ Desmarque para atualizar datas de criação relativamente a hoje.</string>
     <string name="filter_tab_header_sort">ORDEM</string>
     <string name="filter_tab_header_script">SCRIPT</string>
 
-    <string name="script_tab_script_from_file">Script do arquivo</string>
+    <string name="script_tab_script_from_file">Script do ficheiro</string>
     <string name="script_tab_use_script">Usar script</string>
     <string name="script_tab_test">TESTE</string>
     <string name="script_tab_test_task">Testar tatefa</string>
@@ -439,4 +439,12 @@ Desmarque para atualizar datas de criação relativamente a hoje.</string>
     <string name="toast_lua_config_imported">Config lua importada</string>
 
     <string name="saved_filters_imported">Filtros importados</string>
-    </resources>
+    <string name="cancel_changes">As alterações serão perdidas.</string>
+    <string name="by_lua">Script de Lua</string>
+
+    <string name="use_uuid_title">Atribuir um UUID a cada tarefa</string>
+    <string name="nav_drawer_hint">Salvar o filtro atual
+\n usando o botão salvar</string>
+    <string name="invalid_certificate_msg">Certificado de servidor é inválido. Quer continuar\?</string>
+    <string name="invalid_certificate_title">Cert inválido.</string>
+</resources>
