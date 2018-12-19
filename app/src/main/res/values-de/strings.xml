@@ -447,7 +447,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="toast_lua_config_imported">importierte Lua-Konfiguration</string>
 
     <string name="saved_filters_imported">Filter importiert</string>
-    <string name="by_lua">Lua Skript</string>
+    <string name="by_lua">Lua-Skript</string>
 
     <string name="cancel_changes">Alle Änderungen werden verworfen.</string>
     <string name="use_uuid_title">Weise jeder Aufgabe eine UUID zu</string>
