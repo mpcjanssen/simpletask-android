@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources><string name="invalid_context">清单名称无效</string>
     <string name="invalid_project">标签名称无效</string>
     <string name="app_label">Simpletask</string>
@@ -414,4 +414,6 @@
     <string name="back_clears_filter_summary">在退出应用程序之前按返回键将清除筛选器。</string>
     <string name="use_uuid_title">为每个任务分配一个 UUID</string>
     <string name="nav_drawer_hint">使用“保存”按钮保存当前筛选器</string>
+    <string name="invalid_certificate_msg">服务器证书无效，你想继续吗？</string>
+    <string name="invalid_certificate_title">证书无效。</string>
 </resources>
