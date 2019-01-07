@@ -5,6 +5,7 @@
 ### Fixed
 
 - Properly handle multiple clicks on completion context item when `keep selection` is enabled for #942.
+- Include all alphanumerical tokens in the Lua text field for #909.
 
 ### Added
 
