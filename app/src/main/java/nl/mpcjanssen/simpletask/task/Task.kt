@@ -159,6 +159,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             return tokens.asSequence().filter { it is MailToken }.map { it -> (it as MailToken).text }.toSet()
         }
     var selected: Boolean = false
+    val alphaParts: String = showParts { it.isAlpha() }
 
     fun removeTag(tag: String) {
         tokens = tokens.filter {
