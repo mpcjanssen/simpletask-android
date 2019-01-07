@@ -110,4 +110,9 @@ class TaskTest : TestCase() {
         val task4 = "Test @a @b"
         Assert.assertArrayEquals(Task(task3).lists!!.toTypedArray(), Task(task4).lists!!.toTypedArray())
     }
+
+    fun testAlphaParts() {
+        val task1 = Task("2018-07-01 1234 Task text with some 33-33 random numbers 12345678 @a +b due:2019-01-01 t:2019-01-01 misc:mine")
+        assertEquals("1234 Task text with some 33-33 random numbers 12345678", task1.alphaParts)
+    }
 }
