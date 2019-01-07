@@ -136,14 +136,14 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            // Respond to the action bar's Up/Home button
+        when (item.itemId) {
+        // Respond to the action bar's Up/Home button
             android.R.id.home -> {
                 finish()
-                true
+                return true
             }
             else -> {
-                false
+                return false
             }
         }
     }
@@ -203,10 +203,10 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
 
             val screen = preferenceScreen
             val toHide: Preference
-            toHide = if (Config.hasDonated()) {
-                screen.findPreference("donate")
+            if (Config.hasDonated()) {
+                toHide = screen.findPreference("donate")
             } else {
-                screen.findPreference("donated")
+                toHide = screen.findPreference("donated")
             }
             screen.removePreference(toHide)
         }

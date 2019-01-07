@@ -23,7 +23,7 @@ object TodoList {
     private var mLists: MutableList<String>? = null
     private var mTags: MutableList<String>? = null
     private val todoItems = ArrayList<Task>()
-    val pendingEdits = ArrayList<Int>()
+    val pendingEdits = ArrayList<Task>()
     internal val TAG = TodoList::class.java.simpleName
 
     init {
@@ -49,10 +49,7 @@ object TodoList {
 
     fun removeAll(tasks: List<Task>) {
         Log.d(TAG, "Remove")
-        tasks.forEach {
-            val idx = todoItems.indexOf(it)
-            pendingEdits.remove(idx)
-        }
+        pendingEdits.removeAll(tasks)
         todoItems.removeAll(tasks)
 
     }
@@ -145,12 +142,26 @@ object TodoList {
         }
     }
 
+    fun update(org: List<Task>, updated: List<Task>, addAtEnd: Boolean) {
+        val smallestSize = org.zip(updated) { orgTask, updatedTask ->
+            val idx = todoItems.indexOf(orgTask)
+            if (idx != -1) {
+                todoItems[idx] = updatedTask
+            } else {
+                todoItems.add(updatedTask)
+            }
+            1
+        }.size
+        removeAll(org.toMutableList().drop(smallestSize))
+        add(updated.toMutableList().drop(smallestSize), addAtEnd)
+    }
+
     var selectedTasks: List<Task> = ArrayList()
         get() {
             return todoItemsCopy.filter { it.selected }
         }
 
-    fun notifyTasklistChanged(todoName: String, save: Boolean) {
+    fun notifyTasklistChanged(todoName: String, save: Boolean, refreshMainUI: Boolean = true) {
         Log.d(TAG, "Notified changed")
         if (save) {
             save(FileStore, todoName, true, Config.eol)
@@ -160,7 +171,14 @@ object TodoList {
         }
         mLists = null
         mTags = null
-        broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
+        if (refreshMainUI) {
+            broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
+        } else {
+            TodoApplication.app.localBroadCastManager.let {
+                broadcastRefreshWidgets(it)
+
+            }
+        }
     }
 
     private fun startAddTaskActivity(act: Activity, prefill: String) {
@@ -235,11 +253,9 @@ object TodoList {
                         Config.lastSeenRemoteId = remoteContents.remoteId
                         // Backup
                         Backupper.backup(filename, items.map { it.inFileFormat() })
-                        notifyTasklistChanged(filename, false)
-
-
+                        notifyTasklistChanged(filename, false, true)
                     } catch (e: Exception) {
-                        Log.e(TAG, "TodoList load failed: {}$filename", e)
+                        Log.e(TAG, "TodoList load failed: {}" + filename, e)
                         showToastShort(TodoApplication.app, "Loading of todo file failed")
                     }
 
@@ -252,15 +268,16 @@ object TodoList {
 
     private fun save(fileStore: IFileStore, todoFileName: String, backup: Boolean, eol: String) {
         broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
-        val lines = todoItemsCopy.map {
+        val lines = todoItems.map {
             it.inFileFormat()
         }
         // Update cache
         Config.cachedContents = lines.joinToString("\n")
-        if (backup) {
-            Backupper.backup(todoFileName, lines)
-        }
+
         FileStoreActionQueue.add("Save") {
+            if (backup) {
+                Backupper.backup(todoFileName, lines)
+            }
             try {
                 Log.i(TAG, "Saving todo list, size ${lines.size}")
                 val rev = fileStore.saveTasksToFile(todoFileName, lines, eol = eol)
@@ -291,7 +308,7 @@ object TodoList {
             try {
                 FileStore.appendTaskToFile(doneFileName, tasks.map { it.text }, eol)
                 removeAll(tasks)
-                notifyTasklistChanged(todoFilename, true)
+                notifyTasklistChanged(todoFilename, true, true)
             } catch (e: Exception) {
                 Log.e(TAG, "Task archiving failed", e)
                 showToastShort(TodoApplication.app, "Task archiving failed")
@@ -345,12 +362,7 @@ object TodoList {
 
     fun editTasks(from: Activity, tasks: List<Task>, prefill: String) {
         Log.d(TAG, "Edit tasks")
-        for (task in tasks) {
-            val i = todoItems.indexOf(task)
-            if (i >= 0) {
-                pendingEdits.add(Integer.valueOf(i))
-            }
-        }
+        pendingEdits.addAll(tasks)
         startAddTaskActivity(from, prefill)
     }
 

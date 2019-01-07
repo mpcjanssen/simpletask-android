@@ -79,7 +79,11 @@ class DrawerAdapter(private val m_inflater: LayoutInflater,
     }
 
     override fun getItemViewType(position: Int): Int {
-        return return if (isHeader(position)) 0 else 1
+        if (isHeader(position)) {
+            return 0
+        } else {
+            return 1
+        }
     }
 
     override fun getViewTypeCount(): Int {

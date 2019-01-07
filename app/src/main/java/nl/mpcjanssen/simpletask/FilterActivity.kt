@@ -381,10 +381,10 @@ class FilterActivity : ThemedNoActionBarActivity() {
         override fun getPageTitle(position: Int): CharSequence {
             val f = fragments[position]
             val type = f.arguments?.getString(TAB_TYPE, "unknown") ?:"unknown"
-            return when (type) {
-                PROJECT_TAB -> Config.tagTerm
-                CONTEXT_TAB -> Config.listTerm
-                else -> type
+            when (type) {
+                PROJECT_TAB -> return Config.tagTerm
+                CONTEXT_TAB -> return Config.listTerm
+                else -> return type
             }
         }
 

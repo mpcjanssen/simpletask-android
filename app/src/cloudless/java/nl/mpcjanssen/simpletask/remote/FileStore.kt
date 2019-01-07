@@ -55,7 +55,7 @@ object FileStore : IFileStore {
     }
 
     override fun readFile(file: String, fileRead: (String) -> Unit) {
-        Log.i(TAG, "Reading file: $file")
+        Log.i(TAG, "Reading file: {}" + file)
         val contents: String
         val lines = File(file).readLines()
         contents = join(lines, "\n")
@@ -76,6 +76,7 @@ object FileStore : IFileStore {
             Log.w(TAG, "Observer: already watching different path: ${obs.path}")
             obs.ignoreEvents(true)
             obs.stopWatching()
+            observer = null
         }
         observer = TodoObserver(path)
         Log.i(TAG, "Observer: modifying done")
@@ -133,7 +134,7 @@ object FileStore : IFileStore {
         private val handler: Handler
 
         private val delayedEnable = Runnable {
-            Log.i(TAG, "Observer: Delayed enabling events for: $path")
+            Log.i(TAG, "Observer: Delayed enabling events for: " + path)
             ignoreEvents(false)
         }
 
@@ -158,9 +159,9 @@ object FileStore : IFileStore {
                         event == FileObserver.MODIFY ||
                         event == FileObserver.MOVED_TO) {
                     if (ignoreEvents) {
-                        Log.i(TAG, "Observer: ignored event on: $path")
+                        Log.i(TAG, "Observer: ignored event on: " + path)
                     } else {
-                        Log.i(TAG, "File changed {}$path")
+                        Log.i(TAG, "File changed {}" + path)
                         FileStore.remoteTodoFileChanged()
                     }
                 }

@@ -278,7 +278,7 @@ data class Query(val luaModule: String) {
                 if (this.hideHidden && it.isHidden()) {
                     return@filter false
                 }
-                if ("" == it.inFileFormat().trim { c -> c <= ' ' }) {
+                if ("" == it.inFileFormat().trim { it <= ' ' }) {
                     return@filter false
                 }
                 if (!filter.apply(it)) {

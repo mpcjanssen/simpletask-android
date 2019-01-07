@@ -225,15 +225,15 @@ fun addBusinessDays(originalDate: DateTime, days: Int): DateTime {
     var date = originalDate
     var amount = days
     while (amount > 0) {
-        date = when (date.weekDay) {
+        when (date.weekDay) {
             6 -> { // Friday
-                date.plusDays(3)
+                date = date.plusDays(3)
             }
             7 -> { // Saturdau
-                date.plusDays(2)
+                date = date.plusDays(2)
             }
             else -> {
-                date.plusDays(1)
+                date = date.plusDays(1)
             }
 
         }
@@ -276,7 +276,7 @@ fun addInterval(date: DateTime?, interval: String): DateTime? {
 fun getCheckedItems(listView: ListView, checked: Boolean): ArrayList<String> {
     val checks = listView.checkedItemPositions
     val items = ArrayList<String>()
-    for (i in 0 until checks.size()) {
+    for (i in 0..checks.size() - 1) {
         val item = listView.adapter.getItem(checks.keyAt(i)) as String
         if (checks.valueAt(i) && checked) {
             items.add(item)
@@ -441,13 +441,13 @@ fun alfaSort(
     val sorted = items.sortedWith ( compareBy<String> {
         if (caseSensitive) it else it.toLowerCase(Locale.getDefault())
     })
-    return if (prefix != null) {
+    if (prefix != null) {
         val result = ArrayList<String>(sorted.size+1)
         result.add(prefix)
         result.addAll(sorted)
-        result
+        return result
     } else {
-        ArrayList(sorted)
+        return ArrayList(sorted)
     }
 }
 
@@ -490,19 +490,18 @@ fun shareText(act: Activity, subject: String, text: String) {
 fun showLoadingOverlay(act: Activity, visibleDialog: Dialog?, show: Boolean): Dialog? {
 
     if (show) {
-        if (visibleDialog != null) {
-            visibleDialog.show()
-            return visibleDialog
+        if (visibleDialog != null && visibleDialog.isShowing) {
+            visibleDialog.dismiss()
         }
-        val newDialog = Dialog(act)
-        newDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        newDialog.setContentView(R.layout.loading)
-        val pr = newDialog.findViewById(R.id.progress) as ProgressBar?
-        pr?.indeterminateDrawable?.setColorFilter(-16737844, android.graphics.PorterDuff.Mode.MULTIPLY)
-        newDialog.window.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
-        newDialog.setCancelable(false)
-        newDialog.show()
-        return newDialog
+        return Dialog(act).apply {
+            requestWindowFeature(Window.FEATURE_NO_TITLE)
+            setContentView(R.layout.loading)
+            val pr = findViewById(R.id.progress) as ProgressBar?
+            pr?.indeterminateDrawable?.setColorFilter(-16737844, android.graphics.PorterDuff.Mode.MULTIPLY)
+            window.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
+            setCancelable(false)
+            show()
+        }
     } else if (visibleDialog != null && visibleDialog.isShowing) {
         visibleDialog.dismiss()
     }
@@ -521,15 +520,15 @@ fun showChangelogOverlay(act: Activity): Dialog? {
 
 fun markdownAssetAsHtml(ctxt: Context, name: String): String {
     var markdown: String
-    markdown = try {
-        readAsset(ctxt.assets, name)
+    try {
+        markdown = readAsset(ctxt.assets, name)
     } catch (e: IOException) {
         val fallbackAsset = name.replace("\\.[a-z]{2}\\.md$".toRegex(), ".en.md")
         Log.w(TAG, "Failed to load markdown asset: $name falling back to $fallbackAsset")
         try {
-            readAsset(ctxt.assets, fallbackAsset)
+            markdown = readAsset(ctxt.assets, fallbackAsset)
         } catch (e: IOException) {
-            "$name and fallback $fallbackAsset not found."
+            markdown = "$name and fallback $fallbackAsset not found."
         }
     }
     // Change issue numbers to links
@@ -651,10 +650,10 @@ fun initTaskWithFilter(task: Task, mFilter: Query) {
 
 fun String.toDateTime(): DateTime? {
     val date: DateTime?
-    date = if (DateTime.isParseable(this)) {
-        DateTime(this)
+    if (DateTime.isParseable(this)) {
+        date = DateTime(this)
     } else {
-        null
+        date = null
     }
     return date
 }
