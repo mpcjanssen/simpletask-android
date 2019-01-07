@@ -51,9 +51,9 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                     }
                 }
                 "alphabetical" -> comp = if (caseSensitve) {
-                    { it.showParts { p -> p.isAlpha() } }
+                    { it.alphaParts }
                 } else {
-                    { it.showParts { p -> p.isAlpha() }.toLowerCase(Locale.getDefault()) }
+                    { it.alphaParts.toLowerCase(Locale.getDefault()) }
                 }
                 "by_prio" -> comp = { it.priority }
                 "completed" -> comp = { it.isCompleted() }
