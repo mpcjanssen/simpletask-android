@@ -215,7 +215,7 @@ object Interpreter :  AbstractInterpreter() {
         fieldTable.set("threshold", dateStringToLuaLong(t.thresholdDate))
         fieldTable.set("createdate", dateStringToLuaLong(t.createDate))
         fieldTable.set("completiondate", dateStringToLuaLong(t.completionDate))
-        fieldTable.set("text", t.showParts { it is TextToken })
+        fieldTable.set("text", t.showParts { it.isAlpha() })
 
         val recPat = t.recurrencePattern
         if (recPat != null) {
