@@ -77,11 +77,11 @@ class FilterListFragment : Fragment() {
     }
 
     fun getNot(): Boolean {
-        return return if (mSelectedItems == null) {
+        if (mSelectedItems == null) {
             // Tab was not displayed so no selections were changed
-            arguments?.getBoolean(FilterActivity.INITIAL_NOT)?: false
+            return arguments?.getBoolean(FilterActivity.INITIAL_NOT)?: false
         } else {
-            cb!!.isChecked
+            return cb!!.isChecked
         }
     }
 

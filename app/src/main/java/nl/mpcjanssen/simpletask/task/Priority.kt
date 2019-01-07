@@ -52,10 +52,11 @@ enum class Priority {
 
         fun toPriority(s: String?): Priority {
             val upper = s?.toUpperCase(Locale.US) ?: return NONE
-            return try {
-                valueOf(upper)
-            } catch (e: IllegalArgumentException) {
-                NONE
+            try {
+                return valueOf(upper)
+            }
+            catch (e: IllegalArgumentException) {
+                return NONE
             }
         }
     }
