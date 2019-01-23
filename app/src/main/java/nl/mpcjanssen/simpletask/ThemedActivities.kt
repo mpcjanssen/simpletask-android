@@ -1,7 +1,7 @@
 package nl.mpcjanssen.simpletask
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import nl.mpcjanssen.simpletask.util.Config
 import java.util.*
 

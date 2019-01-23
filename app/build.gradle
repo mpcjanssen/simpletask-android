@@ -1,14 +1,14 @@
 buildscript {
     ext.kotlin_version = '1.3.11'
     ext.dokka_version = '0.9.15'
-    ext.android_support_version = '27.1.1'
+    ext.android_support_version = '1.0.0-beta01'
     repositories {
         jcenter()
         google()
         maven {  url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.android.tools.build:gradle:3.3.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "gradle.plugin.org.jlleitschuh.gradle:ktlint-gradle:2.1.0"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokka_version}"
@@ -31,7 +31,7 @@ if (!project.hasProperty("storeServiceAccount")) {
 
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     flavorDimensions "main"
 
     lintOptions {
@@ -57,8 +57,8 @@ android {
         versionCode 3210
         multiDexEnabled true
         minSdkVersion 14
-        targetSdkVersion 27
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        targetSdkVersion 28
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         playAccountConfig = playAccountConfigs.defaultAccountConfig
     }
 
@@ -123,33 +123,34 @@ repositories {
     jcenter()
     maven { url "https://jitpack.io" }
     maven { url "https://maven.google.com" }
+    google()
 }
 
 dependencies {
     dropboxImplementation 'com.dropbox.core:dropbox-core-sdk:3.0.6'
     nextcloudImplementation 'com.github.nextcloud:android-library:1.0.43.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "com.android.support:support-v4:$android_support_version"
-    implementation "com.android.support:support-compat:$android_support_version"
-    implementation "com.android.support:design:$android_support_version"
-    implementation "com.android.support:appcompat-v7:$android_support_version"
-    implementation "com.android.support:recyclerview-v7:$android_support_version"
+    implementation "androidx.legacy:legacy-support-v4:$android_support_version"
+    implementation "androidx.core:core:$android_support_version"
+    implementation "com.google.android.material:material:$android_support_version"
+    implementation "androidx.appcompat:appcompat:$android_support_version"
+    implementation "androidx.recyclerview:recyclerview:$android_support_version"
     implementation 'de.greenrobot:greendao:2.1.0'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.atlassian.commonmark:commonmark:0.11.0'
     implementation 'com.darwinsys:hirondelle-date4j:1.5.1'
     implementation 'org.luaj:luaj-jse:3.0.1'
     implementation 'me.smichel.android:kpreferences:0.11.1'
-    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'androidx.multidex:multidex:2.0.1'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'org.hamcrest:hamcrest-library:1.3'
-    androidTestImplementation('com.android.support.test:runner:0.5') {
+    androidTestImplementation('androidx.test:runner:1.1.0-alpha4') {
         // Necessary if your app targets Marshmallow (since the test runner
         // hasn't moved to Marshmallow yet)
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-    androidTestImplementation('com.android.support.test:rules:0.5') {
+    androidTestImplementation('androidx.test:rules:1.1.0-alpha4') {
         // Necessary if your app targets Marshmallow (since the test runner
         // hasn't moved to Marshmallow yet)
         exclude group: 'com.android.support', module: 'support-annotations'

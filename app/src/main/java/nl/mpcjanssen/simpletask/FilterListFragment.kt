@@ -2,7 +2,7 @@ package nl.mpcjanssen.simpletask
 
 import android.app.ActionBar
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.util.Log
 import android.view.GestureDetector
 import android.view.LayoutInflater

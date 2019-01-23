@@ -27,7 +27,7 @@ package nl.mpcjanssen.simpletask.remote
 import android.Manifest
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
+import androidx.core.app.ActivityCompat
 import kotlinx.android.synthetic.cloudless.login.*
 import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.Simpletask

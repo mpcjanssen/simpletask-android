@@ -39,7 +39,7 @@ import android.graphics.Color
 import android.net.Uri
 import android.provider.CalendarContract
 import android.provider.CalendarContract.*
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.util.Log
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.task.*
