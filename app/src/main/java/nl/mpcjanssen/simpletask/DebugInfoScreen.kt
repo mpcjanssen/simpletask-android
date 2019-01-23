@@ -4,7 +4,7 @@
 package nl.mpcjanssen.simpletask
 
 import android.os.Bundle
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.widget.Toolbar
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TextView

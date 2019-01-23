@@ -3,7 +3,7 @@ package nl.mpcjanssen.simpletask
 import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.graphics.Color
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.StrikethroughSpan

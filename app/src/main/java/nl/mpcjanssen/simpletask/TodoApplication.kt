@@ -35,8 +35,8 @@ import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.*
 import android.os.SystemClock
-import android.support.multidex.MultiDexApplication
-import android.support.v4.content.LocalBroadcastManager
+import androidx.multidex.MultiDexApplication
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.util.Log
 import nl.mpcjanssen.simpletask.dao.Daos
 import nl.mpcjanssen.simpletask.dao.gen.TodoFile
