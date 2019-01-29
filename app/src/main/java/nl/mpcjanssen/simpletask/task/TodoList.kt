@@ -156,7 +156,7 @@ object TodoList {
         add(updated.toMutableList().drop(smallestSize), addAtEnd)
     }
 
-    var selectedTasks: List<Task> = ArrayList()
+    val selectedTasks: List<Task>
         get() {
             return todoItemsCopy.filter { it.selected }
         }
@@ -174,10 +174,7 @@ object TodoList {
         if (refreshMainUI) {
             broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
         } else {
-            TodoApplication.app.localBroadCastManager.let {
-                broadcastRefreshWidgets(it)
-
-            }
+            broadcastRefreshWidgets(TodoApplication.app.localBroadCastManager)
         }
     }
 
