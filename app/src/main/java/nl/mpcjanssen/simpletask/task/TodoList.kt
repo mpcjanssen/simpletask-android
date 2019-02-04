@@ -30,6 +30,7 @@ object TodoList {
         Config.todoList?.let { todoItems.addAll(it) }
     }
 
+    @Synchronized
     fun add(items: List<Task>, atEnd: Boolean) {
         Log.d(TAG, "Add task ${items.size} atEnd: $atEnd")
         val updatedItems = items.map { item ->
@@ -47,6 +48,7 @@ object TodoList {
         add(listOf(t), atEnd)
     }
 
+    @Synchronized
     fun removeAll(tasks: List<Task>) {
         Log.d(TAG, "Remove")
         pendingEdits.removeAll(tasks)
@@ -54,6 +56,7 @@ object TodoList {
 
     }
 
+    @Synchronized
     fun size(): Int {
         return todoItems.size
     }
@@ -77,7 +80,7 @@ object TodoList {
                 return lists
             }
             val res = HashSet<String>()
-            todoItems.forEach { t ->
+            todoItems.iterator().forEach { t ->
                 t.lists?.let {res.addAll(it)}
 
             }
@@ -93,7 +96,7 @@ object TodoList {
                 return tags
             }
             val res = HashSet<String>()
-            todoItems.forEach { t ->
+            todoItems.iterator().forEach { t ->
                 t.tags?.let {res.addAll(it)}
 
             }
@@ -102,6 +105,7 @@ object TodoList {
             return newTags
         }
 
+    @Synchronized
     fun uncomplete(items: List<Task>) {
         Log.d(TAG, "Uncomplete")
         items.forEach {
@@ -109,6 +113,7 @@ object TodoList {
         }
     }
 
+    @Synchronized
     fun complete(tasks: List<Task>, keepPrio: Boolean, extraAtEnd: Boolean) {
         Log.d(TAG, "Complete")
         for (task in tasks) {
@@ -127,6 +132,7 @@ object TodoList {
 
     }
 
+    @Synchronized
     fun prioritize(tasks: List<Task>, prio: Priority) {
         Log.d(TAG, "Complete")
         tasks.map { it.priority = prio }
@@ -142,6 +148,7 @@ object TodoList {
         }
     }
 
+    @Synchronized
     fun update(org: List<Task>, updated: List<Task>, addAtEnd: Boolean) {
         val smallestSize = org.zip(updated) { orgTask, updatedTask ->
             val idx = todoItems.indexOf(orgTask)
@@ -158,9 +165,14 @@ object TodoList {
 
     val selectedTasks: List<Task>
         get() {
-            return todoItemsCopy.filter { it.selected }
+            return todoItems.toList().filter { it.selected }
         }
 
+    val fileFormat : String =  todoItems.toList().joinToString(separator = "\n", transform = Task::inFileFormat)
+
+
+
+    @Synchronized
     fun notifyTasklistChanged(todoName: String, save: Boolean, refreshMainUI: Boolean = true) {
         Log.d(TAG, "Notified changed")
         if (save) {
@@ -185,14 +197,12 @@ object TodoList {
         act.startActivity(intent)
     }
 
-    val todoItemsCopy
-            get() = todoItems.toList()
-
+    @Synchronized
     fun getSortedTasks(filter: Query, sorts: ArrayList<String>, caseSensitive: Boolean): Pair<List<Task>, Int> {
         Log.d(TAG, "Getting sorted and filtered tasks")
         val start = SystemClock.elapsedRealtime()
         val comp = MultiComparator(sorts, TodoApplication.app.today, caseSensitive, filter.createIsThreshold, filter.luaModule)
-        val listCopy = todoItemsCopy
+        val listCopy = todoItems.toList()
         val taskCount = listCopy.size
         val itemsToSort = if (comp.fileOrder) {
             listCopy
@@ -207,6 +217,7 @@ object TodoList {
 
     }
 
+    @Synchronized
     fun reload(reason: String = "") {
         Log.d(TAG, "Reload: $reason")
         broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
@@ -263,6 +274,7 @@ object TodoList {
         }
     }
 
+    @Synchronized
     private fun save(fileStore: IFileStore, todoFileName: String, backup: Boolean, eol: String) {
         broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
         val lines = todoItems.map {
@@ -316,9 +328,11 @@ object TodoList {
 
     fun isSelected(item: Task): Boolean = item.selected
 
+    @Synchronized
     fun numSelected(): Int {
-        return todoItemsCopy.count { it.selected }
+        return todoItems.toList().count { it.selected }
     }
+
 
     fun selectTasks(items: List<Task>) {
         Log.d(TAG, "Select")
@@ -341,6 +355,7 @@ object TodoList {
 
     }
 
+    @Synchronized
     fun clearSelection() {
         Log.d(TAG, "Clear selection")
         todoItems.iterator().forEach { it.selected = false }
@@ -348,14 +363,20 @@ object TodoList {
 
     }
 
+    @Synchronized
     fun getTaskIndex(t: Task): Int {
         return todoItems.indexOf(t)
     }
 
+    @Synchronized
     fun getTaskAt(idx: Int): Task? {
         return todoItems.getOrNull(idx)
     }
 
+    @Synchronized
+    fun each (callback : (Task) -> Unit) {
+        todoItems.forEach { callback.invoke(it) }
+    }
 
     fun editTasks(from: Activity, tasks: List<Task>, prefill: String) {
         Log.d(TAG, "Edit tasks")

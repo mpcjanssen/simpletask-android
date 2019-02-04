@@ -855,7 +855,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             R.id.context_delete -> deleteTasks(checkedTasks)
             R.id.context_select_all -> selectAllTasks()
             R.id.share -> {
-                val shareText = TodoList.todoItemsCopy.joinToString(separator = "\n", transform = Task::inFileFormat)
+                val shareText = TodoList.fileFormat
                 shareText(this@Simpletask, "Simpletask list", shareText)
             }
             R.id.context_share -> {
