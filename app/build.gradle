@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.3.11'
+    ext.kotlin_version = '1.3.20'
     ext.dokka_version = '0.9.15'
     ext.android_support_version = '1.0.0'
     repositories {
@@ -12,7 +12,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "gradle.plugin.org.jlleitschuh.gradle:ktlint-gradle:2.1.0"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokka_version}"
-        classpath 'com.github.triplet.gradle:play-publisher:1.2.0'
+        classpath 'com.github.triplet.gradle:play-publisher:2.1.0'
     }
 }
 
@@ -38,12 +38,7 @@ android {
         disable 'InvalidPackage', 'MissingTranslation'
     }
 
-    playAccountConfigs {
-        defaultAccountConfig {
-            serviceAccountEmail = storeServiceAccount
-            pk12File = new File(System.getenv("HOME"), storeP12File)
-        }
-    }
+
     //noinspection GroovyMissingReturnStatement
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
@@ -59,7 +54,6 @@ android {
         minSdkVersion 14
         targetSdkVersion 28
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        playAccountConfig = playAccountConfigs.defaultAccountConfig
     }
 
     productFlavors {
@@ -112,11 +106,16 @@ android {
 
     play {
         // ...
-        track = 'production' // or 'rollout' or 'beta' or 'alpha'
-        userFraction = 1 // only necessary for 'rollout', in this case default is 1 (100% of the target)
-        untrackOld = true // supersede any releases on other tracks
-        // uploadImages = true // uncomment to upload images using publishListing<Flavour>Release
+
     }
+}
+
+play {
+    serviceAccountEmail = storeServiceAccount
+    serviceAccountCredentials = new File(System.getenv("HOME"), storeP12File)
+    track = 'production' // or 'rollout' or 'beta' or 'alpha'
+    userFraction = 1 // only necessary for 'rollout', in this case default is 1 (100% of the target)
+    // uploadImages = true // uncomment to upload images using publishListing<Flavour>Release
 }
 
 repositories {
@@ -131,9 +130,9 @@ dependencies {
     nextcloudImplementation 'com.github.nextcloud:android-library:1.0.43.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "androidx.legacy:legacy-support-v4:$android_support_version"
-    implementation "androidx.core:core:$android_support_version"
+    implementation "androidx.core:core:1.0.1"
     implementation "com.google.android.material:material:$android_support_version"
-    implementation "androidx.appcompat:appcompat:$android_support_version"
+    implementation "androidx.appcompat:appcompat:1.0.2"
     implementation "androidx.recyclerview:recyclerview:$android_support_version"
     implementation 'de.greenrobot:greendao:2.1.0'
     implementation 'com.google.code.gson:gson:2.8.2'
@@ -170,9 +169,7 @@ if (project.hasProperty('storeFile') &&
     android.buildTypes.release.signingConfig = null
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.4'
-}
+
 
 task cleanPublish(type: GradleBuild) {
     group = 'deployment'
@@ -182,12 +179,7 @@ task cleanPublish(type: GradleBuild) {
 }
 
 
-task publish(type: GradleBuild) {
-    group = 'deployment'
-    description = 'Build and deploy all versions to Google Play'
 
-    setTasks(["publishNextcloudRelease", "publishCloudlessRelease", "publishDropboxRelease"])
-}
 
 allprojects {
     gradle.projectsEvaluated {

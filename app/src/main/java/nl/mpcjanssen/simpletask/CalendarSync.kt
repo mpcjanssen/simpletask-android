@@ -213,9 +213,9 @@ private class EvtMap private constructor() : HashMap<EvtKey, LinkedList<Evt>>() 
         }
     }
 
-    fun mergeTasks(tasks: List<Task>) {
-        for (task in tasks) {
-            if (task.isCompleted()) continue
+    fun mergeTask(task: Task) {
+
+            if (task.isCompleted()) return
 
             var text: String? = null
 
@@ -234,7 +234,6 @@ private class EvtMap private constructor() : HashMap<EvtKey, LinkedList<Evt>>() 
                 val evt = Evt(dt, text, TodoApplication.app.getString(R.string.calendar_sync_desc_thre))
                 mergeEvt(evt)
             }
-        }
     }
 
     @SuppressLint("NewApi")
@@ -394,8 +393,9 @@ object CalendarSync {
 
             Log.d(TAG, "Syncing due/threshold calendar reminders...")
             val evtmap = EvtMap(m_cr, calID)
-            val tasks = TodoList.todoItemsCopy
-            evtmap.mergeTasks(tasks)
+            TodoList.each {
+                evtmap.mergeTask(it)
+            }
             val stats = evtmap.apply(m_cr, calID)
             Log.d(TAG, "Sync finished: ${stats.inserts} inserted, ${stats.keeps} unchanged, ${stats.deletes} deleted")
         } catch (e: SecurityException) {
