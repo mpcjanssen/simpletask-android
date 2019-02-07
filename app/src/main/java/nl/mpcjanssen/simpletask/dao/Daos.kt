@@ -1,13 +1,7 @@
 package nl.mpcjanssen.simpletask.dao
 
-import android.app.Application
 import android.content.Context
 import androidx.room.*
-import hirondelle.date4j.DateTime
-import nl.mpcjanssen.simpletask.TodoApplication
-
-
-import java.util.*
 
 const val SCHEMA_VERSION=1013
 const val DB_FILE="TodoFiles_v1.db"
