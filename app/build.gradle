@@ -3,24 +3,25 @@ buildscript {
     ext.dokka_version = '0.9.15'
     ext.android_support_version = '1.0.0'
     repositories {
-        jcenter()
         google()
-        maven {  url "https://plugins.gradle.org/m2/" }
+        jcenter()
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots"
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.3.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "gradle.plugin.org.jlleitschuh.gradle:ktlint-gradle:2.1.0"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokka_version}"
-        classpath 'com.github.triplet.gradle:play-publisher:2.1.0'
+        classpath("com.github.triplet.gradle:play-publisher:2.0.0-SNAPSHOT")
     }
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.github.triplet.play'
+apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.github.triplet.play'
 
 if (!project.hasProperty("storeP12File")) {
     ext.storeP12File = file("/")
@@ -136,8 +137,11 @@ dependencies {
     implementation "com.google.android.material:material:$android_support_version"
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation "androidx.recyclerview:recyclerview:$android_support_version"
-    implementation 'android.arch.persistence.room:runtime:1.1.1'
-    kapt 'android.arch.persistence.room:compiler:1.1.1'
+    def room_version = "2.1.0-alpha04"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version" // For Kotlin use kapt instead of annotationProcessor
+
     implementation 'com.atlassian.commonmark:commonmark:0.11.0'
     implementation 'com.darwinsys:hirondelle-date4j:1.5.1'
     implementation 'org.luaj:luaj-jse:3.0.1'
