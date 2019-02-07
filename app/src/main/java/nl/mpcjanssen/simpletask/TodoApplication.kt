@@ -38,8 +38,9 @@ import android.os.SystemClock
 import androidx.multidex.MultiDexApplication
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.util.Log
-import nl.mpcjanssen.simpletask.dao.Daos
-import nl.mpcjanssen.simpletask.dao.gen.TodoFile
+import nl.mpcjanssen.simpletask.dao.AppDatabase
+import nl.mpcjanssen.simpletask.dao.TodoFile
+
 import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileDialog
 import nl.mpcjanssen.simpletask.remote.FileStore
@@ -221,8 +222,10 @@ class TodoApplication : MultiDexApplication() {
 
 object Backupper : BackupInterface {
     override fun backup(name: String, lines: List<String>) {
-        val now = Date()
+        val now = Date().time
         val fileToBackup = TodoFile(lines.joinToString ("\n"), name, now)
-        Daos.backup(fileToBackup)
+        val dao =  AppDatabase.getInstance(TodoApplication.app).todoFileDao()
+        dao.insertAll(fileToBackup)
+        dao.removeBefore( now - 2 * 24 * 60 * 60 * 1000)
     }
 }

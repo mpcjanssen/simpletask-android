@@ -20,6 +20,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.github.triplet.play'
+apply plugin: 'kotlin-kapt'
 
 if (!project.hasProperty("storeP12File")) {
     ext.storeP12File = file("/")
@@ -128,13 +129,15 @@ repositories {
 dependencies {
     dropboxImplementation 'com.dropbox.core:dropbox-core-sdk:3.0.6'
     nextcloudImplementation 'com.github.nextcloud:android-library:1.0.43.1'
+    implementation "org.jetbrains.anko:anko-commons:0.10.4"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "androidx.legacy:legacy-support-v4:$android_support_version"
     implementation 'androidx.core:core:1.0.1'
     implementation "com.google.android.material:material:$android_support_version"
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation "androidx.recyclerview:recyclerview:$android_support_version"
-    implementation 'de.greenrobot:greendao:2.1.0'
+    implementation 'android.arch.persistence.room:runtime:1.1.1'
+    kapt 'android.arch.persistence.room:compiler:1.1.1'
     implementation 'com.atlassian.commonmark:commonmark:0.11.0'
     implementation 'com.darwinsys:hirondelle-date4j:1.5.1'
     implementation 'org.luaj:luaj-jse:3.0.1'
