@@ -1,34 +1,75 @@
 package nl.mpcjanssen.simpletask.dao
 
-import android.database.Cursor
+import android.app.Application
+import android.content.Context
+import androidx.room.*
+import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.TodoApplication
-import nl.mpcjanssen.simpletask.dao.gen.*
+
 
 import java.util.*
 
-object Daos {
-    internal val daoSession: DaoSession
-    val backupDao: TodoFileDao
-    init {
-        val helper = DaoMaster.DevOpenHelper(TodoApplication.app, "TodoFiles_v1.db", null)
-        val db = helper.writableDatabase
-        val daoMaster = DaoMaster(db)
-        daoSession = daoMaster.newSession()
-        backupDao = daoSession.todoFileDao
+const val SCHEMA_VERSION=1013
+const val DB_FILE="TodoFiles_v1.db"
 
-    }
+@Entity
+data class TodoFile(
+        @PrimaryKey var contents: String,
+        @ColumnInfo var name: String,
+        @ColumnInfo var date: Long
+)
 
-    fun backup (file : TodoFile) {
-        backupDao.insertOrReplace(file)
-        // Clean up old files
-        val removeBefore = Date(Date().time - 2 * 24 * 60 * 60 * 1000)
-        backupDao.queryBuilder().where(TodoFileDao.Properties.Date.lt(removeBefore)).buildDelete().executeDeleteWithoutDetachingEntities()
-    }
+@Dao
+interface TodoFileDao {
+    @Query("SELECT * FROM TodoFile")
+    fun getAll(): List<TodoFile>
 
 
+    @Insert
+    fun insertAll(vararg users: TodoFile)
 
-    fun initHistoryCursor (): Cursor {
-        val builder = daoSession.todoFileDao.queryBuilder()
-        return builder.buildCursor().query()
+    @Query ("DELETE from TodoFile where date < :timestamp")
+    fun removeBefore(timestamp: Long)
+
+    @Query ("DELETE from TodoFile")
+    fun deleteAll()
+
+
+}
+
+@Database(entities = arrayOf(TodoFile::class), version = SCHEMA_VERSION)
+abstract class AppDatabase : RoomDatabase() {
+    abstract fun todoFileDao(): TodoFileDao
+    companion object : SingletonHolder<AppDatabase, Context>({
+        Room.databaseBuilder(it.applicationContext,
+                AppDatabase::class.java, DB_FILE).fallbackToDestructiveMigration()
+                .build()
+    })
+}
+
+
+open class SingletonHolder<out T, in A>(creator: (A) -> T) {
+    private var creator: ((A) -> T)? = creator
+    @Volatile private var instance: T? = null
+
+    fun getInstance(arg: A): T {
+        val i = instance
+        if (i != null) {
+            return i
+        }
+
+        return synchronized(this) {
+            val i2 = instance
+            if (i2 != null) {
+                i2
+            } else {
+                val created = creator!!(arg)
+                instance = created
+                creator = null
+                created
+            }
+        }
     }
 }
+
+
