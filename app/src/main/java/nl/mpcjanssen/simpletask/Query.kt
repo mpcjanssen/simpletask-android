@@ -430,10 +430,10 @@ data class Query(val luaModule: String) {
             m_sorts = ArrayList<String>()
             m_sorts!!.addAll(Arrays.asList(*prefs.getString(INTENT_SORT_ORDER, "")!!.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
             contexts = ArrayList(prefs.getStringSet(
-                    INTENT_CONTEXTS_FILTER, emptySet<String>()))
-            priorities = Priority.toPriority(ArrayList(prefs.getStringSet(INTENT_PRIORITIES_FILTER, emptySet<String>())))
+                    INTENT_CONTEXTS_FILTER, null) ?: emptySet<String>())
+            priorities = Priority.toPriority(ArrayList(prefs.getStringSet(INTENT_PRIORITIES_FILTER, null) ?: emptySet<String>()))
             projects = ArrayList(prefs.getStringSet(
-                    INTENT_PROJECTS_FILTER, emptySet<String>()))
+                    INTENT_PROJECTS_FILTER, null) ?: emptySet<String>())
             contextsNot = prefs.getBoolean(INTENT_CONTEXTS_FILTER_NOT, false)
             prioritiesNot = prefs.getBoolean(INTENT_PRIORITIES_FILTER_NOT, false)
             projectsNot = prefs.getBoolean(INTENT_PROJECTS_FILTER_NOT, false)

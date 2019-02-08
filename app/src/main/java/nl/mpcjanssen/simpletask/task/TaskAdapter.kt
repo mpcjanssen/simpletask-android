@@ -187,6 +187,7 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         val sorts = newQuery.getSort(Config.defaultSorts)
         val (visibleTasks, total) = TodoList.getSortedTasks(newQuery, sorts, Config.sortCaseSensitive)
         countTotalTasks = total
+        countVisibleTasks = visibleTasks.size
 
         val newVisibleLines = ArrayList<VisibleLine>()
 
@@ -208,18 +209,8 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         }
     }
 
-    val visibleTasks: Sequence<Task>
-        get() {
-            return visibleLines.asSequence()
-                    .filterNot { it.header }
-                    .map { (it as TaskLine).task }
-        }
 
-    val countVisibleTasks: Int
-        get() {
-            return visibleLines.count { !it.header }
-        }
-
+    var countVisibleTasks = 0
     var countTotalTasks = 0
 
     /*

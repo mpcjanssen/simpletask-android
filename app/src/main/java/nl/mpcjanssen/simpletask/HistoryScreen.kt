@@ -30,7 +30,7 @@ class HistoryScreen : ThemedActionBarActivity() {
 
     private var toolbar_menu: Menu? = null
     private var mScroll = 0
-    val db = AppDatabase.getInstance(TodoApplication.app)
+    val db = TodoApplication.db
     lateinit var history: List<TodoFile>
     lateinit var dbFile : File
     var cursorIdx = 0
