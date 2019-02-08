@@ -72,10 +72,9 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
 
         val currentFilter = updateFilter()
         filter = currentFilter
-        val sorts = currentFilter.getSort(Config.defaultSorts)
 
         val newVisibleTasks = ArrayList<Task>()
-        val (tasks, _) = TodoList.getSortedTasks(currentFilter, sorts, Config.sortCaseSensitive)
+        val (tasks, _) = TodoList.getSortedTasks(currentFilter, Config.sortCaseSensitive)
         newVisibleTasks.addAll(tasks)
         Log.d(TAG, "Widget $widgetId: setFilteredTasks returned ${newVisibleTasks.size} tasks")
         visibleTasks = newVisibleTasks
