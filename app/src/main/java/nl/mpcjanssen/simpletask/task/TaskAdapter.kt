@@ -184,8 +184,7 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
             caller.showListViewProgress(true)
         }
         Log.i(tag, "setFilteredTasks called: $TodoList")
-        val sorts = newQuery.getSort(Config.defaultSorts)
-        val (visibleTasks, total) = TodoList.getSortedTasks(newQuery, sorts, Config.sortCaseSensitive)
+        val (visibleTasks, total) = TodoList.getSortedTasks(newQuery, Config.sortCaseSensitive)
         countTotalTasks = total
         countVisibleTasks = visibleTasks.size
 
