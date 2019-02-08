@@ -38,7 +38,9 @@ import android.os.SystemClock
 import androidx.multidex.MultiDexApplication
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.util.Log
+import androidx.room.Room
 import nl.mpcjanssen.simpletask.dao.AppDatabase
+import nl.mpcjanssen.simpletask.dao.DB_FILE
 import nl.mpcjanssen.simpletask.dao.TodoFile
 
 import nl.mpcjanssen.simpletask.remote.BackupInterface
@@ -59,6 +61,9 @@ class TodoApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
         app = this
+        db = Room.databaseBuilder(this,
+                AppDatabase::class.java, DB_FILE).fallbackToDestructiveMigration()
+                .build()
         if (Config.forceEnglish) {
             val conf = resources.configuration
             conf.locale = Locale.ENGLISH
@@ -214,6 +219,7 @@ class TodoApplication : MultiDexApplication() {
         private val TAG = TodoApplication::class.java.simpleName
         fun atLeastAPI(api: Int): Boolean = android.os.Build.VERSION.SDK_INT >= api
         lateinit var app : TodoApplication
+        lateinit var db : AppDatabase
     }
 
     var today: String = todayAsString
@@ -224,7 +230,7 @@ object Backupper : BackupInterface {
     override fun backup(name: String, lines: List<String>) {
         val now = Date().time
         val fileToBackup = TodoFile(lines.joinToString ("\n"), name, now)
-        val dao =  AppDatabase.getInstance(TodoApplication.app).todoFileDao()
+        val dao =  TodoApplication.db.todoFileDao()
         dao.insertAll(fileToBackup)
         dao.removeBefore( now - 2 * 24 * 60 * 60 * 1000)
     }

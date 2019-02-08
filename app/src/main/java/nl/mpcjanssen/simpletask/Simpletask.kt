@@ -809,7 +809,9 @@ class Simpletask : ThemedNoActionBarActivity() {
     private fun archiveTasks(checkedTasks: List<Task>?, showDialog: Boolean = true) {
         val tasksToArchive = ArrayList<Task>()
         if (checkedTasks == null) {
-            tasksToArchive.addAll(taskAdapter.visibleTasks.filter { it.isCompleted() })
+            tasksToArchive.addAll(taskAdapter.visibleLines.asSequence()
+                    .filterNot { it.header }
+                    .map { (it as TaskLine).task })
         } else {
             tasksToArchive.addAll(checkedTasks)
         }

@@ -61,11 +61,11 @@ object TodoList {
         return todoItems.size
     }
 
-
     val priorities: ArrayList<Priority>
+        @Synchronized
         get() {
             val res = HashSet<Priority>()
-            todoItems.iterator().forEach {
+            todoItems.forEach {
                 res.add(it.priority)
             }
             val ret = ArrayList(res)
@@ -74,13 +74,14 @@ object TodoList {
         }
 
     val contexts: List<String>
+        @Synchronized
         get() {
             val lists = mLists
             if (lists != null) {
                 return lists
             }
             val res = HashSet<String>()
-            todoItems.iterator().forEach { t ->
+            todoItems.forEach { t ->
                 t.lists?.let {res.addAll(it)}
 
             }
@@ -90,13 +91,14 @@ object TodoList {
         }
 
     val projects: List<String>
+        @Synchronized
         get() {
             val tags = mTags
             if (tags != null) {
                 return tags
             }
             val res = HashSet<String>()
-            todoItems.iterator().forEach { t ->
+            todoItems.forEach { t ->
                 t.tags?.let {res.addAll(it)}
 
             }
@@ -138,6 +140,7 @@ object TodoList {
         tasks.map { it.priority = prio }
     }
 
+    @Synchronized
     fun defer(deferString: String, tasks: List<Task>, dateType: DateType) {
         Log.d(TAG, "Defer")
         tasks.forEach {
@@ -164,6 +167,7 @@ object TodoList {
     }
 
     val selectedTasks: List<Task>
+        @Synchronized
         get() {
             return todoItems.toList().filter { it.selected }
         }
@@ -190,6 +194,7 @@ object TodoList {
         }
     }
 
+    @Synchronized
     private fun startAddTaskActivity(act: Activity, prefill: String) {
         Log.d(TAG, "Start add/edit task activity")
         val intent = Intent(act, AddTask::class.java)
@@ -309,6 +314,7 @@ object TodoList {
         }
     }
 
+    @Synchronized
     fun archive(todoFilename: String, doneFileName: String, tasks: List<Task>, eol: String) {
         Log.d(TAG, "Archive ${tasks.size} tasks")
 
@@ -333,21 +339,24 @@ object TodoList {
         return todoItems.toList().count { it.selected }
     }
 
-
+    @Synchronized
     fun selectTasks(items: List<Task>) {
         Log.d(TAG, "Select")
         items.forEach { selectTask(it) }
         broadcastRefreshSelection(TodoApplication.app.localBroadCastManager)
     }
 
+    @Synchronized
     private fun selectTask(item: Task?) {
         item?.selected = true
     }
 
+    @Synchronized
     private fun unSelectTask(item: Task) {
         item.selected = false
     }
 
+    @Synchronized
     fun unSelectTasks(items: List<Task>) {
         Log.d(TAG, "Unselect")
         items.forEach { unSelectTask(it) }
@@ -378,12 +387,14 @@ object TodoList {
         todoItems.forEach { callback.invoke(it) }
     }
 
+    @Synchronized
     fun editTasks(from: Activity, tasks: List<Task>, prefill: String) {
         Log.d(TAG, "Edit tasks")
         pendingEdits.addAll(tasks)
         startAddTaskActivity(from, prefill)
     }
 
+    @Synchronized
     fun clearPendingEdits() {
         Log.d(TAG, "Clear selection")
         pendingEdits.clear()

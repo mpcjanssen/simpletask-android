@@ -50,18 +50,21 @@ class AddTaskBackground : Activity() {
         val action = intent.action
 
         val append_text = Config.shareAppendText
-        if (intent.type.startsWith("text/")) {
+        if (intent.type?.startsWith("text/") ?: false) {
             if (Intent.ACTION_SEND == action) {
                 Log.d(TAG, "Share")
                 var share_text = ""
                 if (TodoApplication.atLeastAPI(21) && intent.hasExtra(Intent.EXTRA_STREAM)) {
-                    val uri = intent.extras.get(Intent.EXTRA_STREAM) as Uri?
-                    try {
-                        val `is` = contentResolver.openInputStream(uri)
-                        share_text = `is`.reader().readText()
-                        `is`.close()
-                    } catch (e: IOException) {
-                        e.printStackTrace()
+                    val uri = intent.extras?.get(Intent.EXTRA_STREAM) as Uri?
+                    uri?.let {
+                        try {
+                            contentResolver.openInputStream(uri)?.let {
+                                share_text = it.reader().readText()
+                                it.close()
+                            }
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                        }
                     }
 
                 } else if (intent.hasExtra(Intent.EXTRA_TEXT)) {
