@@ -53,7 +53,7 @@ android {
         versionName '10.2.9'
         versionCode 3210
         multiDexEnabled true
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 28
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -129,12 +129,13 @@ repositories {
 
 dependencies {
     dropboxImplementation 'com.dropbox.core:dropbox-core-sdk:3.0.6'
-    nextcloudImplementation 'com.github.nextcloud:android-library:1.0.43.1'
-    implementation "org.jetbrains.anko:anko-commons:0.10.4"
+    nextcloudImplementation 'com.github.nextcloud:android-library:1.3.1'
+    implementation "org.jetbrains.anko:anko-commons:0.10.8"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "androidx.legacy:legacy-support-v4:$android_support_version"
     implementation 'androidx.core:core:1.0.1'
     implementation "com.google.android.material:material:$android_support_version"
+//    implementation "androidx.preference:preference:1.0.0"
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation "androidx.recyclerview:recyclerview:$android_support_version"
     def room_version = "2.1.0-alpha04"

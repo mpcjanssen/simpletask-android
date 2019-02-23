@@ -8,7 +8,11 @@ import com.owncloud.android.lib.common.OwnCloudClient
 import com.owncloud.android.lib.common.OwnCloudClientFactory
 import com.owncloud.android.lib.common.OwnCloudCredentialsFactory
 import com.owncloud.android.lib.common.operations.RemoteOperationResult
-import com.owncloud.android.lib.resources.files.*
+import com.owncloud.android.lib.resources.files.DownloadFileRemoteOperation
+import com.owncloud.android.lib.resources.files.ReadFileRemoteOperation
+import com.owncloud.android.lib.resources.files.ReadFolderRemoteOperation
+import com.owncloud.android.lib.resources.files.UploadFileRemoteOperation
+import com.owncloud.android.lib.resources.files.model.RemoteFile
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.join
@@ -69,7 +73,7 @@ object FileStore : IFileStore {
     }
 
     override fun getRemoteVersion(filename: String): String {
-        val op = ReadRemoteFileOperation(filename)
+        val op = ReadFileRemoteOperation(filename)
         val res = op.execute(mNextcloud)
         val file = res.data[0] as RemoteFile
         return file.etag
@@ -94,9 +98,9 @@ object FileStore : IFileStore {
         val readLines = ArrayList<String>()
 
         val cacheDir = mApp.applicationContext.cacheDir
-        val op = DownloadRemoteFileOperation(path, cacheDir.canonicalPath)
+        val op = DownloadFileRemoteOperation(path, cacheDir.canonicalPath)
         op.execute(mNextcloud)
-        val infoOp = ReadRemoteFileOperation(path)
+        val infoOp = ReadFileRemoteOperation(path)
         val res = infoOp.execute(mNextcloud)
         if (res.httpCode == 404) {
             throw (IOException("File not found"))
@@ -127,7 +131,7 @@ object FileStore : IFileStore {
 
         // if we have previously seen a file from the server, we don't upload unless it's the
         // one we've seen before. If we've never seen a file, we just upload unconditionally
-        val res = UploadRemoteFileOperation(tmpFile.absolutePath, path,
+        val res = UploadFileRemoteOperation(tmpFile.absolutePath, path,
                 "text/plain", timestamp).execute(mNextcloud)
 
         val conflict = 412
@@ -138,14 +142,14 @@ object FileStore : IFileStore {
             val nameWithoutTxt = "\\.txt$".toRegex().replace(name, "")
             val newName = nameWithoutTxt + "_conflict_" + UUID.randomUUID() + ".txt"
             val newPath = parent + "/" + newName
-            UploadRemoteFileOperation(tmpFile.absolutePath, newPath,
+            UploadFileRemoteOperation(tmpFile.absolutePath, newPath,
                     "text/plain", timestamp).execute(mNextcloud)
 
             showToastLong(TodoApplication.app, "CONFLICT! Uploaded as " + newName
                     + ". Review differences manually with a text editor.")
         }
 
-        val infoOp = ReadRemoteFileOperation(path)
+        val infoOp = ReadFileRemoteOperation(path)
         val infoRes = infoOp.execute(mNextcloud)
         val fileInfo = infoRes.data[0] as RemoteFile
 
@@ -160,7 +164,7 @@ object FileStore : IFileStore {
         }
         val cacheDir = mApp.applicationContext.cacheDir
 
-        val op = DownloadRemoteFileOperation(path, cacheDir.canonicalPath)
+        val op = DownloadFileRemoteOperation(path, cacheDir.canonicalPath)
         val result = op.execute(mNextcloud)
         val doneContents = if (result.isSuccess) {
             val cachePath = File(cacheDir, path).canonicalPath
@@ -175,7 +179,7 @@ object FileStore : IFileStore {
         val tmpFile = File(cacheDir, "tmp.txt")
         tmpFile.writeText(contents)
         val timestamp = timeStamp()
-        val writeOp = UploadRemoteFileOperation(tmpFile.absolutePath, path, "text/plain", timestamp)
+        val writeOp = UploadFileRemoteOperation(tmpFile.absolutePath, path, "text/plain", timestamp)
         writeOp.execute(mNextcloud)
 
 
@@ -190,7 +194,7 @@ object FileStore : IFileStore {
         val cacheDir = mApp.applicationContext.cacheDir
         val tmpFile = File(cacheDir, "tmp.txt")
         tmpFile.writeText(contents)
-        val op = UploadRemoteFileOperation(tmpFile.absolutePath, file.canonicalPath, "text/plain", timeStamp())
+        val op = UploadFileRemoteOperation(tmpFile.absolutePath, file.canonicalPath, "text/plain", timeStamp())
         val result = op.execute(mNextcloud)
         Log.i(TAG, "Wrote file to ${file.path}, result ${result.isSuccess}")
 
@@ -204,7 +208,7 @@ object FileStore : IFileStore {
             return
         }
         val cacheDir = mApp.applicationContext.cacheDir
-        val op = DownloadRemoteFileOperation(file, cacheDir.canonicalPath)
+        val op = DownloadFileRemoteOperation(file, cacheDir.canonicalPath)
         op.execute(mNextcloud)
         val cachePath = File(cacheDir, file).canonicalPath
         val contents = File(cachePath).readText()
@@ -214,7 +218,7 @@ object FileStore : IFileStore {
 
     override fun loadFileList(path: String, txtOnly: Boolean): List<FileEntry> {
         val result = ArrayList<FileEntry>()
-        val op = ReadRemoteFolderOperation(File(path).canonicalPath)
+        val op = ReadFolderRemoteOperation(File(path).canonicalPath)
         val res: RemoteOperationResult = op.execute(mNextcloud)
         // Loop over the resulting files
         // Drop the first one as it is the current folder
