@@ -802,19 +802,19 @@ class Simpletask : ThemedNoActionBarActivity() {
         showConfirmationDialog(this, R.string.delete_task_message, delete, title)
     }
 
-    private fun archiveTasks(showDialog: Boolean) {
-        archiveTasks(null, showDialog)
-    }
+    private fun archiveTasks(showDialog: Boolean = true) {
+        val selection = TodoList.selectedTasks
 
-    private fun archiveTasks(checkedTasks: List<Task>?, showDialog: Boolean = true) {
-        val tasksToArchive = ArrayList<Task>()
-        if (checkedTasks == null) {
+        val tasksToArchive =  ArrayList<Task>()
+        if (selection.isNotEmpty()) {
+            tasksToArchive.addAll(selection)
+        } else {
             tasksToArchive.addAll(taskAdapter.visibleLines.asSequence()
                     .filterNot { it.header }
-                    .map { (it as TaskLine).task })
-        } else {
-            tasksToArchive.addAll(checkedTasks)
+                    .map { (it as TaskLine).task }
+                    .filter {it.isCompleted()})
         }
+
         val archiveAction = {
             if (Config.todoFileName == Config.doneFileName) {
                 showToastShort(this, "You have the done.txt file opened.")
@@ -864,7 +864,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 val shareText = selectedTasksAsString()
                 shareText(this@Simpletask, "Simpletask tasks", shareText)
             }
-            R.id.context_archive -> archiveTasks(checkedTasks)
+            R.id.context_archive -> archiveTasks(Config.showConfirmationDialogs)
             R.id.help -> showHelp()
             R.id.open_lua -> openLuaConfig()
             R.id.sync -> {
