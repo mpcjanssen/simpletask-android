@@ -231,7 +231,9 @@ object Backupper : BackupInterface {
         val now = Date().time
         val fileToBackup = TodoFile(lines.joinToString ("\n"), name, now)
         val dao =  TodoApplication.db.todoFileDao()
-        dao.insertAll(fileToBackup)
+        if(dao.insert(fileToBackup) == -1L) {
+            dao.update(fileToBackup)
+        }
         dao.removeBefore( now - 2 * 24 * 60 * 60 * 1000)
     }
 }
