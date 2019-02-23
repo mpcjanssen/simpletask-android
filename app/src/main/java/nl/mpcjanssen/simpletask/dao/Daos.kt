@@ -19,8 +19,11 @@ interface TodoFileDao {
     fun getAll(): List<TodoFile>
 
 
-    @Insert
-    fun insertAll(vararg users: TodoFile)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insert(contents: TodoFile) : Long
+
+    @Update(onConflict = OnConflictStrategy.IGNORE)
+    fun update(contents: TodoFile)
 
     @Query ("DELETE from TodoFile where date < :timestamp")
     fun removeBefore(timestamp: Long)
