@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
 This file is part of Todo.txt Touch, an Android app for managing your todo.txt file (http://todotxt.com).
 
@@ -23,9 +23,7 @@ You should have received a copy of the GNU General Public License along with Tod
 @copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
 @copyright 2013 Mark Janssen
 @copyright 2015 Vojtech Kral
--->
-<!--suppress ALL -->
-<resources>
+--><!--suppress ALL --><resources>
     <string name="invalid_context">Nieprawidłowa nazwa listy</string>
     <string name="invalid_project">Nieprawidłowa nazwa tagu</string>
     <string name="app_label">Simpletask</string>
@@ -77,9 +75,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="cancel">Anuluj</string>
     <string name="clear_filter">Wyczyść filtr</string>
     <string name="write_failed">Nie udało się zapisać pliku!. Twoje zmiany NIE zostały zapisane.</string>
-
     <string name="tasktexthint">\@Przedyskutuj +Paris kwestię z +Hector @Troy\nPowiedz +Hector aby nie przewlekał @Troy\nPrzeglądaj +Simpletask ustawienia, aby usunać ten tekst @Phone</string>
-
     <string name="filter_name_empty">Nie określono nazwy, filtr nie zostanie dodany</string>
     <string name="widget_name_empty">Nie określono nazwy widżetu, filtr nie zostanie dodany</string>
     <string name="add_task_help">Dodaj lub aktualizuj zadanie do listy zadań. Kiedy zadanie będzie dodawane,
@@ -93,7 +89,6 @@ You should have received a copy of the GNU General Public License along with Tod
         Zadanie może zawierać dowolną ilość tagów lub może znajdować się na wielu
         listach.
     </string>
-
     <!-- other_preferences -->
     <string name="ARCHIVE_settings_header">Archiwum</string>
     <string name="ARCHIVE_settings_summary">Ustawienia archiwizacji zakończonych zadań w done.txt</string>
@@ -108,7 +103,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="TODOTXTPATH_defaultPath">/todo</string>
     <string name="DROPBOX_settings_header">Dropbox</string>
     <string name="DROPBOX_settings_summary">Ustawienia synchronizacji Dropbox</string>
-
     <string name="todotxt_ui_settings_header">Interfejs użytkownika</string>
     <string name="todotxt_behavior_settings_header">Zachowanie</string>
     <string name="todotxt_settings_summary">Szerokie ustawienia aplikacji</string>
@@ -134,25 +128,18 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="font_size_delta_pref_summary">Zmień rozmiar czcionki.</string>
     <string name="theme_pref_title">Motyw aplikacji</string>
     <string name="theme_pref_summary">Zmień motyw wykorzystywany przez aplikację.</string>
-
     <string name="share_task_show_edit_pref_title">Edytuj współdzielone zadanie</string>
     <string name="share_task_show_edit_summary">Zezwól na edycję współdzielonego zadania przed jego zapisem.
             Wyłącz to, aby współdzielone zadanie było zapisane bez interwencji.</string>
-
-
     <string name="share_task_append_text_title">Tag w tle</string>
     <string name="share_task_append_text_summary">Dodaj skonfigurowany tekst to zadań dodanych w tle. Na przykład ustawienie \"+tło\" pozwoli łatwo filtrować w celu edycji/przeglądu dodanych zadań w tle.</string>
     <string name="local_file_root_title">Link pliku root</string>
     <string name="local_file_root_summary">Główna ścieżka rozwiązania pliku root://.... linków.</string>
-
-
     <string name="menu_capitalize_tasks">Nowe zadania pisane wielką literą</string>
     <string name="back_saves_pref_title">Przycisk powrotu</string>
     <string name="back_saves_summary">Zapisz wprowadzone zadania lub zastosuj filtr po naciśnięciu przycisku z powrotem.</string>
-
     <string name="show_txt_only_pref_title">Pokaż tylko pliki txt</string>
     <string name="show_txt_only_summary">Pokaż tylko pliki .txt w oknie wyboru pliku.</string>
-
     <string name="calendar_sync_screen_title">Przypomnienia kalendarza</string>
     <string name="calendar_sync_screen_summary">Automatycznie stwórz przypomnienia kalendarza dla terminu oraz/lub progu dat.</string>
     <string name="calendar_sync_dues_title">Ważne daty</string>
@@ -161,77 +148,52 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="calendar_reminder_days_summary">Ile dni przed terminem/progiem daty powiadomienie powinno zostać ustawione.</string>
     <string name="calendar_reminder_time_title">Czas przypomnień</string>
     <string name="calendar_reminder_time_summary">O jakiej porze dnia przypomnienie powinno zostać ustawione.</string>
-
     <string name="drawer_fixed_landscape_title">Otwórz widok skrytki</string>
     <string name="drawer_fixed_landscape_summary">Zawsze otwórz skrytki w trybie widoku.</string>
-
-
     <string name="widget_theme_pref_title">Motyw widżetu</string>
     <string name="widget_theme_pref_summary">Zmień motyw wykorzystywany przez widżety.</string>
-
     <string name="task_text_ellipsizing_pref_title">Skróć treść zadania</string>
     <string name="task_text_ellipsizing_pref_summary">Skróć treść zadania w głównym oknie, jeżeli zajmuje ono więcej jak 2 linie.</string>
-
     <string name="widget_header_transparency_title">Przezroczysty nagłówek widżetu</string>
     <string name="widget_background_transparency_title">Przezroczyste tło widżetu</string>
-
     <string name="widget_extended_pref_title">Rozszerz widżet</string>
     <string name="widget_extended_pref_summary">Pokaż zadania w widżecie z odrębną linią z datą.</string>
-
     <string name="append_tasks_at_end_title">Dopisz nowe zadania</string>
     <string name="append_tasks_at_end_summary">Dopisz nowe zadania na końcu listy todo. Gdy wyłączone, nowe zadania są umieszczane na początku.</string>
-
     <string name="color_due_pref_title">Pokoloruj termin dat</string>
     <string name="color_due_pref_summary">Pokoloruj termin daty (dzisiejsze, przyszłe bądź przeterminowane).</string>
-
     <string name="show_hidden_title">Pokaż ukryte zadania</string>
     <string name="show_hidden_summary">Pokaż ukryte (h:1) zadania, aby móc je edytować. Po edycji, odznacz opcję ponownie.</string>
-
     <string name="show_empty_lists_title">Pokaż puste nagłówki</string>
     <string name="show_empty_lists_summary">Pokaż nagłówek nawet, jeżeli wszystkie zadania pod tym nagłówkiem są schowane.</string>
-
     <string name="split_actionbar_pref_title">Użyj opcji podziału z paska akcji</string>
     <string name="split_actionbar_pref_summary">Użyj opcji podziału z paska akcji, tak aby przyciski menu były w dolnej części ekranu.
         Aby uzyskać więcej powierzchni ekranu wyłącz daną opcję. </string>
-
     <string name="show_edittext_hint_title">Pokaż wskazówki</string>
-    <string name="show_edittext_hint_summary">Pokaż wskazówki edycyjne w polu tekstowym. Jeżeli będzie irytowało Ciebie dane ustawienie, wyłącz je.</string>
-
+    <string name="show_edittext_hint_summary">Pokaż wskazówki edycyjne w polu tekstowym.</string>
     <string name="show_complete_checkbox_title">Pokaż pole wyboru \"Ukończone\"</string>
     <string name="show_complete_checkbox_summary">Pokaż pole wyboru ukończenia przed zadaniami.</string>
-
     <string name="show_confirmation_dialogs_title">Pokaż okna potwierdzające</string>
-    <string name="show_confirmation_dialogs_summary">Pokaż okno potwierdzające przed wykonaniem nieodwracalnych akcji lub akcji, które mogą prowadzić do utraty danych.
-        Odznacz do ustawienie, jeżeli będzie je Ciebie irytowało. Zostałeś chociaż ostrzeżony.</string>
-
-
+    <string name="show_confirmation_dialogs_summary">Pokaż okno potwierdzające przed wykonaniem nieodwracalnych akcji lub akcji, które mogą prowadzić do utraty danych. Odznacz do ustawienie, jeżeli będzie je Ciebie irytowało. Zostałeś chociaż ostrzeżony.</string>
     <string name="show_todo_path_title">Pokaż ścieżkę do pliku todo</string>
     <string name="show_todo_path_summary">Pokaż ścieżkę do pliku todo. Nazwy katalogów zostały skrócone do pierwszej litery. Na przykład /todo/home/todo.txt stanie się /t/h/todo.txt.</string>
-
     <string name="show_fast_scroll_title">Szybkie przewijanie</string>
     <string name="show_fast_scroll_summary">Użyj szybkiego przewijania, jeżeli lista zadań todo stanie się dłuższa.</string>
-
     <string name="show_calendarview_title">Użyj kalendarza dla wpisu datowego</string>
-
     <string name="sort_case_sensitive_title">Sortuj z uwzględnieniem wielkości liter</string>
     <string name="sort_case_sensitive_summary">Z uwzględnieniem wielkości liter przy sortowaniu list, kategorii i filtrów.</string>
-
     <string name="use_create_as_threshold_title">Stwórz z progiem</string>
     <string name="use_create_backup_summary">Podczas sortowania, użyj daty utworzenia zadania, jeżeli nie ustawiono daty progowej.</string>
-
     <string name="todotxt_terms_title">Użyj warunków todo.txt</string>
     <string name="todotxt_terms_summary">Użyj \"kontekstu\" oraz \"projektu\" zamiast \"tagu\" i \"listy\" zgodnie z warunkami todo.txt.</string>
-
     <string name="about_settings_header">O</string>
     <string name="about_settings_summary">Informacje o aplikacji</string>
     <string name="visit_website_title">Pomoc</string>
     <string name="visit_website_summary">Odwiedź stronę Simpletask</string>
     <string name="visit_website_data">http://mpcjanssen.nl/pages/simpletask.html</string>
-
     <string name="visit_tracker_title">Prośba o funkcjonalność lub zgłoszenie błędu</string>
     <string name="visit_tracker_summary">Prośba o nową funkcjonalność, ozszerzenie lub zgłoszenie problemu.</string>
     <string name="visit_tracker_data">http://mpcjanssen.nl/redmine/projects/simpletask-android/issues/</string>
-
     <!-- sync dialog -->
     <string name="sync_dialog_title">Manualna synchronizacja</string>
     <string name="sync_dialog_msg">Czy chcesz wysłać czy pobrać todo.txt?</string>
@@ -239,13 +201,11 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="sync_dialog_download">Pobierz na urządzenie</string>
     <string name="sync_upload_message">Wysyłanie todo.txt…</string>
     <string name="sync_download_message">Pobieranie todo.txt…</string>
-
     <!-- sync conflict dialog -->
     <string name="sync_conflict_dialog_title">Konflikt pliku</string>
     <string name="sync_conflict_dialog_msg">Oj! Jest nowsza wersja pliku todo.txt w Dropboxie. \nChcesz
         wysłać swoje lokalne zmiany lub pobrać wersję z Dropbox?
     </string>
-
     <!-- login -->
     <string name="first_title_word">Simpletask</string>
     <string name="login_screen_button">Zaloguj się do Dropboxa</string>
@@ -254,7 +214,6 @@ You should have received a copy of the GNU General Public License along with Tod
         możesz pobrać Simpletask Cloudless z Play Store.
         \nhttp://goo.gl/X1C55P
     </string>
-
     <!-- delete -->
     <string name="delete_task_title">Usuń Zadanie(a)</string>
     <string name="archive_task_title">Archiwizuj Zadanie(a)</string>
@@ -262,16 +221,14 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="logout_message">Proszę upewnij się, że zsynchronizowałeś wszystkie zmiany z Dropboxem lub
         wspóldzieliłeś Twoje zakończone zadania, jeżeli nie jesteś połączony z Dropboxem.\n
         Wszelkie zmiany, które nie zostały zsynchronizowane zostaną utracone po wylogowaniu się.</string>
-     <string name="dropbox_open">Proszę upewnij się, że zsynchronizowałeś wszystkie zmiany z Dropboxem lub
+    <string name="dropbox_open">Proszę upewnij się, że zsynchronizowałeś wszystkie zmiany z Dropboxem lub
         wspóldzieliłeś Twoje zakończone zadania, jeżeli nie jesteś połączony z Dropboxem.\n
         Wszelkie zmiany, które nie zostały zsynchronizowane zostaną utracone po otworzeniu innego pliku.</string>
     <string name="delete_task_confirm">Usuń</string>
-
     <!-- search -->
     <string name="clone_tags">Wstępne uzupełnianie</string>
     <string name="word_wrap">Zawijanie słów</string>
     <string name="search_hint">Wyszukaj todo.txt</string>
-
     <!-- sort -->
     <string name="sort_help">Przeciągnij i upuść, aby zmienić kolejność sortowania. Kliknij na elementy, aby zmienić kierunek sortowania.</string>
     <string name="file_order">Kolejność plików (nieposortowane)</string>
@@ -286,7 +243,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="in_future">Próg przypomnienia w przyszłości</string>
     <string name="by_due_date">Po terminie</string>
     <string name="by_threshold_date">Po prógu przypomnienia</string>
-
     <!-- applyFilter -->
     <string name="filter_select_all">Zaznacz wszystkie</string>
     <string name="filter_clear_all">Wyczyść filtr</string>
@@ -301,16 +257,13 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="filter_show_lists">Pokaż listy w zadaniach</string>
     <string name="filter_show_tags">Pokaż tagi w zadaniach</string>
     <string name="filter_show_create_date">Pokaż wiek zadań</string>
-
     <string name="filter_show_completed_short">Zakończone</string>
     <string name="filter_show_future_short">Przyszłość</string>
     <string name="filter_show_prompt">Pokaż</string>
     <string name="filter_saved_prompt">Zapisane filtry</string>
-
     <!-- task parts -->
     <string name="task_select_parts">Wybierz części zadań</string>
     <string name="task_show_all">Wszystko</string>
-
     <!-- title bar changes -->
     <string name="title_filter_applied">Przefiltrowano na:</string>
     <string name="add_task_help_btn">Pomoc</string>
@@ -321,17 +274,12 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="project_prompt_todotxt">Projekt</string>
     <string name="context_prompt_todotxt">Kontekst</string>
     <string name="priority_format">(prio)</string>
-
     <string name="separator">Separator</string>
-
     <!-- launcher shortcut -->
     <string name="shortcut_addtask_name">Dodaj Zadanie</string>
-
     <!-- share -->
     <string name="share_addtask_name">Dodaj do Simpletask</string>
-
     <string name="none">żaden</string>
-
     <!-- Relative Dates -->
     <string name="dates_days_ago">%d dni temu</string>
     <string name="dates_one_day_ago">1 dzień temu</string>
@@ -341,15 +289,12 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="dates_one_month_ago">1 miesiąc temu</string>
     <string name="dates_weeks_ago">%d tygodni temu</string>
     <string name="dates_one_week_ago">1 tydzień temu</string>
-
     <string name="dates_one_week">1 tydzień</string>
     <string name="dates_two_weeks">2 tygodnie</string>
     <string name="dates_one_month">1 miesiąc</string>
-
     <string name="dates_today">dzisiaj</string>
     <string name="date_pick">wybierz datę</string>
     <string name="dates_tomorrow">jutro</string>
-
     <string name="title_activity_filter">Filtr</string>
     <string name="selected">wybrany</string>
     <string name="no_context">Skrzynka</string>
@@ -362,45 +307,57 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="calendar_title">Powiadomienie Simpletask</string>
     <string name="share_title">Zadanie Simpletask</string>
     <string name="version_copied">Informacja o wersji została skopiowana do schowka</string>
-
     <string name="task_added">Zadanie dodane do Simpletask</string>
     <string name="default_sort">Domyślne sortowanie</string>
     <string name="pull_to_refresh_refreshing_label">Synchronizacja z dropboxem…</string>
     <string name="input_new">Wprowadź nową</string>
     <string name="no_filter">Brak filtra</string>
     <string name="dropbox">Dropbox</string>
-
     <string name="save_filter">Zapisz obecny filtr</string>
     <string name="save_filter_message">Wprowadź nazwę dla obecnego filtru, która zostanie wyświetlona spośród zapisanych filtrów.</string>
-
     <string name="donate_title">Wspomóż</string>
     <string name="donate_summary">Wspomóż Simpletask. UWAGA : Darowizna jest dobrowolna, Simpletask zawsze będzie darmowy. </string>
     <string name="donated_summary">Dziękujemy za darowiznę</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Odwróć sortowanie</string>
-
     <!-- Calendar sync -->
     <string name="calendar_disp_name">Powiadomienia Simpletask</string>
     <string name="calendar_sync_desc_due">Przypomnienie terminu dla daty, wygenerowany automatycznie przez Simpletask</string>
     <string name="calendar_sync_desc_thre">Przypomnienie progu dla daty, wygenerowany automatycznie przez Simpletask</string>
     <string name="calendar_exists_warning">Uwaga: Kalendarz z taką samą nazwą już istnieje, nadpisuję...</string>
     <string name="calendar_write_error">Błąd : Nie można zapisać kalendarza</string>
-
     <string name="click_to_copy">Kliknij i skopiuj do schowka.</string>
-
     <string name="share_history">Przeglądaj i udostępnij wewnętrzną bazę danych todo.txt do odzyskania.</string>
     <string name="share_history_title">Historia todo</string>
-
     <string name="hello_world">Witaj świecie!</string>
     <string name="action_settings">Ustawienia</string>
-
     <!-- Default Help localisation -->
     <string name="help_locale">pl</string>
-
     <string name="task_action">Akcja</string>
-
     <string name="name">Nazwa</string>
     <string name="date">Data</string>
-<string name="preference_interface">Interfejs</string>
+    <string name="preference_interface">Interfejs</string>
     <string name="preference_widget">Widżet</string>
-    </resources>
+    <string name="cancel_changes">Zmiany zostaną utracone.</string>
+    <string name="preference_appearance">Wygląd</string>
+    <string name="preference_other">Inne</string>
+    <string name="todotxt_features_settings_header">Funkcje</string>
+    <string name="todotxt_features_settings_summary">Włącz lub wyłącz funkcje</string>
+    <string name="todotxt_configuration_settings_header">Konfiguracja</string>
+    <string name="todotxt_configuration_settings_summary">Skonfiguruj działanie aplikacji</string>
+    <string name="todotxt_creation_settings_header">Tworzenie Zadań</string>
+    <string name="task_text_ellipsizing_none">Brak: Bardzo długi tekst zadania</string>
+    <string name="task_text_ellipsizing_start">Początek: ...tekst zadania</string>
+    <string name="task_text_ellipsizing_middle">Środek: Bardzo... zadania</string>
+    <string name="task_text_ellipsizing_end">Koniec: Bardzo długi…</string>
+    <string name="filter_tab_header_prio">Prio</string>
+    <string name="filter_tab_header_other">Inne</string>
+    <string name="filter_tab_header_sort">Sortuj</string>
+    <string name="filter_tab_header_script">Skrypt</string>
+    <string name="script_tab_script_from_file">Skrypt z pliku</string>
+    <string name="script_tab_use_script">Użyj skryptu</string>
+    <string name="script_tab_script">Skrypt</string>
+    <string name="saved_filters_exported"></string>
+    <string name="saved_filters_imported"></string>
+    <string name="taskview_extended_pref_title">Pokaż daty w osobnym wierszu</string>
+</resources>

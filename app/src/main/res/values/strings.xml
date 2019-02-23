@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
 This file is part of Todo.txt Touch, an Android app for managing your todo.txt file (http://todotxt.com).
 
@@ -23,9 +23,7 @@ You should have received a copy of the GNU General Public License along with Tod
 @copyright © 2009-2012 Todo.txt contributors (http://todotxt.com)
 @copyright © 2013 Mark Janssen
 @copyright © 2015 Vojtech Kral
--->
-<!--suppress ALL -->
-<resources>
+--><!--suppress ALL --><resources>
     <string name="invalid_context">Invalid list name</string>
     <string name="invalid_project">Invalid tag name</string>
     <string name="added_task">Added task</string>
@@ -482,7 +480,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="nav_drawer_hint">Save the current filter\n
         using the save button</string>
     <string name="invalid_certificate_msg">Server certificate is invalid. Do you want to continue?</string>
-    <string name="invalid_certificate_title">Invalid cert.</string>
+    <string name="invalid_certificate_title">Invalid certificate.</string>
 
     <string name="no_tasks_to_archive">No tasks to archive.</string>
 
