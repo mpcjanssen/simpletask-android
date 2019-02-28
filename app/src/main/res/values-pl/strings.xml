@@ -95,7 +95,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="auto_archive_pref_title">Auto archiwizacja</string>
     <string name="auto_archive_pref_summary">Automatycznie zarchiwizuj zadania do done.txt po zakończeniu.</string>
     <string name="archive_now_pref_title">Archiwizuj teraz</string>
-    <string name="archive_now_pref_summary">Przenieś wykonane zadania z todo.txt do done.txt</string>
+    <string name="archive_now_pref_summary">Przenieś wykonane zadania z todo.txt do done.txt.</string>
     <string name="dropbox_logout_pref_title">Wyloguj się</string>
     <string name="dropbox_logout_pref_summary">Wyloguj się z Dropboxa.</string>
     <string name="TODOTXTPATH_title">Lokalizacja pliku</string>
@@ -105,16 +105,16 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="DROPBOX_settings_summary">Ustawienia synchronizacji Dropbox</string>
     <string name="todotxt_ui_settings_header">Interfejs użytkownika</string>
     <string name="todotxt_behavior_settings_header">Zachowanie</string>
-    <string name="todotxt_settings_summary">Szerokie ustawienia aplikacji</string>
+    <string name="todotxt_settings_summary">Ustawienia dla całej aplikacji</string>
     <string name="sort_complete_last_pref_title">Pokaż ostatnio zakończone</string>
     <string name="sort_complete_last_pref_summary">Zawsze wyświetlaj zakończone zadania na końcu listy
     </string>
     <string name="keep_prio_header">Pior w zakończonych zadaniach</string>
     <string name="keep_prio_summary">Zachowaj priorytety w zakończonych zadaniach. dezaktywuj to aby odtworzyć zachowanie aplikacji todo.txt, co usuwa priorytet w momencie zakończenia zadania.</string>
     <string name="prepend_date_pref_title">Data nowych zadań</string>
-    <string name="prepend_date_pref_summary">Automatyczne dodawanie daty utworzenia do nowych zadań.</string>
+    <string name="prepend_date_pref_summary">Automatyczne dodawanie daty utworzenia do nowych zadań</string>
     <string name="line_breaks_pref_title">Łamanie linii Windows</string>
-    <string name="line_breaks_pref_summary">Użyj łamania linii zgodnego z Windowsem w pliku tekstowym.</string>
+    <string name="line_breaks_pref_summary">Użyj łamania linii zgodnego z Windowsem</string>
     <string name="recur_from_original_date_pref_title">Powtórz zadania używając oryginalnych dat</string>
     <string name="recur_from_original_date_pref_summary">Zwiększ oryginalne daty w zadaniu podczas tworzenia powtarzających się zadań.
         Odznacz to ustawienie, aby ustawić nowe daty zgodne z dniem dzisiejszym.</string>
@@ -141,11 +141,11 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="show_txt_only_pref_title">Pokaż tylko pliki txt</string>
     <string name="show_txt_only_summary">Pokaż tylko pliki .txt w oknie wyboru pliku.</string>
     <string name="calendar_sync_screen_title">Przypomnienia kalendarza</string>
-    <string name="calendar_sync_screen_summary">Automatycznie stwórz przypomnienia kalendarza dla terminu oraz/lub progu dat.</string>
+    <string name="calendar_sync_screen_summary">Przypomnienia w kalendarzu (eksperymentalne)</string>
     <string name="calendar_sync_dues_title">Ważne daty</string>
     <string name="calendar_sync_thresholds_title">Próg dat</string>
     <string name="calendar_reminder_days_title">Przypomnij z wyprzedzeniem</string>
-    <string name="calendar_reminder_days_summary">Ile dni przed terminem/progiem daty powiadomienie powinno zostać ustawione.</string>
+    <string name="calendar_reminder_days_summary">Ile dni przed terminem/progiem daty powiadomienie powinno zostać ustawione</string>
     <string name="calendar_reminder_time_title">Czas przypomnień</string>
     <string name="calendar_reminder_time_summary">O jakiej porze dnia przypomnienie powinno zostać ustawione.</string>
     <string name="drawer_fixed_landscape_title">Otwórz widok skrytki</string>
@@ -357,7 +357,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="script_tab_script_from_file">Skrypt z pliku</string>
     <string name="script_tab_use_script">Użyj skryptu</string>
     <string name="script_tab_script">Skrypt</string>
-    <string name="saved_filters_exported"></string>
-    <string name="saved_filters_imported"></string>
+    <string name="saved_filters_exported"/>
+    <string name="saved_filters_imported"/>
     <string name="taskview_extended_pref_title">Pokaż daty w osobnym wierszu</string>
 </resources>
