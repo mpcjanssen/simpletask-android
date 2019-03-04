@@ -11,6 +11,7 @@ import android.os.Bundle
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.appcompat.app.AlertDialog
 import android.text.InputType
+import android.text.Selection
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -83,7 +84,6 @@ class AddTask : ThemedActionBarActivity() {
         Log.d(TAG, "Fill addtask")
 
         val pendingTasks = TodoList.pendingEdits.map { it.inFileFormat() }
-        runOnUiThread {
             val preFillString = when {
                 pendingTasks.isNotEmpty() -> {
                     setTitle(R.string.updatetask)
@@ -102,8 +102,7 @@ class AddTask : ThemedActionBarActivity() {
             setInputType()
 
 
-            val textIndex = 0
-            taskText.setSelection(textIndex)
+
 
             // Set button callbacks
             btnContext.setOnClickListener { showListMenu() }
@@ -113,8 +112,9 @@ class AddTask : ThemedActionBarActivity() {
             btnThreshold.setOnClickListener { insertDate(DateType.THRESHOLD) }
             btnNext.setOnClickListener { addPrefilledTask() }
             btnSave.setOnClickListener { saveTasksAndClose() }
+            taskText.requestFocus()
+            Selection.setSelection(taskText.text,0)
 
-        }
     }
 
     private fun addPrefilledTask() {
