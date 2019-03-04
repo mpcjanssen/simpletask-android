@@ -130,7 +130,7 @@ repositories {
 dependencies {
     dropboxImplementation 'com.dropbox.core:dropbox-core-sdk:3.0.6'
     nextcloudImplementation 'com.github.nextcloud:android-library:1.0.43.1'
-    implementation "org.jetbrains.anko:anko-commons:0.10.4"
+    implementation 'org.jetbrains.anko:anko-commons:0.10.4'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "androidx.legacy:legacy-support-v4:$android_support_version"
     implementation 'androidx.core:core:1.0.1'
@@ -138,10 +138,9 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation "androidx.recyclerview:recyclerview:$android_support_version"
     def room_version = "2.1.0-alpha04"
-
     implementation "androidx.room:room-runtime:$room_version"
-    kapt "androidx.room:room-compiler:$room_version" // For Kotlin use kapt instead of annotationProcessor
-
+    kapt "androidx.room:room-compiler:$room_version"
+    // For Kotlin use kapt instead of annotationProcessor
     implementation 'com.atlassian.commonmark:commonmark:0.11.0'
     implementation 'com.darwinsys:hirondelle-date4j:1.5.1'
     implementation 'org.luaj:luaj-jse:3.0.1'
