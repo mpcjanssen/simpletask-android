@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="invalid_context">Nome de lista inválido</string>
     <string name="invalid_project">Nome de etiqueta inválido</string>
@@ -104,7 +104,7 @@
     <string name="todotxt_ui_settings_header">Funções</string>
     <string name="todotxt_ui_settings_summary">Controlar exibição</string>
     <string name="todotxt_behavior_settings_header">Comportamento</string>
-    <string name="todotxt_settings_summary">Configurações gerais do aplicativo</string>
+    <string name="todotxt_settings_summary">Configurações para todo o aplicativo</string>
     <string name="sort_complete_last_pref_title">Exibir concluídas no fim</string>
     <string name="sort_complete_last_pref_summary">Sempre exibir tarefas concluídas no fim da lista</string>
     <string name="keep_prio_header">Manter a prioridade nas tarefas concluídas</string>
@@ -126,7 +126,7 @@ Desmarque para atualizar datas de criação relativamente a hoje.</string>
     <string name="datebar_relative_size_summary">Barra de datas proporcional</string>
     <string name="font_size_delta_pref_summary">Mudar tamanho da fonte.</string>
     <string name="theme_pref_title">Tema</string>
-    <string name="theme_pref_summary">Trocar tema do aplicativo.</string>
+    <string name="theme_pref_summary">Mudar tema do aplicativo.</string>
 
     <string name="share_task_show_edit_pref_title">Editar tarefas compartilhadas</string>
     <string name="share_task_show_edit_summary">Editar tarefas compartilhadas para o Simpletask antes de as salvar</string>
