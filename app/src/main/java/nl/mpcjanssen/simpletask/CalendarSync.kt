@@ -39,7 +39,7 @@ import android.graphics.Color
 import android.net.Uri
 import android.provider.CalendarContract
 import android.provider.CalendarContract.*
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.util.Log
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.task.*
@@ -89,8 +89,8 @@ private class Evt(
 
     infix fun equals(other: Evt) =
             dtStart == other.dtStart &&
-                    title.equals(other.title) &&
-                    description.equals(other.description) &&
+                    title == other.title &&
+                    description == other.description &&
                     remMinutes == other.remMinutes
 
     @TargetApi(16)
@@ -213,9 +213,9 @@ private class EvtMap private constructor() : HashMap<EvtKey, LinkedList<Evt>>() 
         }
     }
 
-    fun mergeTasks(tasks: List<Task>) {
-        for (task in tasks) {
-            if (task.isCompleted()) continue
+    fun mergeTask(task: Task) {
+
+            if (task.isCompleted()) return
 
             var text: String? = null
 
@@ -234,7 +234,6 @@ private class EvtMap private constructor() : HashMap<EvtKey, LinkedList<Evt>>() 
                 val evt = Evt(dt, text, TodoApplication.app.getString(R.string.calendar_sync_desc_thre))
                 mergeEvt(evt)
             }
-        }
     }
 
     @SuppressLint("NewApi")
@@ -246,9 +245,11 @@ private class EvtMap private constructor() : HashMap<EvtKey, LinkedList<Evt>>() 
 
         for (list in values) {
             for (evt in list) {
-                if (evt.status == EvtStatus.INSERT) ins++
-                else if (evt.status == EvtStatus.KEEP) kps++
-                else if (evt.status == EvtStatus.DELETE) dels++
+                when {
+                    evt.status == EvtStatus.INSERT -> ins++
+                    evt.status == EvtStatus.KEEP -> kps++
+                    evt.status == EvtStatus.DELETE -> dels++
+                }
 
                 evt.addOp(ops, calID)
             }
@@ -353,12 +354,11 @@ object CalendarSync {
         val args = arrayOf(CAL_NAME)
         try {
             val ret = m_cr.delete(CAL_URI, selection, args)
-            if (ret == 0)
-                Log.d(TAG, "No calendar to remove")
-            else if (ret == 1)
-                Log.d(TAG, "Calendar removed")
-            else
-                Log.e(TAG, "Unexpected return value while removing calendar: " + ret)
+            when (ret) {
+                0 -> Log.d(TAG, "No calendar to remove")
+                1 -> Log.d(TAG, "Calendar removed")
+                else -> Log.e(TAG, "Unexpected return value while removing calendar: " + ret)
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Error while removing calendar", e)
         }
@@ -393,8 +393,9 @@ object CalendarSync {
 
             Log.d(TAG, "Syncing due/threshold calendar reminders...")
             val evtmap = EvtMap(m_cr, calID)
-            val tasks = TodoList.todoItemsCopy
-            evtmap.mergeTasks(tasks)
+            TodoList.each {
+                evtmap.mergeTask(it)
+            }
             val stats = evtmap.apply(m_cr, calID)
             Log.d(TAG, "Sync finished: ${stats.inserts} inserted, ${stats.keeps} unchanged, ${stats.deletes} deleted")
         } catch (e: SecurityException) {

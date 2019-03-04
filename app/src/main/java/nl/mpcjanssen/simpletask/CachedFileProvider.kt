@@ -37,18 +37,20 @@ class CachedFileProvider : ContentProvider() {
 
         // If it returns 1 - then it matches the Uri defined in onCreate
             1 -> {
+                context?.let {
 
-                // The desired file name is specified by the last segment of the
-                // path
-                // E.g.
-                // 'content://com.stephendnicholas.gmailattach.provider/Test.txt'
-                // Take this and build the path to the file
-                val fileLocation = File(context.cacheDir , uri.lastPathSegment)
+                    // The desired file name is specified by the last segment of the
+                    // path
+                    // E.g.
+                    // 'content://com.stephendnicholas.gmailattach.provider/Test.txt'
+                    // Take this and build the path to the file
+                    val fileLocation = File(it.cacheDir, uri.lastPathSegment)
 
-                // Create & return a ParcelFileDescriptor pointing to the file
-                // Note: I don't care what mode they ask for - they're only getting
-                // read only
-                return ParcelFileDescriptor.open(fileLocation, ParcelFileDescriptor.MODE_READ_ONLY)
+                    // Create & return a ParcelFileDescriptor pointing to the file
+                    // Note: I don't care what mode they ask for - they're only getting
+                    // read only
+                    return ParcelFileDescriptor.open(fileLocation, ParcelFileDescriptor.MODE_READ_ONLY)
+                } ?: throw FileNotFoundException("Context is null")
             }
 
         // Otherwise unrecognised Uri

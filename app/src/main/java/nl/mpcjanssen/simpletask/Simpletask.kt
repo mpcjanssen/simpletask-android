@@ -22,14 +22,14 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.CalendarContract
 import android.provider.CalendarContract.Events
-import android.support.annotation.StyleableRes
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.LocalBroadcastManager
-import android.support.v4.view.GravityCompat
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.StyleableRes
+import androidx.core.content.ContextCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.core.view.GravityCompat
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
@@ -95,7 +95,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     completeTasks(it)
                     // Update the tri state checkbox
                     handleMode(mapOf(Mode.SELECTION to { invalidateOptionsMenu() }))
-                    TodoList.notifyTasklistChanged(Config.todoFileName, false)
+                    TodoList.notifyTasklistChanged(Config.todoFileName, false,true)
                 },
                 unCompleteAction = {
                     uncompleteTasks(it)
@@ -457,7 +457,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             Log.d(TAG, "Selection from intent")
             val position = currentIntent.getIntExtra(Constants.INTENT_SELECTED_TASK_LINE, -1)
             currentIntent.removeExtra(Constants.INTENT_SELECTED_TASK_LINE)
-            setIntent(currentIntent)
+            intent = currentIntent
             if (position > -1) {
                 val itemAtPosition = TodoList.getTaskAt(position)
                 itemAtPosition?.let {
@@ -500,9 +500,31 @@ class Simpletask : ThemedNoActionBarActivity() {
         val count = selectedTasks.count()
         val completedCount = selectedTasks.count { it.isCompleted() }
         when (completedCount) {
-            0 -> cbItem.setIcon(R.drawable.ic_check_box_outline_blank_white_24dp)
-            count -> cbItem.setIcon(R.drawable.ic_check_box_white_24dp)
-            else -> cbItem.setIcon(R.drawable.ic_indeterminate_check_box_white_24dp)
+            0 -> {
+                cbItem.setIcon(R.drawable.ic_check_box_outline_blank_white_24dp)
+                cbItem.setOnMenuItemClickListener { completeTasks(selectedTasks) ; true }
+            }
+            count -> {
+                cbItem.setIcon(R.drawable.ic_check_box_white_24dp)
+                cbItem.setOnMenuItemClickListener { uncompleteTasks(selectedTasks) ; true }
+            }
+            else -> {
+                cbItem.setIcon(R.drawable.ic_indeterminate_check_box_white_24dp)
+                cbItem.setOnMenuItemClickListener {
+                    val popup = PopupMenu(this, toolbar)
+                    val menuInflater = popup.menuInflater
+                    menuInflater.inflate(R.menu.completion_popup, popup.menu)
+                    popup.show()
+                    popup.setOnMenuItemClickListener popup@{ item ->
+                        val menuId = item.itemId
+                        when (menuId) {
+                            R.id.complete -> completeTasks(selectedTasks)
+                            R.id.uncomplete -> uncompleteTasks(selectedTasks)
+                        }
+                        return@popup true
+                    } ; true
+                }
+            }
         }
     }
 
@@ -542,56 +564,18 @@ class Simpletask : ThemedNoActionBarActivity() {
                     toolbar.visibility = View.VISIBLE
                     toolbar.menu.clear()
                     inflater.inflate(R.menu.task_context, toolbar.menu)
-
-                    val cbItem = toolbar.menu.findItem(R.id.multicomplete_checkbox)
-
-                    val selectedTasks = TodoList.selectedTasks
-                    val initialCompleteTasks = ArrayList<Task>()
-                    val initialIncompleteTasks = ArrayList<Task>()
-
-                    val first: Boolean? = selectedTasks.getOrNull(0)?.isCompleted()
-
-                    val cbState: Boolean? = selectedTasks.fold(first) { stateSoFar, task ->
-                        val completed = task.isCompleted()
-                        if (completed) {
-                            initialCompleteTasks.add(task)
-                        } else {
-                            initialIncompleteTasks.add(task)
+                    if (!Config.useListAndTagIcons) {
+                        toolbar.menu?.apply {
+                            findItem(R.id.update_lists)?.setIcon(R.drawable.ic_action_todotxt_lists)
+                            findItem(R.id.update_tags)?.setIcon(R.drawable.ic_action_todotxt_tags)
                         }
-                        stateSoFar?.takeIf { it == completed }
-                    }
-                    when (cbState) {
-                        null -> cbItem.setIcon(R.drawable.ic_indeterminate_check_box_white_24dp)
-                        false -> cbItem.setIcon(R.drawable.ic_check_box_outline_blank_white_24dp)
-                        true -> cbItem.setIcon(R.drawable.ic_check_box_white_24dp)
                     }
 
-                    cbItem.setOnMenuItemClickListener { _ ->
-                        Log.i(TAG, "Clicked on completion checkbox, state: $cbState")
-                        when (cbState) {
-                            false -> completeTasks(selectedTasks)
-                            true -> uncompleteTasks(selectedTasks)
-                            null -> {
-                                val popup = PopupMenu(this, toolbar)
-                                val menuInflater = popup.menuInflater
-                                menuInflater.inflate(R.menu.completion_popup, popup.menu)
-                                popup.show()
-                                popup.setOnMenuItemClickListener popup@{ item ->
-                                    val menuId = item.itemId
-                                    when (menuId) {
-                                        R.id.complete -> completeTasks(selectedTasks)
-                                        R.id.uncomplete -> uncompleteTasks(selectedTasks)
-                                    }
-                                    return@popup true
-                                }
-                            }
-                        }
-                        return@setOnMenuItemClickListener true
-                    }
 
+                    updateCompletionCheckboxState()
                     selection_fab.visibility = View.VISIBLE
                     selection_fab.setOnClickListener {
-                        createCalendarAppointment(selectedTasks)
+                        createCalendarAppointment(TodoList.selectedTasks)
                     }
                 },
 
@@ -818,17 +802,19 @@ class Simpletask : ThemedNoActionBarActivity() {
         showConfirmationDialog(this, R.string.delete_task_message, delete, title)
     }
 
-    private fun archiveTasks(showDialog: Boolean) {
-        archiveTasks(null, showDialog)
-    }
+    private fun archiveTasks(showDialog: Boolean = true) {
+        val selection = TodoList.selectedTasks
 
-    private fun archiveTasks(checkedTasks: List<Task>?, showDialog: Boolean = true) {
-        val tasksToArchive = ArrayList<Task>()
-        if (checkedTasks == null) {
-            tasksToArchive.addAll(taskAdapter.visibleTasks.filter { it.isCompleted() })
+        val tasksToArchive =  ArrayList<Task>()
+        if (selection.isNotEmpty()) {
+            tasksToArchive.addAll(selection)
         } else {
-            tasksToArchive.addAll(checkedTasks)
+            tasksToArchive.addAll(taskAdapter.visibleLines.asSequence()
+                    .filterNot { it.header }
+                    .map { (it as TaskLine).task }
+                    .filter {it.isCompleted()})
         }
+
         val archiveAction = {
             if (Config.todoFileName == Config.doneFileName) {
                 showToastShort(this, "You have the done.txt file opened.")
@@ -871,14 +857,14 @@ class Simpletask : ThemedNoActionBarActivity() {
             R.id.context_delete -> deleteTasks(checkedTasks)
             R.id.context_select_all -> selectAllTasks()
             R.id.share -> {
-                val shareText = TodoList.todoItemsCopy.joinToString(separator = "\n", transform = Task::inFileFormat)
+                val shareText = TodoList.fileFormat
                 shareText(this@Simpletask, "Simpletask list", shareText)
             }
             R.id.context_share -> {
                 val shareText = selectedTasksAsString()
                 shareText(this@Simpletask, "Simpletask tasks", shareText)
             }
-            R.id.context_archive -> archiveTasks(checkedTasks)
+            R.id.context_archive -> archiveTasks(Config.showConfirmationDialogs)
             R.id.help -> showHelp()
             R.id.open_lua -> openLuaConfig()
             R.id.sync -> {

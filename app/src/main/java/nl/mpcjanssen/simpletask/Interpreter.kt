@@ -10,9 +10,9 @@ import org.luaj.vm2.lib.OneArgFunction
 import org.luaj.vm2.lib.jse.JsePlatform
 import java.util.*
 
-object Interpreter : AbstractInterpreter() {
+object Interpreter :  AbstractInterpreter() {
     private val globals = JsePlatform.standardGlobals()!!
-    val tag = "LuaInterp"
+    const val tag = "LuaInterp"
 
     private val TODOLIB = readAsset(TodoApplication.app.assets, "lua/todolib.lua")
 
@@ -215,7 +215,7 @@ object Interpreter : AbstractInterpreter() {
         fieldTable.set("threshold", dateStringToLuaLong(t.thresholdDate))
         fieldTable.set("createdate", dateStringToLuaLong(t.createDate))
         fieldTable.set("completiondate", dateStringToLuaLong(t.completionDate))
-        fieldTable.set("text", t.showParts({ it is TextToken }))
+        fieldTable.set("text", t.alphaParts)
 
         val recPat = t.recurrencePattern
         if (recPat != null) {

@@ -35,11 +35,14 @@ import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.*
 import android.os.SystemClock
-import android.support.multidex.MultiDexApplication
-import android.support.v4.content.LocalBroadcastManager
+import androidx.multidex.MultiDexApplication
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.util.Log
-import nl.mpcjanssen.simpletask.dao.Daos
-import nl.mpcjanssen.simpletask.dao.gen.TodoFile
+import androidx.room.Room
+import nl.mpcjanssen.simpletask.dao.AppDatabase
+import nl.mpcjanssen.simpletask.dao.DB_FILE
+import nl.mpcjanssen.simpletask.dao.TodoFile
+
 import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileDialog
 import nl.mpcjanssen.simpletask.remote.FileStore
@@ -56,8 +59,16 @@ class TodoApplication : MultiDexApplication() {
     private lateinit var m_broadcastReceiver: BroadcastReceiver
 
     override fun onCreate() {
-        app = this
         super.onCreate()
+        app = this
+        db = Room.databaseBuilder(this,
+                AppDatabase::class.java, DB_FILE).fallbackToDestructiveMigration()
+                .build()
+        if (Config.forceEnglish) {
+            val conf = resources.configuration
+            conf.locale = Locale.ENGLISH
+            resources.updateConfiguration(conf, resources.displayMetrics)
+        }
 
         localBroadCastManager = LocalBroadcastManager.getInstance(this)
 
@@ -208,6 +219,7 @@ class TodoApplication : MultiDexApplication() {
         private val TAG = TodoApplication::class.java.simpleName
         fun atLeastAPI(api: Int): Boolean = android.os.Build.VERSION.SDK_INT >= api
         lateinit var app : TodoApplication
+        lateinit var db : AppDatabase
     }
 
     var today: String = todayAsString
@@ -216,8 +228,12 @@ class TodoApplication : MultiDexApplication() {
 
 object Backupper : BackupInterface {
     override fun backup(name: String, lines: List<String>) {
-        val now = Date()
+        val now = Date().time
         val fileToBackup = TodoFile(lines.joinToString ("\n"), name, now)
-        Daos.backup(fileToBackup)
+        val dao =  TodoApplication.db.todoFileDao()
+        if(dao.insert(fileToBackup) == -1L) {
+            dao.update(fileToBackup)
+        }
+        dao.removeBefore( now - 2 * 24 * 60 * 60 * 1000)
     }
 }
