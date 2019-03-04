@@ -13,13 +13,13 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.LocalBroadcastManager
-import android.support.v4.content.pm.ShortcutInfoCompat
-import android.support.v4.content.pm.ShortcutManagerCompat
-import android.support.v4.graphics.drawable.IconCompat
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
+import androidx.core.content.ContextCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.core.content.pm.ShortcutInfoCompat
+import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.core.graphics.drawable.IconCompat
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.InputType
 import android.text.Spannable
 import android.text.SpannableString
@@ -422,12 +422,8 @@ fun copyFile(sourceFile: File, destFile: File) {
         destination = FileOutputStream(destFile).channel
         destination!!.transferFrom(source, 0, source!!.size())
     } finally {
-        if (source != null) {
-            source.close()
-        }
-        if (destination != null) {
-            destination.close()
-        }
+        source?.close()
+        destination?.close()
     }
 }
 
@@ -494,19 +490,18 @@ fun shareText(act: Activity, subject: String, text: String) {
 fun showLoadingOverlay(act: Activity, visibleDialog: Dialog?, show: Boolean): Dialog? {
 
     if (show) {
-        if (visibleDialog != null) {
-            visibleDialog.show()
-            return visibleDialog
+        if (visibleDialog != null && visibleDialog.isShowing) {
+            visibleDialog.dismiss()
         }
-        val newDialog = Dialog(act)
-        newDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        newDialog.setContentView(R.layout.loading)
-        val pr = newDialog.findViewById(R.id.progress) as ProgressBar?
-        pr?.indeterminateDrawable?.setColorFilter(-16737844, android.graphics.PorterDuff.Mode.MULTIPLY)
-        newDialog.window.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
-        newDialog.setCancelable(false)
-        newDialog.show()
-        return newDialog
+        return Dialog(act).apply {
+            requestWindowFeature(Window.FEATURE_NO_TITLE)
+            setContentView(R.layout.loading)
+            val pr = findViewById(R.id.progress) as ProgressBar?
+            pr?.indeterminateDrawable?.setColorFilter(-16737844, android.graphics.PorterDuff.Mode.MULTIPLY)
+            window.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
+            setCancelable(false)
+            show()
+        }
     } else if (visibleDialog != null && visibleDialog.isShowing) {
         visibleDialog.dismiss()
     }

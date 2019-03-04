@@ -32,9 +32,9 @@ import android.content.*
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.*
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.LocalBroadcastManager
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.util.Log
 import android.view.MenuItem
 import nl.mpcjanssen.simpletask.util.Config
@@ -125,7 +125,7 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
 
         // Remove calendar preferences for older devices
         if (!TodoApplication.atLeastAPI(16)) {
-            target.addAll(allHeaders.filter { !it.fragment.equals(CalendarPrefFragment::class.java.name) })
+            target.addAll(allHeaders.filter { it.fragment != CalendarPrefFragment::class.java.name })
         } else {
             target.addAll(allHeaders)
         }

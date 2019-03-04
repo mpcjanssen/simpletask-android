@@ -2,9 +2,9 @@ package nl.mpcjanssen.simpletask.task
 
 import android.graphics.Color
 import android.graphics.Paint
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.text.SpannableString
 import android.text.Spanned.*
 import android.text.TextUtils
@@ -184,9 +184,9 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
             caller.showListViewProgress(true)
         }
         Log.i(tag, "setFilteredTasks called: $TodoList")
-        val sorts = newQuery.getSort(Config.defaultSorts)
-        val (visibleTasks, total) = TodoList.getSortedTasks(newQuery, sorts, Config.sortCaseSensitive)
+        val (visibleTasks, total) = TodoList.getSortedTasks(newQuery, Config.sortCaseSensitive)
         countTotalTasks = total
+        countVisibleTasks = visibleTasks.size
 
         val newVisibleLines = ArrayList<VisibleLine>()
 
@@ -208,18 +208,8 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         }
     }
 
-    val visibleTasks: Sequence<Task>
-        get() {
-            return visibleLines.asSequence()
-                    .filterNot { it.header }
-                    .map { (it as TaskLine).task }
-        }
 
-    val countVisibleTasks: Int
-        get() {
-            return visibleLines.count { !it.header }
-        }
-
+    var countVisibleTasks = 0
     var countTotalTasks = 0
 
     /*

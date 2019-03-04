@@ -178,6 +178,8 @@ object Config : Preferences(TodoApplication.app) {
 
     val hasShareTaskShowsEdit by BooleanPreference(R.string.share_task_show_edit, false)
 
+    val useListAndTagIcons by BooleanPreference(R.string.use_list_and_tags_icons, true)
+
     val hasExtendedTaskView by BooleanPreference(R.string.taskview_extended_pref_key, true)
 
     val showCompleteCheckbox by BooleanPreference(R.string.ui_complete_checkbox, true)
@@ -254,10 +256,11 @@ object Config : Preferences(TodoApplication.app) {
             if (items == null) {
                 prefs.edit().remove(getString(R.string.cached_todo_file)).apply()
             } else {
-                cachedContents = items.map { it.inFileFormat() }.joinToString("\n")
+                cachedContents = items.joinToString("\n") { it.inFileFormat() }
             }
         }
     var changesPending by BooleanPreference(R.string.changes_pending, false)
+    var forceEnglish by BooleanPreference(R.string.force_english, false)
     var useUUIDs by BooleanPreference(R.string.use_uuids, false)
 
     fun legacyQueryStoreJson() : String   {

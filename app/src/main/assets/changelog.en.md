@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## Unreleased
+
+### Fixed
+
+- Properly handle multiple clicks on completion context item when `keep selection` is enabled for #942.
+- Include all alphanumerical tokens in the Lua text field for #909.
+
+### Added
+
+- Add setting to change list and tag icons to todo.txt text for #944.
+
 ## 10.2.9
 
 ### Fixed

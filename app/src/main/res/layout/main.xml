@@ -9,14 +9,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     >
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/main_actionbar"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:minHeight="?android:attr/actionBarSize"
         style="@style/SimpleToolbar"
         />
-    <android.support.v4.widget.DrawerLayout
+    <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -86,7 +86,7 @@
                             />
                     </LinearLayout>
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@android:id/list"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -95,7 +95,7 @@
                 </LinearLayout>
 
 
-                <android.support.design.widget.FloatingActionButton
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/fab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -103,7 +103,7 @@
                     android:layout_margin="16dp"
                     android:src="@drawable/ic_add_white_24dp"
                     />
-                <android.support.design.widget.FloatingActionButton
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/selection_fab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -119,7 +119,7 @@
                          style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                          android:id="@+id/sync_progress"
                          android:visibility="gone"/>
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 style="@style/SimpleSelectionBar"
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
@@ -153,5 +153,5 @@
             android:divider="@android:color/transparent"
             android:dividerHeight="0dp"
             />
-    </android.support.v4.widget.DrawerLayout>
+    </androidx.drawerlayout.widget.DrawerLayout>
 </LinearLayout>

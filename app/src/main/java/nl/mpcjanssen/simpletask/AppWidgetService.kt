@@ -3,7 +3,7 @@ package nl.mpcjanssen.simpletask
 import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.graphics.Color
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.StrikethroughSpan
@@ -72,10 +72,9 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
 
         val currentFilter = updateFilter()
         filter = currentFilter
-        val sorts = currentFilter.getSort(Config.defaultSorts)
 
         val newVisibleTasks = ArrayList<Task>()
-        val (tasks, _) = TodoList.getSortedTasks(currentFilter, sorts, Config.sortCaseSensitive)
+        val (tasks, _) = TodoList.getSortedTasks(currentFilter, Config.sortCaseSensitive)
         newVisibleTasks.addAll(tasks)
         Log.d(TAG, "Widget $widgetId: setFilteredTasks returned ${newVisibleTasks.size} tasks")
         visibleTasks = newVisibleTasks

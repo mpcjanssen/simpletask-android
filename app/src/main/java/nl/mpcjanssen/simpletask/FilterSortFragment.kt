@@ -2,7 +2,7 @@ package nl.mpcjanssen.simpletask
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -138,14 +138,12 @@ class FilterSortFragment : Fragment() {
     val selectedItem: ArrayList<String>
         get() {
             val multiSort = ArrayList<String>()
-            if (lv != null) {
-                for (i in 0..adapter.count - 1) {
+            when {
+                lv != null -> for (i in 0..adapter.count - 1) {
                     multiSort.add(directions[i] + Query.SORT_SEPARATOR + adapter.getSortType(i))
                 }
-            } else if (originalItems != null) {
-                multiSort.addAll(originalItems as ArrayList<String>)
-            } else {
-                multiSort.addAll(arguments?.getStringArrayList(FilterActivity.FILTER_ITEMS) ?: java.util.ArrayList())
+                originalItems != null -> multiSort.addAll(originalItems as ArrayList<String>)
+                else -> multiSort.addAll(arguments?.getStringArrayList(FilterActivity.FILTER_ITEMS) ?: java.util.ArrayList())
             }
             return multiSort
         }

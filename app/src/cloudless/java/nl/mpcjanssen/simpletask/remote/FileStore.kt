@@ -6,7 +6,7 @@ import android.os.Environment
 import android.os.FileObserver
 import android.os.Handler
 import android.os.Looper
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.util.Log
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.util.join
@@ -76,6 +76,7 @@ object FileStore : IFileStore {
             Log.w(TAG, "Observer: already watching different path: ${obs.path}")
             obs.ignoreEvents(true)
             obs.stopWatching()
+            observer = null
         }
         observer = TodoObserver(path)
         Log.i(TAG, "Observer: modifying done")

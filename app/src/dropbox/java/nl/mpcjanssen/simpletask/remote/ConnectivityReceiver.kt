@@ -3,8 +3,8 @@ package nl.mpcjanssen.simpletask.remote
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.support.v4.content.LocalBroadcastManager
 import android.util.Log
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import nl.mpcjanssen.simpletask.util.broadcastFileSync
 import nl.mpcjanssen.simpletask.util.broadcastUpdateStateIndicator
 
