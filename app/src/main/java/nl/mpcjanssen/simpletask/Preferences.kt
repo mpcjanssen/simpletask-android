@@ -99,6 +99,13 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
                 ActivityCompat.requestPermissions(this,
                 arrayOf(Manifest.permission.WRITE_CALENDAR), 0)
             }
+            val permissionCheck = ContextCompat.checkSelfPermission(app,
+                    Manifest.permission.READ_CALENDAR)
+
+            if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+                ActivityCompat.requestPermissions(this,
+                        arrayOf(Manifest.permission.READ_CALENDAR), 0)
+            }
         }
     }
 
