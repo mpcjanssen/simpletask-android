@@ -92,17 +92,17 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
 
     private fun requestCalendarPermission() {
         if (Config.isSyncDues || Config.isSyncThresholds) {
-            val permissionCheck = ContextCompat.checkSelfPermission(app,
+            val writePermissionCheck = ContextCompat.checkSelfPermission(app,
             Manifest.permission.WRITE_CALENDAR)
 
-            if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+            if (writePermissionCheck == PackageManager.PERMISSION_DENIED) {
                 ActivityCompat.requestPermissions(this,
                 arrayOf(Manifest.permission.WRITE_CALENDAR), 0)
             }
-            val permissionCheck = ContextCompat.checkSelfPermission(app,
+            val readPermissionCheck = ContextCompat.checkSelfPermission(app,
                     Manifest.permission.READ_CALENDAR)
 
-            if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+            if (readPermissionCheck == PackageManager.PERMISSION_DENIED) {
                 ActivityCompat.requestPermissions(this,
                         arrayOf(Manifest.permission.READ_CALENDAR), 0)
             }
