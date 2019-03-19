@@ -1,5 +1,6 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="invalid_context">Neplatný názov zoznamu</string>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="invalid_context">Neplatný názov zoznamu</string>
     <string name="invalid_project">Neplatný názov značky</string>
     <string name="added_task">Pridaná úloha</string>
     <string name="add_task_failed">Nemožno pridať úlohu</string>
@@ -26,15 +27,13 @@
     <string name="preference_interface">Rozhranie</string>
     <string name="preference_widget">Widget</string>
     <string name="preference_other">Ostatné</string>
-
     <string name="dropbox_logout_pref_title">Odhlásiť</string>
     <string name="dropbox_logout_pref_summary">Odhlásiť sa z Dropboxu.</string>
-    <string name="TODOTXTPATH_title">"Umiestnenie  súboru"</string>
+    <string name="TODOTXTPATH_title">Umiestnenie súboru</string>
     <string name="DROPBOX_settings_header">Dropbox</string>
     <string name="todotxt_features_settings_header">Vlastnosti</string>
     <string name="todotxt_configuration_settings_header">Konfigurácia</string>
     <string name="todotxt_creation_settings_header">Vytváranie úloh</string>
-
     <string name="todotxt_ui_settings_header">Vlastnosti</string>
     <string name="theme_pref_title">Motív</string>
     <string name="calendar_sync_screen_title">Notifikácie</string>
@@ -44,7 +43,6 @@
     <string name="show_empty_lists_title">Zobraziť prázdne hlavičky</string>
     <string name="visit_website_summary">Navštíviť webovú stránku</string>
     <string name="delete_task_confirm">Odstrániť</string>
-
     <string name="word_wrap">Zalamovanie slov</string>
     <string name="alphabetical">Abecedne</string>
     <string name="by_prio">Priorita</string>
@@ -63,9 +61,7 @@
     <string name="dates_one_month_ago">minulý mesiac</string>
     <string name="dates_today">dnes</string>
     <string name="dropbox">Dropbox</string>
-
     <string name="action_settings">Nastavenia</string>
-
     <string name="name">Názov</string>
     <string name="date">Dátum</string>
     <string name="script">Skript</string>
@@ -83,7 +79,6 @@
     <string name="archive_now_pref_title">Archivovať teraz</string>
     <string name="TODOTXTPATH_defaultPath">/todo</string>
     <string name="DROPBOX_settings_summary">Nastavenie pre synchronizáciu Dropboxu</string>
-
     <string name="manual_sync_pref_title">Ručná synchronizácia</string>
     <string name="resume_sync_pref_title">Obnoviť synchronizáciu</string>
     <string name="font_size_delta_pref_title">Vlastná veľkosť písma</string>
@@ -91,9 +86,54 @@
     <string name="local_file_root_title">root:// adresár</string>
     <string name="calendar_reminder_time_title">Čas pripomienky</string>
     <string name="action_pop_up_sms">SMS:</string>
-
     <string name="append_tasks_at_end_title">Pripojiť k súboru</string>
     <string name="append_tasks_at_end_summary">Pridať nové úlohy na koniec súboru</string>
-
     <string name="show_hidden_title">Zobraziť skryté úlohy</string>
-    </resources>
+    <string name="archive">Archivovať</string>
+    <string name="debug_info">Informácie pre ladenie</string>
+    <string name="cleartask">Vyčistiť úlohu</string>
+    <string name="archive_now_pref_summary">Presunúť hotové úlohy z todo.txt do done.txt</string>
+    <string name="TODOTXTPATH_summary">Dropbox priečinok kde je uložený súbor todo.txt.</string>
+    <string name="todotxt_features_settings_summary">Povoliť alebo zakázať vlastnosti</string>
+    <string name="todotxt_behavior_settings_header">Správanie</string>
+    <string name="sort_complete_last_pref_title">Zobraziť hotové úlohy</string>
+    <string name="prepend_date_pref_title">Dátumová pečiatka novej úlohy</string>
+    <string name="prepend_date_pref_summary">Automaticky pridať dátum vytvorenia</string>
+    <string name="line_breaks_pref_title">Konce riadkov ako vo Windows</string>
+    <string name="line_breaks_pref_summary">Použije ukončovanie riadkov ako vo Windows</string>
+    <string name="resume_sync_pref_summary">Synchronizovať s Dropboxom pri spustení aplikácie.</string>
+    <string name="calendar_sync_screen_summary">Pripomienky v kalendári (experimentálne)</string>
+    <string name="calendar_reminder_days_title">Dní dopredu</string>
+    <string name="filter_tab_header_prio">Priorita</string>
+    <string name="filter_tab_header_sort">Zoradenie</string>
+    <string name="filter_tab_header_script">Skript</string>
+    <string name="script_tab_script_from_file">Skript zo súboru</string>
+    <string name="script_tab_use_script">Použiť skript</string>
+    <string name="script_tab_test">Test</string>
+    <string name="script_tab_test_task">Testovacia úloha</string>
+    <string name="script_tab_script">Skript</string>
+    <string name="script_tab_true_task_shown">Zobrazené</string>
+    <string name="script_tab_false_task_not_shown">Nezobrazené</string>
+    <string name="action_pop_up_call">Volanie:</string>
+    <string name="quick_filter_tag_header_inverted">Obrátené</string>
+    <string name="widget_header_transparency_title">Priehľadnosť hlavičky</string>
+    <string name="widget_background_transparency_title">Priehľadnosť pozadia</string>
+    <string name="show_calendarview_title">Použiť kalendár pre zadanie dátumu</string>
+    <string name="about_settings_header">O aplikácii</string>
+    <string name="about_settings_summary">Informácie o aplikácii</string>
+    <string name="visit_website_title">Pomocník</string>
+    <string name="visit_website_data">https://mpcjanssen.nl/</string>
+    <string name="visit_tracker_title">Požiadať o funkciu alebo nahlásiť chybu</string>
+    <string name="file_order">Poradie súborov (nezoradené)</string>
+    <string name="by_context_todotxt">Kontext</string>
+    <string name="filter_clear_all">Vyčistiť filter</string>
+    <string name="filter_invert">Obrátiť filter</string>
+    <string name="add_filter_shortcut">Na hlavnú obrazovku</string>
+    <string name="export_filter">Export</string>
+    <string name="import_filter">Import</string>
+    <string name="filter_show_completed">Zobraziť hotové úlohy</string>
+    <string name="save_filter">Uložiť súčasný filter</string>
+    <string name="save_filter_message">Zadajte názov súčasného filtra, ktorý bude zobrazený v zásuvke s uloženými filtrami.</string>
+    <string name="donate_title">Podporiť vývoj</string>
+    <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
+</resources>
