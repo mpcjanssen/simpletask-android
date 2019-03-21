@@ -1,5 +1,6 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="invalid_context">Neplatný název seznamu</string>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="invalid_context">Neplatný název seznamu</string>
     <string name="invalid_project">Neplatný název štítku</string>
     <string name="added_task">Přidaný úkol</string>
     <string name="add_task_failed">Úkol se nepodařilo přidat</string>
@@ -50,18 +51,15 @@
     <string name="cancel">Storno</string>
     <string name="clear_filter">Vyčistit filtr</string>
     <string name="write_failed">Nepodařilo se zapsat do souboru. Vaše změny NEBYLY uloženy.</string>
-
     <string name="tasktexthint">\@prodiskutovat +Petr problém s +Honza @Troy 
 \nŘíct +Honza aby nebyl takový tahoun @Troy 
 \nOdebrat tento text z nabídky @telefon</string>
-
     <string name="filter_name_empty">Není zadán název, filtr nebude přidán</string>
     <string name="widget_name_empty">Nebyl zadán název ovládacího prvku, nebude přidán</string>
     <string name="preference_appearance">Vzhled</string>
     <string name="preference_interface">Rozhraní</string>
     <string name="preference_widget">Ovládací prvek</string>
     <string name="preference_other">Ostatní</string>
-
     <string name="ARCHIVE_settings_header">Archiv</string>
     <string name="ARCHIVE_settings_summary">Nastavení pro archivaci dokončených úkolů v souboru done.txt</string>
     <string name="auto_archive_pref_title">Automatická archivace</string>
@@ -75,15 +73,11 @@
     <string name="TODOTXTPATH_defaultPath">/todo</string>
     <string name="DROPBOX_settings_header">Dropbox</string>
     <string name="DROPBOX_settings_summary">Nastavení pro Dropbox synchronizaci</string>
-
     <string name="todotxt_features_settings_header">Funkce</string>
     <string name="todotxt_features_settings_summary">Zapnout nebo vypnout funkce</string>
-
     <string name="todotxt_configuration_settings_header">Nastavení</string>
     <string name="todotxt_configuration_settings_summary">Nastavit chování aplikace</string>
-
     <string name="todotxt_creation_settings_header">Vytvoření úkolu</string>
-
     <string name="todotxt_ui_settings_header">Funkce</string>
     <string name="todotxt_ui_settings_summary">Řízení toho, co je zobrazováno</string>
     <string name="todotxt_behavior_settings_header">Chování</string>
@@ -105,12 +99,10 @@
     <string name="font_size_delta_pref_summary">Změnit velikost písma.</string>
     <string name="theme_pref_title">Motiv vzhledu</string>
     <string name="theme_pref_summary">Změnit motiv vzhledu aplikace.</string>
-
     <string name="share_task_show_edit_pref_title">Upravit sdílené úkoly</string>
     <string name="share_task_append_text_title">Text na pozadí</string>
     <string name="local_file_root_title">složka root://</string>
     <string name="local_file_root_summary">%s</string>
-
     <string name="menu_capitalize_tasks">Převést na velká písmena</string>
     <string name="back_saves_pref_title">Tlačítko zpět</string>
     <string name="show_txt_only_pref_title">Zobrazovat pouze TXT soubory</string>
@@ -122,7 +114,6 @@
     <string name="calendar_reminder_days_summary">Na jak předem nastavit připomínku</string>
     <string name="calendar_reminder_time_title">Čas připomínky</string>
     <string name="calendar_reminder_time_summary">Denní doba na kterou nastavit připomínku</string>
-
     <string name="widget_theme_pref_title">Téma vzhledu</string>
     <string name="task_text_ellipsizing_none">Žádné: velmi dlouhý text úkolu</string>
     <string name="filter_tab_header_prio">Priorita</string>
@@ -130,23 +121,18 @@
     <string name="filter_tab_header_sort">Seřadit</string>
     <string name="action_pop_up_call">Volání:</string>
     <string name="action_pop_up_sms">SMS:</string>
-
     <string name="saved_filters_exported">Filtry exportovány</string>
     <string name="saved_filters_imported">Filtry importovány</string>
     <string name="toast_lua_config_imported">Nastavení Lua importováno</string>
-
     <string name="widget_background_transparency_title">Průhlednost pozadí</string>
-
     <string name="widget_extended_pref_title">Zobrazit pruh s datumem</string>
     <string name="widget_extended_pref_summary">Zobrazit datumy na zvlášť řádku</string>
-
     <string name="append_tasks_at_end_title">Připojit k souboru</string>
     <string name="color_due_pref_title">Barva</string>
     <string name="show_hidden_title">Zobrazit skryté úkoly</string>
     <string name="show_empty_lists_title">Zobrazit prázdná záhlaví</string>
     <string name="show_edittext_hint_title">Našeptávat</string>
     <string name="show_edittext_hint_summary">Při přidávání úkolu našeptávat.</string>
-
     <string name="show_complete_checkbox_title">Zobrazovat zaškrtávací kolonky dokončení</string>
     <string name="show_confirmation_dialogs_title">Potvrzovací dialogy</string>
     <string name="show_todo_path_title">Zobrazit kde je uložen soubor todo</string>
@@ -158,29 +144,24 @@
     <string name="visit_website_title">Nápověda</string>
     <string name="visit_website_summary">Navštívit webové stránky projektu</string>
     <string name="visit_website_data">https://mpcjanssen.nl/</string>
-
     <string name="visit_tracker_title">Požádat o funkci nebo nahlásit chybu</string>
     <string name="visit_tracker_data">https://github.com/mpcjanssen/simpletask-android/issues</string>
     <string name="preference_title_debug_info">Zobrazit ladící informace</string>
     <string name="preference_summary_debug_info">Zobrazit a sdílet verzi aplikace a záznam událostí (log).</string>
-
     <string name="sync_dialog_title">Ruční synchronizace</string>
     <string name="sync_dialog_msg">Chcete nahrát nebo si stáhnout svůj soubor todo.txt?</string>
     <string name="sync_dialog_upload">Nahrát na Dropbox</string>
     <string name="sync_dialog_download">Stáhnout si do zařízení</string>
     <string name="sync_upload_message">Nahrávání todo.txt…</string>
     <string name="sync_download_message">Stahování todo.txt…</string>
-
     <string name="login_screen_button">Přihlásit k Dropbox</string>
     <string name="delete_task_title">Smazat %s úkolů</string>
     <string name="archive_task_title">Archivovat %s úkolů</string>
     <string name="delete_task_message">Toto není možné vrátit zpět. Opravdu chcete udělat?</string>
     <string name="delete_task_confirm">Smazat</string>
-
     <string name="clone_tags">Předvyplnit</string>
     <string name="word_wrap">Dělení slov</string>
     <string name="search_hint">Hledat…</string>
-
     <string name="sort_help">Pořadí řazení změníte přetažením. Kliknutím na položky změníte směr řazení.</string>
     <string name="file_order">Pořadí souborů (neseřazeno)</string>
     <string name="alphabetical">Abecedně</string>
@@ -196,7 +177,6 @@
     <string name="by_threshold_date">Hraniční datum</string>
     <string name="by_completion_date">Datum dokončení</string>
     <string name="by_lua">Lua skript</string>
-
     <string name="filter_select_all">Vybrat vše</string>
     <string name="filter_clear_all">Vyčistit filtr</string>
     <string name="filter_invert">Převrátit filtr</string>
@@ -214,14 +194,11 @@
     <string name="filter_show_lists">Zobrazovat seznamy v úkolech</string>
     <string name="filter_show_tags">Zobrazovat v úkolech štítky</string>
     <string name="filter_show_create_date">Zobrazovat stáří úkolu</string>
-
     <string name="filter_show_completed_short">Dokončeno</string>
     <string name="filter_show_future_short">Budoucí</string>
     <string name="filter_show_prompt">Zobrazit</string>
     <string name="filter_saved_prompt">Uložené filtry</string>
-
     <string name="task_show_all">Vše</string>
-
     <string name="add_task_help_btn">Nápověda</string>
     <string name="priority_prompt">Priorita</string>
     <string name="project_prompt">Štítek</string>
@@ -229,12 +206,10 @@
     <string name="project_prompt_todotxt">Projekt</string>
     <string name="context_prompt_todotxt">Kontext</string>
     <string name="separator">Oddělovač</string>
-
     <string name="shortcut_addtask_name">Přidat úkol</string>
     <string name="none">žádné</string>
     <string name="keep">ponechat</string>
     <string name="all">vše</string>
-
     <string name="dates_days_ago">před %d dny</string>
     <string name="dates_one_day_ago">včera</string>
     <string name="dates_years_ago">před %d lety</string>
@@ -243,51 +218,39 @@
     <string name="dates_one_month_ago">minulý měsíc</string>
     <string name="dates_weeks_ago">před %d týdny</string>
     <string name="dates_one_week_ago">minulý týden</string>
-
     <string name="dates_one_week">jeden týden</string>
     <string name="dates_two_weeks">dva týdny</string>
     <string name="dates_one_month">jeden měsíc</string>
-
     <string name="dates_today">dnes</string>
     <string name="date_pick">vybrat datum</string>
     <string name="dates_tomorrow">zítra</string>
-
     <string name="selected">označeno</string>
     <string name="no_project">Žádný štítek</string>
     <string name="no_header">Žádné</string>
     <string name="no_prio">–</string>
     <string name="add_to_calendar">Přidat připomínku</string>
     <string name="version_copied">Informace o verzi zkopírovány do schránky</string>
-
     <string name="task_added">Úkol přidán do Simpletask</string>
     <string name="default_sort">Výchozí řazení</string>
     <string name="pull_to_refresh_refreshing_label">Synchronizuje se s DropBox…</string>
     <string name="input_new">Zadat nový</string>
     <string name="no_filter">Bez filtru</string>
     <string name="dropbox">Dropbox</string>
-
     <string name="save_filter">Uložit stávající filtr</string>
     <string name="donate_title">Přispět na vývoj</string>
     <string name="donated_summary">Děkujeme za váš dar.</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Obrácené pořadí</string>
-
     <string name="calendar_write_error">Chyba: Nepodařilo se zapsat kalendář</string>
-
     <string name="click_to_copy">Kliknutím zkopírujte do schránky.</string>
-
     <string name="share_history_title">Historie úkolu</string>
-
     <string name="hello_world">Ahoj světe!</string>
     <string name="action_settings">Nastavení</string>
-
     <string name="task_action">Akce</string>
-
     <string name="name">Název</string>
     <string name="date">Datum</string>
     <string name="experimental_title">Experimentální</string>
     <string name="experimental_summary">Zapnout experimentální funkce</string>
-
     <string name="keep_selection_title">Ponechat výběr</string>
     <string name="lua_error">Chyba Lua</string>
     <string name="lua_config_screen">Nastavení Lua</string>
@@ -297,17 +260,12 @@
     <string name="lua_config_import">Import</string>
     <string name="lua_config_share">Sdílet</string>
     <string name="lua_open_config">Nastavení Lua</string>
-
     <string name="resume_sync_pref_summary">Při spouštění aplikace synchronizovat s Dropbox.</string>
     <string name="datebar_relative_size_summary">Relativní velikost datového řádku</string>
     <string name="share_task_append_text_summary">Připojit „%s“ k úkolům přidaným na pozadí.</string>
-
     <string name="back_saves_summary">Při kliknutí na zpět uložit otevřený seznam úkolů nebo použít filtr.</string>
-
     <string name="show_txt_only_summary">V dialogu pro výběr souboru zobrazit pouze .txt soubory.</string>
-
     <string name="filter_tab_header_script">Skript</string>
-
     <string name="script_tab_script_from_file">Skript ze souboru</string>
     <string name="script_tab_use_script">Použít skript</string>
     <string name="script_tab_test">Test</string>
@@ -315,33 +273,23 @@
     <string name="script_tab_script">Skript</string>
     <string name="script_tab_true_task_shown">Zobrazeno</string>
     <string name="script_tab_false_task_not_shown">Nezobrazeno</string>
-
     <string name="quick_filter_tag_header_inverted">Prohozené</string>
     <string name="widget_header_transparency_title">Průhlednost hlavičky</string>
     <string name="taskview_extended_pref_title">Zobrazit datumy na zvlášť řádku</string>
-
     <string name="append_tasks_at_end_summary">Vložit nové úkoly na konec souboru</string>
-
     <string name="color_due_pref_summary">Termíny a hraniční datumy</string>
-
     <string name="show_confirmation_dialogs_summary">Dotázat se před archivací nebo smazáním úkolů</string>
-
     <string name="todotxt_terms_summary">Kontext a projekt namísto seznamu a štítku</string>
-
     <string name="visit_tracker_summary">Požádat o novou funkci / vylepšení nebo nahlásit problém.</string>
     <string name="task_select_parts">Vybrat části úkolu</string>
     <string name="share_title">Úkol ze Simpletask</string>
     <string name="calendar_disp_name">Simpletask připomínky</string>
     <string name="calendar_exists_warning">Varování: kalendář s takovým názvem už existuje, ukončuje se…</string>
     <string name="keep_selection_summary">Po změnách zachovat výběr úkolu.</string>
-
-
     <string name="use_uuid_title">Každému z úkolů přiřadit neopakující se identifikátor</string>
-<string name="cancel_changes">Změny budou ztraceny.</string>
+    <string name="cancel_changes">Změny budou ztraceny.</string>
     <string name="show_todo_path_summary">Složky jsou zkráceny na první písmeno</string>
-
     <string name="show_calendarview_title">Pro zadání datumu použít kalendář</string>
-
     <string name="sync_conflict_dialog_title">Konflikt souboru</string>
     <string name="first_title_word">přihlášení</string>
     <string name="login_folder_screen_button">Přihlášení do Dropbox
@@ -350,71 +298,56 @@
     <string name="no_creation_date">Žádné datum vytvoření</string>
     <string name="calendar_title">Připomínka Simpletask</string>
     <string name="filter_import_export">Filtry importu/exportu</string>
-
-    <string name="nav_drawer_hint">Stávající filtr uložíte
-\nstisknutím uložit</string>
-<string name="add_task_help">Aktualizovat v nebo přidat na seznam úkolů. Každý úkol na zvlášť řádku.<b>Priorita</b> začněte řádek s (.), jako (A)<b>Štítky</b> začněte znakem +, jako +kuchyně <b>seznamy</b> začněte znakem @, jako @doma Úkol může obsahovat libovolný počet štítků nebo být na vícero seznamech.</string>
-
+    <string name="nav_drawer_hint">Stávající filtr uložíte 
+\nstisknutím Uložit</string>
+    <string name="add_task_help">Aktualizovat v nebo přidat na seznam úkolů. Každý úkol na zvlášť řádku.<b>Priorita</b> začněte řádek s (.), jako (A)<b>Štítky</b> začněte znakem +, jako +kuchyně <b>seznamy</b> začněte znakem @, jako @doma Úkol může obsahovat libovolný počet štítků nebo být na vícero seznamech.</string>
     <string name="swipe_complete_pref_title">Přejetím dokončete</string>
     <string name="swipe_complete_pref_summary">Úlohu dokončete přejetím přes ní.</string>
     <string name="share_task_show_edit_summary">Úlohy Simpletask před uložením upravit</string>
-
     <string name="drawer_fixed_landscape_title">Otevřít vodorovné výsuvné panely</string>
     <string name="drawer_fixed_landscape_summary">Vždy otevírat výsuvné panely ve vodorovném režimu.</string>
-
     <string name="widget_theme_pref_summary">Změnit motiv vzhledu použitý pro ovládací prvky.</string>
-
     <string name="task_text_ellipsizing_pref_title">Zkracování textu úkolu výpustky</string>
     <string name="task_text_ellipsizing_pref_summary">V hlavním okně zkrátit text pomocí výpustek pokud je více než na dva řádky.</string>
     <string name="task_text_ellipsizing_start">Začátek: …text úkolu</string>
     <string name="task_text_ellipsizing_middle">Střed: velmi… text</string>
     <string name="task_text_ellipsizing_end">Konec: velmi dlouhý…</string>
     <string name="task_text_ellipsizing_marquee">Značka: velmi dlouhý te</string>
-
     <string name="show_hidden_summary">Zobrazit skryté (h:1) úkoly takže je budete moci upravovat. Po úpravě toto nastavení opět zrušte.</string>
-
     <string name="show_empty_lists_summary">Zobrazit hlavičku i když jsou všechny úkoly pod ní skryté.</string>
-
     <string name="split_actionbar_pref_title">Použít pruh rozdělení akce</string>
     <string name="split_actionbar_pref_summary">Použít pruh rozdělení akce, kdy jsou tlačítka nabídky umístěna na spodní část obrazovky. Pro zobrazení více ze seznamu úkolů toto vypněte.</string>
-
     <string name="show_complete_checkbox_summary">Zobrazit před úkoly zaškrtávací kolonku pro označení jejich dokončování či odvolání dokončení.</string>
-
     <string name="show_fast_scroll_summary">V delších seznamech úkolů posouvat rychleji</string>
-
     <string name="sort_case_sensitive_summary">Všímat si velikosti písmen při řazení seznamů, štítků a uložených filtrů.</string>
-
     <string name="use_create_as_threshold_title">Vytvoření je hraniční datum</string>
     <string name="use_create_backup_summary">Při řazení použít datum vytvoření úkolu jako hraniční datum pokud takové není nastavené</string>
-
     <string name="sync_conflict_dialog_msg">Jejda! Na Dropbox je novější verze vašeho todo.txt souboru.
 \nChcete nahrát své místní změny, nebo si stáhnout verzi z Dropbox?</string>
-
     <string name="login_cloudless">Pokud nemáte Dropbox účet nebo ho nechcete používat pro ukládání svých seznamů úkolů, můžete si stáhnout Simpletask Cloudless z obchodu Play.
 \nhttps://goo.gl/X1C55P</string>
-
     <string name="logout_message">Ověřte že máte všechny změny synchronizovány s dropbox nebo sdílený svůj celý seznam úkolů pokud nejste připojení ke Dropbox.
 \nJakékoli změny které nebyly synchronizovány budou po odhlášení ztraceny.</string>
-     <string name="dropbox_open">Ověřte že máte všechny změny synchronizovány s dropbox nebo sdílený svůj celý seznam úkolů pokud nejste připojení ke Dropbox.
+    <string name="dropbox_open">Ověřte že máte všechny změny synchronizovány s dropbox nebo sdílený svůj celý seznam úkolů pokud nejste připojení ke Dropbox.
 \nJakékoli změny které nebyly synchronizovány budou po otevření jiného souboru ztraceny.</string>
     <string name="title_filter_applied">Filtrováno na:</string>
     <string name="priority_short_prompt">Prio</string>
     <string name="priority_format">(prio)</string>
-
     <string name="share_addtask_name">Použít na to Simpletask</string>
-
     <string name="title_activity_filter">Filtrovat</string>
     <string name="no_threshold_date">Žádné hraniční datum</string>
     <string name="save_filter_message">Zadejte název pro stávající filtr, který bude zobrazován v přihrádce s uloženými filtry.</string>
-
     <string name="donate_summary">Krom toho že je poskytovaný zdarma, jedná se o svobodný software. Je do něho vkládáno mnoho usilovné práce a proto pokud máte možnost, jakýkoli dat je velmi oceněn.</string>
     <string name="calendar_sync_desc_due">Připomínka termínu, automaticky vytvořená Simpletask</string>
     <string name="calendar_sync_desc_thre">Připomínka hraničního data, automaticky vytvořená Simpletask</string>
     <string name="share_history">Zobrazit a sdílet vnitřní databáze historie todo.txt pro účely obnovy.</string>
     <string name="help_locale">cs</string>
-
     <string name="back_clears_filter_title">„Zpět“ vyčistí filtr</string>
     <string name="back_clears_filter_summary">Tlačítko zpět před ukončením aplikace vyčistí filtr.</string>
     <string name="invalid_certificate_msg">Certifikát serveru není platný. Chcete pokračovat i tak?</string>
-    <string name="invalid_certificate_title">Neplatný cert.</string>
+    <string name="invalid_certificate_title">Neplatný certifikát.</string>
+    <string name="use_list_and_tags_icons_title">Použít ikony</string>
+    <string name="use_list_and_tags_icons_summary">Používat pro změnu seznamu úkolu a štítku ikony. Vypnout používání pojmů z todo.txt: @ a +.</string>
+    <string name="no_tasks_to_archive">Žádné úkoly k archivaci.</string>
+    <string name="force_english_title">Vynutit angličtinu</string>
 </resources>
