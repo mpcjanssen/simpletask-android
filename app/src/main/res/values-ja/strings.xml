@@ -350,4 +350,7 @@
     <string name="invalid_certificate_msg">サーバー証明書が正しくありません。続行しますか?</string>
     <string name="invalid_certificate_title">無効な証明書です。</string>
     <string name="no_tasks_to_archive">アーカイブするタスクはありません。</string>
+    <string name="use_list_and_tags_icons_title">アイコンを使用する</string>
+    <string name="use_list_and_tags_icons_summary">タスクの一覧とタグを変更するためにアイコンを使用します。 todo.txt @ および + 条件の使用を不可にします。</string>
+    <string name="force_english_title">強制的に英語を使用する</string>
 </resources>
