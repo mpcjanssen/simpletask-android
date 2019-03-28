@@ -1,6 +1,8 @@
 Simpletask
 ==========
 
+<img src="https://circleci.com/gh/mpcjanssen/simpletask-android/tree/development.svg?style=svg">
+
 See [here](./app/src/main/assets/index.en.md) for more information.
 
 ## Translation
