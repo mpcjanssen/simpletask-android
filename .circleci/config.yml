@@ -1,0 +1,8 @@
+docker:
+  - image: circleci/android:api-28
+  - run:
+      name: Chmod permissions
+      command: sudo chmod +x ./gradlew
+  - run:
+      name: Build
+      command: ./gradlew build
