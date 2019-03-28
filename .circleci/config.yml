@@ -9,11 +9,11 @@ jobs:
     steps:
       - checkout
       - run:
-        name: Chmod permissions
-        command: sudo chmod +x ./gradlew
+          name: Chmod permissions
+          command: sudo chmod +x ./gradlew
       - run:
-        name: Build
-        command: ./gradlew build
+          name: Build
+          command: ./gradlew build
 
 general:
   branches:
