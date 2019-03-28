@@ -13,7 +13,7 @@ jobs:
           command: sudo chmod +x ./gradlew
       - run:
           name: Build
-          command: ./gradlew build
+          command: ./gradlew assembleCloudlessDebug
 
 general:
   branches:
