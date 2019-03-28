@@ -6,3 +6,8 @@ docker:
   - run:
       name: Build
       command: ./gradlew build
+
+general:
+  branches:
+    only:
+     - development # list of branches to build
