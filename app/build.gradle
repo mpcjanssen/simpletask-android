@@ -4,6 +4,7 @@ buildscript {
     ext.android_support_version = '1.0.0'
     repositories {
         google()
+        mavenCentral()
         jcenter()
         maven {
             url "https://oss.sonatype.org/content/repositories/snapshots"
