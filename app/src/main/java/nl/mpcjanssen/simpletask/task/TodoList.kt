@@ -295,8 +295,7 @@ object TodoList {
             }
             try {
                 Log.i(TAG, "Saving todo list, size ${lines.size}")
-                val rev = fileStore.saveTasksToFile(todoFileName, lines, eol = eol)
-                Config.lastSeenRemoteId = rev
+                fileStore.saveTasksToFile(todoFileName, lines, eol = eol)
                 val changesWerePending = Config.changesPending
                 Config.changesPending = false
                 if (changesWerePending) {

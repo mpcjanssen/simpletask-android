@@ -125,7 +125,7 @@ object FileStore : IFileStore {
 
     @Synchronized
     @Throws(IOException::class)
-    override fun saveTasksToFile(path: String, lines: List<String>, eol: String): String {
+    override fun saveTasksToFile(path: String, lines: List<String>, eol: String) {
         Log.i(TAG, "Saving ${lines.size} tasks to Dropbox.")
         val contents = join(lines, eol) + eol
 
@@ -136,7 +136,8 @@ object FileStore : IFileStore {
         val uploadBuilder = dbxClient.files().uploadBuilder(path)
         uploadBuilder.withAutorename(true).withMode(if (rev != null) WriteMode.update(rev) else null)
         val uploaded = uploadBuilder.uploadAndFinish(`in`)
-        rev = uploaded.rev
+        Config.lastSeenRemoteId = uploaded.rev
+        Log.i(TAG, "New rev " + uploaded.rev)
         val newName = uploaded.pathDisplay
 
         if (newName != path) {
@@ -146,7 +147,6 @@ object FileStore : IFileStore {
             showToastLong(mApp, "Filename was changed remotely. New name is: " + newName)
             mApp.switchTodoFile(newName)
         }
-        return rev
     }
 
     override fun appendTaskToFile(path: String, lines: List<String>, eol: String) {

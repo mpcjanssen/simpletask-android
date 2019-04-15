@@ -119,7 +119,7 @@ object FileStore : IFileStore {
 
     @Synchronized
     @Throws(IOException::class)
-    override fun saveTasksToFile(path: String, lines: List<String>, eol: String): String {
+    override fun saveTasksToFile(path: String, lines: List<String>, eol: String) {
         val contents = join(lines, eol) + eol
 
         val timestamp = timeStamp()
@@ -152,8 +152,7 @@ object FileStore : IFileStore {
         val infoOp = ReadFileRemoteOperation(path)
         val infoRes = infoOp.execute(mNextcloud)
         val fileInfo = infoRes.data[0] as RemoteFile
-
-        return fileInfo.etag
+        Config.lastSeenRemoteId = fileInfo.etag
 
     }
 
