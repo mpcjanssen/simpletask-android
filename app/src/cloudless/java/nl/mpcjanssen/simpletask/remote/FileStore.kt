@@ -9,6 +9,7 @@ import android.os.Looper
 import androidx.core.content.ContextCompat
 import android.util.Log
 import nl.mpcjanssen.simpletask.TodoApplication
+import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.join
 import nl.mpcjanssen.simpletask.util.writeToFile
 import java.io.File
@@ -82,14 +83,14 @@ object FileStore : IFileStore {
         Log.i(TAG, "Observer: modifying done")
     }
 
-    override fun saveTasksToFile(path: String, lines: List<String>, eol: String): String {
+    override fun saveTasksToFile(path: String, lines: List<String>, eol: String) {
         Log.i(TAG, "Saving tasks to file: $path")
         val obs = observer
         obs?.ignoreEvents(true)
         val file = File(path)
         writeToFile(lines, eol, file, false)
         obs?.delayedStartListen(1000)
-        return file.lastModified().toString()
+        Config.lastSeenRemoteId = file.lastModified().toString()
     }
 
     override fun appendTaskToFile(path: String, lines: List<String>, eol: String) {
