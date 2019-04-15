@@ -1,17 +1,10 @@
-## 10.2.8
+## 10.3.0
 
 ### Fixed
 
-- Update state of completion checkbox when task list changes for #942.
-- Tags sorting.
+- Properly handle multiple clicks on completion context item when `keep selection` is enabled for #942.
+- Include all alphanumerical tokens in the Lua text field for #909.
 
-## 10.2.7
+### Added
 
-### Fixed
-
-- NONE filter
-- Grouping on tags and lists
-
-### Changed
-
-- More consistently apply case sensitive sorting.
+- Add setting to change list and tag icons to todo.txt text for #944.
