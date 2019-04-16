@@ -915,6 +915,9 @@ class Simpletask : ThemedNoActionBarActivity() {
     private fun createCalendarAppointment(checkedTasks: List<Task>) {
         var calendarTitle = getString(R.string.calendar_title)
         var calendarDescription = ""
+        if (checkedTasks.isEmpty()) {
+            return
+        }
         if (checkedTasks.size == 1) {
             // Set the task as title
             val task = checkedTasks[0]
