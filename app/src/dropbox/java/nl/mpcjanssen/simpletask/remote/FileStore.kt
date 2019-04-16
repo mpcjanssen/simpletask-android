@@ -123,19 +123,24 @@ object FileStore : IFileStore {
         return LoginScreen::class
     }
 
-    @Synchronized
     @Throws(IOException::class)
     override fun saveTasksToFile(path: String, lines: List<String>, eol: String) {
         Log.i(TAG, "Saving ${lines.size} tasks to Dropbox.")
         val contents = join(lines, eol) + eol
 
-        var rev = Config.lastSeenRemoteId
+        val rev = Config.lastSeenRemoteId
+        Log.i(TAG, "Last seen rev $rev")
+
         val toStore = contents.toByteArray(charset("UTF-8"))
         val `in` = ByteArrayInputStream(toStore)
-        Log.i(TAG, "Saving to file " + path)
+        Log.i(TAG, "Saving to file $path")
         val uploadBuilder = dbxClient.files().uploadBuilder(path)
         uploadBuilder.withAutorename(true).withMode(if (rev != null) WriteMode.update(rev) else null)
-        val uploaded = uploadBuilder.uploadAndFinish(`in`)
+        val uploaded = try {
+             uploadBuilder.uploadAndFinish(`in`)
+        }  finally {
+            `in`.close()
+        }
         Config.lastSeenRemoteId = uploaded.rev
         Log.i(TAG, "New rev " + uploaded.rev)
         val newName = uploaded.pathDisplay
@@ -143,8 +148,8 @@ object FileStore : IFileStore {
         if (newName != path) {
             // The file was written under another name
             // Usually this means the was a conflict.
-            Log.i(TAG, "Filename was changed remotely. New name is: " + newName)
-            showToastLong(mApp, "Filename was changed remotely. New name is: " + newName)
+            Log.i(TAG, "Filename was changed remotely. New name is: $newName")
+            showToastLong(mApp, "Filename was changed remotely. New name is: $newName")
             mApp.switchTodoFile(newName)
         }
     }
