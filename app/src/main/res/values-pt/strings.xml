@@ -120,7 +120,7 @@ Desmarque para atualizar datas de criação relativamente a hoje.</string>
     <string name="theme_pref_title">Tema</string>
     <string name="theme_pref_summary">Mudar tema do aplicativo.</string>
     <string name="share_task_show_edit_pref_title">Editar tarefas compartilhadas</string>
-    <string name="share_task_show_edit_summary">Editar tarefas compartilhadas para o Simpletask antes de as salvar</string>
+    <string name="share_task_show_edit_summary">Editar tarefas Simpletask antes de as salvar</string>
     <string name="share_task_append_text_title">Texto de segundo plano</string>
     <string name="share_task_append_text_summary">Anexar \"%s\" às tarefas em segundo plano.</string>
     <string name="local_file_root_title">raiz:// pasta</string>
@@ -128,7 +128,7 @@ Desmarque para atualizar datas de criação relativamente a hoje.</string>
     <string name="menu_capitalize_tasks">Capitalizar</string>
     <string name="back_saves_pref_title">Botão voltar</string>
     <string name="back_saves_summary">Salvar tarefas inseridas ou aplicar filtro quando voltar.</string>
-    <string name="show_txt_only_pref_title">Exibir somente arquivos .txt</string>
+    <string name="show_txt_only_pref_title">Exibir somente arquivos TXT</string>
     <string name="show_txt_only_summary">Somente exibir arquivos .txt na caixa de seleção.</string>
     <string name="calendar_sync_screen_title">Notificações</string>
     <string name="calendar_sync_screen_summary">Lembretes na agenda (experimental)</string>
@@ -160,7 +160,7 @@ Desmarque para atualizar datas de criação relativamente a hoje.</string>
     <string name="split_actionbar_pref_title">Usar barra de separação</string>
     <string name="split_actionbar_pref_summary">Usar barra dividida para que os menus fiquem no inferior da tela. Para melhor disposição da tela desabilite.</string>
     <string name="show_edittext_hint_title">Exibir dicas</string>
-    <string name="show_edittext_hint_summary">Exibir dicas na adição de tarefas. Desabilite se quiser.</string>
+    <string name="show_edittext_hint_summary">Exibir dicas na adição de tarefas.</string>
     <string name="show_complete_checkbox_title">Exibir caixas de conclusão</string>
     <string name="show_complete_checkbox_summary">Exibir caixa diante das tarefas para (des)completá-las.</string>
     <string name="show_confirmation_dialogs_title">Diálogos de confirmação</string>
@@ -168,7 +168,7 @@ Desmarque para atualizar datas de criação relativamente a hoje.</string>
     <string name="show_todo_path_title">Mostrar onde o ficheiro \"TODO\" é armazenado</string>
     <string name="show_todo_path_summary">Representar pastas pela primeira letra</string>
     <string name="show_fast_scroll_title">Rolagem rápida</string>
-    <string name="show_fast_scroll_summary">Usar rolagem rápida em listas grandes</string>
+    <string name="show_fast_scroll_summary">Usar rolagem rápida em listas grandes de tarefas</string>
     <string name="show_calendarview_title">Usar o calendário para datar</string>
     <string name="sort_case_sensitive_title">Considerar maiúsculas</string>
     <string name="sort_case_sensitive_summary">Considerar maiúsculas na organização de listas, etiquetas e filtros salvos.</string>
@@ -177,15 +177,15 @@ Desmarque para atualizar datas de criação relativamente a hoje.</string>
     <string name="todotxt_terms_title">Usar padrões todo.txt</string>
     <string name="todotxt_terms_summary">Contexto e projeto em vez de lista e etiqueta</string>
     <string name="about_settings_header">Sobre</string>
-    <string name="about_settings_summary">Informações do app</string>
+    <string name="about_settings_summary">Informações do aplicativo</string>
     <string name="visit_website_title">Ajuda</string>
-    <string name="visit_website_summary">Visitar site do Simpletask</string>
-    <string name="visit_website_data">http://mpcjanssen.nl/pages/simpletask.html</string>
+    <string name="visit_website_summary">Visitar site</string>
+    <string name="visit_website_data">https://mpcjanssen.nl/</string>
     <string name="visit_tracker_title">Solicite uma função ou relatório de erro</string>
     <string name="visit_tracker_summary">Solicite uma nova função ou aperfeiçoamento ou informe um problema.</string>
-    <string name="visit_tracker_data">http://mpcjanssen.nl/redmine/projects/simpletask-android/issues/</string>
+    <string name="visit_tracker_data">https://github.com/mpcjanssen/simpletask-android/issues</string>
     <string name="preference_title_debug_info">Ver histórico de depuração</string>
-    <string name="preference_summary_debug_info">Ver e compartilhar versão e histórico de erros.</string>
+    <string name="preference_summary_debug_info">Ver e compartilhar versão e registro de erros.</string>
     <!-- sync dialog -->
     <string name="sync_dialog_title">Sincronização manual</string>
     <string name="sync_dialog_msg">NÃO ESTÁ SENDO USADO EM NENHUM LUGAR DO APP???</string>
@@ -202,7 +202,7 @@ Desmarque para atualizar datas de criação relativamente a hoje.</string>
     <string name="login_screen_button">Entrar no Dropbox</string>
     <string name="login_folder_screen_button">Entrar no Dropbox\n(Pasta do aplicativo)</string>
     <string name="login_cloudless">Se não tem conta no Dropbox ou não quer usá-la para armazenar sua lista de tarefas, você pode baixar o Simpletask Cloudless da Play Store. 
-\nhttp://goo.gl/X1C55P</string>
+\nhttps://goo.gl/X1C55P</string>
     <!-- delete -->
     <string name="delete_task_title">Apagar %s tarefa(s)</string>
     <string name="archive_task_title">Arquivar %s tarefa(s)</string>
@@ -215,22 +215,22 @@ Desmarque para atualizar datas de criação relativamente a hoje.</string>
     <!-- search -->
     <string name="clone_tags">Clonar</string>
     <string name="word_wrap">Encapsulamento</string>
-    <string name="search_hint">Procurar...</string>
+    <string name="search_hint">Procurar…</string>
     <!-- sort -->
     <string name="sort_help">Arrastar e soltar para mudar a ordem. Clicar nos itens para mudar a ordem.</string>
     <string name="file_order">Ordem no ficheiro (sem ordem)</string>
     <string name="alphabetical">Alfabética</string>
-    <string name="by_prio">Por prioridade</string>
-    <string name="by_project">Por etiqueta</string>
-    <string name="by_context">Por lista</string>
-    <string name="by_project_todotxt">Por projeto</string>
-    <string name="by_context_todotxt">Por contexto</string>
+    <string name="by_prio">Prioridade</string>
+    <string name="by_project">Etiqueta</string>
+    <string name="by_context">Lista</string>
+    <string name="by_project_todotxt">Projeto</string>
+    <string name="by_context_todotxt">Contexto</string>
     <string name="completed">Concluídas</string>
-    <string name="by_creation_date">Por criação</string>
+    <string name="by_creation_date">Data de criação</string>
     <string name="in_future">Data limiar para o futuro</string>
-    <string name="by_due_date">Por prazo</string>
-    <string name="by_threshold_date">Por data limiar</string>
-    <string name="by_completion_date">Por data de conclusão</string>
+    <string name="by_due_date">Prazo</string>
+    <string name="by_threshold_date">Data limiar</string>
+    <string name="by_completion_date">Data de conclusão</string>
     <!-- applyFilter -->
     <string name="filter_select_all">Selecionar tudo</string>
     <string name="filter_clear_all">Limpar filtro</string>
@@ -276,16 +276,16 @@ Desmarque para atualizar datas de criação relativamente a hoje.</string>
     <string name="all">todos</string>
     <!-- Relative Dates -->
     <string name="dates_days_ago">%d dias atrás</string>
-    <string name="dates_one_day_ago">1 dia atrás</string>
+    <string name="dates_one_day_ago">ontem</string>
     <string name="dates_years_ago">%d anos atrás</string>
-    <string name="dates_one_year_ago">1 ano atrás</string>
+    <string name="dates_one_year_ago">último ano</string>
     <string name="dates_months_ago">%d meses atrás</string>
-    <string name="dates_one_month_ago">1 mês atrás</string>
+    <string name="dates_one_month_ago">último mês</string>
     <string name="dates_weeks_ago">%d semanas atrás</string>
-    <string name="dates_one_week_ago">1 semana atrás</string>
-    <string name="dates_one_week">1 semana</string>
-    <string name="dates_two_weeks">2 semanas</string>
-    <string name="dates_one_month">1 mês</string>
+    <string name="dates_one_week_ago">última semana</string>
+    <string name="dates_one_week">uma semana</string>
+    <string name="dates_two_weeks">duas semanas</string>
+    <string name="dates_one_month">um mês</string>
     <string name="dates_today">hoje</string>
     <string name="date_pick">escolher data</string>
     <string name="dates_tomorrow">amanhã</string>
@@ -312,18 +312,18 @@ Desmarque para atualizar datas de criação relativamente a hoje.</string>
     <string name="filter_import_export">Importar/exportar filtros</string>
     <string name="donate_title">Doar</string>
     <string name="donate_summary">Doe se gostou do Simpletask. NOTA: Doações são voluntárias - o Simpletask sempre será gratuito.</string>
-    <string name="donated_summary">Obrigado pela doação.</string>
+    <string name="donated_summary">Obrigado pela sua doação.</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Organização reversa</string>
     <!-- Calendar sync -->
     <string name="calendar_disp_name">Lembretes do Simpletask</string>
     <string name="calendar_sync_desc_due">Lembrete de prazo, gerado automaticamente pelo Simpletask</string>
     <string name="calendar_sync_desc_thre">Lembrete de data limiar, gerado automaticamente pelo Simpletask</string>
-    <string name="calendar_exists_warning">Aviso: Calendário com mesmo nome, sobrescrevendo...</string>
+    <string name="calendar_exists_warning">Aviso: calendário com mesmo nome, sobrescrevendo…</string>
     <string name="calendar_write_error">Erro: impossível escrever na agenda</string>
     <string name="click_to_copy">Toque para copiar para a área de transferência.</string>
     <string name="share_history">Ver e compartilhar histórico interno do todo.txt para recuperação.</string>
-    <string name="share_history_title">Histórico</string>
+    <string name="share_history_title">Histórico da tarefa</string>
     <string name="hello_world">Olá mundo!</string>
     <string name="action_settings">Configurações</string>
     <!-- Default Help localisation -->
@@ -331,14 +331,14 @@ Desmarque para atualizar datas de criação relativamente a hoje.</string>
     <string name="task_action">Ação</string>
     <string name="name">Nome</string>
     <string name="date">Data</string>
-    <string name="back_clears_filter_title">Voltar limpa o filtro</string>
+    <string name="back_clears_filter_title">\"Voltar\" limpa o filtro</string>
     <string name="back_clears_filter_summary">O botão voltar limpa o filtro ao sair do aplicativo.</string>
     <string name="experimental_title">Experimental</string>
     <string name="experimental_summary">Habilitar funções experimentais</string>
     <string name="lua_error">Erro de lua</string>
     <string name="lua_config_screen">Configuração de lua</string>
     <string name="lua_run">Executar</string>
-    <string name="lua_config_import_export">Importar/exportar config. de lua</string>
+    <string name="lua_config_import_export">Importar/exportar config. de Lua</string>
     <string name="lua_config_export">Salvar e exportar</string>
     <string name="lua_config_import">Importar</string>
     <string name="lua_config_share">Compartilhar</string>
@@ -346,24 +346,24 @@ Desmarque para atualizar datas de criação relativamente a hoje.</string>
     <string name="keep_selection_title">Manter seleção</string>
     <string name="keep_selection_summary">Manter tarefas selecionadas após aplicar as mudanças.</string>
     <string name="task_text_ellipsizing_none">Nenhum: Texto muito longo</string>
-    <string name="task_text_ellipsizing_start">Começo: ...texto da tarefa</string>
-    <string name="task_text_ellipsizing_middle">Meio: Muito... texto</string>
-    <string name="task_text_ellipsizing_end">Fim: Texto muito...</string>
+    <string name="task_text_ellipsizing_start">Começo: …texto da tarefa</string>
+    <string name="task_text_ellipsizing_middle">Meio: Muito… texto</string>
+    <string name="task_text_ellipsizing_end">Fim: Texto muito…</string>
     <string name="task_text_ellipsizing_marquee">Toldo: Texto muito la</string>
-    <string name="filter_tab_header_prio">PRIO</string>
-    <string name="filter_tab_header_other">OUTRO</string>
-    <string name="filter_tab_header_sort">ORDEM</string>
-    <string name="filter_tab_header_script">SCRIPT</string>
+    <string name="filter_tab_header_prio">Prio</string>
+    <string name="filter_tab_header_other">Outro</string>
+    <string name="filter_tab_header_sort">Ordenar</string>
+    <string name="filter_tab_header_script">Script</string>
     <string name="script_tab_script_from_file">Script do ficheiro</string>
     <string name="script_tab_use_script">Usar script</string>
-    <string name="script_tab_test">TESTE</string>
+    <string name="script_tab_test">Testar</string>
     <string name="script_tab_test_task">Testar tatefa</string>
     <string name="script_tab_script">Script</string>
-    <string name="script_tab_true_task_shown">Verdadeiro, a tarefa será exibida</string>
-    <string name="script_tab_false_task_not_shown">Falso, a tarefa será ocultada</string>
+    <string name="script_tab_true_task_shown">Exibida</string>
+    <string name="script_tab_false_task_not_shown">Ocultada</string>
     <string name="action_pop_up_call">Ligar:</string>
     <string name="action_pop_up_sms">SMS:</string>
-    <string name="quick_filter_tag_header_inverted">INVERTIDO</string>
+    <string name="quick_filter_tag_header_inverted">Invertida</string>
     <string name="saved_filters_exported">Filtros exportados</string>
     <string name="toast_lua_config_imported">Config lua importada</string>
     <string name="saved_filters_imported">Filtros importados</string>
@@ -373,7 +373,7 @@ Desmarque para atualizar datas de criação relativamente a hoje.</string>
     <string name="nav_drawer_hint">Salvar o filtro atual
 \n usando o botão salvar</string>
     <string name="invalid_certificate_msg">Certificado de servidor é inválido. Quer continuar\?</string>
-    <string name="invalid_certificate_title">Cert inválido.</string>
+    <string name="invalid_certificate_title">Certificado inválido.</string>
     <string name="use_list_and_tags_icons_title">Usar ícones</string>
     <string name="use_list_and_tags_icons_summary">Usar ícones para trocar a lista de tarefas e etiqueta. Desabilitar para usar o @ e + nos padrões todo.txt.</string>
     <string name="no_tasks_to_archive">Sem tarefas para arquivar.</string>
