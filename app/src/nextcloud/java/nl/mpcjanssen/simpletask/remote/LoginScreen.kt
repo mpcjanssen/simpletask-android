@@ -11,6 +11,8 @@ import com.owncloud.android.lib.common.network.CertificateCombinedException
 import com.owncloud.android.lib.common.network.NetworkUtils
 import com.owncloud.android.lib.common.operations.RemoteOperationResult
 import com.owncloud.android.lib.resources.files.ReadFolderRemoteOperation
+import com.owncloud.android.lib.resources.users.GetRemoteUserInfoOperation
+import com.owncloud.android.lib.resources.files.FileUtils
 
 import kotlinx.android.synthetic.nextcloud.login.*
 import nl.mpcjanssen.simpletask.*
@@ -80,7 +82,7 @@ class LoginScreen : ThemedActionBarActivity() {
                     nextcloud_username.text.toString(),
                     nextcloud_password.text.toString()
             )
-            val op = ReadFolderRemoteOperation(File("/").canonicalPath)
+            val op = GetRemoteUserInfoOperation()
             val res: RemoteOperationResult = op.execute(client)
             Log.d(TAG, res.logMessage)
             Log.d(TAG, res.exception?.localizedMessage?:"No exception")
