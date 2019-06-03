@@ -98,21 +98,23 @@ class LoginScreen : ThemedActionBarActivity() {
                 }
                 res.isSslRecoverableException -> {
                     Log.d(TAG, "Invalid certificate")
-                    try {
-                        val okListener = DialogInterface.OnClickListener { _, _ ->
-                            val ex = res.exception as CertificateCombinedException
-                            val cert = ex.serverCertificate
-                            NetworkUtils.addCertToKnownServersStore(cert, this)
-                            showToastLong(this, "Certificate saved")
-                            Log.d(TAG, "Server certificate saved")
-                            finishLogin()
+                    runOnUiThread {
+                        try {
+                            val okListener = DialogInterface.OnClickListener { _, _ ->
+                                val ex = res.exception as CertificateCombinedException
+                                val cert = ex.serverCertificate
+                                NetworkUtils.addCertToKnownServersStore(cert, this)
+                                showToastLong(this, "Certificate saved")
+                                Log.d(TAG, "Server certificate saved")
+                                finishLogin()
+                            }
+                            showConfirmationDialog(this, R.string.invalid_certificate_msg, okListener, R.string.invalid_certificate_title)
+
+                        } catch (e: Exception) {
+
+                            Log.d(TAG, "Server certificate could not be saved in the known-servers trust store ", e)
+                            showToastLong(this, "Failed to store certificate")
                         }
-                        showConfirmationDialog(this, R.string.invalid_certificate_msg, okListener, R.string.invalid_certificate_title )
-
-                    } catch (e: Exception) {
-
-                        Log.d(TAG, "Server certificate could not be saved in the known-servers trust store ", e)
-                        showToastLong(this, "Failed to store certificate")
                     }
                 }
                 else -> {
