@@ -51,7 +51,7 @@ class LoginScreen : ThemedActionBarActivity() {
         setContentView(R.layout.login)
 
         login.setOnClickListener {
-            startLogin()
+            startLogin(true)
         }
 
         logging.setOnClickListener {
@@ -75,7 +75,7 @@ class LoginScreen : ThemedActionBarActivity() {
     }
 
 
-    private fun startLogin() {
+    private fun startLogin(retrySsl: Boolean) {
         FileStoreActionQueue.add("login") {
             val client = OwnCloudClientFactory.createOwnCloudClient(Uri.parse(url), this, true, true)
             client.credentials = OwnCloudCredentialsFactory.newBasicCredentials(
@@ -96,7 +96,7 @@ class LoginScreen : ThemedActionBarActivity() {
                     Log.d(TAG, "Logged in to Nextcloud: ${client.ownCloudVersion}")
                     finishLogin()
                 }
-                res.isSslRecoverableException -> {
+                res.isSslRecoverableException && retrySsl -> {
                     Log.d(TAG, "Invalid certificate")
                     runOnUiThread {
                         try {
@@ -106,7 +106,7 @@ class LoginScreen : ThemedActionBarActivity() {
                                 NetworkUtils.addCertToKnownServersStore(cert, this)
                                 showToastLong(this, "Certificate saved")
                                 Log.d(TAG, "Server certificate saved")
-                                finishLogin()
+                                startLogin(false)
                             }
                             showConfirmationDialog(this, R.string.invalid_certificate_msg, okListener, R.string.invalid_certificate_title)
 
