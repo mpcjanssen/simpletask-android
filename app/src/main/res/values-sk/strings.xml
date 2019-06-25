@@ -136,4 +136,15 @@
     <string name="save_filter_message">Zadajte názov súčasného filtra, ktorý bude zobrazený v zásuvke s uloženými filtrami.</string>
     <string name="donate_title">Podporiť vývoj</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
+    <string name="log">Záznam udalostí (log)</string>
+    <string name="next">Ďalší</string>
+    <string name="prev">Predchodzí</string>
+    <string name="open_file">Otvoriť súbor so zoznamom úloh</string>
+    <string name="changelist">Vyberte zoznam</string>
+    <string name="clear_database">Prázdna databáza</string>
+    <string name="done">Dokončené</string>
+    <string name="select_priority">Vyberte prioritu</string>
+    <string name="select_all">Vybrať všetko</string>
+    <string name="update_lists">Aktualizovať zoznamy</string>
+    <string name="cancel_changes">Zmeny budú stratené.</string>
 </resources>
