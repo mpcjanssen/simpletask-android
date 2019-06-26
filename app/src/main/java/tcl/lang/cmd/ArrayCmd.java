@@ -312,7 +312,7 @@ public class ArrayCmd implements Command {
 			 */
 			Var.lookupVar(interp, name1, "", 0, "set", true, false);
 
-			// Set each of the array variable names in the interp
+			// Set each of the array variable names in the mainInterp
 
 			for (i = 0; i < size; i++) {
 				name2 = TclList.index(interp, objv[3], i++).toString();

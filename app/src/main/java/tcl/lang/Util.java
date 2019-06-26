@@ -313,7 +313,7 @@ public class Util {
 	 * integer object.
 	 * 
 	 * @param interp
-	 *            interp, can be null
+	 *            mainInterp, can be null
 	 * @param tobj
 	 *            the index object, an integer, "end", or "end-n"
 	 * @param endValue
@@ -375,13 +375,13 @@ public class Util {
 	 * TclCheckBadOctal -> Util.checkBadOctal
 	 * 
 	 * This procedure checks for a bad octal value and returns a meaningful
-	 * error that should be appended to the interp's result.
+	 * error that should be appended to the mainInterp's result.
 	 * 
 	 * Results: Returns error message if it was a bad octal.
 	 * 
 	 * Side effects: None.
 	 * 
-	 * @param interp Interpreter to use for error reporting, can be null.
+	 * @param mainInterp Interpreter to use for error reporting, can be null.
 	 * 
 	 * @param value the value to check
 	 * 

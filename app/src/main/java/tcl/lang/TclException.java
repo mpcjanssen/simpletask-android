@@ -66,7 +66,7 @@ public class TclException extends Exception {
 	 * Results: None.
 	 * 
 	 * Side effects: The instance fields are initialized; the message is
-	 * assigned to the interpreter's result if interp is non-null.
+	 * assigned to the interpreter's result if mainInterp is non-null.
 	 * 
 	 * @param interp current interpreter; may be null
 	 * @param msg error message
@@ -122,7 +122,7 @@ public class TclException extends Exception {
 	 * Results: None.
 	 * 
 	 * Side effects: The instance fields are initialized; the message is
-	 * assigned to the interpreter's result if interp is non-null.
+	 * assigned to the interpreter's result if mainInterp is non-null.
 	 * 
 	 * @param interp current interpreter, may be null if unknown
 	 * @param msg error message
@@ -141,7 +141,7 @@ public class TclException extends Exception {
 	 * Results: None.
 	 * 
 	 * Side effects: The instance fields are initialized; the message is
-	 * assigned to the interpreter's result if interp is non-null.
+	 * assigned to the interpreter's result if mainInterp is non-null.
 	 * @param interp current interpreter, may be null if unknown
 	 * @param msg error message
 	 * @param ccode completion code

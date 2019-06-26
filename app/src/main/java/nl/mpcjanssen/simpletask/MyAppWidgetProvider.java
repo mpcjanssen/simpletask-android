@@ -9,8 +9,9 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import java.io.File;
@@ -25,7 +26,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
     private static final String TAG = "MyAppWidgetProvider" ;
 
     private static void putFilterExtras(Intent target, @NonNull SharedPreferences preferences, int widgetId) {
-        // log.debug(tag, "putFilter extras  for appwidget " + widgetId);
+        // Log.d(tag, "putFilter extras  for appwidget " + widgetId);
         Query filter = new Query(preferences, "widget" + widgetId);
         filter.saveInIntent(target);
     }
@@ -106,9 +107,8 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 	@Override
 	public void onUpdate(@NonNull Context context, @NonNull AppWidgetManager appWidgetManager,
 			@NonNull int[] appWidgetIds) {
-        Logger log = Logger.INSTANCE;
         for (int widgetId : appWidgetIds) {
-            log.debug(TAG, "onUpdate " + widgetId);
+            Log.d(TAG, "onUpdate " + widgetId);
 			RemoteViews views = updateView(widgetId, context);
 			appWidgetManager.updateAppWidget(widgetId, views);
 
@@ -120,9 +120,8 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onDeleted(@NonNull Context context, @NonNull int[] appWidgetIds) {
-        Logger log = Logger.INSTANCE;
         for (int widgetId : appWidgetIds) {
-            log.debug(TAG, "cleaning up widget configuration prefName:" + widgetId);
+            Log.d(TAG, "cleaning up widget configuration prefName:" + widgetId);
             // At least clear contents of the other_preferences file
             SharedPreferences preferences = context.getSharedPreferences("" + widgetId, 0);
             preferences.edit().clear().apply();
@@ -130,7 +129,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
             File prefs_xml = new File(prefs_path, widgetId + ".xml");
             // Remove the XML file
             if (!prefs_xml.delete()) {
-                log.warn(TAG, "File not deleted: " + prefs_xml.toString());
+                Log.w(TAG, "File not deleted: " + prefs_xml.toString());
             }
 
         }
@@ -138,8 +137,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 
 
     public static void updateAppWidget(@NonNull Context context, @NonNull AppWidgetManager appWidgetManager, int appWidgetId, String name) {
-        Logger log = Logger.INSTANCE;
-        log.debug(TAG, "updateAppWidget appWidgetId=" + appWidgetId + " title=" + name);
+        Log.d(TAG, "updateAppWidget appWidgetId=" + appWidgetId + " title=" + name);
 
         // Construct the RemoteViews object.  It takes the package name (in our case, it's our
         // package, but it needs this because on the other side it's the widget host inflating

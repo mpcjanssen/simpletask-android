@@ -365,12 +365,12 @@ public class FileUtil {
 				System.out.println("File name is PATH_VOLUME_RELATIVE");
 			}
 
-			// Something is very wrong if interp.getWorkingDir()
+			// Something is very wrong if mainInterp.getWorkingDir()
 			// does not start with C: or another drive letter
 			String cwd = interp.getWorkingDir().toString();
 			int index = beginsWithLetterColon(cwd);
 			if (index == 0) {
-				throw new TclRuntimeError("interp working directory \"" + cwd + "\" does not start with a drive letter");
+				throw new TclRuntimeError("mainInterp working directory \"" + cwd + "\" does not start with a drive letter");
 			}
 
 			// We can not use the joinPath() method because joing("D:/",

@@ -55,12 +55,12 @@ class ParseAdaptor {
 	 * parseNestedCmd --
 	 * 
 	 * Parse the nested command in string. The index points to the character
-	 * after the [. Set the interp flag to denote a nested evaluation.
+	 * after the [. Set the mainInterp flag to denote a nested evaluation.
 	 * 
 	 * Results: A ParseResult with the value of the executed command and an
 	 * index into string that points to the character after the ].
 	 * 
-	 * Side effects: The call to eval2 may alter the state of the interp.
+	 * Side effects: The call to eval2 may alter the state of the mainInterp.
 	 * 
 	 * ----------------------------------------------------------------------
 	 */

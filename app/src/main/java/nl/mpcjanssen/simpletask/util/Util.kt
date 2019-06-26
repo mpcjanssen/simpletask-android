@@ -1,27 +1,3 @@
-/**
- * This file is part of Todo.txt Touch, an Android app for managing your todo.txt file (http://todotxt.com).
-
- * Copyright (c) 2009-2012 Todo.txt contributors (http://todotxt.com)
-
- * LICENSE:
-
- * Todo.txt Touch is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
- * later version.
-
- * Todo.txt Touch is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
- * details.
-
- * You should have received a copy of the GNU General Public License along with Todo.txt Touch.  If not, see
- * //www.gnu.org/licenses/>.
-
- * @author Todo.txt contributors @yahoogroups.com>
- * *
- * @license http://www.gnu.org/licenses/gpl.html
- * *
- * @copyright 2009-2012 Todo.txt contributors (http://todotxt.com)
- */
 @file:JvmName("Util")
 
 package nl.mpcjanssen.simpletask.util
@@ -37,17 +13,18 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.LocalBroadcastManager
-import android.support.v4.content.pm.ShortcutInfoCompat
-import android.support.v4.content.pm.ShortcutManagerCompat
-import android.support.v4.graphics.drawable.IconCompat
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
+import androidx.core.content.ContextCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.core.content.pm.ShortcutInfoCompat
+import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.core.graphics.drawable.IconCompat
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.InputType
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.view.KeyEvent
 import android.view.Window
@@ -60,7 +37,6 @@ import kotlinx.android.synthetic.main.update_items_dialog.view.*
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
 import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TodoList
 import org.commonmark.parser.Parser
 import org.commonmark.renderer.html.HtmlRenderer
 import java.io.*
@@ -69,7 +45,6 @@ import java.util.*
 import java.util.regex.Pattern
 
 val TAG = "Util"
-val log = Logger
 val todayAsString: String
     get() = DateTime.today(TimeZone.getDefault()).format(Constants.DATE_FORMAT)
 
@@ -142,7 +117,6 @@ interface InputDialogListener {
 
 @Throws(TodoException::class)
 fun createParentDirectory(dest: File?) {
-    val log = Logger
     if (dest == null) {
         throw TodoException("createParentDirectory: dest is null")
     }
@@ -151,7 +125,7 @@ fun createParentDirectory(dest: File?) {
         createParentDirectory(dir)
         if (!dir.exists()) {
             if (!dir.mkdirs()) {
-                log.error(TAG, "Could not create dirs: " + dir.absolutePath)
+                Log.e(TAG, "Could not create dirs: " + dir.absolutePath)
                 throw TodoException("Could not create dirs: " + dir.absolutePath)
             }
         }
@@ -326,7 +300,7 @@ fun Activity.updateItemsDialog(
         title: String,
         tasks: List<Task>,
         allItems: Collection<String>,
-        retrieveFromTask: (Task) -> Set<String>,
+        retrieveFromTask: (Task) -> Set<String>?,
         addToTask: (Task, String) -> Unit,
         removeFromTask: (Task, String) -> Unit,
         positiveButtonListener: () -> Unit
@@ -437,7 +411,7 @@ fun createCachedFile(context: Context, fileName: String,
 fun copyFile(sourceFile: File, destFile: File) {
 
     if (destFile.createNewFile()) {
-        log.debug(TAG, "Destination file created {}" + destFile.absolutePath)
+        Log.d(TAG, "Destination file created {}" + destFile.absolutePath)
     }
 
     var source: FileChannel? = null
@@ -448,12 +422,8 @@ fun copyFile(sourceFile: File, destFile: File) {
         destination = FileOutputStream(destFile).channel
         destination!!.transferFrom(source, 0, source!!.size())
     } finally {
-        if (source != null) {
-            source.close()
-        }
-        if (destination != null) {
-            destination.close()
-        }
+        source?.close()
+        destination?.close()
     }
 }
 
@@ -469,7 +439,7 @@ fun alfaSort(
         prefix: String? = null
 ): ArrayList<String> {
     val sorted = items.sortedWith ( compareBy<String> {
-        if (caseSensitive) it.toLowerCase(Locale.getDefault()) else it
+        if (caseSensitive) it else it.toLowerCase(Locale.getDefault())
     })
     if (prefix != null) {
         val result = ArrayList<String>(sorted.size+1)
@@ -510,7 +480,7 @@ fun shareText(act: Activity, subject: String, text: String) {
             val fileUri = Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/" + Constants.SHARE_FILE_NAME)
             shareIntent.putExtra(android.content.Intent.EXTRA_STREAM, fileUri)
         } catch (e: Exception) {
-            log.warn(TAG, "Failed to create file for sharing")
+            Log.w(TAG, "Failed to create file for sharing")
         }
 
     }
@@ -520,19 +490,18 @@ fun shareText(act: Activity, subject: String, text: String) {
 fun showLoadingOverlay(act: Activity, visibleDialog: Dialog?, show: Boolean): Dialog? {
 
     if (show) {
-        if (visibleDialog != null) {
-            visibleDialog.show()
-            return visibleDialog
+        if (visibleDialog != null && visibleDialog.isShowing) {
+            visibleDialog.dismiss()
         }
-        val newDialog = Dialog(act)
-        newDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        newDialog.setContentView(R.layout.loading)
-        val pr = newDialog.findViewById(R.id.progress) as ProgressBar?
-        pr?.indeterminateDrawable?.setColorFilter(-16737844, android.graphics.PorterDuff.Mode.MULTIPLY)
-        newDialog.window.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
-        newDialog.setCancelable(false)
-        newDialog.show()
-        return newDialog
+        return Dialog(act).apply {
+            requestWindowFeature(Window.FEATURE_NO_TITLE)
+            setContentView(R.layout.loading)
+            val pr = findViewById(R.id.progress) as ProgressBar?
+            pr?.indeterminateDrawable?.setColorFilter(-16737844, android.graphics.PorterDuff.Mode.MULTIPLY)
+            window.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
+            setCancelable(false)
+            show()
+        }
     } else if (visibleDialog != null && visibleDialog.isShowing) {
         visibleDialog.dismiss()
     }
@@ -555,7 +524,7 @@ fun markdownAssetAsHtml(ctxt: Context, name: String): String {
         markdown = readAsset(ctxt.assets, name)
     } catch (e: IOException) {
         val fallbackAsset = name.replace("\\.[a-z]{2}\\.md$".toRegex(), ".en.md")
-        log.warn(TAG, "Failed to load markdown asset: $name falling back to $fallbackAsset")
+        Log.w(TAG, "Failed to load markdown asset: $name falling back to $fallbackAsset")
         try {
             markdown = readAsset(ctxt.assets, fallbackAsset)
         } catch (e: IOException) {
@@ -690,26 +659,26 @@ fun String.toDateTime(): DateTime? {
 }
 
 fun broadcastFileSync(broadcastManager: LocalBroadcastManager) {
-    log.info(TAG, "Sending file changed broadcast")
+    Log.i(TAG, "Sending file changed broadcast")
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_FILE_SYNC))
 }
 
 fun broadcastFileSyncStart(broadcastManager: LocalBroadcastManager) {
-    log.info(TAG, "Sending file sync start broadcast")
+    Log.i(TAG, "Sending file sync start broadcast")
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_SYNC_START))
 }
 
 fun broadcastFileSyncDone(broadcastManager: LocalBroadcastManager) {
-    log.info(TAG, "Sending file sync done changed broadcast")
+    Log.i(TAG, "Sending file sync done changed broadcast")
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_SYNC_DONE))
-}
-
-fun broadcastRefreshUI(broadcastManager: LocalBroadcastManager) {
-    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_UI))
 }
 
 fun broadcastTasklistChanged(broadcastManager: LocalBroadcastManager) {
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_TASKLIST_CHANGED))
+}
+
+fun broadcastAuthFailed(broadcastManager: LocalBroadcastManager) {
+    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_AUTH_FAILED))
 }
 
 fun broadcastRefreshSelection(broadcastManager: LocalBroadcastManager) {
@@ -717,13 +686,17 @@ fun broadcastRefreshSelection(broadcastManager: LocalBroadcastManager) {
 }
 
 fun broadcastRefreshWidgets(broadcastManager: LocalBroadcastManager) {
-    log.info(TAG, "Sending widget refresh broadcast")
+    Log.i(TAG, "Sending widget refresh broadcast")
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_UPDATE_WIDGETS))
+}
+
+fun broadcastUpdateStateIndicator(broadcastManager: LocalBroadcastManager) {
+    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_STATE_INDICATOR))
 }
 
 fun createShortcut(ctxt: Context, id: String, name: String, icon: Int, target: Intent) {
     val iconRes = IconCompat.createWithResource(ctxt, icon)
-    val pinShortcutInfo = ShortcutInfoCompat.Builder(ctxt, id)
+    val pinShortcutInfo = ShortcutInfoCompat.Builder(ctxt, "$id.$name")
             .setIcon(iconRes)
             .setShortLabel(name)
             .setIntent(target)

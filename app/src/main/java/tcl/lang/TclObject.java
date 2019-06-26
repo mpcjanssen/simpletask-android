@@ -113,7 +113,7 @@ public final class TclObject extends TclObjectBase {
 	 * optimized logic is like TclInteger.set() except that it does not invoke
 	 * invalidateStringRep(). This method is only invoked from the Interp class
 	 * when the TclObject is known to have a refCount of 1 or when the refCount
-	 * is 2 but the interp result holds the other ref. An object with a refCount
+	 * is 2 but the mainInterp result holds the other ref. An object with a refCount
 	 * of 2 would normally raise an exception in invalidateStringRep, but this
 	 * optimized case is worth it for this common case.
 	 */
@@ -137,7 +137,7 @@ public final class TclObject extends TclObjectBase {
 	 * This optimized logic is like TclDouble.set() except that it does not
 	 * invoke invalidateStringRep(). This method is only invoked from the Interp
 	 * class when the TclObject is known to have a refCount of 1 or when the
-	 * refCount is 2 but the interp result holds the other ref. An object with a
+	 * refCount is 2 but the mainInterp result holds the other ref. An object with a
 	 * refCount of 2 would normally raise an exception in invalidateStringRep,
 	 * but this optimized case is worth it for this common case.
 	 */

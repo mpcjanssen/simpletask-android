@@ -1,6 +1,6 @@
 package nl.mpcjanssen.simpletask
 
-import nl.mpcjanssen.simpletask.task.TToken
+import android.util.Log
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.util.*
 
@@ -21,183 +21,171 @@ class ToastShortCmd : Command {
 }
 
 object Interpreter : AbstractInterpreter() {
-    val interp = Interp()
+
+    val interps = HashMap<String,Interp>()
+
+    fun getInterp(moduleName: String) : Interp {
+            return interps[moduleName] ?: Interp().also {
+                try {
+                    it.init(moduleName == "")
+                } catch (e: TclException) {
+                    Log.e(TAG, "Interper $moduleName failed to initialize ${it.result.toString()}")
+                }
+                interps[moduleName] = it }
+    }
+    val mainInterp : Interp by lazy { getInterp("")}
+
     override fun tasklistTextSize(): Float? {
-        return interp.tasklistTextSize()?.toFloat()
+        return mainInterp.tasklistTextSize()?.toFloat()
     }
 
     override fun configTheme(): String? {
-        return interp.configTheme()
+        return mainInterp.configTheme()
     }
 
     override fun onFilterCallback(moduleName: String, t: Task): Pair<Boolean, String> {
-        return interp.onFilterCallback(moduleName,t)
+        return getInterp(moduleName).onFilterCallback(t)
     }
 
     override fun hasFilterCallback(moduleName: String): Boolean {
-        return interp.hasOnFilterCallback(moduleName)
+        return getInterp(moduleName).hasOnFilterCallback()
     }
 
     override fun hasOnSortCallback(moduleName: String): Boolean {
-        return interp.hasOnSortCallback(moduleName)
+        return getInterp(moduleName).hasOnSortCallback()
     }
 
     override fun hasOnGroupCallback(moduleName: String): Boolean {
-        return interp.hasOnGroupCallback(moduleName)
+        return getInterp(moduleName).hasOnGroupCallback()
     }
 
     override fun onSortCallback(moduleName: String, t: Task): String {
-        return interp.onSortCallback(moduleName,t)
+        return getInterp(moduleName).onSortCallback(t)
     }
 
     override fun onGroupCallback(moduleName: String, t: Task): String? {
-        return interp.onGroupCallback(moduleName, t)
+        return getInterp(moduleName).onGroupCallback(t)
     }
 
     override fun onDisplayCallback(moduleName: String, t: Task): String? {
-        return interp.onDisplayCallback(moduleName,t)
+        return getInterp(moduleName).onDisplayCallback(t)
     }
 
     override fun onAddCallback(t: Task): Task? {
-        return interp.onAddCallback(t)
+        return mainInterp.onAddCallback(t)
     }
 
     override fun onTextSearchCallback(moduleName: String, input: String, search: String, caseSensitive: Boolean): Boolean? {
         return true
     }
 
-    override fun evalScript(moduleName: String?, script: String?): AbstractInterpreter {
-        script?.let { interp.evalNSScript(moduleName?:"::", it) }
+    override fun evalScript(moduleName: String, script: String?): AbstractInterpreter {
+        getInterp(moduleName).eval(script)
         return this
     }
 
     override fun clearOnFilter(moduleName: String) {
-        interp.evalNSScript(moduleName, "rename $ON_FILTER_NAME {}")
+        getInterp(moduleName).eval("rename $ON_FILTER_NAME {}")
     }
 
+    override fun getStackTrace(moduleName: String): String? {
+        return getInterp(moduleName).result.toString()
+    }
 
 }
 
-fun Interp.init() : Interp  {
+
+fun Interp.init(main : Boolean = false) : Interp  {
     val TODOLIB = readAsset(TodoApplication.app.assets, "tcl/todolib.tcl")
-    try {
-        this.createCommand("toast", ToastShortCmd())
-        this.eval(TODOLIB)
-        this.eval(Config.luaConfig)
-    } catch (e: TclException) {
-        Logger.warn(Config.TAG, "Script execution failed " + this.result)
-        showToastLong(TodoApplication.app, "${getString(R.string.lua_error)}:  ${this.result.toString()}")
-    }
+    this.createCommand("toast", ToastShortCmd())
+    this.eval(TODOLIB)
+    if (main)  this.eval(Config.luaConfig)
     return this
 }
 
 
 fun Interp.tasklistTextSize(): Double? {
     try {
-        return TclDouble.get(this, this.getVar(Vars.CONFIG_TASKLIST_TEXT_SIZE_SP, TCL.GLOBAL_ONLY))
-    } catch (e: TclException) {
+        return this.getVar(Vars.CONFIG_TASKLIST_TEXT_SIZE_SP, TCL.GLOBAL_ONLY)?.let {
+            TclDouble.get(this, it)
+        }
+    } catch (e: TclVarException) {
         return null
     }
 }
+
 
 // Callback to determine the theme. Return true for dark.
 
 
 fun Interp.configTheme(): String? {
     try {
-        return this.getVar(Vars.CONFIG_THEME, TCL.GLOBAL_ONLY).toString()
-    } catch (e: TclException) {
+        return this.getVar(Vars.CONFIG_THEME, TCL.GLOBAL_ONLY)?.toString()
+    } catch (e: TclVarException) {
         return null
     }
 }
 
-fun cmdName(namespace : String, cmd: String) : String {
-    return "::$namespace::$cmd"
-}
 
-fun Interp.hasOnFilterCallback(namespace : String): Boolean {
-    val cmd = this.getCommand(cmdName(namespace, Callbacks.ON_FILTER_NAME))
+fun Interp.hasOnFilterCallback(): Boolean {
+    val cmd = this.getCommand(Callbacks.ON_FILTER_NAME)
     return cmd != null
 }
 
-fun Interp.hasOnSortCallback(namespace : String): Boolean {
-    val cmd = this.getCommand(cmdName(namespace, Callbacks.ON_SORT_NAME))
+fun Interp.hasOnSortCallback(): Boolean {
+    val cmd = this.getCommand(Callbacks.ON_SORT_NAME)
     return cmd != null
 }
 
-fun Interp.hasOnDisplayCallback(namespace: String): Boolean {
-    val cmd = this.getCommand(cmdName(namespace, Callbacks.ON_DISPLAY_NAME))
+fun Interp.hasOnDisplayCallback(): Boolean {
+    val cmd = this.getCommand(Callbacks.ON_DISPLAY_NAME)
     return cmd != null
 }
 
-fun Interp.hasOnGroupCallback(namespace: String): Boolean {
-    val cmd = this.getCommand(cmdName(namespace, Callbacks.ON_GROUP_NAME))
+fun Interp.hasOnGroupCallback(): Boolean {
+    val cmd = this.getCommand(Callbacks.ON_GROUP_NAME)
     return cmd != null
 }
 
-fun Interp.onFilterCallback(ns: String, t: Task): Pair<Boolean, String> {
-    if (!hasOnFilterCallback(ns)) {
+fun Interp.onFilterCallback(t: Task): Pair<Boolean, String> {
+    if (!hasOnFilterCallback()) {
         return Pair(true, "true")
     }
-    try {
-        executeCallbackCommand(cmdName(ns, Callbacks.ON_FILTER_NAME), t)
-        val strVal = this.result.toString()
-        val boolVal = TclBoolean.get(this, this.result)
-        return Pair(boolVal,strVal)
-    } catch (e: TclException) {
-        log.debug(TAG, "Tcl execution failed: ${this.result}")
-        return Pair(true, "true")
-    }
+
+    executeCallbackCommand(Callbacks.ON_FILTER_NAME, t)
+    val strVal = this.result.toString()
+    val boolVal = TclBoolean.get(this, this.result)
+    return Pair(boolVal,strVal)
+
 }
 
-fun Interp.onSortCallback(ns: String, t1: Task): String {
-    try {
-        val cmdList = TclList.newInstance()
-        TclList.append(this, cmdList, TclString.newInstance(cmdName(ns, Callbacks.ON_SORT_NAME)))
-        appendCallbackArgs(t1, cmdList)
-        this.eval(cmdList, TCL.GLOBAL_ONLY)
-        return this.result.toString()
-    } catch (e: TclException) {
-        log.debug(TAG, "Tcl execution failed " + e.message)
-        return ""
-    }
+fun Interp.onSortCallback(t1: Task): String {
+
+    val cmdList = TclList.newInstance()
+    TclList.append(this, cmdList, TclString.newInstance(Callbacks.ON_SORT_NAME))
+    appendCallbackArgs(t1, cmdList)
+    this.eval(cmdList, TCL.GLOBAL_ONLY)
+    return this.result.toString()
+
 }
 
-fun Interp.evalNSScript(ns: String, script: String) {
-    try {
-        val cmdList = TclString.newInstance("namespace eval")
-        TclList.append(this, cmdList, TclString.newInstance(ns))
-        TclList.append(this, cmdList, TclString.newInstance(script))
-        this.eval(cmdList, TCL.GLOBAL_ONLY)
-    } catch (e: TclException) {
-        log.debug(TAG, "Tcl execution failed " + this.result)
+fun Interp.onGroupCallback(t: Task): String? {
+    if (!hasOnGroupCallback()) {
+        return null
     }
+
+    executeCallbackCommand(Callbacks.ON_GROUP_NAME, t)
+    return this.result.toString()
+
 }
 
-fun Interp.onGroupCallback(ns: String, t: Task): String? {
-    if (!hasOnGroupCallback(ns)) {
+fun Interp.onDisplayCallback(t: Task): String? {
+    if (!hasOnDisplayCallback()) {
         return null
     }
-    try {
-        executeCallbackCommand(cmdName(ns, Callbacks.ON_GROUP_NAME), t)
-        return this.result.toString()
-    } catch (e: TclException) {
-        log.debug(TAG, "Tcl execution failed " + e.message)
-        return null
-    }
-}
+    executeCallbackCommand(Callbacks.ON_DISPLAY_NAME, t)
+    return this.result.toString()
 
-fun Interp.onDisplayCallback(ns: String, t: Task): String? {
-    if (!hasOnDisplayCallback(ns)) {
-        return null
-    }
-    try {
-        executeCallbackCommand(cmdName(ns, Callbacks.ON_DISPLAY_NAME), t)
-        return this.result.toString()
-    } catch (e: TclException) {
-        log.debug(TAG, "Tcl execution failed " + e.message)
-        return null
-    }
 }
 
 fun Interp.onAddCallback(t: Task): Task {
@@ -247,10 +235,10 @@ private fun Interp.appendCallbackArgs(t: Task?, cmdList: TclObject) {
 }
 
 
-private fun Interp.javaListToTclList(javaList: Iterable<String>): TclObject {
+private fun Interp.javaListToTclList(javaList: Iterable<String>?): TclObject {
     val tclList = TclList.newInstance()
-    for (item in javaList) {
-        TclList.append(this, tclList, TclString.newInstance(item))
+    javaList?.forEach() {
+        TclList.append(this, tclList, TclString.newInstance(it))
     }
     return tclList
 }

@@ -2,7 +2,8 @@ package nl.mpcjanssen.simpletask
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,7 +37,6 @@ class FilterSortFragment : Fragment() {
     }
 
     private val onRemove = DragSortListView.RemoveListener { which -> adapter.remove(adapter.getItem(which)) }
-    private var log: Logger? = null
 
     private // this DSLV xml declaration does not call for the use
             // of the default DragSortController; therefore,
@@ -46,7 +46,6 @@ class FilterSortFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        log = Logger
 
         val arguments = arguments
         if (originalItems == null) {
@@ -56,7 +55,7 @@ class FilterSortFragment : Fragment() {
                 originalItems = arguments?.getStringArrayList(FilterActivity.FILTER_ITEMS)?: ArrayList()
             }
         }
-        log!!.debug(TAG, "Created view with: " + originalItems!!)
+        Log.d(TAG, "Created view with: " + originalItems)
         m_app = TodoApplication.app
 
         // Set the proper theme
@@ -85,7 +84,7 @@ class FilterSortFragment : Fragment() {
             } else {
                 sortDirection = parts[0]
                 sortType = parts[1]
-                if (sortDirection.isNullOrEmpty() || sortDirection != Query.REVERSED_SORT) {
+                if (sortDirection.isEmpty() || sortDirection != Query.REVERSED_SORT) {
                     sortDirection = Query.NORMAL_SORT
                 }
             }
@@ -139,14 +138,12 @@ class FilterSortFragment : Fragment() {
     val selectedItem: ArrayList<String>
         get() {
             val multiSort = ArrayList<String>()
-            if (lv != null) {
-                for (i in 0..adapter.count - 1) {
+            when {
+                lv != null -> for (i in 0..adapter.count - 1) {
                     multiSort.add(directions[i] + Query.SORT_SEPARATOR + adapter.getSortType(i))
                 }
-            } else if (originalItems != null) {
-                multiSort.addAll(originalItems as ArrayList<String>)
-            } else {
-                multiSort.addAll(arguments?.getStringArrayList(FilterActivity.FILTER_ITEMS) ?: java.util.ArrayList())
+                originalItems != null -> multiSort.addAll(originalItems as ArrayList<String>)
+                else -> multiSort.addAll(arguments?.getStringArrayList(FilterActivity.FILTER_ITEMS) ?: java.util.ArrayList())
             }
             return multiSort
         }

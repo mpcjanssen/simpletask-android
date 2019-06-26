@@ -138,7 +138,7 @@ public class TclBoolean implements InternalRep {
 			String lowerCase = string.toLowerCase();
 
 			// Parse the string as a boolean. We use an implementation here that
-			// doesn't report errors in interp if interp is null.
+			// doesn't report errors in mainInterp if mainInterp is null.
 
 			boolean b;
 			boolean badBoolean = false;

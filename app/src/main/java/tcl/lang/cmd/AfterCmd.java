@@ -43,7 +43,7 @@ import tcl.lang.Util;
 public class AfterCmd implements Command {
 
 	/*
-	 * The list of handler are stored as AssocData in the interp.
+	 * The list of handler are stored as AssocData in the mainInterp.
 	 */
 
 	AfterAssocData assocData = null;

@@ -141,7 +141,7 @@ class TclParse {
 	 * 
 	 * TclParse --
 	 * 
-	 * Construct a TclParse object with default values. The interp and fileName
+	 * Construct a TclParse object with default values. The mainInterp and fileName
 	 * arguments may be null.
 	 * 
 	 * Side effects: None.
@@ -239,7 +239,7 @@ class TclParse {
 	private final TclToken grabToken() {
 		if (USE_TOKEN_CACHE) {
 			if (interp == null || interp.parserTokensUsed == MAX_CACHED_TOKENS) {
-				// either we do not have a cache because the interp is null or
+				// either we do not have a cache because the mainInterp is null or
 				// we have already
 				// used up all the open cache slots, we just allocate a new one
 				// in this case

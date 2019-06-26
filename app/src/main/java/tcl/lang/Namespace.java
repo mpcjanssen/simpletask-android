@@ -439,7 +439,7 @@ public class Namespace {
 			simpleName = "";
 		} else if (name.length() == 0) {
 			/*
-			 * TclObject tobj = interp.getResult(); // FIXME : is there a test
+			 * TclObject tobj = mainInterp.getResult(); // FIXME : is there a test
 			 * case to check this error result? TclString.append(tobj,
 			 * "can't create namespace \"\": only global namespace can have empty name"
 			 * );
@@ -472,7 +472,7 @@ public class Namespace {
 
 			if (parent.childTable.get(simpleName) != null) {
 				/*
-				 * TclObject tobj = interp.getResult(); // FIXME : is there a
+				 * TclObject tobj = mainInterp.getResult(); // FIXME : is there a
 				 * test case to check this error result? TclString.append(tobj,
 				 * "can't create namespace \"" + name + "\": already exists");
 				 */
@@ -1126,7 +1126,7 @@ public class Namespace {
 
 					data = new ImportedCmdData();
 
-					// Create the imported command inside the interp
+					// Create the imported command inside the mainInterp
 					interp.createCommand(ds.toString(), data);
 
 					// Lookup in the namespace for the new WrappedCommand
@@ -1716,7 +1716,7 @@ public class Namespace {
 			return ns;
 		} else if ((flags & TCL.LEAVE_ERR_MSG) != 0) {
 			/*
-			 * interp.resetResult(); TclString.append(interp.getResult(),
+			 * mainInterp.resetResult(); TclString.append(mainInterp.getResult(),
 			 * "unknown namespace \"" + name + "\"");
 			 */
 
@@ -1964,7 +1964,7 @@ public class Namespace {
 			return var;
 		} else if ((flags & TCL.LEAVE_ERR_MSG) != 0) {
 			/*
-			 * interp.resetResult(); TclString.append(interp.getResult(),
+			 * mainInterp.resetResult(); TclString.append(mainInterp.getResult(),
 			 * "unknown variable \"" + name + "\"");
 			 */
 
@@ -2108,7 +2108,7 @@ public class Namespace {
 	 * 
 	 * Command resolution is handled by the following method:
 	 * 
-	 * resolveCmd (Interp interp, String name, Namespace context, int flags)
+	 * resolveCmd (Interp mainInterp, String name, Namespace context, int flags)
 	 * throws TclException;
 	 * 
 	 * Whenever a command is executed or Namespace.findCommand is invoked within
@@ -2120,7 +2120,7 @@ public class Namespace {
 	 * 
 	 * Variable resolution is handled by the following method:
 	 * 
-	 * resolveVar (Interp interp, String name, Namespace context, int flags)
+	 * resolveVar (Interp mainInterp, String name, Namespace context, int flags)
 	 * throws TclException;
 	 * 
 	 * If this method is able to resolve the name, it should return the variable

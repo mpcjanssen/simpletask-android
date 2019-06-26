@@ -1,7 +1,7 @@
 /*
  * InterpAliasCmd.java --
  *
- *	Implements the built-in "interp" Tcl command.
+ *	Implements the built-in "mainInterp" Tcl command.
  *
  * Copyright (c) 2000 Christian Krone.
  *
@@ -29,14 +29,14 @@ import tcl.lang.WrappedCommand;
 
 /**
  * This class implements the alias commands, which are created in response to
- * the built-in "interp alias" command in Tcl.
+ * the built-in "mainInterp alias" command in Tcl.
  * 
  */
 
 public class InterpAliasCmd implements CommandWithDispose {
 
 	/**
-	 *  Name of alias command in slave interp.
+	 *  Name of alias command in slave mainInterp.
 	 */
 	public TclObject name;
 
@@ -49,7 +49,7 @@ public class InterpAliasCmd implements CommandWithDispose {
 	 *  Tcl list making up the prefix of the target command to be invoked in
 	 *
 	 * the target interpreter. Additional arguments specified when calling
-	 * the alias in the slave interp will be appended to the prefix before
+	 * the alias in the slave mainInterp will be appended to the prefix before
 	 * the command is invoked.
 	 */
 	private TclObject prefix;
@@ -102,7 +102,7 @@ public class InterpAliasCmd implements CommandWithDispose {
 			targetInterp.allowExceptions();
 
 			// Append the arguments to the command prefix and invoke the command
-			// in the target interp's global namespace.
+			// in the target mainInterp's global namespace.
 
 			TclObject[] prefv = TclList.getElements(interp, prefix);
 			TclObject cmd = TclList.newInstance();
@@ -173,7 +173,7 @@ public class InterpAliasCmd implements CommandWithDispose {
 	 *
 	 * @param interp interpreter for error reporting
 	 * @param slaveInterp itnerp where alias cmd will live or from which it will be deleted
-	 * @param masterInterp interp in which target command will be invoked
+	 * @param masterInterp mainInterp in which target command will be invoked
 	 * @param name name of alias cmd
 	 * @param targetName name of target cmd
 	 * @param objIx offset of first element in objv
@@ -192,7 +192,7 @@ public class InterpAliasCmd implements CommandWithDispose {
 			throws TclException {
 		String string = name.toString();
 
-		/* Don't allow alias over an interpreter's own slave command - see test interp-14.4 */
+		/* Don't allow alias over an interpreter's own slave command - see test mainInterp-14.4 */
 		WrappedCommand slaveCmd = Namespace.findCommand(slaveInterp, name.toString(), null, 0);
 		if (slaveCmd!=null && slaveInterp!=null && slaveCmd.cmd == masterInterp.slave)  {
 			slaveInterp.deleteCommandFromToken(slaveCmd);
@@ -241,9 +241,9 @@ public class InterpAliasCmd implements CommandWithDispose {
 		// Create the new command. We must do it after deleting any old command,
 		// because the alias may be pointing at a renamed alias, as in:
 		//
-		// interp alias {} foo {} bar # Create an alias "foo"
+		// mainInterp alias {} foo {} bar # Create an alias "foo"
 		// rename foo zop # Now rename the alias
-		// interp alias {} foo {} zop # Now recreate "foo"...
+		// mainInterp alias {} foo {} zop # Now recreate "foo"...
 
 		masterInterp.targetTable.put(alias.slaveCmd, slaveInterp);
 
@@ -258,7 +258,7 @@ public class InterpAliasCmd implements CommandWithDispose {
 	 * Side effects: Deletes the alias from the slave interpreter.
 	 * 
 	 * @param interp interpreter for error reporting
-	 * @param slaveInterp interp where alias command will be deleted
+	 * @param slaveInterp mainInterp where alias command will be deleted
 	 * @param name name of alias to delete
 	 * @throws TclException
 	 */
@@ -291,7 +291,7 @@ public class InterpAliasCmd implements CommandWithDispose {
 	 * Side effects: None.
 	 * 
 	 * @param interp interpreter for error reporting
-	 * @param slaveInterp interp that contains alias command that will be described
+	 * @param slaveInterp mainInterp that contains alias command that will be described
 	 * @param name name of alias to describe
 	 * @throws TclException
 	 */
@@ -348,7 +348,7 @@ public class InterpAliasCmd implements CommandWithDispose {
 	 * 
 	 * Side effects: None.
 	 * 
-	 * @param interp interp for error reporting
+	 * @param interp mainInterp for error reporting
 	 * @return the wrapped command
 	 */
 

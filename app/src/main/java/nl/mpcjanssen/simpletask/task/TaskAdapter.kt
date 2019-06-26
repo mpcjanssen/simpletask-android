@@ -2,11 +2,14 @@ package nl.mpcjanssen.simpletask.task
 
 import android.graphics.Color
 import android.graphics.Paint
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.text.SpannableString
+import android.text.Spanned.*
 import android.text.TextUtils
+import android.text.style.StrikethroughSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,43 +18,43 @@ import kotlinx.android.synthetic.main.list_header.view.*
 import kotlinx.android.synthetic.main.list_item.view.*
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.util.*
+import java.lang.Exception
 import java.util.ArrayList
 
 class TaskViewHolder(itemView: View, val viewType : Int) : RecyclerView.ViewHolder(itemView)
 
-class TaskAdapter(var query: Query,
-                  private val m_inflater: LayoutInflater,
-                  val completeAction: (Task) -> Unit,
+class TaskAdapter(val completeAction: (Task) -> Unit,
                   val unCompleteAction: (Task) -> Unit,
                   val onClickAction: (Task) -> Unit,
                   val onLongClickAction: (Task) -> Boolean) : RecyclerView.Adapter <TaskViewHolder>() {
+    lateinit var query: Query
     val tag = "TaskAdapter"
     var textSize: Float = 14.0F
     override fun getItemCount(): Int {
         return visibleLines.size + 1
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TaskViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val view = when (viewType) {
             0 -> {
                 // Header
-                m_inflater.inflate(R.layout.list_header, parent, false)
+                LayoutInflater.from(parent.context).inflate(R.layout.list_header, parent, false)
             }
             1 -> {
                 // Task
-                m_inflater.inflate(R.layout.list_item, parent, false)
+                LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false)
             }
             else -> {
                 // Empty at end
-                m_inflater.inflate(R.layout.empty_list_item, parent, false)
+                LayoutInflater.from(parent.context).inflate(R.layout.empty_list_item, parent, false)
             }
 
         }
         return TaskViewHolder(view, viewType)
     }
 
-    override fun onBindViewHolder(holder: TaskViewHolder?, position: Int) {
-        when (holder?.viewType) {
+    override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
+        when (holder.viewType) {
             0 -> bindHeader(holder, position)
             1 -> bindTask(holder, position)
             else -> return
@@ -96,16 +99,16 @@ class TaskAdapter(var query: Query,
                 else -> true
             }
         }
-        val txt = Interpreter.onDisplayCallback(query.luaModule, task) ?: task.showParts(tokensToShowFilter)
+        val txt = try {
+            Interpreter.onDisplayCallback(query.luaModule, task) ?: task.showParts(tokensToShowFilter)
+        } catch (e: Exception) {
+            Log.e(TAG, e.message)
+            task.showParts (tokensToShowFilter)
+        }
         val ss = SpannableString(txt)
 
-        val contexts = task.lists
-        val colorizeStrings = contexts.mapTo(ArrayList()) { "@$it" }
-        setColor(ss, Color.GRAY, colorizeStrings)
-        colorizeStrings.clear()
-        val projects = task.tags
-        projects.mapTo(colorizeStrings) { "+$it" }
-        setColor(ss, Color.GRAY, colorizeStrings)
+        task.lists?.mapTo(ArrayList()) { "@$it" }?.let { setColor(ss, Color.GRAY, it) }
+        task.tags?.mapTo(ArrayList()) { "+$it" }?.let { setColor(ss, Color.GRAY, it) }
 
         val priorityColor: Int
         val priority = task.priority
@@ -124,22 +127,22 @@ class TaskAdapter(var query: Query,
         taskThreshold.textSize = textSize * Config.dateBarRelativeSize
 
         val cb = view.checkBox
-        taskText.text = ss
-        taskText.textSize = textSize
-        handleEllipsis(taskText)
+
 
         if (completed) {
-            // log.info( "Striking through " + task.getText());
-            taskText.paintFlags = taskText.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            // Log.i( "Striking through " + task.getText());
+            ss.setSpan(StrikethroughSpan(), 0 , ss.length, SPAN_INCLUSIVE_INCLUSIVE)
             taskAge.paintFlags = taskAge.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             cb.setOnClickListener { unCompleteAction(task) }
         } else {
-            taskText.paintFlags = taskText.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             taskAge.paintFlags = taskAge.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
 
             cb.setOnClickListener { completeAction(task) }
 
         }
+        taskText.text = ss
+        taskText.textSize = textSize
+        handleEllipsis(taskText)
         cb.isChecked = completed
 
         val relAge = getRelativeAge(task, TodoApplication.app)
@@ -168,7 +171,7 @@ class TaskAdapter(var query: Query,
             taskThreshold.visibility = View.GONE
         }
         // Set selected state
-        // log.debug(tag, "Setting selected state ${TodoList.isSelected(item)}")
+        // Log.d(tag, "Setting selected state ${TodoList.isSelected(item)}")
         view.isActivated = TodoList.isSelected(task)
 
         // Set click listeners
@@ -178,45 +181,41 @@ class TaskAdapter(var query: Query,
     }
     internal var visibleLines = ArrayList<VisibleLine>()
 
-    internal fun setFilteredTasks(caller: Simpletask?, newQuery: Query) {
+    internal fun setFilteredTasks(caller: Simpletask, newQuery: Query) {
         textSize = Config.tasklistTextSize ?: textSize
-        log.info(tag, "Text size = $textSize")
+        Log.i(tag, "Text size = $textSize")
         query = newQuery
-        TodoList.todoQueue("setFilteredTasks") {
-            caller?.runOnUiThread {
-                caller.showListViewProgress(true)
-            }
-            log.info(tag, "setFilteredTasks called: $TodoList")
-            val sorts = newQuery.getSort(Config.defaultSorts)
-            val (visibleTasks, total) = TodoList.getSortedTasks(newQuery, sorts, Config.sortCaseSensitive)
-            countTotalTasks = total
 
-            val newVisibleLines = ArrayList<VisibleLine>()
+        caller.runOnUiThread {
+            caller.showListViewProgress(true)
+        }
+        Log.i(tag, "setFilteredTasks called: $TodoList")
+        val (visibleTasks, total) = TodoList.getSortedTasks(newQuery, Config.sortCaseSensitive)
+        countTotalTasks = total
+        countVisibleTasks = visibleTasks.size
 
-            newVisibleLines.addAll(addHeaderLines(visibleTasks, newQuery, getString(R.string.no_header)))
+        val newVisibleLines = ArrayList<VisibleLine>()
 
-            caller?.runOnUiThread {
-                // Replace the array in the main thread to prevent OutOfIndex exceptions
-                visibleLines = newVisibleLines
-                notifyDataSetChanged()
-                caller.showListViewProgress(false)
-                if (Config.lastScrollPosition != -1) {
-                    val manager = caller.listView?.layoutManager as LinearLayoutManager?
-                    val position = Config.lastScrollPosition
-                    val offset = Config.lastScrollOffset
-                    Logger.info(tag, "Restoring scroll offset $position, $offset")
-                    manager?.scrollToPositionWithOffset(position, offset )
-                    Config.lastScrollPosition = -1
-                }
+        newVisibleLines.addAll(addHeaderLines(visibleTasks, newQuery, getString(R.string.no_header)))
+
+        caller.runOnUiThread {
+            // Replace the array in the main thread to prevent OutOfIndex exceptions
+            visibleLines = newVisibleLines
+            notifyDataSetChanged()
+            caller.showListViewProgress(false)
+            if (Config.lastScrollPosition != -1) {
+                val manager = caller.listView?.layoutManager as LinearLayoutManager?
+                val position = Config.lastScrollPosition
+                val offset = Config.lastScrollOffset
+                Log.i(tag, "Restoring scroll offset $position, $offset")
+                manager?.scrollToPositionWithOffset(position, offset)
+                Config.lastScrollPosition = -1
             }
         }
     }
 
-    val countVisibleTasks: Int
-        get() {
-            return visibleLines.count { !it.header }
-        }
 
+    var countVisibleTasks = 0
     var countTotalTasks = 0
 
     /*
@@ -248,18 +247,17 @@ class TaskAdapter(var query: Query,
         val ellipsizeKey = TodoApplication.app.getString(R.string.task_text_ellipsizing_pref_key)
         val ellipsizePref = Config.prefs.getString(ellipsizeKey, noEllipsizeValue)
 
-        if (noEllipsizeValue != ellipsizePref) ellipsis@ {
+        if (noEllipsizeValue != ellipsizePref) {
             taskText.ellipsize = when (ellipsizePref) {
                 "start" -> TextUtils.TruncateAt.START
                 "end" -> TextUtils.TruncateAt.END
                 "middle" -> TextUtils.TruncateAt.MIDDLE
                 "marquee" -> TextUtils.TruncateAt.MARQUEE
                 else -> {
-                    log.warn(tag, "Unrecognized preference value for task text ellipsis: {} ! $ellipsizePref")
-                    return@ellipsis
+                    Log.w(tag, "Unrecognized preference value for task text ellipsis: {} ! $ellipsizePref")
+                    TextUtils.TruncateAt.MIDDLE
                 }
             }
-
             taskText.maxLines = 1
             taskText.setHorizontallyScrolling(true)
         }

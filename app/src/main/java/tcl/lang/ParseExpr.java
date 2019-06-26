@@ -159,7 +159,7 @@ class ParseExpr {
 	 * module.
 	 * 
 	 * Results: The return value is Tcl.OK if the command was parsed
-	 * successfully and TCL_ERROR otherwise. If an error occurs and interp isn't
+	 * successfully and TCL_ERROR otherwise. If an error occurs and mainInterp isn't
 	 * NULL then an error message is left in its result. On a successful return,
 	 * parseObj is filled in with information about the expression that was
 	 * parsed.
@@ -1164,7 +1164,7 @@ class ParseExpr {
 	 * syntactic element from an expression string.
 	 * 
 	 * Results: Tcl.OK is returned unless an error occurred. In that case a
-	 * standard Tcl error code is returned and, if info.parseObj.interp is
+	 * standard Tcl error code is returned and, if info.parseObj.mainInterp is
 	 * non-NULL, the interpreter's result is set to hold an error message.
 	 * TCL_ERROR is returned if an integer overflow, or a floating-point
 	 * overflow or underflow occurred while reading in a number. If the lexical

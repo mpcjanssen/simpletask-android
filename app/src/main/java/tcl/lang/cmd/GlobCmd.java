@@ -78,7 +78,7 @@ public class GlobCmd implements Command {
 	 * 
 	 * @see tcl.lang.Command#cmdProc(tcl.lang.Interp, tcl.lang.TclObject[])
 	 */
-	public void cmdProc(Interp interp, // Current interp to eval the file cmd.
+	public void cmdProc(Interp interp, // Current mainInterp to eval the file cmd.
 			TclObject argv[]) // Args passed to the glob command.
 			throws TclException {
 

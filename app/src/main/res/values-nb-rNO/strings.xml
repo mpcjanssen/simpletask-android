@@ -1,5 +1,6 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="invalid_context">Ugyldig listenavn</string>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="invalid_context">Ugyldig listenavn</string>
     <string name="invalid_project">Ugyldig etikettnavn</string>
     <string name="added_task">Gjøremål lagt til</string>
     <string name="add_task_failed">Kunne ikke legge til gjøremål</string>
@@ -11,7 +12,7 @@
     <string name="main_no_items">Ingen gjøremål å vise.</string>
     <string name="set_preferences">Innstillinger</string>
     <string name="preferences">Innstillinger</string>
-    <string name="archive">Arkiv</string>
+    <string name="archive">Arkiver</string>
     <string name="help">Hjelp</string>
     <string name="history">Historikk</string>
     <string name="debug_info">Feilrettingsinfo</string>
@@ -48,7 +49,6 @@
     <string name="cancel">Avbryt</string>
     <string name="clear_filter">Tøm filter</string>
     <string name="write_failed">Klarte ikke å skrive fil. Endringene dine ble IKKE lagret.</string>
-
     <string name="preference_appearance">Utseende</string>
     <string name="preference_interface">Grensesnitt</string>
     <string name="preference_widget">Miniprogram</string>
@@ -59,15 +59,11 @@
     <string name="TODOTXTPATH_summary">Dropbox-mappa der todo.txt er lagret.</string>
     <string name="DROPBOX_settings_header">Dropbox</string>
     <string name="DROPBOX_settings_summary">Innstillinger for Dropbox-synkronisering</string>
-
     <string name="todotxt_features_settings_header">Funksjoner</string>
     <string name="todotxt_features_settings_summary">Skru på eller av funksjoner</string>
-
     <string name="todotxt_configuration_settings_header">Oppsett</string>
     <string name="todotxt_configuration_settings_summary">Sett opp programoppførsel</string>
-
     <string name="todotxt_creation_settings_header">Gjøremålsopprettelse</string>
-
     <string name="todotxt_ui_settings_header">Funksjoner</string>
     <string name="todotxt_ui_settings_summary">Kontroller hva som vises</string>
     <string name="todotxt_behavior_settings_header">Oppførsel</string>
@@ -88,37 +84,29 @@
     <string name="font_size_delta_pref_summary">Endre skriftstørrelsen.</string>
     <string name="theme_pref_title">Drakt</string>
     <string name="theme_pref_summary">Endre drakten brukt av programmet.</string>
-
     <string name="share_task_show_edit_pref_title">Rediger delte gjøremål</string>
     <string name="share_task_show_edit_summary">Rediger gjøremål delt med Simpletask før lagring</string>
-
     <string name="share_task_append_text_title">Bakgrunnstekst</string>
     <string name="share_task_append_text_summary">Legg til \"%s\" til gjøremål lagt til i bakgrunnen.</string>
-
     <string name="local_file_root_summary">%s</string>
-
     <string name="back_saves_pref_title">Tilbake-knapp</string>
     <string name="show_txt_only_pref_title">Kun vis TXT-filer</string>
     <string name="show_txt_only_summary">Bare vis .txt-filer i filutvelgelsesdialogen.</string>
-
     <string name="calendar_sync_screen_title">Merknader</string>
     <string name="calendar_sync_screen_summary">Kalenderpåminnelser (eksperimentelt)</string>
     <string name="calendar_reminder_days_title">Dager på forskudd</string>
     <string name="calendar_reminder_time_title">Påminnelsestid</string>
     <string name="widget_theme_pref_title">Drakt</string>
     <string name="widget_theme_pref_summary">Endre drakten brukt av miniprogrammer.</string>
-
     <string name="task_text_ellipsizing_none">Ingen: Veldig lang gjøremålstekst</string>
     <string name="task_text_ellipsizing_start">Start: …gjøremålstekst</string>
     <string name="task_text_ellipsizing_middle">Midten: Veldig… tekst</string>
     <string name="task_text_ellipsizing_end">Slutt: Veldig lang…</string>
     <string name="task_text_ellipsizing_marquee">Avsnitt: Veldig langt gj</string>
-
     <string name="filter_tab_header_prio">Prio</string>
     <string name="filter_tab_header_other">Annet</string>
     <string name="filter_tab_header_sort">Sorter</string>
     <string name="filter_tab_header_script">Skript</string>
-
     <string name="script_tab_script_from_file">Skript fra fil</string>
     <string name="script_tab_use_script">Bruk skript</string>
     <string name="script_tab_test">Test</string>
@@ -126,39 +114,29 @@
     <string name="script_tab_script">Skript</string>
     <string name="script_tab_true_task_shown">Skru på for å vise gjøremål</string>
     <string name="script_tab_false_task_not_shown">Skru av for å skjule gjøremål</string>
-
     <string name="action_pop_up_call">Ring:</string>
     <string name="action_pop_up_sms">SMS:</string>
-
     <string name="quick_filter_tag_header_inverted">Invertert</string>
     <string name="saved_filters_exported">Filter eksportert</string>
     <string name="saved_filters_imported">Filter importert</string>
     <string name="toast_lua_config_imported">Lua-oppsett importert</string>
-
     <string name="widget_header_transparency_title">Gjennomsiktighet for hode</string>
     <string name="widget_background_transparency_title">Gjennomsiktighet for bakgrunn</string>
-
     <string name="widget_extended_pref_title">Vis datofelt</string>
     <string name="widget_extended_pref_summary">Vis datoer på egen linje</string>
-
     <string name="taskview_extended_pref_title">Viser datoer på egen linje</string>
-
     <string name="append_tasks_at_end_summary">Legg inn nye gjøremål i slutten av fila</string>
-
     <string name="color_due_pref_title">Farge</string>
     <string name="show_hidden_title">Vis skjulte gjøremål</string>
     <string name="show_empty_lists_title">Vis tomme hoder</string>
     <string name="show_empty_lists_summary">Vis hode selv om alle gjøremål under det er skjult.</string>
-
     <string name="split_actionbar_pref_title">Vis delt handlingsfelt</string>
     <string name="show_edittext_hint_title">Vis hint</string>
     <string name="show_complete_checkbox_title">Vis avkryssningsbokser for fullføring</string>
     <string name="show_confirmation_dialogs_title">Bekreftelsesdialoger</string>
     <string name="show_fast_scroll_title">Rask rulling</string>
     <string name="show_fast_scroll_summary">Bruk rask rulling hvis gjøremålslisten blir lenger</string>
-
     <string name="show_calendarview_title">Bruk kalender for datooppføring</string>
-
     <string name="about_settings_header">Om</string>
     <string name="about_settings_summary">Programinformasjon</string>
     <string name="visit_website_title">Hjelp</string>
@@ -172,7 +150,6 @@
     <string name="sync_dialog_download">Last ned til enhet</string>
     <string name="sync_upload_message">Laster opp todo.txt…</string>
     <string name="sync_download_message">Laster ned todo.txt…</string>
-
     <string name="sync_conflict_dialog_title">Filkonflikt</string>
     <string name="first_title_word">Simpletask</string>
     <string name="login_screen_button">Logg inn på Dropbox</string>
@@ -182,10 +159,8 @@
     <string name="archive_task_title">Arkiver %s gjøremål</string>
     <string name="delete_task_message">Dette kan ikke angres. Er du sikker?</string>
     <string name="delete_task_confirm">Slett</string>
-
     <string name="word_wrap">Tekstbryting</string>
     <string name="search_hint">Søk…</string>
-
     <string name="sort_help">Dra og slipp for å endre sorteringsrekkefølgen. Klikk på elementene for å endre sorteringsretning.</string>
     <string name="file_order">Filrekkefølge (usortert)</string>
     <string name="alphabetical">Alfabetisk</string>
@@ -197,7 +172,6 @@
     <string name="completed">Fullført</string>
     <string name="by_creation_date">Etter opprettelsesdato</string>
     <string name="by_completion_date">Etter fullføringsdato</string>
-	
     <string name="filter_select_all">Valg alt</string>
     <string name="filter_clear_all">Tøm filter</string>
     <string name="filter_invert">Inverter filter</string>
@@ -213,15 +187,12 @@
     <string name="filter_show_completed">Vis fullførte gjøremål</string>
     <string name="filter_show_tags">Vis etiketter i gjøremålene</string>
     <string name="filter_show_create_date">Vis gjøremålsalder</string>
-
     <string name="filter_show_completed_short">Fullført</string>
     <string name="filter_show_future_short">Fremtidig</string>
     <string name="filter_show_prompt">Vis</string>
     <string name="filter_saved_prompt">Lagrede filter</string>
-
     <string name="task_select_parts">Velg gjøremålsdeler</string>
     <string name="task_show_all">Alle</string>
-
     <string name="add_task_help_btn">Hjelp</string>
     <string name="priority_prompt">Prioritet</string>
     <string name="priority_short_prompt">Prio</string>
@@ -230,23 +201,18 @@
     <string name="project_prompt_todotxt">Prosjekt</string>
     <string name="context_prompt_todotxt">Bindeleddsinformasjon</string>
     <string name="priority_format">(prio)</string>
-
     <string name="separator">Inndeler</string>
-
     <string name="shortcut_addtask_name">Legg til gjøremål</string>
     <string name="share_addtask_name">Legg til i Simpletask</string>
-
     <string name="none">ingen</string>
     <string name="keep">behold</string>
     <string name="all">alle</string>
-
     <string name="dates_days_ago">%d dager siden</string>
     <string name="dates_years_ago">%d år siden</string>
     <string name="dates_weeks_ago">%d uker siden</string>
     <string name="dates_today">i dag</string>
     <string name="date_pick">velg dato</string>
     <string name="dates_tomorrow">i morgen</string>
-
     <string name="selected">valgt</string>
     <string name="no_context">Innboks</string>
     <string name="no_project">Ingen etikett</string>
@@ -255,40 +221,28 @@
     <string name="calendar_title">Simpletask-påminnelse</string>
     <string name="share_title">Simpletask-påminnelse</string>
     <string name="version_copied">Versjonsinfo kopiert til utklippstavle</string>
-
     <string name="task_added">Gjøremål lagt til i Simpletask</string>
     <string name="default_sort">Forvalgt sortering</string>
     <string name="pull_to_refresh_refreshing_label">Synkroniserer med Dropbox…</string>
     <string name="dropbox">Dropbox</string>
-
     <string name="save_filter">Lagre gjeldende filter</string>
     <string name="filter_import_export">Importer/eksporter filter</string>
-
     <string name="donate_title">Doner</string>
     <string name="donated_summary">Takk for din donasjon.</string>
     <string name="sort_reverse">Omvendt sortering</string>
-
     <string name="calendar_disp_name">Simpletask-påminnelser</string>
     <string name="calendar_write_error">Feil: Kunne ikke skrive kalender</string>
-
     <string name="click_to_copy">Klikk for å kopiere til utklippstavle.</string>
-
     <string name="hello_world">Hei verden!</string>
     <string name="action_settings">Innstillinger</string>
-
     <string name="help_locale">nb</string>
-
     <string name="task_action">Handling</string>
-
     <string name="name">Navn</string>
     <string name="date">Dato</string>
     <string name="experimental_title">Eksperimentelt</string>
     <string name="experimental_summary">Skru på eksperimentelle funksjoner</string>
-
     <string name="keep_selection_title">Behold utvalg</string>
     <string name="keep_selection_summary">Behold gjøremålsutvalg etter endringer.</string>
-
-
     <string name="lua_error">Lua-feil</string>
     <string name="lua_config_screen">Lua-oppsett</string>
     <string name="lua_run">Kjør</string>
@@ -297,19 +251,16 @@
     <string name="lua_config_import">Importer</string>
     <string name="lua_config_share">Del</string>
     <string name="lua_open_config">Lua-oppsett</string>
-<string name="defer_threshold">Sett terskeldato</string>
+    <string name="defer_threshold">Sett terskeldato</string>
     <string name="insert_threshold">Sett inn terskeldato</string>
     <string name="tasktexthint">\@Diskuter +Paris-problem med +Hector @Troy 
 \nFortell +Hector at han ikke skal være så nedlatende @Troy 
 \nFjern denne teksten fra menyen @Phone</string>
-
     <string name="filter_name_empty">Inget navn angitt, legger ikke til filter</string>
     <string name="widget_name_empty">Inget miniprogramsnavn angitt, legger ikke til miniprogram</string>
     <string name="add_task_help">Oppdater og gjør endringer i oppgavelisten. Ett gjøremål per linje. <b>Priority</b> Start linjen med (.), likt (A) <b>Etiketter</b> Start med et \"+\"-tegn, likt +Kitchen <b>-lister</b> Start med et @-tegn, likt @home. En oppgave kan inneholde vilkårlig mengde etiketter eller være på flerfoldige lister. </string>
-
     <string name="preference_other">Annet</string>
-
-    <string name="ARCHIVE_settings_header">Arkiver</string>
+    <string name="ARCHIVE_settings_header">Arkivering</string>
     <string name="ARCHIVE_settings_summary">Innstillinger for arkivering av fullførte gjøremål i done.txt</string>
     <string name="auto_archive_pref_title">Automatisk arkivering</string>
     <string name="auto_archive_pref_summary">Arkiver gjøremål umiddelbart ved fullføring.</string>
@@ -323,23 +274,16 @@
     <string name="local_file_root_title">Rotmappe</string>
     <string name="menu_capitalize_tasks">Endre til stor forbokstav</string>
     <string name="back_saves_summary">Lagre den åpne gjøremålslisten, eller legg til filteret når du trykker \"Tilbake\".</string>
-
     <string name="calendar_reminder_days_summary">Hvordan sette tidlig påminnelse</string>
     <string name="calendar_reminder_time_summary">Tidspunkt på dagen å sette påminnelse</string>
-
     <string name="drawer_fixed_landscape_title">Åpne skuffer vannrett</string>
     <string name="drawer_fixed_landscape_summary">Alltid åpne skuffer vannrett.</string>
-
     <string name="show_edittext_hint_summary">Vis hint når du legger til gjøremål.</string>
-
     <string name="sort_case_sensitive_title">Sorter etter størrelse på forbokstav</string>
     <string name="sort_case_sensitive_summary">Ta hensyn til forbokstavsstørrelse ved sortering av lister, etiketter og lagrede filter.</string>
-
     <string name="visit_website_data">https://mpcjanssen.nl/</string>
-
     <string name="visit_tracker_data">https://github.com/mpcjanssen/simpletask-android/issues</string>
     <string name="preference_summary_debug_info">Vis og del programversjonen og loggen.</string>
-
     <string name="clone_tags">Forhåndsutfyll</string>
     <string name="by_due_date">Frist</string>
     <string name="by_threshold_date">Fristdato</string>
@@ -351,11 +295,9 @@
     <string name="dates_months_ago">%d måneder siden</string>
     <string name="dates_one_month_ago">Forrige måned</string>
     <string name="dates_one_week_ago">Forrige uke</string>
-
     <string name="dates_one_week">Ei uke</string>
     <string name="dates_two_weeks">To uker</string>
     <string name="dates_one_month">Én måned</string>
-
     <string name="title_activity_filter">Filtrer</string>
     <string name="no_threshold_date">Ingen terskeldato</string>
     <string name="no_header">Ingen</string>
@@ -363,13 +305,11 @@
     <string name="input_new">Skriv inn ny</string>
     <string name="no_filter">Inget filter</string>
     <string name="save_filter_message">Skriv inn navn på gjeldende filter, for visning i skuffen for lagrede filter.</string>
-
     <string name="donate_summary">Tilbudt deg gratis, men også copyleft friprog. Mye hardt arbeid har blitt investert i det, og siden du har valget, blir donasjoner varmt mottatt.</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="calendar_sync_desc_due">Påminnelse om frist, automatisk generert av Simpletask</string>
     <string name="calendar_sync_desc_thre">Påminnelse om terskel, automatisk generert av Simpletask</string>
     <string name="share_history_title">Gjøremålshistorikk</string>
-
     <string name="cancel_changes">Endringer vil gå tapt.</string>
     <string name="calendar_sync_dues_title">Tidsfristpåminnelser</string>
     <string name="calendar_sync_thresholds_title">Terskel for tidsfristpåminndelser</string>
@@ -377,37 +317,26 @@
     <string name="task_text_ellipsizing_pref_summary">Legg til ellipse for oppgavetekst i hovedvinduet hvis den tar opp mer enn to linjer.</string>
     <string name="append_tasks_at_end_title">Legg til fila</string>
     <string name="color_due_pref_summary">Frist og terskeldatoer</string>
-
     <string name="show_hidden_summary">Vis skjulte (h:1)-oppgaver slik at du kan redigere dem. Etter å ha redigert, fravelg denne innstillingen igjen.</string>
-
     <string name="split_actionbar_pref_summary">Bruk et delt handlingsfelt, noe som plasserer menyknapper på bunnen av skjermen. Skru dette av for å vise mer av oppgavelisten.</string>
-
     <string name="show_complete_checkbox_summary">Vis avkryssningsboks foran oppgaver for å fullføre eller gjenoppta dem.</string>
-
     <string name="show_confirmation_dialogs_summary">Spør før arkivering eller sletting av oppgaver</string>
-
     <string name="show_todo_path_title">Vis hvor TODO-fil lagres</string>
     <string name="show_todo_path_summary">Mapper forkortes til første bokstav</string>
-
     <string name="use_create_as_threshold_title">Opprettelse er terskel</string>
     <string name="use_create_backup_summary">Etter sortering, bruk oppgaveopprettelsesdato som terskeldato hvis ingen terskeldato er satt</string>
-
     <string name="todotxt_terms_title">Bruk todo.txt-vilkår</string>
     <string name="todotxt_terms_summary">Bindeleddsinformasjon og prosjekt istedenfor liste og etikett</string>
-
     <string name="sync_conflict_dialog_msg">Oida, det er en nyere versjon av din todo.txt-fil i Dropbox.
 \nØnsker du å laste opp dine lokale endringer, eller laste ned Dropbox-versjonen?</string>
-
     <string name="login_cloudless">Hvis du ikke har en Dropbox-konto, eller ikke ønsker å bruke den til å lagre oppgavelisten din, kan du laste ned Skyfri Simpletask fra Play-butikken.
 \nhttps://goo.gl/X1C55P</string>
-
     <string name="logout_message">Forsikre deg om at du har synkronisert alle endringer med Dropbox, eller delt din fullstendige oppgaveliste hvis du ikke er tilkoblet Dropbox.
 \nAlle endringer som ikke har blitt synkroniserte vil gå tapt etter utlogging.</string>
-     <string name="dropbox_open">Forsikre deg om at du ha synkronisert alle endringer med Dropbox, eller delt din fullstendige oppgaveliste hvis du ikke er tilkoblet Dropbox.
+    <string name="dropbox_open">Forsikre deg om at du ha synkronisert alle endringer med Dropbox, eller delt din fullstendige oppgaveliste hvis du ikke er tilkoblet Dropbox.
 \nAlle endringer som ikke har blitt synkroniserte vil gå tapt etter at en ny fil åpnes.</string>
     <string name="in_future">Terskeldato i framtiden</string>
     <string name="by_lua">Lua-skript</string>
-
     <string name="calendar_exists_warning">Advarsel: En kalender med samme navn finnes allerede, overskriver…</string>
     <string name="share_history">Vis og del den interne todo.txt-historikkdatabasen for gjenoppretting.</string>
     <string name="back_clears_filter_title">\"Tilbake\" tømmer filter</string>
@@ -415,4 +344,10 @@
     <string name="use_uuid_title">Tildel hver oppgave en UUID</string>
     <string name="nav_drawer_hint">Lagre nåværende filter
 \nved bruk av \"Lagre\"-knappen</string>
+    <string name="invalid_certificate_msg">Tjenersertifikatet er ugyldig. Ønsker du å fortsette?</string>
+    <string name="invalid_certificate_title">Ugyldig sertifikat.</string>
+    <string name="use_list_and_tags_icons_title">Bruk ikoner</string>
+    <string name="use_list_and_tags_icons_summary">Bruk ikoner for å endre gjøremålenes liste og etiketter. Skru av for å bruke todo.txt @ og + begrepene.</string>
+    <string name="no_tasks_to_archive">Ingen gjøremål å arkivere.</string>
+    <string name="force_english_title">Påtving engelsk tittel</string>
 </resources>

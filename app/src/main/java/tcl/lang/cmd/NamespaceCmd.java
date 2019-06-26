@@ -357,10 +357,10 @@ public class NamespaceCmd implements InternalRep, Command {
 		if (currNs == Namespace.getGlobalNamespace(interp)) {
 			// FIXME : appending to te result really screws everything up!
 			// need to figure out how to disallow this!
-			// TclString.append(interp.getResult(), "::");
+			// TclString.append(mainInterp.getResult(), "::");
 			interp.setResult("::");
 		} else {
-			// TclString.append(interp.getResult(), currNs.fullName);
+			// TclString.append(mainInterp.getResult(), currNs.fullName);
 			interp.setResult(currNs.fullName);
 		}
 	}
@@ -466,7 +466,7 @@ public class NamespaceCmd implements InternalRep, Command {
 			name = objv[2].toString();
 			namespace = Namespace.createNamespace(interp, name, null);
 			if (namespace == null) {
-				// FIXME : result hack, we get the interp result and throw it!
+				// FIXME : result hack, we get the mainInterp result and throw it!
 				throw new TclException(interp, interp.getResult().toString());
 			}
 		}
@@ -868,7 +868,7 @@ public class NamespaceCmd implements InternalRep, Command {
 
 		// FIXME : is this the right way to search for a command?
 
-		// command = Tcl_GetCommandFromObj(interp, objv[2]);
+		// command = Tcl_GetCommandFromObj(mainInterp, objv[2]);
 		command = Namespace.findCommand(interp, objv[2].toString(), null, 0);
 
 		if (command == null) {
@@ -1114,7 +1114,7 @@ public class NamespaceCmd implements InternalRep, Command {
 			arg = objv[argIndex].toString();
 
 			// FIXME : is this the right way to lookup a Command token?
-			// cmd = Tcl_GetCommandFromObj(interp, objv[argIndex]);
+			// cmd = Tcl_GetCommandFromObj(mainInterp, objv[argIndex]);
 			cmd = Namespace.findCommand(interp, arg, null, 0);
 
 			if (cmd == null) {

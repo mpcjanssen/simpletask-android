@@ -158,7 +158,7 @@ public final class QSort {
 	 * Starts the quick sort with the given parameters.
 	 * 
 	 * @param interp
-	 *            if cmd is specified, it is evaluated inside this interp.
+	 *            if cmd is specified, it is evaluated inside this mainInterp.
 	 * @param a
 	 *            the array of TclObject's to sort.
 	 * @param mode

@@ -1,7 +1,7 @@
 /*
  * InterpSlaveCmd.java --
  *
- *	Implements the built-in "interp" Tcl command.
+ *	Implements the built-in "mainInterp" Tcl command.
  *
  * Copyright (c) 2000 Christian Krone.
  *
@@ -38,9 +38,9 @@ import tcl.lang.channel.StdChannel;
 
 /**
  * This class implements the slave interpreter commands, which are created in
- * response to the built-in "interp create" command in Tcl.
+ * response to the built-in "mainInterp create" command in Tcl.
  * 
- * It is also used by the "interp" command to record and find information about
+ * It is also used by the "mainInterp" command to record and find information about
  * slave interpreters. Maps from a command name in the master to information
  * about a slave interpreter, e.g. what aliases are defined in it.
  */
@@ -83,7 +83,7 @@ public class InterpSlaveCmd implements CommandWithDispose, AssocData {
 
 	WrappedCommand interpCmd;
 
-	// Debug child interp alloc/dispose calls
+	// Debug child mainInterp alloc/dispose calls
 
 	static final boolean debug = false;
 
@@ -244,7 +244,7 @@ public class InterpSlaveCmd implements CommandWithDispose, AssocData {
 	 * Results: None.
 	 * 
 	 * Side effects: Cleans up storage. Sets the interpInfoPtr field of the
-	 * interp to NULL.
+	 * mainInterp to NULL.
 	 */
 
 	public void disposeAssocData(Interp interp) // Current interpreter.
@@ -256,8 +256,8 @@ public class InterpSlaveCmd implements CommandWithDispose, AssocData {
 		}
 		interp.slaveTable = null;
 
-		// Tell any interps that have aliases to this interp that they should
-		// delete those aliases. If the other interp was already dead, it
+		// Tell any interps that have aliases to this mainInterp that they should
+		// delete those aliases. If the other mainInterp was already dead, it
 		// would have removed the target record already.
 
 		for (Object o : interp.targetTable.entrySet()) {
@@ -283,9 +283,9 @@ public class InterpSlaveCmd implements CommandWithDispose, AssocData {
 
 		if (interp.slave.interpCmd != null) {
 			// Tcl_DeleteInterp() was called on this interpreter, rather
-			// "interp delete" or the equivalent deletion of the command in the
+			// "mainInterp delete" or the equivalent deletion of the command in the
 			// master. First ensure that the cleanup callback doesn't try to
-			// delete the interp again.
+			// delete the mainInterp again.
 
 			interp.slave.slaveInterp = null;
 			interp.slave.masterInterp
@@ -301,7 +301,7 @@ public class InterpSlaveCmd implements CommandWithDispose, AssocData {
 	}
 
 	/**
-	 * Helper function to do the actual work of creating a slave interp and new
+	 * Helper function to do the actual work of creating a slave mainInterp and new
 	 * object command. Also optionally makes the new slave interpreter "safe".
 	 * 
 	 * Results: Returns the new Tcl_Interp * if successful or NULL if not. If
@@ -511,8 +511,8 @@ public class InterpSlaveCmd implements CommandWithDispose, AssocData {
 	 * 
 	 * Side effects: None.
 	 * 
-	 * @param interp interp for data return
-	 * @param slaveInterp interp whose hidden commands to query
+	 * @param interp mainInterp for data return
+	 * @param slaveInterp mainInterp whose hidden commands to query
 	 * @throws TclException
 	 */
 	static void hidden(Interp interp, // Interp for data return.
@@ -613,7 +613,7 @@ public class InterpSlaveCmd implements CommandWithDispose, AssocData {
 	}
 
 	/**
-	 * Helper function to set/query the Recursion limit of an interp
+	 * Helper function to set/query the Recursion limit of an mainInterp
 	 * 
 	 * Results: A standard Tcl result.
 	 * 

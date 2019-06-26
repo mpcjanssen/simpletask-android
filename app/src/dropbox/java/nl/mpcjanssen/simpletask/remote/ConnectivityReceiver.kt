@@ -3,23 +3,22 @@ package nl.mpcjanssen.simpletask.remote
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.support.v4.content.LocalBroadcastManager
-import nl.mpcjanssen.simpletask.Logger
+import android.util.Log
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import nl.mpcjanssen.simpletask.util.broadcastFileSync
-import nl.mpcjanssen.simpletask.util.broadcastRefreshUI
+import nl.mpcjanssen.simpletask.util.broadcastUpdateStateIndicator
 
 class ConnectivityReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         val lbm = LocalBroadcastManager.getInstance(context)
-        val log = Logger
-        log.debug(TAG, "Connectivity changed {}" + intent)
-        broadcastRefreshUI(lbm)
+        Log.d(TAG, "Connectivity changed {}" + intent)
+        broadcastUpdateStateIndicator(lbm)
         if (FileStore.isOnline) {
-            log.info(TAG, "Device went online")
+            Log.i(TAG, "Device went online")
             broadcastFileSync(lbm)
         } else {
-            log.info(TAG, "Device no longer online")
+            Log.i(TAG, "Device no longer online")
         }
     }
 

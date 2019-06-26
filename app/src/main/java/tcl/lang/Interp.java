@@ -38,7 +38,7 @@ public class Interp extends EventuallyFreed {
 	// The following three variables are used to maintain a translation
 	// table between ReflectObject's and their string names. These
 	// variables are accessed by the ReflectObject class, they
-	// are defined here be cause we need them to be per interp data.
+	// are defined here be cause we need them to be per mainInterp data.
 
 	/**
 	 * Translates Object to ReflectObject. This makes sure we have only one ReflectObject internalRep for the same
@@ -76,7 +76,7 @@ public class Interp extends EventuallyFreed {
 	public int cmdCount;
 
 	/**
-	 * Table of channels currently registered in this interp.
+	 * Table of channels currently registered in this mainInterp.
 	 */
 	public HashMap<String, Channel> interpChanTable;
 
@@ -117,14 +117,14 @@ public class Interp extends EventuallyFreed {
 	Namespace globalNs;
 
 	/**
-	 * Hash table used to keep track of hidden commands on a per-interp basis.
+	 * Hash table used to keep track of hidden commands on a per-mainInterp basis.
 	 */
 	public HashMap hiddenCmdTable;
 
 	/**
-	 * Information used by InterpCmd.java to keep track of master/slave interps on a per-interp basis.
+	 * Information used by InterpCmd.java to keep track of master/slave interps on a per-mainInterp basis.
 	 * 
-	 * Keeps track of all interps for which this interp is the Master. First, slaveTable (a hashtable) maps from names
+	 * Keeps track of all interps for which this mainInterp is the Master. First, slaveTable (a hashtable) maps from names
 	 * of commands to slave interpreters. This hashtable is used to store information about slave interpreters of this
 	 * interpreter, to map over all slaves, etc.
 	 */
@@ -140,7 +140,7 @@ public class Interp extends EventuallyFreed {
 	public HashMap targetTable;
 
 	/**
-	 * Information necessary for this interp to function as a slave.
+	 * Information necessary for this mainInterp to function as a slave.
 	 */
 	public InterpSlaveCmd slave;
 
@@ -160,7 +160,7 @@ public class Interp extends EventuallyFreed {
 	public String scriptFile;
 
 	/**
-	 * Number of times the interp.eval() routine has been recursively invoked.
+	 * Number of times the mainInterp.eval() routine has been recursively invoked.
 	 */
 	public int nestLevel;
 
@@ -195,13 +195,13 @@ public class Interp extends EventuallyFreed {
 	ArrayList resolvers;
 
 	/**
-	 * The expression parser for this interp.
+	 * The expression parser for this mainInterp.
 	 */
 	public Expression expr;
 
 	/**
 	 * Used by the Expression class. If it is equal to zero, then the parser will evaluate commands and retrieve
-	 * variable values from the interp.
+	 * variable values from the mainInterp.
 	 */
 	int noEval;
 
@@ -279,7 +279,7 @@ public class Interp extends EventuallyFreed {
 
 	// Shared common result values. For common values, it
 	// is much better to use a shared TclObject. These
-	// common values are used in interp.setResult()
+	// common values are used in mainInterp.setResult()
 	// methods for built-in Java types. The internal rep
 	// of these shared values should not be changed.
 
@@ -326,9 +326,9 @@ public class Interp extends EventuallyFreed {
 	private final TclObject[] m_charCommon;
 	private final int m_charCommonMax = 128;
 
-	// Java thread this interp was created in. This is used
+	// Java thread this mainInterp was created in. This is used
 	// to check for user coding errors where the user tries
-	// to create an interp in one thread and then invoke
+	// to create an mainInterp in one thread and then invoke
 	// methods from another thread.
 
 	private Thread cThread;
@@ -384,7 +384,7 @@ public class Interp extends EventuallyFreed {
 	public static final int INVOKE_NO_UNKNOWN = 2;
 	public static final int INVOKE_NO_TRACEBACK = 4;
 
-	// The ClassLoader for this interp
+	// The ClassLoader for this mainInterp
 
 	TclClassLoader classLoader = null;
 
@@ -405,7 +405,7 @@ public class Interp extends EventuallyFreed {
 	// The interruptedEvent field is set after a call
 	// to Interp.setInterrupted(). When non-null, this
 	// field indicates that the user has requested
-	// that the interp execution should be interrupted
+	// that the mainInterp execution should be interrupted
 	// at the next safe moment.
 
 	private TclInterruptedExceptionEvent interruptedEvent = null;
@@ -595,7 +595,7 @@ public class Interp extends EventuallyFreed {
 		TclParse.init(this);
 
 		// Initialize the Global (static) channel table and the local
-		// interp channel table.
+		// mainInterp channel table.
 
 		interpChanTable = TclIO.getInterpChanTable(this);
 
@@ -651,7 +651,7 @@ public class Interp extends EventuallyFreed {
 			throw new TclRuntimeError("unexpected TclException: " + e);
 		}
 
-		// Debug print interp info, this is handy when tracking
+		// Debug print mainInterp info, this is handy when tracking
 		// down where an Interp that was not disposed of properly
 		// was allocated.
 
@@ -666,7 +666,7 @@ public class Interp extends EventuallyFreed {
 	}
 
 	/**
-	 * Invoked to indicate that the interp should be disposed of. If there are no Tcl_Preserve calls in effect for this
+	 * Invoked to indicate that the mainInterp should be disposed of. If there are no Tcl_Preserve calls in effect for this
 	 * interpreter, it is deleted immediately, otherwise the interpreter is deleted when the last Tcl_Preserve is
 	 * matched by a call to Tcl_Release.
 	 * 
@@ -784,7 +784,7 @@ public class Interp extends EventuallyFreed {
 
 		expr = null;
 
-		// Remove all the assoc data tied to this interp and invoke
+		// Remove all the assoc data tied to this mainInterp and invoke
 		// deletion callbacks; note that a callback can create new
 		// callbacks, so we iterate.
 
@@ -843,7 +843,7 @@ public class Interp extends EventuallyFreed {
 	 * Check if an interpreter is ready to eval commands or scripts, i.e., if it was not deleted and if the nesting
 	 * level is not too high.
 	 * 
-	 * Results: Raises a TclExcetpion is the interp is not ready.
+	 * Results: Raises a TclExcetpion is the mainInterp is not ready.
 	 * 
 	 * Side effects: The interpreters result is cleared.
 	 */
@@ -912,7 +912,7 @@ public class Interp extends EventuallyFreed {
 		Extension.loadOnDemand(this, "if", "tcl.lang.cmd.IfCmd");
 		Extension.loadOnDemand(this, "incr", "tcl.lang.cmd.IncrCmd");
 		Extension.loadOnDemand(this, "info", "tcl.lang.cmd.InfoCmd");
-		Extension.loadOnDemand(this, "interp", "tcl.lang.cmd.InterpCmd");
+		Extension.loadOnDemand(this, "mainInterp", "tcl.lang.cmd.InterpCmd");
 		Extension.loadOnDemand(this, "list", "tcl.lang.cmd.ListCmd");
 		Extension.loadOnDemand(this, "join", "tcl.lang.cmd.JoinCmd");
 		Extension.loadOnDemand(this, "lappend", "tcl.lang.cmd.LappendCmd");
@@ -958,7 +958,7 @@ public class Interp extends EventuallyFreed {
 		Extension.loadOnDemand(this, "vwait", "tcl.lang.cmd.VwaitCmd");
 		Extension.loadOnDemand(this, "while", "tcl.lang.cmd.WhileCmd");
 
-		// Add "regexp" and related commands to this interp.
+		// Add "regexp" and related commands to this mainInterp.
 		RegexpCmd.init(this);
 
 		// Load tcltest package as a result of "package require tcltest"
@@ -972,7 +972,7 @@ public class Interp extends EventuallyFreed {
 		}
 
 		// The Java package is only loaded when the user does a
-		// "package require java" in the interp. We need to create a small
+		// "package require java" in the mainInterp. We need to create a small
 		// command that will load when "package require java" is called.
 
 		Extension.loadOnDemand(this, "jaclloadjava", "tcl.pkg.java.JaclLoadJavaCmd");
@@ -1487,7 +1487,7 @@ public class Interp extends EventuallyFreed {
 	}
 
 	/**
-	 * Define a new command in the interpreter. Side effects: If a command named cmdName already exists for interp, it
+	 * Define a new command in the interpreter. Side effects: If a command named cmdName already exists for mainInterp, it
 	 * is deleted. In the future, when cmdName is seen as the name of a command by eval(), cmd will be called. When the
 	 * command is deleted from the table, cmd.disposeCmd() be called if cmd implements the CommandWithDispose interface.
 	 * 
@@ -3038,7 +3038,7 @@ public class Interp extends EventuallyFreed {
 	/**
 	 * This method is used by various parts of the Jacl and external packages. interpreter when a TclException of
 	 * TCL.RETURN is received. The most common case is when the "return" command is executed inside a Tcl procedure.
-	 * This method examines fields such as interp.returnCode and interp.errorCode and determines the real return status
+	 * This method examines fields such as mainInterp.returnCode and mainInterp.errorCode and determines the real return status
 	 * of the Tcl procedure accordingly. Side effects: The errorInfo and errorCode variables may get modified.
 	 * 
 	 * @return The return value is the true completion code to use for the Tcl procedure, instead of TCL.RETURN. It's
@@ -3159,7 +3159,7 @@ public class Interp extends EventuallyFreed {
 	 * thread the Interp was created in. If this method is invoked after the Interp object has been disposed of then
 	 * null will be returned.
 	 * 
-	 * @return the Notifier for the thread the interp was created in.
+	 * @return the Notifier for the thread the mainInterp was created in.
 	 */
 	public Notifier getNotifier() {
 		return notifier;
@@ -3289,23 +3289,23 @@ public class Interp extends EventuallyFreed {
 	}
 
 	/**
-	 * Copy the result (and error information) from one interp to another. Used when one interp has caused another
-	 * interp to evaluate a script and then wants to transfer the results back to itself.
+	 * Copy the result (and error information) from one mainInterp to another. Used when one mainInterp has caused another
+	 * mainInterp to evaluate a script and then wants to transfer the results back to itself.
 	 * 
 	 * This routine copies the string reps of the result and error information. It does not simply increment the
 	 * refcounts of the result and error information objects themselves. It is not legal to exchange objects between
-	 * interps, because an object may be kept alive by one interp, but have an internal rep that is only valid while
-	 * some other interp is alive.
+	 * interps, because an object may be kept alive by one mainInterp, but have an internal rep that is only valid while
+	 * some other mainInterp is alive.
 	 * 
-	 * Results: The target interp's result is set to a copy of the source interp's result. The source's error
+	 * Results: The target mainInterp's result is set to a copy of the source mainInterp's result. The source's error
 	 * information "$errorInfo" may be appended to the target's error information and the source's error code
 	 * "$errorCode" may be stored in the target's error code.
 	 * 
 	 * Side effects: None.
 	 * 
 	 * @param sourceInterp
-	 *            interp whose result and error information should be moved to the target interp. AFter moving the
-	 *            results, the interp's result is reset
+	 *            mainInterp whose result and error information should be moved to the target mainInterp. AFter moving the
+	 *            results, the mainInterp's result is reset
 	 * @param result
 	 *            TCL.OK if just the result should be copied, TCL.ERROR if both teh result and the error information
 	 *            should be copied
@@ -3325,7 +3325,7 @@ public class Interp extends EventuallyFreed {
 
 			// An error occurred, so transfer error information from the source
 			// interpreter to the target interpreter. Setting the flags tells
-			// the target interp that it has inherited a partial traceback
+			// the target mainInterp that it has inherited a partial traceback
 			// chain, not just a simple error message.
 
 			if (!sourceInterp.errAlreadyLogged) {
@@ -3357,7 +3357,7 @@ public class Interp extends EventuallyFreed {
 	/**
 	 * Makes a command hidden so that it cannot be invoked from within an interpreter, only from within an ancestor.
 	 * 
-	 * Results: A standard Tcl result; also leaves a message in the interp's result if an error occurs.
+	 * Results: A standard Tcl result; also leaves a message in the mainInterp's result if an error occurs.
 	 * 
 	 * Side effects: Removes a command from the command table and create an entry into the hidden command table under
 	 * the specified token name.
@@ -3455,7 +3455,7 @@ public class Interp extends EventuallyFreed {
 	/**
 	 * Makes a previously hidden command callable from inside the interpreter instead of only by its ancestors.
 	 * 
-	 * Results: A standard Tcl result. If an error occurs, a message is left in the interp's result.
+	 * Results: A standard Tcl result. If an error occurs, a message is left in the mainInterp's result.
 	 * 
 	 * Side effects: Moves commands from one hash table to another.
 	 * 
@@ -3530,7 +3530,7 @@ public class Interp extends EventuallyFreed {
 		// Not needed as we are only in the global namespace
 		// (but would be needed again if we supported namespace command hiding)
 
-		// TclResetShadowedCmdRefs(interp, cmdPtr);
+		// TclResetShadowedCmdRefs(mainInterp, cmdPtr);
 	}
 
 	/**
@@ -3889,12 +3889,12 @@ public class Interp extends EventuallyFreed {
 			return m_twoIntegerResult;
 		} else {
 			if ((recycledI.getRefCount() == 1) || ((recycledI.getRefCount() == 2) && (recycledI == m_result))) {
-				// If (refCount == 1) then interp result
+				// If (refCount == 1) then mainInterp result
 				// is not recycledI and nobody else holds a ref,
 				// so we can modify recycledI.
 
 				// If (refCount == 2) and this object is the
-				// interp result then we can modify recycledI.
+				// mainInterp result then we can modify recycledI.
 
 				recycledI.setRecycledIntValue(value);
 			} else {
@@ -3949,12 +3949,12 @@ public class Interp extends EventuallyFreed {
 			return m_twoDoubleResult;
 		} else {
 			if ((recycledD.getRefCount() == 1) || ((recycledD.getRefCount() == 2) && (recycledD == m_result))) {
-				// If (refCount == 1) then interp result
+				// If (refCount == 1) then mainInterp result
 				// is not recycledD and nobody else holds a ref,
 				// so we can modify recycledD.
 
 				// If (refCount == 2) and this object is the
-				// interp result then we can modify recycledD.
+				// mainInterp result then we can modify recycledD.
 
 				recycledD.setRecycledDoubleValue(value);
 			} else {
@@ -4041,7 +4041,7 @@ public class Interp extends EventuallyFreed {
 	}
 
 	/**
-	 * Query the interp.errorLine member. This is like accessing the public Tcl_Interp.errorLine field in the C impl.
+	 * Query the mainInterp.errorLine member. This is like accessing the public Tcl_Interp.errorLine field in the C impl.
 	 * this method should be used by classes outside the tcl.lang package.
 	 * 
 	 * Results: None.
@@ -4055,7 +4055,7 @@ public class Interp extends EventuallyFreed {
 	}
 
 	/**
-	 * Get the TclClassLoader used for the interp. This class loader delagates to the context class loader which
+	 * Get the TclClassLoader used for the mainInterp. This class loader delagates to the context class loader which
 	 * delagates to the system class loader. The TclClassLoader will read classes and resources from the
 	 * env(TCL_CLASSPATH).
 	 * 
@@ -4115,7 +4115,7 @@ public class Interp extends EventuallyFreed {
 	}
 
 	/**
-	 * Invoke this method to indicate that an executing interp should be interrupted at the next safe moment.
+	 * Invoke this method to indicate that an executing mainInterp should be interrupted at the next safe moment.
 	 * Interrupting a running interpreter will unwind the stack by throwing an exception. This method can safely be
 	 * called from a thread other than the one processsing events. No explicit synchronization is needed. Once a thread
 	 * has been interrupted or disposed of, setInterrupted() calls will do nothing.
@@ -4134,11 +4134,11 @@ public class Interp extends EventuallyFreed {
 			// previous interrupted event.
 			//
 			// The disposed check avoids a race condition between a
-			// timeout thread that will interrupt an interp and the
+			// timeout thread that will interrupt an mainInterp and the
 			// main thread that could interrupt and then dispose
-			// of the interp. The caller of this method has no way
-			// to check if the interp has been disposed of, so this
-			// method needs to no-op on an already deleted interp.
+			// of the mainInterp. The caller of this method has no way
+			// to check if the mainInterp has been disposed of, so this
+			// method needs to no-op on an already deleted mainInterp.
 
 			return;
 		}
@@ -4168,11 +4168,11 @@ public class Interp extends EventuallyFreed {
 	}
 
 	/**
-	 * This method is invoked after an eval operation to check if a running interp has been marked as interrupted. This
+	 * This method is invoked after an eval operation to check if a running mainInterp has been marked as interrupted. This
 	 * method is not public since it should only be used by the Jacl internal implementation.
 	 * 
 	 * Results: This method will raise a TclInterruptedException if the Interp.setInterrupted() method was invoked for
-	 * this interp. This method will only raise a TclInterruptedException once.
+	 * this mainInterp. This method will only raise a TclInterruptedException once.
 	 * 
 	 * Side effects: None.
 	 * 
@@ -4193,7 +4193,7 @@ public class Interp extends EventuallyFreed {
 	/**
 	 * This method is invoked to cleanup an Interp object that has been interrupted and had its stack unwound. This
 	 * method will remove any pending events from the Tcl event queue and then invoke the dispose() method for this
-	 * interp. The interp object should not be used after this method has finished. This method must only ever be
+	 * mainInterp. The mainInterp object should not be used after this method has finished. This method must only ever be
 	 * invoked after catching a TclInterrupted exception at the outermost level of the Tcl event processing loop.
 	 * 
 	 */
@@ -4201,14 +4201,14 @@ public class Interp extends EventuallyFreed {
 	final void disposeInterrupted() {
 
 		if (deleted) {
-			final String msg = "Interp.disposeInterrupted() invoked for " + "a deleted interp";
+			final String msg = "Interp.disposeInterrupted() invoked for " + "a deleted mainInterp";
 
 			throw new TclRuntimeError(msg);
 		}
 
 		if (interruptedEvent == null) {
 			final String msg = "Interp.disposeInterrupted() invoked for "
-					+ "an interp that was not interrupted via setInterrupted()";
+					+ "an mainInterp that was not interrupted via setInterrupted()";
 
 			throw new TclRuntimeError(msg);
 		}
@@ -4223,10 +4223,10 @@ public class Interp extends EventuallyFreed {
 		// Remove each after event from the Tcl event queue.
 		// It is not possible to remove events from the Tcl
 		// event queue directly since an event does not
-		// know which interp it was registered for. This
+		// know which mainInterp it was registered for. This
 		// logic loops of pending after events and deletes
 		// each one from the Tcl event queue. Note that
-		// an interrupted interp only raises the interrupted
+		// an interrupted mainInterp only raises the interrupted
 		// exception once, so it is legal to execute Tcl code
 		// here to cleanup after events.
 
@@ -4245,9 +4245,9 @@ public class Interp extends EventuallyFreed {
 			// ignored
 		}
 
-		// Actually dispose of the interp. After this dispose
+		// Actually dispose of the mainInterp. After this dispose
 		// call is invoked, it should not be possible to invoke
-		// commands in this interp.
+		// commands in this mainInterp.
 
 		dispose();
 	}

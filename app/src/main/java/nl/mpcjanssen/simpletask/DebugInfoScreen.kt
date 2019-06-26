@@ -4,11 +4,10 @@
 package nl.mpcjanssen.simpletask
 
 import android.os.Bundle
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.widget.Toolbar
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TextView
-import nl.mpcjanssen.simpletask.dao.Daos
 import nl.mpcjanssen.simpletask.util.appVersion
 import nl.mpcjanssen.simpletask.util.shareText
 import java.util.*
@@ -47,9 +46,9 @@ class DebugInfoScreen : ThemedActionBarActivity() {
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         val inflater = menuInflater
-        val toolbar_menu = toolbar.menu
-        toolbar_menu.clear()
-        inflater.inflate(R.menu.log_menu, toolbar_menu)
+        val toolbarMenu = toolbar.menu
+        toolbarMenu.clear()
+        inflater.inflate(R.menu.log_menu, toolbarMenu)
         toolbar.setOnMenuItemClickListener(Toolbar.OnMenuItemClickListener { item ->
             when (item.itemId) {
             // Respond to the action bar's Up/Home button

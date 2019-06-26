@@ -1,7 +1,7 @@
 /*
  * WrappedCommand.java
  *
- *	Wrapper for commands located inside a Jacl interp.
+ *	Wrapper for commands located inside a Jacl mainInterp.
  *
  * Copyright (c) 1999 Mo DeJong.
  *

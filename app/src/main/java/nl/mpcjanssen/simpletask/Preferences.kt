@@ -32,12 +32,12 @@ import android.content.*
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.*
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.LocalBroadcastManager
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import android.util.Log
 import android.view.MenuItem
 import nl.mpcjanssen.simpletask.util.Config
-import nl.mpcjanssen.simpletask.util.FontManager
 import java.util.*
 
 class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -59,12 +59,12 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
         m_broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, receivedIntent: Intent) {
                 if (receivedIntent.action == Constants.BROADCAST_THEME_CHANGED) {
-                    Logger.info(TAG, "Reloading preference screen with fragment ${intent.getStringExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT)}")
+                    Log.i(TAG, "Reloading preference screen with fragment ${intent.getStringExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT)}")
                     recreate()
                 }
             }
         }
-        Logger.info(TAG, "Registering broadcast receiver")
+        Log.i(TAG, "Registering broadcast receiver")
         localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter)
     }
 
@@ -84,7 +84,7 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
             }
             getString(R.string.custom_font_size),
             getString(R.string.font_size) -> {
-                val broadcastIntent = Intent(Constants.BROADCAST_UPDATE_UI)
+                val broadcastIntent = Intent(Constants.BROADCAST_MAIN_FONTSIZE_CHANGED)
                 localBroadcastManager.sendBroadcast(broadcastIntent)
             }
         }
@@ -92,12 +92,19 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
 
     private fun requestCalendarPermission() {
         if (Config.isSyncDues || Config.isSyncThresholds) {
-            val permissionCheck = ContextCompat.checkSelfPermission(app,
+            val writePermissionCheck = ContextCompat.checkSelfPermission(app,
             Manifest.permission.WRITE_CALENDAR)
 
-            if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+            if (writePermissionCheck == PackageManager.PERMISSION_DENIED) {
                 ActivityCompat.requestPermissions(this,
                 arrayOf(Manifest.permission.WRITE_CALENDAR), 0)
+            }
+            val readPermissionCheck = ContextCompat.checkSelfPermission(app,
+                    Manifest.permission.READ_CALENDAR)
+
+            if (readPermissionCheck == PackageManager.PERMISSION_DENIED) {
+                ActivityCompat.requestPermissions(this,
+                        arrayOf(Manifest.permission.READ_CALENDAR), 0)
             }
         }
     }
@@ -125,7 +132,7 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
 
         // Remove calendar preferences for older devices
         if (!TodoApplication.atLeastAPI(16)) {
-            target.addAll(allHeaders.filter { !it.fragment.equals(CalendarPrefFragment::class.java.name) })
+            target.addAll(allHeaders.filter { it.fragment != CalendarPrefFragment::class.java.name })
         } else {
             target.addAll(allHeaders)
         }

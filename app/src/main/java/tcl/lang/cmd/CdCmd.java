@@ -46,7 +46,7 @@ public class CdCmd implements Command {
 	 * ---
 	 */
 
-	public void cmdProc(Interp interp, // Current interp to eval the file cmd.
+	public void cmdProc(Interp interp, // Current mainInterp to eval the file cmd.
 			TclObject argv[]) // Args passed to the file command.
 			throws TclException {
 		String dirName;
@@ -65,7 +65,7 @@ public class CdCmd implements Command {
 			dirName = dirName + "/";
 		}
 
-		// Set the interp's working dir.
+		// Set the mainInterp's working dir.
 
 		interp.setWorkingDir(dirName);
 	}

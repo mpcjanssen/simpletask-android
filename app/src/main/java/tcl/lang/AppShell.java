@@ -166,7 +166,7 @@ public class AppShell {
 			}
 		}
 
-		// Note that if the above interp.evalFile() returns the main
+		// Note that if the above mainInterp.evalFile() returns the main
 		// thread will exit. This may bring down the VM and stop
 		// the execution of Tcl.
 		//

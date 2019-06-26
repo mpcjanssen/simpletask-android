@@ -33,7 +33,7 @@ public class TclParserExtension extends Extension implements Command {
 	}
 
 	/*
-	 * Invoked when loaded into a safe interp.
+	 * Invoked when loaded into a safe mainInterp.
 	 */
 
 	public void safeInit(Interp safeInterp) throws TclException {

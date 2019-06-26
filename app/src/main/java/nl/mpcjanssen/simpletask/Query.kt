@@ -3,7 +3,7 @@ package nl.mpcjanssen.simpletask
 import android.app.SearchManager
 import android.content.Intent
 import android.content.SharedPreferences
-import android.util.Base64
+import android.util.Log
 
 import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.join
@@ -14,13 +14,9 @@ import java.util.*
 
 data class NamedQuery(val name: String, val query: Query) {
 
-    fun id() : String {
-        return Base64.encodeToString(name.toByteArray(), Base64.DEFAULT).trim()
-    }
-
     fun saveInPrefs(prefs: SharedPreferences) {
         query.saveInPrefs(prefs)
-        prefs.edit().apply { putString(INTENT_TITLE,name) }.commit()
+        prefs.edit().apply { putString(INTENT_TITLE,name) }.apply()
     }
 
     companion object {
@@ -39,10 +35,7 @@ data class NamedQuery(val name: String, val query: Query) {
 /**
  * Active applyFilter, has methods for serialization in several formats
  */
-class Query(
-        val luaModule: String
-) {
-    private val log: Logger = Logger
+data class Query(val luaModule: String) {
     var priorities = ArrayList<Priority>()
     var contexts = ArrayList<String>()
     var projects = ArrayList<String>()
@@ -201,16 +194,16 @@ class Query(
             appliedFilters.addAll(Priority.inCode(priorities))
             appliedFilters.addAll(projects)
             appliedFilters.remove("-")
-            if (appliedFilters.size == 1) {
-                return appliedFilters[0]
+            return if (appliedFilters.size == 1) {
+                appliedFilters[0]
             } else {
-                return ""
+                ""
             }
         }
 
     fun getSort(defaultSort: Array<String>?): ArrayList<String> {
         var sorts = m_sorts
-        if (sorts == null || sorts.size == 0 || sorts[0].isNullOrEmpty()) {
+        if (sorts == null || sorts.size == 0 || sorts[0].isEmpty()) {
             // Set a default sort
             sorts = ArrayList<String>()
             if (defaultSort == null) return sorts
@@ -232,9 +225,7 @@ class Query(
     }
 
     fun saveInPrefs(prefs: SharedPreferences?) {
-        if (prefs != null) {
-            prefs.edit().putString(INTENT_JSON, json.toString(2)).apply()
-        }
+        prefs?.edit()?.putString(INTENT_JSON, json.toString(2))?.apply()
     }
 
     fun clear(): Query {
@@ -254,7 +245,7 @@ class Query(
             Interpreter.clearOnFilter(luaModule)
             Interpreter.evalScript(luaModule, code)
         } catch (e: Exception) {
-            log.debug(TAG, "Lua execution failed " + e.message)
+            Log.d(TAG, "Lua execution failed " + e.message)
         }
     }
 
@@ -299,7 +290,7 @@ class Query(
                 return@filter true
             }
         } catch (e: Exception) {
-            log.debug(TAG, "Lua execution failed " + e.message)
+            Log.d(TAG, "Lua execution failed " + e.message)
         }
         return ArrayList()
     }
@@ -439,10 +430,10 @@ class Query(
             m_sorts = ArrayList<String>()
             m_sorts!!.addAll(Arrays.asList(*prefs.getString(INTENT_SORT_ORDER, "")!!.split(INTENT_EXTRA_DELIMITERS.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
             contexts = ArrayList(prefs.getStringSet(
-                    INTENT_CONTEXTS_FILTER, emptySet<String>()))
-            priorities = Priority.toPriority(ArrayList(prefs.getStringSet(INTENT_PRIORITIES_FILTER, emptySet<String>())))
+                    INTENT_CONTEXTS_FILTER, null) ?: emptySet<String>())
+            priorities = Priority.toPriority(ArrayList(prefs.getStringSet(INTENT_PRIORITIES_FILTER, null) ?: emptySet<String>()))
             projects = ArrayList(prefs.getStringSet(
-                    INTENT_PROJECTS_FILTER, emptySet<String>()))
+                    INTENT_PROJECTS_FILTER, null) ?: emptySet<String>())
             contextsNot = prefs.getBoolean(INTENT_CONTEXTS_FILTER_NOT, false)
             prioritiesNot = prefs.getBoolean(INTENT_PRIORITIES_FILTER_NOT, false)
             projectsNot = prefs.getBoolean(INTENT_PROJECTS_FILTER_NOT, false)

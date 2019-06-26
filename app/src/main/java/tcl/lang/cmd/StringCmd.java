@@ -365,7 +365,7 @@ public class StringCmd implements Command {
 				//
 				// The danger in this function is that
 				// "12345678901234567890" is an acceptable 'double',
-				// but will later be interp'd as an int by something
+				// but will later be mainInterp'd as an int by something
 				// like [expr]. Therefore, we check to see if it looks
 				// like an int, and if so we do a range check on it.
 				// If strtoul gets to the end, we know we either

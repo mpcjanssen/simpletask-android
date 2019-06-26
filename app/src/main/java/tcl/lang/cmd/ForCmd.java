@@ -30,7 +30,7 @@ public class ForCmd implements Command {
 	 * This procedure is invoked to process the "for" Tcl command. See the user
 	 * documentation for details on what it does.
 	 * 
-	 * @param interp the current interpreter.
+	 * @param mainInterp the current interpreter.
 	 * 
 	 * @param argv command arguments.
 	 * 

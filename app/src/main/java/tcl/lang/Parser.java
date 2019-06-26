@@ -42,7 +42,7 @@ public class Parser {
 	 * @return a TclParse object that contains information
 	 *         about the parsed command. If the command was parsed successfully, the
 	 *         TclParse object's result variable is set to TCL_OK and TCL_ERROR
-	 *         otherwise. If an error occurs and interp isn't null then an error message
+	 *         otherwise. If an error occurs and mainInterp isn't null then an error message
 	 *         is left in its result. Side effects: None.
 	 */
 	static TclParse parseCommand(Interp interp, char[] script_array, 
@@ -480,7 +480,7 @@ public class Parser {
 	 * return value is TclParse object that contains information about the
 	 * parsed command. If the command was parsed successfully, the TclParse
 	 * object's result variable is set to TCL_OK and TCL_ERROR otherwise. If an
-	 * error occurs and interp isn't null then an error message is left in its
+	 * error occurs and mainInterp isn't null then an error message is left in its
 	 * result.
 	 * 
 	 * Side effects: None.
@@ -755,7 +755,7 @@ public class Parser {
 	 * This procedure evaluates a Tcl command that has already been parsed into
 	 * words, with one TclObject holding each word.
 	 * 
-	 * Results: A result or error message is left in interp's result. If an
+	 * Results: A result or error message is left in mainInterp's result. If an
 	 * error occurs, this procedure does NOT add any information to the
 	 * errorInfo variable.
 	 * 
@@ -778,7 +778,7 @@ public class Parser {
 		WrappedCommand cmd;
 		TclObject[] newObjv = null;
 		int i;
-		CallFrame savedVarFrame; // Saves old copy of interp.varFrame
+		CallFrame savedVarFrame; // Saves old copy of mainInterp.varFrame
 		// in case TCL.EVAL_GLOBAL was set.
 
 		if (objv.length == 0) {
@@ -786,7 +786,7 @@ public class Parser {
 			return;
 		}
 
-		// Reset result, check for deleted interp, and check nest level
+		// Reset result, check for deleted mainInterp, and check nest level
 
 		interp.ready();
 
@@ -835,7 +835,7 @@ public class Parser {
 			// (TODO)
 			//
 			// if (AsyncReady()) {
-			// code = AsyncInvoke(interp, code);
+			// code = AsyncInvoke(mainInterp, code);
 			// }
 		} finally {
 			interp.varFrame = savedVarFrame;
@@ -850,7 +850,7 @@ public class Parser {
 	 * was being executed when the error occurred. Side effects: Information
 	 * about the command is added to errorInfo and the line number stored
 	 * internally in the interpreter is set. If this is the first call to this
-	 * procedure or interp.addErrorInfo since an error occurred, then old
+	 * procedure or mainInterp.addErrorInfo since an error occurred, then old
 	 * information in errorInfo is deleted.
 	 * 
 	 * @param interp
@@ -1005,13 +1005,13 @@ public class Parser {
 				token.script_index++;
 
 				// should the nest level be changed???
-				// interp.nestLevel++;
+				// mainInterp.nestLevel++;
 
 				eval2(interp, token.script_array, token.script_index,
 						token.size - 2, 0);
 
 				token.script_index--;
-				// interp.nestLevel--;
+				// mainInterp.nestLevel--;
 				value = interp.getResult();
 				break;
 
@@ -1028,7 +1028,7 @@ public class Parser {
 				varName = tokenList[tIndex + 1].getTokenString();
 
 				// In order to get the existing expr parser to work with the
-				// new Parser, we test the interp.noEval flag which is set
+				// new Parser, we test the mainInterp.noEval flag which is set
 				// by the expr parser. If it is != 0, then we do not evaluate
 				// the variable. This should be removed when the new expr
 				// parser is implemented.
@@ -1086,7 +1086,7 @@ public class Parser {
 	 * byte-code interpreter. It just parses the script, creates values for each
 	 * word of each command, then calls evalObjv to execute each command.
 	 * 
-	 * Results: A result or error message is left in interp's result.
+	 * Results: A result or error message is left in mainInterp's result.
 	 * 
 	 * @param interp
 	 *            interpreter in which to evaluate the script and report errors
@@ -1118,7 +1118,7 @@ public class Parser {
 		TclParse parse = null;
 		TclToken token;
 
-		// Saves old copy of interp.varFrame in case TCL.EVAL_GLOBAL was set
+		// Saves old copy of mainInterp.varFrame in case TCL.EVAL_GLOBAL was set
 		CallFrame savedVarFrame;
 
 		// Take into account the trailing '\0'
@@ -1260,7 +1260,7 @@ public class Parser {
 									parse.commandStart, commandLength, e);
 						}
 						/*
-						 *  set the interp.termOffset even on exception, so 'subst' can use
+						 *  set the mainInterp.termOffset even on exception, so 'subst' can use
 						 *  when a continue, break or return exception occurs
 						 */
 						interp.termOffset =  parse.commandStart + parse.commandSize - script_index;
@@ -1318,7 +1318,7 @@ public class Parser {
 	 * Results: The return value is TclParse object that contains information
 	 * about the parsed command. If the command was parsed successfully, the
 	 * TclParse object's result variable is set to TCL_OK and TCL_ERROR
-	 * otherwise. If an error occurs and interp isn't null then an error message
+	 * otherwise. If an error occurs and mainInterp isn't null then an error message
 	 * is left in its result. On a successful return, tokenList and numTokens
 	 * fields of TclParse are filled in with information about the variable name
 	 * that was parsed. The "size" field of the first new token gives the total
@@ -1602,7 +1602,7 @@ public class Parser {
 	 * 
 	 * commandComplete --
 	 * 
-	 * This procedure is shared by interp.commandComplete and
+	 * This procedure is shared by mainInterp.commandComplete and
 	 * objCommandComplete; it does all the real work of seeing whether a script
 	 * is complete.
 	 * 
@@ -2129,7 +2129,7 @@ public class Parser {
 
 	// FIXME: Create a more general parse result object that is
 	// returned by any of the parse operations, also make this
-	// result an interp member so that an allocation is not needed
+	// result an mainInterp member so that an allocation is not needed
 	// for each parse operation.
 
 	static class ParseWhitespaceResult {
@@ -2473,11 +2473,11 @@ public class Parser {
 	// sequence of instructions. This is set 1, for
 	// example, when command traces are requested.
 	// RAND_SEED_INITIALIZED: Non-zero means that the randSeed value of the
-	// interp has not be initialized. This is set 1
+	// mainInterp has not be initialized. This is set 1
 	// when we first use the rand() or srand() functions.
-	// SAFE_INTERP: Non zero means that the current interp is a
-	// safe interp (ie it has only the safe commands
-	// installed, less priviledge than a regular interp).
+	// SAFE_INTERP: Non zero means that the current mainInterp is a
+	// safe mainInterp (ie it has only the safe commands
+	// installed, less priviledge than a regular mainInterp).
 	// USE_EVAL_DIRECT: Non-zero means don't use the compiler or byte-code
 	// interpreter; instead, have Tcl_EvalObj call
 	// Tcl_EvalDirect. Used primarily for testing the
