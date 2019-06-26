@@ -44,7 +44,7 @@ public class StrtoulResult {
 
 	/**
 	 * Update a StrtoulResult. Note that there is typically just one
-	 * StrtoulResult for each interp.
+	 * StrtoulResult for each mainInterp.
 	 * 
 	 * @param v
 	 *            value for the value field.

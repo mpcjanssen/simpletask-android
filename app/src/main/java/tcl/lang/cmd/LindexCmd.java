@@ -97,7 +97,7 @@ public class LindexCmd implements Command {
 	 * 
 	 * The reference count of the returned object includes one reference
 	 * corresponding to the pointer returned. Thus, the calling code will
-	 * usually do something like: Tcl_SetObjResult( interp, result );
+	 * usually do something like: Tcl_SetObjResult( mainInterp, result );
 	 * Tcl_DecrRefCount( result );
 	 * 
 	 * ----------------------------------------------------------------------

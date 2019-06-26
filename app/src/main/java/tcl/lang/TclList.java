@@ -162,7 +162,7 @@ public class TclList implements InternalRep {
 	 * @return Normally returns a new TclObject, that contains the same list
 	 *         value as 'list' does. The returned TclObject has a refCount of
 	 *         zero. If 'list' does not hold a list, null is returned, and if
-	 *         'interp' is non-null, an error message is recorded there.
+	 *         'mainInterp' is non-null, an error message is recorded there.
 	 */
 
 	public static TclObject copy(Interp interp, TclObject list) {

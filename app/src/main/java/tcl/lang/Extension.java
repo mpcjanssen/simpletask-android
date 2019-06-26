@@ -76,7 +76,7 @@ abstract public class Extension {
 	 * stub command is invoked. Register the stub command in the interpreter.
 	 * 
 	 * @param interp
-	 *            current interp.
+	 *            current mainInterp.
 	 * @param cmdName
 	 *            name of the command, e.g., "after".
 	 * @param clsName

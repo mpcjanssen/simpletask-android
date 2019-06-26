@@ -9,12 +9,14 @@ interface VisibleLine {
 }
 
 data class TaskLine(override val task: Task) : VisibleLine {
-    override val title = null
+    override val title: String?
+        get() = null
     override val header = false
 
 }
 
 data class HeaderLine(override var title: String) : VisibleLine {
-    override val task = null
+    override val task: Task?
+        get() =  null
     override val header = true
 }

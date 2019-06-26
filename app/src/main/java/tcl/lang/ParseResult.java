@@ -22,7 +22,7 @@ public class ParseResult {
 
 	/**
 	 * The value of a parse operation. For calls to Interp.intEval(), this
-	 * variable is the same as interp.m_result. The ref count has been
+	 * variable is the same as mainInterp.m_result. The ref count has been
 	 * incremented, so the user will need to explicitly invoke release() to drop
 	 * the ref.
 	 */

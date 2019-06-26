@@ -1,7 +1,7 @@
 /*
  * InterpCmd.java --
  *
- *	Implements the built-in "interp" Tcl command.
+ *	Implements the built-in "mainInterp" Tcl command.
  *
  * Copyright (c) 2000 Christian Krone.
  *
@@ -30,7 +30,7 @@ import tcl.lang.TclString;
 import tcl.lang.channel.Channel;
 
 /**
- * This class implements the built-in "interp" command in Tcl.
+ * This class implements the built-in "mainInterp" command in Tcl.
  */
 
 public class InterpCmd implements Command {
@@ -71,7 +71,7 @@ public class InterpCmd implements Command {
 	 * Tcl_InterpObjCmd -> cmdProc
 	 * 
 	 * This procedure is invoked as part of the Command interface to process the
-	 * "interp" Tcl command. See the user documentation for details on what it
+	 * "mainInterp" Tcl command. See the user documentation for details on what it
 	 * does.
 	 * 
 	 * Results: None.
@@ -161,10 +161,10 @@ public class InterpCmd implements Command {
 				// existing command in the master interpreter.
 
 				int i = 0;
-				while (interp.getCommand("interp" + i) != null) {
+				while (interp.getCommand("mainInterp" + i) != null) {
 					i++;
 				}
-				slaveNameObj = TclString.newInstance("interp" + i);
+				slaveNameObj = TclString.newInstance("mainInterp" + i);
 			}
 			InterpSlaveCmd.create(interp, slaveNameObj, safe);
 			interp.setResult(slaveNameObj);
@@ -333,16 +333,16 @@ public class InterpCmd implements Command {
 	 * --------------------------------------------------------------------------
 	 * -
 	 * 
-	 * GetInterp2 -> getInterp
+	 * GetInterp2 -> getMainInterp
 	 * 
-	 * Helper function for Tcl_InterpObjCmd() to convert the interp name
+	 * Helper function for Tcl_InterpObjCmd() to convert the mainInterp name
 	 * potentially specified on the command line to an Tcl_Interp.
 	 * 
-	 * Results: The return value is the interp specified on the command line, or
-	 * the interp argument itself if no interp was specified on the command
-	 * line. If the interp could not be found or the wrong number of arguments
+	 * Results: The return value is the mainInterp specified on the command line, or
+	 * the mainInterp argument itself if no mainInterp was specified on the command
+	 * line. If the mainInterp could not be found or the wrong number of arguments
 	 * was specified on the command line, the return value is NULL and an error
-	 * message is left in the interp's result.
+	 * message is left in the mainInterp's result.
 	 * 
 	 * Side effects: None.
 	 * 
@@ -352,8 +352,8 @@ public class InterpCmd implements Command {
 	 * -
 	 */
 
-	private static Interp getInterp(Interp interp, // Default interp if no
-			// interp was specified
+	private static Interp getInterp(Interp interp, // Default mainInterp if no
+			// mainInterp was specified
 			// on the command line.
 			TclObject[] objv) // Argument objects.
 			throws TclException {
@@ -409,7 +409,7 @@ public class InterpCmd implements Command {
 	/**
 	 *----------------------------------------------------------------------
 	 * 
-	 * getInterp --
+	 * getMainInterp --
 	 * 
 	 * Helper function to find a slave interpreter given a pathname.
 	 * 
@@ -422,11 +422,11 @@ public class InterpCmd implements Command {
 	 */
 
 	static Interp getInterp(Interp interp, // Interp. to start search from.
-			TclObject path) // List object containing name of interp. to
+			TclObject path) // List object containing name of mainInterp. to
 			// be found.
 			throws TclException {
 		TclObject[] objv = TclList.getElements(interp, path);
-		Interp searchInterp = interp; // Interim storage for interp. to find.
+		Interp searchInterp = interp; // Interim storage for mainInterp. to find.
 
 		for (TclObject anObjv : objv) {
 			String name = anObjv.toString();

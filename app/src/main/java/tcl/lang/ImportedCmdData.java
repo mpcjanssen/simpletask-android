@@ -41,7 +41,7 @@ class ImportedCmdData implements Command, CommandWithDispose {
 	}
 
 	/**
-	 * Called when the command is invoked in the interp.
+	 * Called when the command is invoked in the mainInterp.
 	 */
 
 	public void cmdProc(Interp interp, // The interpreter for setting result
@@ -52,7 +52,7 @@ class ImportedCmdData implements Command, CommandWithDispose {
 	}
 
 	/**
-	 * Called when the command is deleted from the interp.
+	 * Called when the command is deleted from the mainInterp.
 	 */
 
 	public void disposeCmd() {

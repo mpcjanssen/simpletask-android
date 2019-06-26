@@ -301,7 +301,7 @@ public class FormatCmd implements Command {
 					// Format field had a '.' without an integer or '*'
 					// preceeding it (eg %2.d or %2.-5d)
 					precision = 0;
-					//errorBadField(interp, format[fmtIndex]);
+					//errorBadField(mainInterp, format[fmtIndex]);
 				}
 			}
 

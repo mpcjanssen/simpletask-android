@@ -1,39 +1,45 @@
 package nl.mpcjanssen.simpletask.dao
 
-import android.database.Cursor
-import de.greenrobot.dao.converter.PropertyConverter
-import nl.mpcjanssen.simpletask.Logger
-import nl.mpcjanssen.simpletask.TodoApplication
-import nl.mpcjanssen.simpletask.dao.gen.*
-import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.util.shortAppVersion
-import java.text.SimpleDateFormat
+import android.content.Context
+import androidx.room.*
 
-import java.util.*
+const val SCHEMA_VERSION=1013
+const val DB_FILE="TodoFiles_v1.db"
 
-object Daos {
-    internal val daoSession: DaoSession
-    val backupDao: TodoFileDao
-    init {
-        val helper = DaoMaster.DevOpenHelper(TodoApplication.app, "TodoFiles_v1.db", null)
-        val db = helper.writableDatabase
-        val daoMaster = DaoMaster(db)
-        daoSession = daoMaster.newSession()
-        backupDao = daoSession.todoFileDao
+@Entity
+data class TodoFile(
+        @PrimaryKey var contents: String,
+        @ColumnInfo var name: String,
+        @ColumnInfo var date: Long
+)
 
-    }
-
-    fun backup (file : TodoFile) {
-        backupDao.insertOrReplace(file)
-        // Clean up old files
-        val removeBefore = Date(Date().time - 2 * 24 * 60 * 60 * 1000)
-        backupDao.queryBuilder().where(TodoFileDao.Properties.Date.lt(removeBefore)).buildDelete().executeDeleteWithoutDetachingEntities()
-    }
+@Dao
+interface TodoFileDao {
+    @Query("SELECT * FROM TodoFile")
+    fun getAll(): List<TodoFile>
 
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insert(contents: TodoFile) : Long
 
-    fun initHistoryCursor (): Cursor {
-        val builder = daoSession.todoFileDao.queryBuilder()
-        return builder.buildCursor().query()
-    }
+    @Update(onConflict = OnConflictStrategy.IGNORE)
+    fun update(contents: TodoFile)
+
+    @Query ("DELETE from TodoFile where date < :timestamp")
+    fun removeBefore(timestamp: Long)
+
+    @Query ("DELETE from TodoFile")
+    fun deleteAll()
+
+
 }
+
+@Database(entities = arrayOf(TodoFile::class), version = SCHEMA_VERSION, exportSchema = false)
+abstract class AppDatabase : RoomDatabase() {
+    abstract fun todoFileDao(): TodoFileDao
+}
+
+
+
+
+

@@ -47,7 +47,7 @@ public abstract class Channel {
 
 	/**
 	 * This is a unique name that sub-classes need to set via setChanName(). It
-	 * is used as the key in the hashtable of registered channels (in interp).
+	 * is used as the key in the hashtable of registered channels (in mainInterp).
 	 */
 	private String chanName;
 

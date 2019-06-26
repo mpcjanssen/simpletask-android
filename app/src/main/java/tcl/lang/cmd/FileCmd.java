@@ -621,7 +621,7 @@ public class FileCmd implements Command {
 	 * support the above attributes.
 	 * 
 	 * Results: Returns a standard Tcl return value. If an error occurs then a
-	 * message is left in interp->result.
+	 * message is left in mainInterp->result.
 	 * 
 	 * Side effects: Elements of the associative array given by "varName" are
 	 * modified.
@@ -654,7 +654,7 @@ public class FileCmd implements Command {
 			TclObject mtimeObj = TclInteger.newInstance(mtime);
 			TclObject atimeObj = TclInteger.newInstance(mtime);
 			TclObject ctimeObj = TclInteger.newInstance(mtime);
-			// interp.setVar(varName, "atime", atimeObj, 0);
+			// mainInterp.setVar(varName, "atime", atimeObj, 0);
 			interp.setVar(varName, "ctime", ctimeObj, 0);
 			interp.setVar(varName, "mtime", mtimeObj, 0);
 		} catch (SecurityException e) {

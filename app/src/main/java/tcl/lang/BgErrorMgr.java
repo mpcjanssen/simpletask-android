@@ -30,7 +30,7 @@ import tcl.lang.channel.StdChannel;
 class BgErrorMgr implements AssocData {
 
 	/*
-	 * We manage the background errors in this interp instance.
+	 * We manage the background errors in this mainInterp instance.
 	 */
 
 	Interp interp;
@@ -61,7 +61,7 @@ class BgErrorMgr implements AssocData {
 	 * ----------------------------------------------------------------------
 	 */
 
-	BgErrorMgr(Interp i) // Manage the background errors in this interp.
+	BgErrorMgr(Interp i) // Manage the background errors in this mainInterp.
 	{
 		interp = i;
 		bgerrorCmdObj = TclString.newInstance("bgerror");
@@ -169,7 +169,7 @@ class BgErrorMgr implements AssocData {
 	class BgError extends IdleHandler {
 
 		/*
-		 * The interp's result, errorCode and errorInfo when the bgerror
+		 * The mainInterp's result, errorCode and errorInfo when the bgerror
 		 * happened.
 		 */
 
@@ -216,7 +216,7 @@ class BgErrorMgr implements AssocData {
 
 			// During the execution of this method, elements may be removed from
 			// the errors list (because a TCL.BREAK was returned by the bgerror
-			// command, or because the interp was deleted). We remove this
+			// command, or because the mainInterp was deleted). We remove this
 			// BgError instance from the list first so that this instance won't
 			// be deleted twice.
 

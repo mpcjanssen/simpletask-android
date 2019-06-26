@@ -60,7 +60,7 @@ public class Var {
 	 * and is marked undefined. The variable's refCount is incremented to
 	 * reflect the "reference" from its namespace. NO_CACHE - 1 means that code
 	 * should not be able to hold a cached reference to this variable. This flag
-	 * is only set for Var objects returned by a namespace or interp resolver.
+	 * is only set for Var objects returned by a namespace or mainInterp resolver.
 	 * It is not possible to clear this flag, so the variable can't be cached as
 	 * long as it is alive. NON_LOCAL - 1 means that the variable exists in the
 	 * compiled local table, but it is not a local or imported local. This flag
@@ -860,7 +860,7 @@ public class Var {
 	 * name and element within array.
 	 * 
 	 * @param interp
-	 *            the interp that holds the variable
+	 *            the mainInterp that holds the variable
 	 * @param part1
 	 *            1st part of the variable name.
 	 * @param part2
@@ -898,7 +898,7 @@ public class Var {
 	 * Query the value of a variable, given refs to the variables Var objects.
 	 * 
 	 * @param interp
-	 *            the interp that holds the variable
+	 *            the mainInterp that holds the variable
 	 * @param part1
 	 *            1st part of the variable name.
 	 * @param part2
@@ -992,7 +992,7 @@ public class Var {
 	 * then this method will create one.
 	 * 
 	 * @param interp
-	 *            the interp that holds the variable
+	 *            the mainInterp that holds the variable
 	 * @param var
 	 *            a resolved Var ref
 	 * @param array
@@ -1030,7 +1030,7 @@ public class Var {
 	 *            must increment its ref count yourself.
 	 */
 
-	static TclObject setVarPtr(Interp interp, // interp to search for the var in
+	static TclObject setVarPtr(Interp interp, // mainInterp to search for the var in
 			Var var, Var array, String part1, // Name of an array (if part2 is
 												// non-null)
 			// or the name of a variable.
@@ -1205,7 +1205,7 @@ public class Var {
 	// is null. Initializing a compiled local scalar is
 	// a very common operation, so it is highly optimized here.
 
-	public static TclObject initVarCompiledLocalScalar(final Interp interp, // interp
+	public static TclObject initVarCompiledLocalScalar(final Interp interp, // mainInterp
 																			// to
 																			// search
 																			// for
@@ -1224,11 +1224,11 @@ public class Var {
 			CallFrame varFrame = interp.varFrame;
 
 			if (varFrame == null) {
-				throw new TclRuntimeError("null interp.varFrame");
+				throw new TclRuntimeError("null mainInterp.varFrame");
 			}
 			if (varFrame != interp.frame) {
 				throw new TclRuntimeError(
-						"interp.frame vs interp.varFrame mismatch");
+						"mainInterp.frame vs mainInterp.varFrame mismatch");
 			}
 			if (varFrame.isProcCallFrame == false) {
 				throw new TclRuntimeError("expected isProcCallFrame to be true");
@@ -1328,7 +1328,7 @@ public class Var {
 	// never be invoked when the compiled local slot is null.
 	// This method is not in the critical execution path.
 
-	public static TclObject setVarCompiledLocalScalarInvalid(Interp interp, // interp
+	public static TclObject setVarCompiledLocalScalarInvalid(Interp interp, // mainInterp
 																			// to
 																			// search
 																			// for
@@ -1349,11 +1349,11 @@ public class Var {
 			CallFrame varFrame = interp.varFrame;
 
 			if (varFrame == null) {
-				throw new TclRuntimeError("null interp.varFrame");
+				throw new TclRuntimeError("null mainInterp.varFrame");
 			}
 			if (varFrame != interp.frame) {
 				throw new TclRuntimeError(
-						"interp.frame vs interp.varFrame mismatch");
+						"mainInterp.frame vs mainInterp.varFrame mismatch");
 			}
 			if (varFrame.isProcCallFrame == false) {
 				throw new TclRuntimeError("expected isProcCallFrame to be true");
@@ -1394,7 +1394,7 @@ public class Var {
 	// implementation. This method is not in the
 	// critical execution path.
 
-	public static TclObject getVarCompiledLocalScalarInvalid(Interp interp, // interp
+	public static TclObject getVarCompiledLocalScalarInvalid(Interp interp, // mainInterp
 																			// to
 																			// search
 																			// for
@@ -1410,11 +1410,11 @@ public class Var {
 			CallFrame varFrame = interp.varFrame;
 
 			if (varFrame == null) {
-				throw new TclRuntimeError("null interp.varFrame");
+				throw new TclRuntimeError("null mainInterp.varFrame");
 			}
 			if (varFrame != interp.frame) {
 				throw new TclRuntimeError(
-						"interp.frame vs interp.varFrame mismatch");
+						"mainInterp.frame vs mainInterp.varFrame mismatch");
 			}
 
 			if (varFrame.isProcCallFrame == false) {
@@ -1452,7 +1452,7 @@ public class Var {
 	// is null. Initializing a compiled local array is
 	// a very common operation, so it is optimized.
 
-	public static TclObject initVarCompiledLocalArray(final Interp interp, // interp
+	public static TclObject initVarCompiledLocalArray(final Interp interp, // mainInterp
 																			// to
 																			// search
 																			// for
@@ -1476,11 +1476,11 @@ public class Var {
 			CallFrame varFrame = interp.varFrame;
 
 			if (varFrame == null) {
-				throw new TclRuntimeError("null interp.varFrame");
+				throw new TclRuntimeError("null mainInterp.varFrame");
 			}
 			if (varFrame != interp.frame) {
 				throw new TclRuntimeError(
-						"interp.frame vs interp.varFrame mismatch");
+						"mainInterp.frame vs mainInterp.varFrame mismatch");
 			}
 			if (varFrame.isProcCallFrame == false) {
 				throw new TclRuntimeError("expected isProcCallFrame to be true");
@@ -1561,7 +1561,7 @@ public class Var {
 	// never be invoked when the compiled local slot is null.
 	// This method is not in the critical execution path.
 
-	public static TclObject setVarCompiledLocalArrayInvalid(Interp interp, // interp
+	public static TclObject setVarCompiledLocalArrayInvalid(Interp interp, // mainInterp
 																			// to
 																			// search
 																			// for
@@ -1583,11 +1583,11 @@ public class Var {
 			CallFrame varFrame = interp.varFrame;
 
 			if (varFrame == null) {
-				throw new TclRuntimeError("null interp.varFrame");
+				throw new TclRuntimeError("null mainInterp.varFrame");
 			}
 			if (varFrame != interp.frame) {
 				throw new TclRuntimeError(
-						"interp.frame vs interp.varFrame mismatch");
+						"mainInterp.frame vs mainInterp.varFrame mismatch");
 			}
 			if (varFrame.isProcCallFrame == false) {
 				throw new TclRuntimeError("expected isProcCallFrame to be true");
@@ -1653,7 +1653,7 @@ public class Var {
 	// proc implementation. This method is not in the
 	// critical execution path.
 
-	public static TclObject getVarCompiledLocalArrayInvalid(Interp interp, // interp
+	public static TclObject getVarCompiledLocalArrayInvalid(Interp interp, // mainInterp
 																			// to
 																			// search
 																			// for
@@ -1670,11 +1670,11 @@ public class Var {
 			CallFrame varFrame = interp.varFrame;
 
 			if (varFrame == null) {
-				throw new TclRuntimeError("null interp.varFrame");
+				throw new TclRuntimeError("null mainInterp.varFrame");
 			}
 			if (varFrame != interp.frame) {
 				throw new TclRuntimeError(
-						"interp.frame vs interp.varFrame mismatch");
+						"mainInterp.frame vs mainInterp.varFrame mismatch");
 			}
 			if (varFrame.compiledLocals == null) {
 				throw new TclRuntimeError("expected non-null compiledLocals");
@@ -1876,7 +1876,7 @@ public class Var {
 	 *            misc flags that control the actions of this method.
 	 * 
 	 *            If part1 and part2 indicate a local or global variable in
-	 *            interp, it is deleted. If part1 is an array name and part2 is
+	 *            mainInterp, it is deleted. If part1 is an array name and part2 is
 	 *            null, then the whole array is deleted.
 	 * 
 	 */
@@ -1964,7 +1964,7 @@ public class Var {
 
 			dummyVar.traces = null;
 
-			// Active trace stuff is not part of Jacl's interp
+			// Active trace stuff is not part of Jacl's mainInterp
 
 			var.refCount--;
 		}
@@ -2263,7 +2263,7 @@ public class Var {
 			result = Var.lookupVar(interp, otherP1, otherP2, otherLookupFlags,
 					"access", true, true);
 		} finally {
-			// Reset interp.varFrame
+			// Reset mainInterp.varFrame
 
 			if ((otherFlags & TCL.NAMESPACE_ONLY) == 0) {
 				interp.varFrame = savedFrame;
@@ -3080,7 +3080,7 @@ public class Var {
 	 * ----------------------------------------------------------------------
 	 */
 
-	public static void AppendLocals(Interp interp, // Current interp
+	public static void AppendLocals(Interp interp, // Current mainInterp
 			TclObject list, // list to append to
 			String pattern, // Pattern to match against.
 			boolean includeLinks) // true if upvars should be included

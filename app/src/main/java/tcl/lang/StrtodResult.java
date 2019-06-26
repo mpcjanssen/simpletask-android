@@ -44,7 +44,7 @@ public class StrtodResult {
 	public double value;
 
 	// Update a StrtodResult. Note that there is typically
-	// just one StrtodResult for each interp.
+	// just one StrtodResult for each mainInterp.
 
 	void update(double v, // value for the value field.
 			int i, // value for the index field.

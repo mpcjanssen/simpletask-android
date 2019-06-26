@@ -172,7 +172,7 @@ public class TclDouble implements InternalRep {
 			TclObject tobj) // The object to convert.
 			throws TclException // If error occurs in type conversion.
 	// Error message will be left inside
-	// the interp if it's not null.
+	// the mainInterp if it's not null.
 
 	{
 		// This method is only ever invoked from TclDouble.get().
@@ -222,7 +222,7 @@ public class TclDouble implements InternalRep {
 			throws TclException // If the object does not have a TclDouble
 	// representation and a conversion fails.
 	// Error message will be left inside
-	// the interp if it's not null.
+	// the mainInterp if it's not null.
 	{
 		TclDouble tdouble;
 

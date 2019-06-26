@@ -232,7 +232,7 @@ public class SubstCmd implements Command {
 			break;
 		case TCL.RETURN:
 			// if we got a return, append the return value, which is in
-			// interp.getResult()
+			// mainInterp.getResult()
 			result.append(interp.getResult().toString());
 			break;
 		case TCL.CONTINUE:

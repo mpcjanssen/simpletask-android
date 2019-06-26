@@ -31,15 +31,18 @@ package nl.mpcjanssen.simpletask
 
 import android.app.Activity
 import android.app.AlarmManager
-import android.app.Application
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.*
 import android.os.SystemClock
-import android.support.multidex.MultiDexApplication
-import android.support.v4.content.LocalBroadcastManager
-import nl.mpcjanssen.simpletask.dao.Daos
-import nl.mpcjanssen.simpletask.dao.gen.TodoFile
+import androidx.multidex.MultiDexApplication
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import android.util.Log
+import androidx.room.Room
+import nl.mpcjanssen.simpletask.dao.AppDatabase
+import nl.mpcjanssen.simpletask.dao.DB_FILE
+import nl.mpcjanssen.simpletask.dao.TodoFile
+
 import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileDialog
 import nl.mpcjanssen.simpletask.remote.FileStore
@@ -49,53 +52,57 @@ import nl.mpcjanssen.simpletask.util.*
 import java.io.File
 import java.util.*
 
-class TodoApplication : MultiDexApplication(),
-
-        BackupInterface {
+class TodoApplication : MultiDexApplication() {
 
     private lateinit var androidUncaughtExceptionHandler: Thread.UncaughtExceptionHandler
     lateinit var localBroadCastManager: LocalBroadcastManager
     private lateinit var m_broadcastReceiver: BroadcastReceiver
 
     override fun onCreate() {
-        app = this
         super.onCreate()
+        app = this
+        db = Room.databaseBuilder(this,
+                AppDatabase::class.java, DB_FILE).fallbackToDestructiveMigration()
+                .build()
+        if (Config.forceEnglish) {
+            val conf = resources.configuration
+            conf.locale = Locale.ENGLISH
+            resources.updateConfiguration(conf, resources.displayMetrics)
+        }
 
         localBroadCastManager = LocalBroadcastManager.getInstance(this)
 
         setupUncaughtExceptionHandler()
 
         val intentFilter = IntentFilter()
-        intentFilter.addAction(Constants.BROADCAST_UPDATE_UI)
         intentFilter.addAction(Constants.BROADCAST_UPDATE_WIDGETS)
         intentFilter.addAction(Constants.BROADCAST_FILE_SYNC)
+        intentFilter.addAction(Constants.BROADCAST_TASKLIST_CHANGED)
 
         m_broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
-                Logger.info(TAG, "Received broadcast ${intent.action}")
-                if (intent.action == Constants.BROADCAST_UPDATE_UI) {
-                    TodoList.todoQueue("Refresh external UI") {
+                Log.i(TAG, "Received broadcast ${intent.action}")
+                when {
+                    intent.action == Constants.BROADCAST_TASKLIST_CHANGED -> {
                         CalendarSync.syncLater()
                         redrawWidgets()
                         updateWidgets()
                     }
-                } else if (intent.action == Constants.BROADCAST_UPDATE_WIDGETS) {
-                    Logger.info(TAG, "Refresh widgets from broadcast")
-                    redrawWidgets()
-                    updateWidgets()
-                } else if (intent.action == Constants.BROADCAST_FILE_SYNC) {
-                    loadTodoList("From BROADCAST_FILE_SYNC")
+                    intent.action == Constants.BROADCAST_UPDATE_WIDGETS -> {
+                        Log.i(TAG, "Refresh widgets from broadcast")
+                        redrawWidgets()
+                        updateWidgets()
+                    }
+                    intent.action == Constants.BROADCAST_FILE_SYNC -> loadTodoList("From BROADCAST_FILE_SYNC")
                 }
             }
         }
-
-        TodoActionQueue.start()
         FileStoreActionQueue.start()
 
         localBroadCastManager.registerReceiver(m_broadcastReceiver, intentFilter)
-        Logger.info(TAG, "onCreate()")
-        Logger.info(TAG, "Created todolist " + TodoList)
-        Logger.info(TAG, "Started ${appVersion(this)}")
+        Log.i(TAG, "onCreate()")
+        Log.i(TAG, "Created todolist $TodoList")
+        Log.i(TAG, "Started ${appVersion(this)}")
         scheduleOnNewDay()
         scheduleRepeating()
     }
@@ -106,7 +113,7 @@ class TodoApplication : MultiDexApplication(),
         // Handle all uncaught exceptions for logging.
         // After that call the default uncaught exception handler
         Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
-            Logger.error(TAG, "Uncaught exception", throwable)
+            Log.e(TAG, "Uncaught exception", throwable)
             androidUncaughtExceptionHandler.uncaughtException(thread, throwable)
         }
     }
@@ -124,7 +131,7 @@ class TodoApplication : MultiDexApplication(),
         calendar.set(Calendar.MINUTE, 2)
         calendar.set(Calendar.SECOND, 0)
 
-        Logger.info(TAG, "Scheduling daily UI updateCache alarm, first at ${calendar.time}")
+        Log.i(TAG, "Scheduling daily UI updateCache alarm, first at ${calendar.time}")
         val intent = Intent(this, AlarmReceiver::class.java)
         intent.putExtra(Constants.ALARM_REASON_EXTRA, Constants.ALARM_NEW_DAY)
         val pi = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
@@ -136,7 +143,7 @@ class TodoApplication : MultiDexApplication(),
     private fun scheduleRepeating() {
         // Schedules background reload
 
-        Logger.info(TAG, "Scheduling task list reload")
+        Log.i(TAG, "Scheduling task list reload")
         val intent = Intent(this, AlarmReceiver::class.java)
         intent.putExtra(Constants.ALARM_REASON_EXTRA, Constants.ALARM_RELOAD)
         val pi = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
@@ -147,7 +154,7 @@ class TodoApplication : MultiDexApplication(),
     }
 
     override fun onTerminate() {
-        Logger.info(TAG, "De-registered receiver")
+        Log.i(TAG, "De-registered receiver")
         localBroadCastManager.unregisterReceiver(m_broadcastReceiver)
         super.onTerminate()
     }
@@ -158,22 +165,22 @@ class TodoApplication : MultiDexApplication(),
     }
 
     fun loadTodoList(reason: String) {
-        Logger.info(TAG, "Loading todolist")
-        TodoList.reload(this, reason = reason)
+        Log.i(TAG, "Loading todolist")
+        TodoList.reload(reason = reason)
     }
 
     fun updateWidgets() {
         val mgr = AppWidgetManager.getInstance(applicationContext)
         for (appWidgetId in mgr.getAppWidgetIds(ComponentName(applicationContext, MyAppWidgetProvider::class.java))) {
             mgr.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widgetlv)
-            Logger.info(TAG, "Updating widget: " + appWidgetId)
+            Log.i(TAG, "Updating widget: $appWidgetId")
         }
     }
 
     fun redrawWidgets() {
         val appWidgetManager = AppWidgetManager.getInstance(applicationContext)
         val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(this, MyAppWidgetProvider::class.java))
-        Logger.info(TAG, "Redrawing widgets ")
+        Log.i(TAG, "Redrawing widgets ")
         if (appWidgetIds.isNotEmpty()) {
             MyAppWidgetProvider().onUpdate(this, appWidgetManager, appWidgetIds)
         }
@@ -192,7 +199,6 @@ class TodoApplication : MultiDexApplication(),
         }
     }
 
-
     fun browseForNewFile(act: Activity) {
         val fileStore = FileStore
         FileDialog.browseForNewFile(
@@ -207,22 +213,27 @@ class TodoApplication : MultiDexApplication(),
                 Config.showTxtOnly)
     }
 
-    val doneFileName: String
-        get() = File(Config.todoFile.parentFile, "done.txt").absolutePath
 
-    override fun backup(name: String, lines: List<Task>) {
-        val now = Date()
-        val fileToBackup = TodoFile(lines.map { it.inFileFormat() }.joinToString ("\n"), name, now)
-        Daos.backup(fileToBackup)
-
-    }
 
     companion object {
         private val TAG = TodoApplication::class.java.simpleName
         fun atLeastAPI(api: Int): Boolean = android.os.Build.VERSION.SDK_INT >= api
         lateinit var app : TodoApplication
+        lateinit var db : AppDatabase
     }
 
     var today: String = todayAsString
 }
 
+
+object Backupper : BackupInterface {
+    override fun backup(name: String, lines: List<String>) {
+        val now = Date().time
+        val fileToBackup = TodoFile(lines.joinToString ("\n"), name, now)
+        val dao =  TodoApplication.db.todoFileDao()
+        if(dao.insert(fileToBackup) == -1L) {
+            dao.update(fileToBackup)
+        }
+        dao.removeBefore( now - 2 * 24 * 60 * 60 * 1000)
+    }
+}

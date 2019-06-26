@@ -8,6 +8,7 @@ import android.widget.ListAdapter
 import android.widget.ListView
 import android.widget.TextView
 import nl.mpcjanssen.simpletask.R
+import nl.mpcjanssen.simpletask.util.alfaSort
 import java.util.*
 
 class DrawerAdapter(private val m_inflater: LayoutInflater,
@@ -23,13 +24,13 @@ class DrawerAdapter(private val m_inflater: LayoutInflater,
         internal set
 
     init {
-        this.items = ArrayList<String>()
+        this.items = ArrayList()
         this.items.add(contextHeader)
         contextHeaderPosition = 0
-        this.items.addAll(contexts)
+        this.items.addAll(alfaSort(contexts))
         projectsHeaderPosition = items.size
         this.items.add(projectHeader)
-        this.items.addAll(projects)
+        this.items.addAll(alfaSort(projects))
     }
 
     private fun isHeader(position: Int): Boolean {
@@ -105,3 +106,5 @@ class DrawerAdapter(private val m_inflater: LayoutInflater,
         return items.indexOf(item)
     }
 }
+
+

@@ -1,12 +1,10 @@
 package com.mobeta.android.dslv;
 
 import android.graphics.Point;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.view.*;
 import android.widget.AdapterView;
-import nl.mpcjanssen.simpletask.Logger;
-
 
 /**
  * Class that starts and stops item drags on a {@link DragSortListView}
@@ -113,7 +111,6 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
     public DragSortController(@NonNull DragSortListView dslv, int dragHandleId, int dragInitMode,
             int removeMode, int clickRemoveId, int flingHandleId) {
         super(dslv);
-        Logger log = Logger.INSTANCE;
         mDslv = dslv;
         if (mFlingRemoveListener == null) {
             mFlingRemoveListener =
@@ -121,7 +118,7 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
                         @Override
                         public final boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
                                                      float velocityY) {
-                            // log.debug(tag, "on fling remove called");
+                            // Log.d(tag, "on fling remove called");
                             if (mRemoveEnabled && mIsRemoving) {
                                 int w = mDslv.getWidth();
                                 int minPos = w / 5;
@@ -358,7 +355,7 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
         final int numFooters = mDslv.getFooterViewsCount();
         final int count = mDslv.getCount();
 
-        // log.debug(tag, "touch down on position " + itemnum);
+        // Log.d(tag, "touch down on position " + itemnum);
         // We're only interested if the touch was on an
         // item that's not a header or footer.
         if (touchPos != AdapterView.INVALID_POSITION && touchPos >= numHeaders
@@ -442,7 +439,7 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
 
     @Override
     public void onLongPress(MotionEvent e) {
-        // log.debug(tag, "lift listener long pressed");
+        // Log.d(tag, "lift listener long pressed");
         if (mHitPos != MISS && mDragInitMode == ON_LONG_PRESS) {
             mDslv.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             startDrag(mHitPos, mCurrX - mItemX, mCurrY - mItemY);

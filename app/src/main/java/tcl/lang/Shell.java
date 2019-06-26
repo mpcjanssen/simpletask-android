@@ -133,7 +133,7 @@ public class Shell {
 				}
 			}
 
-			// Note that if the above interp.evalFile() returns the main
+			// Note that if the above mainInterp.evalFile() returns the main
 			// thread will exit. This may bring down the VM and stop
 			// the execution of Tcl.
 			//
@@ -151,14 +151,14 @@ public class Shell {
 
 		if (fileName == null) {
 			// We are running in interactive mode. Start the ConsoleThread
-			// that loops, grabbing stdin and passing it to the interp.
+			// that loops, grabbing stdin and passing it to the mainInterp.
 
 			ConsoleThread consoleThread = new ConsoleThread(interp);
 			consoleThread.setDaemon(true);
 			consoleThread.start();
 
 			// Loop forever to handle user input events in the command line.
-			// This method will loop until "exit" is called or the interp
+			// This method will loop until "exit" is called or the mainInterp
 			// is interrupted.
 
 			Notifier notifier = interp.getNotifier();

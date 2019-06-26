@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
 This file is part of Todo.txt Touch, an Android app for managing your todo.txt file (http://todotxt.com).
 
@@ -23,9 +23,7 @@ You should have received a copy of the GNU General Public License along with Tod
 @copyright © 2009-2012 Todo.txt contributors (http://todotxt.com)
 @copyright © 2013 Mark Janssen
 @copyright © 2015 Vojtech Kral
--->
-<!--suppress ALL -->
-<resources>
+--><!--suppress ALL --><resources>
     <string name="invalid_context">Invalid list name</string>
     <string name="invalid_project">Invalid tag name</string>
     <string name="added_task">Added task</string>
@@ -277,6 +275,11 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="preference_title_debug_info">View debug log</string>
     <string name="preference_summary_debug_info">View and share the app version and log.</string>
 
+
+    <string name="use_list_and_tags_icons_title">Use icons</string>
+    <string name="use_list_and_tags_icons_summary">Use icons for changing the task\'s list and tag. Disable to use the todo.txt @ and + terms.</string>
+
+
     <!-- sync dialog -->
     <string name="sync_dialog_title">Manual Sync</string>
     <string name="sync_dialog_msg">Do you want to upload or download your todo.txt file?</string>
@@ -464,8 +467,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="keep_selection_summary">Keep task selection after changes.</string>
 
 
-    <string name="lua_error">Lua error</string>
-    <string name="lua_config_screen">Lua configuration</string>
+    <string name="lua_error">Script error</string>
+    <string name="lua_config_screen">Script configuration</string>
     <string name="lua_run">Run</string>
     <string name="lua_config_import_export">Import/export Lua configuration</string>
     <string name="lua_config_export">Save and export</string>
@@ -476,4 +479,11 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="use_uuid_title">Assign a UUID to each task</string>
     <string name="nav_drawer_hint">Save the current filter\n
         using the save button</string>
+    <string name="invalid_certificate_msg">Server certificate is invalid. Do you want to continue?</string>
+    <string name="invalid_certificate_title">Invalid certificate.</string>
+
+    <string name="no_tasks_to_archive">No tasks to archive.</string>
+
+    <string name="force_english_title">Force English</string>
+
 </resources>

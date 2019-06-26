@@ -24,6 +24,7 @@ abstract class AbstractInterpreter {
     abstract fun onDisplayCallback(moduleName: String, t: Task): String?
     abstract fun onAddCallback(t: Task): Task?
     abstract fun onTextSearchCallback(moduleName: String, input: String, search: String, caseSensitive: Boolean): Boolean?
-    abstract fun evalScript(moduleName: String?, script: String?): AbstractInterpreter
+    abstract fun evalScript(moduleName: String, script: String?): AbstractInterpreter
     abstract fun clearOnFilter(moduleName: String)
+    abstract fun getStackTrace(moduleName: String): String?
 }

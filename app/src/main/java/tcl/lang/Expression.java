@@ -128,7 +128,7 @@ public class Expression {
 	private int m_ind;
 
 	/**
-	 * Cache of ExprValue objects. These are cached on a per-interp basis to
+	 * Cache of ExprValue objects. These are cached on a per-mainInterp basis to
 	 * speed up most expressions.
 	 */
 	private ExprValue[] cachedExprValue;
@@ -136,7 +136,7 @@ public class Expression {
 	private static final int cachedExprLength = 50;
 
 	/**
-	 * Evaluate a Tcl expression and set the interp result to the value.
+	 * Evaluate a Tcl expression and set the mainInterp result to the value.
 	 * 
 	 * @param interp
 	 *            the context in which to evaluate the expression.
@@ -2206,7 +2206,7 @@ abstract class NoArgMathFunction extends MathFunction {
 
 	void apply(Interp interp, ExprValue[] values) throws TclException {
 		throw new TclRuntimeError(
-				"NoArgMathFunction must be invoked via apply(interp, ExprValue)");
+				"NoArgMathFunction must be invoked via apply(mainInterp, ExprValue)");
 	}
 }
 
@@ -2348,8 +2348,8 @@ class PowFunction extends BinaryMathFunction {
  * 
  * foreach func {Acos Asin Atan Ceil Cos Exp Floor Log Sin Sqrt Tan} { puts "
  * class $func\Function extends UnaryMathFunction { ExprValue apply(Interp
- * interp, TclObject argv\[\]) throws TclException { return new
- * ExprValue(Math.[string tolower $func](TclDouble.get(interp, argv\[0\]))); } }
+ * mainInterp, TclObject argv\[\]) throws TclException { return new
+ * ExprValue(Math.[string tolower $func](TclDouble.get(mainInterp, argv\[0\]))); } }
  * " }
  */
 

@@ -43,7 +43,7 @@ public class ConsoleThread extends Thread {
 	/**
 	 * Create a ConsoleThread.
 	 */
-	public ConsoleThread(Interp i) // Initial value for interp.
+	public ConsoleThread(Interp i) // Initial value for mainInterp.
 	{
 		setName("ConsoleThread");
 		interp = i;
@@ -92,7 +92,7 @@ public class ConsoleThread extends Thread {
 			// When interacting with the interpreter, one must
 			// be careful to never call a Tcl method from
 			// outside of the event loop thread. If we did
-			// something like just call interp.eval() it
+			// something like just call mainInterp.eval() it
 			// could crash the whole process because two
 			// threads might write over each other.
 

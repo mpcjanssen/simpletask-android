@@ -42,6 +42,6 @@ class ByPriorityFilter(
     }
 
     fun filter(input: Task): Boolean {
-        return priorities.size == 0 || priorities.contains(input.priority)
+        return priorities.isEmpty() || priorities.contains(input.priority)
     }
 }

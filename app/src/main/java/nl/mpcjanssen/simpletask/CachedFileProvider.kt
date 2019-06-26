@@ -6,6 +6,7 @@ import android.content.UriMatcher
 import android.database.Cursor
 import android.net.Uri
 import android.os.ParcelFileDescriptor
+import android.util.Log
 
 import java.io.File
 import java.io.FileNotFoundException
@@ -14,7 +15,6 @@ class CachedFileProvider : ContentProvider() {
 
     // UriMatcher used to match against incoming requests
     private var uriMatcher: UriMatcher? = null
-    private val log = Logger
 
     override fun onCreate(): Boolean {
 
@@ -30,30 +30,32 @@ class CachedFileProvider : ContentProvider() {
     @Throws(FileNotFoundException::class)
     override fun openFile(uri: Uri, mode: String): ParcelFileDescriptor {
 
-        log.debug(TAG, "Called with uri: '" + uri + "'." + uri.lastPathSegment)
+        Log.d(TAG, "Called with uri: '" + uri + "'." + uri.lastPathSegment)
 
         // Check incoming Uri against the matcher
         when (uriMatcher!!.match(uri)) {
 
         // If it returns 1 - then it matches the Uri defined in onCreate
             1 -> {
+                context?.let {
 
-                // The desired file name is specified by the last segment of the
-                // path
-                // E.g.
-                // 'content://com.stephendnicholas.gmailattach.provider/Test.txt'
-                // Take this and build the path to the file
-                val fileLocation = File(context.cacheDir , uri.lastPathSegment)
+                    // The desired file name is specified by the last segment of the
+                    // path
+                    // E.g.
+                    // 'content://com.stephendnicholas.gmailattach.provider/Test.txt'
+                    // Take this and build the path to the file
+                    val fileLocation = File(it.cacheDir, uri.lastPathSegment)
 
-                // Create & return a ParcelFileDescriptor pointing to the file
-                // Note: I don't care what mode they ask for - they're only getting
-                // read only
-                return ParcelFileDescriptor.open(fileLocation, ParcelFileDescriptor.MODE_READ_ONLY)
+                    // Create & return a ParcelFileDescriptor pointing to the file
+                    // Note: I don't care what mode they ask for - they're only getting
+                    // read only
+                    return ParcelFileDescriptor.open(fileLocation, ParcelFileDescriptor.MODE_READ_ONLY)
+                } ?: throw FileNotFoundException("Context is null")
             }
 
         // Otherwise unrecognised Uri
             else -> {
-                log.debug(TAG, "Unsupported uri: '$uri'.")
+                Log.d(TAG, "Unsupported uri: '$uri'.")
                 throw FileNotFoundException("Unsupported uri: " + uri.toString())
             }
         }

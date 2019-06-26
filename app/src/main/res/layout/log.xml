@@ -23,7 +23,7 @@
         android:layout_weight="1"
         android:scrollbars="vertical"
         />
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         style="@style/SimpleToolbar"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"

@@ -49,7 +49,7 @@ public class PwdCmd implements Command {
 	 * ---
 	 */
 
-	public void cmdProc(Interp interp, // Current interp to eval the file cmd.
+	public void cmdProc(Interp interp, // Current mainInterp to eval the file cmd.
 			TclObject argv[]) // Args passed to the file command.
 			throws TclException {
 		if (argv.length != 1) {

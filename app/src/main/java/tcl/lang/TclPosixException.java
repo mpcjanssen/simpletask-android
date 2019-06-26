@@ -126,7 +126,7 @@ public class TclPosixException extends TclException {
 	
 	/**
 	 * Creates a TclException with the appropiate Tcl error message for posix
-	 * error, and sets the interp's error code to a 3 element list (eg. {"posix"
+	 * error, and sets the mainInterp's error code to a 3 element list (eg. {"posix"
 	 * "eexist" {file already exists}}).  Does not append posix message to intepreter result.
 	 * 
 	 * @param interp Current interpretor, or null
@@ -145,7 +145,7 @@ public class TclPosixException extends TclException {
 
 	/**
 	 * Creates a TclException with the appropiate Tcl error message for posix
-	 * error, and sets the interp's error code to a 3 element list (eg. {"posix"
+	 * error, and sets the mainInterp's error code to a 3 element list (eg. {"posix"
 	 * "eexist" {file already exists}}).
 	 * 
 	 * @param interp Current interpretor, or null

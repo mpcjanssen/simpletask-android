@@ -28,7 +28,7 @@ public class TclNumArgsException extends TclException {
 	 * <pre>
 	 * 
 	 * if (argv.length != 3) {
-	 * 	throw new TclNumArgsException(interp, 1, argv, &quot;option name&quot;);
+	 * 	throw new TclNumArgsException(mainInterp, 1, argv, &quot;option name&quot;);
 	 * }
 	 * </pre>
 	 * 

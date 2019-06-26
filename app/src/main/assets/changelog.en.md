@@ -1,5 +1,118 @@
-﻿Changelog
-=========
+﻿# Changelog
+
+## 10.3.0
+
+### Fixed
+
+- Properly handle multiple clicks on completion context item when `keep selection` is enabled for #942.
+- Include all alphanumerical tokens in the Lua text field for #909.
+
+### Added
+
+- Add setting to change list and tag icons to todo.txt text for #944.
+
+## 10.2.9
+
+### Fixed
+
+- Crash when (un)completing a task.
+
+## 10.2.8
+
+### Fixed
+
+- Update state of completion checkbox when task list changes for #942.
+- Tags sorting.
+
+## 10.2.7
+
+### Fixed
+
+- NONE filter
+- Grouping on tags and lists
+
+### Changed
+
+- More consistently apply case sensitive sorting.
+
+
+## 10.2.6
+
+### Fixed
+
+- Navigation and tags/list issues #936 and #937.
+
+## 10.2.5
+
+### Fixed
+
+- Synchronize re-use of matchers as it's not thread safe
+
+### Changed
+
+- Prevent creating unnecessary objects for reduced memory usage.
+
+
+## 10.2.4
+
+### Fixed
+
+- Re-use regexp matchers for #934. Should also fix random native crashes.
+
+### Changed
+
+- Only archive visible or selected tasks #131.
+
+
+## 10.2.3
+
+### Fixed
+
+- Crash with Nextcloud login.
+
+## 10.2.2
+
+### Fixed
+
+- Crash when Nextcloud login fails.
+
+## 10.2.1
+
+### Changed
+
+- Updated translations for Dutch, Japanese, Spanish, Norwegian,
+- Use toolbar in AddTask instead of a FAB.
+
+### Fixed
+
+- Obey capitalisation setting in Add Task.
+- Remove AddTask hint for #924.
+- Improve authentication detection for #925.
+
+### Removed
+
+- Don't use Android Account Manager for Nextcloud credentials. 
+  It sometimes fails for some unknown reasons.
+
+10.2.0
+------
+
+- Refactored UI updates and events. Should improve performance.
+- Add support for Nextcloud servers using self signed certificates.
+- Make https:// the default for Nextcloud but allow http.
+- Clear intent after starting with filter. Possible fix for #894.
+- Several translation updates.
+- Show confirmation dialog when manually archiving.
+- Extend the range of tokens included for alpha sort.
+- Merged #906 (Strubbl), add more precise documentation on hidden tasks
+- Store saved filters in preferences, this should fix most issues with saved filters.
+
+
+
+10.1.16
+-------
+
+- Several bug fixes.
 
 10.1.15
 -------
@@ -1050,7 +1163,7 @@
 5.2.0
 -----
 
-- (Experimental) Included Javascript engine to allow advanced filtering. See [Javascript](./javascript.md) for usage.
+- (Experimental) Included Javascript engine to allow advanced filtering. See Javascript for usage.
 - Don't use `removeAll` in task stores. Fixes #112.
 - Return to filter activity when switching to another app and back instead of to the main screen.
 
@@ -1577,7 +1690,7 @@
 
 -   Add checkbox when adding multiple tasks to copy tags and lists from the previous line.
 -   Better handling of {Enter} in the Add Task screen. It will always insert a new line regardless of position in the current line.
--   Add Intent to create task for automation tools such as tasker see [help](intents.md).
+-   Add Intent to create task for automation tools such as tasker see [help](intents.en.md).
 -   Make application intents package specific so you can install different simpletask versions at the same time.
 -   Integrate cloudless build so all versions are based on same source code
 -   Add Archive to context menu so you don't have to go to preferences to archive your tasks
@@ -1591,8 +1704,8 @@
 2.7.1
 -----
 
--   Added black theme for widgets. Widget and app theme can be configured seperately.
--   Remove custom font size deltas, it kills perfomance (and thus battery). Will be re-added if there is a better way.
+-   Added black theme for widgets. Widget and app theme can be configured separately.
+-   Remove custom font size deltas, it kills performance (and thus battery). Will be re-added if there is a better way.
 
 2.7.0
 -----
@@ -1600,7 +1713,7 @@
 -   Support for a Holo Dark theme. Can be configured from the Preferences.
 -   Added grouping by threshold date and priority.
 -   Demonstrate Navigation drawers on first run.
--   Properly initialize side drawes after first sync with Dropbox.
+-   Properly initialize side drawers after first sync with Dropbox.
 -   Do not reset preferences to default after logging out of Dropbox and logging in again.
 -   Fixed some sorting issues caused by bug in Alphabetical sort.
 -   Refactored header functionality so it will be easier to add new groupings.

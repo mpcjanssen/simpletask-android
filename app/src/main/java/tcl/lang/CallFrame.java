@@ -57,14 +57,14 @@ public class CallFrame {
 	public TclObject[] objv;
 
 	/**
-	 * Value of interp.frame when this procedure was invoked (i.e. next in stack
+	 * Value of mainInterp.frame when this procedure was invoked (i.e. next in stack
 	 * of all active procedures).
 	 */
 
 	public CallFrame caller;
 
 	/**
-	 * Value of interp.varFrame when this procedure was invoked (i.e. determines
+	 * Value of mainInterp.varFrame when this procedure was invoked (i.e. determines
 	 * variable scoping within caller; same as caller unless an "uplevel"
 	 * command or something equivalent was active in the caller).
 	 */
@@ -122,8 +122,8 @@ public class CallFrame {
 	 * <ul>
 	 * <li>this.caller
 	 * <li>this.callerVar
-	 * <li>interp.frame
-	 * <li>interp.varFrame
+	 * <li>mainInterp.frame
+	 * <li>mainInterp.varFrame
 	 * </ul>
 	 * 
 	 * @param i

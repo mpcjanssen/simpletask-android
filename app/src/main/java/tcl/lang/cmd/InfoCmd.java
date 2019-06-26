@@ -646,7 +646,7 @@ public class InfoCmd implements Command {
 	 * Called to implement the "info loaded" command that returns the packages that have been loaded into an
 	 * interpreter. Handles the following syntax:
 	 * 
-	 * info loaded ?interp?
+	 * info loaded ?mainInterp?
 	 * 
 	 * @param interp
 	 * @param objv
@@ -655,7 +655,7 @@ public class InfoCmd implements Command {
 
 	private static void InfoLoadedCmd(Interp interp, TclObject[] objv) throws TclException {
 		if (objv.length != 2 && objv.length != 3) {
-			throw new TclNumArgsException(interp, 2, objv, "?interp?");
+			throw new TclNumArgsException(interp, 2, objv, "?mainInterp?");
 		}
 		if (objv.length == 3) {
 			Interp slaveInterp = InterpCmd.getInterp(interp, objv[2]);

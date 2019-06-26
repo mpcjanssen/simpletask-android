@@ -20,6 +20,11 @@
         android:key="@string/custom_font_size"
         android:title="@string/font_size_delta_pref_title"
         />
+    <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/force_english"
+            android:title="@string/force_english_title"
+    />
     <com.robobunny.SeekBarPreference
         xmlns:robobunny="http://robobunny.com"
         android:dependency="@string/custom_font_size"
@@ -68,4 +73,10 @@
         android:summary="%s"
         android:title="@string/task_text_ellipsizing_pref_title"
         />
+    <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/use_list_and_tags_icons"
+            android:title="@string/use_list_and_tags_icons_title"
+            android:summary="@string/use_list_and_tags_icons_summary"
+    />
 </PreferenceScreen>

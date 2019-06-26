@@ -1,9 +1,11 @@
 package nl.mpcjanssen.simpletask.util
 
+import android.util.Log
 import me.smichel.android.KPreferences.Preferences
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.Task
+import org.json.JSONObject
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -75,8 +77,6 @@ object Config : Preferences(TodoApplication.app) {
 
     var isWordWrap by BooleanPreference(R.string.word_wrap_key, true)
 
-    var isShowEditTextHint by BooleanPreference(R.string.show_edittext_hint, true)
-
     var isCapitalizeTasks by BooleanPreference(R.string.capitalize_tasks, true)
 
     val showTodoPath by BooleanPreference(R.string.show_todo_path, false)
@@ -97,8 +97,6 @@ object Config : Preferences(TodoApplication.app) {
             return false
         }
     }
-
-    var isAddTagsCloneTags by BooleanPreference(R.string.clone_tags_key, false)
 
     val hasAppendAtEnd by BooleanPreference(R.string.append_tasks_at_end, true)
 
@@ -174,11 +172,13 @@ object Config : Preferences(TodoApplication.app) {
             if (!customSize) {
                 return 14.0f
             }
-            val font_size by IntPreference(R.string.font_size, 14)
-            return font_size.toFloat()
+            val fontSize by IntPreference(R.string.font_size, 14)
+            return fontSize.toFloat()
         }
 
     val hasShareTaskShowsEdit by BooleanPreference(R.string.share_task_show_edit, false)
+
+    val useListAndTagIcons by BooleanPreference(R.string.use_list_and_tags_icons, true)
 
     val hasExtendedTaskView by BooleanPreference(R.string.taskview_extended_pref_key, true)
 
@@ -214,6 +214,9 @@ object Config : Preferences(TodoApplication.app) {
         prefs.edit().remove(getString(R.string.file_current_version_id)).apply()
     }
 
+    val doneFileName: String
+        get() = File(todoFile.parentFile, "done.txt").absolutePath
+
     fun clearCache() {
         cachedContents = null
         todoList = null
@@ -243,21 +246,52 @@ object Config : Preferences(TodoApplication.app) {
     var todoList: List<Task>?
         get() = cachedContents?.let {
             val lines = it.lines()
-            log.info(TAG, "Getting ${lines.size} items todoList from cache")
+            Log.i(TAG, "Getting ${lines.size} items todoList from cache")
             ArrayList<Task>().apply {
                 addAll(lines.map { line -> Task(line) })
             }
         }
         set(items) {
-            log.info(TAG, "Updating todoList cache with ${items?.size} items")
+            Log.i(TAG, "Updating todoList cache with ${items?.size} items")
             if (items == null) {
                 prefs.edit().remove(getString(R.string.cached_todo_file)).apply()
             } else {
-                cachedContents = items.map { it.inFileFormat() }.joinToString("\n")
+                cachedContents = items.joinToString("\n") { it.inFileFormat() }
             }
         }
     var changesPending by BooleanPreference(R.string.changes_pending, false)
+    var forceEnglish by BooleanPreference(R.string.force_english, false)
     var useUUIDs by BooleanPreference(R.string.use_uuids, false)
+
+    fun legacyQueryStoreJson() : String   {
+        val queries = LegacyQueryStore.ids().map {
+            LegacyQueryStore.get(it)
+        }
+        val jsonObject = queries.fold(JSONObject()) { acc, query ->
+            acc.put(query.name, query.query.saveInJSON())
+        }
+        return jsonObject.toString(2)
+    }
+
+    var savedQueriesJSONString by StringPreference(R.string.query_store, legacyQueryStoreJson())
+
+    var savedQueries : List<NamedQuery>
+    get() {
+        val queries = ArrayList<NamedQuery>()
+        val jsonFilters = JSONObject(savedQueriesJSONString)
+        jsonFilters.keys().forEach { name ->
+            val json = jsonFilters.getJSONObject(name)
+            val newQuery = NamedQuery(name, Query(json, luaModule = "mainui"))
+            queries.add(newQuery)
+        }
+        return queries
+    }
+    set(queries) {
+        val jsonFilters = queries.fold(JSONObject()) { acc, query ->
+            acc.put(query.name, query.query.saveInJSON())
+        }
+        savedQueriesJSONString = jsonFilters.toString(2)
+    }
 
     fun getSortString(key: String): String {
         if (useTodoTxtTerms) {

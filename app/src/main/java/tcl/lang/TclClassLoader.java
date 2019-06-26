@@ -42,8 +42,8 @@ public class TclClassLoader extends ClassLoader {
 
 	/**
 	 * Cache of classes loaded by this class loader. Typically, a class loader
-	 * is defined on a per-interp basis, so this will cache instances of class
-	 * data for each access in the interp. Different interpreters require
+	 * is defined on a per-mainInterp basis, so this will cache instances of class
+	 * data for each access in the mainInterp. Different interpreters require
 	 * different caches since the same class name could be loaded from two
 	 * different locations in different interps.
 	 */
@@ -59,7 +59,7 @@ public class TclClassLoader extends ClassLoader {
 	/**
 	 * Each instance can have a list of additional paths to search. This needs
 	 * to be stored on a per instance basis because classes may be resolved at
-	 * later times. loadpath is extracted from the env(TCL_CLASSPATH) interp
+	 * later times. loadpath is extracted from the env(TCL_CLASSPATH) mainInterp
 	 * variable.
 	 */
 	private String[] loadpath = null;
@@ -91,7 +91,7 @@ public class TclClassLoader extends ClassLoader {
 	private ClassLoader parent;
 
 	/**
-	 * Pointer to interp, non-null when the value of env(TCL_CLASSPATH) should
+	 * Pointer to mainInterp, non-null when the value of env(TCL_CLASSPATH) should
 	 * be used and checked for updates.
 	 */
 	private Interp interp = null;
@@ -99,20 +99,20 @@ public class TclClassLoader extends ClassLoader {
 	/*
 	 * TclClassLoader searches a possible -classpath path and the
 	 * env(TCL_CLASSPATH) path for classes and resources to load. A
-	 * TclClassLoader is defined on a per-interp basis, if a specific command
+	 * TclClassLoader is defined on a per-mainInterp basis, if a specific command
 	 * needs to search additional paths then that search is done in a
-	 * TclClassLoader() that has the interp class loader as a parent. Note that
+	 * TclClassLoader() that has the mainInterp class loader as a parent. Note that
 	 * a TclClassLoader will always have a non-null parent.
 	 * 
 	 * The list of paths in pathList and env(TCL_CLASSPATH) can be relative to
-	 * the current interp dir. The full path names are resolved, before they are
+	 * the current mainInterp dir. The full path names are resolved, before they are
 	 * stored.
 	 * 
 	 * Results: None.
 	 * 
 	 * Side effects: Creates a new TclClassLoader object.
 	 * 
-	 * @param interp Used to get env(TCL_CLASSPATH) and current working dir
+	 * @param mainInterp Used to get env(TCL_CLASSPATH) and current working dir
 	 * 
 	 * @param pathList List of additional paths to search
 	 * 
@@ -135,7 +135,7 @@ public class TclClassLoader extends ClassLoader {
 	 * object to to object.
 	 * 
 	 * The list of paths in pathList and env(TCL_CLASSPATH) can be relative to
-	 * the current interp dir. The full path names are resolved, before they are
+	 * the current mainInterp dir. The full path names are resolved, before they are
 	 * stored.
 	 * 
 	 * Results:
@@ -156,13 +156,13 @@ public class TclClassLoader extends ClassLoader {
 		try {
 			boolean searchTclClasspath = true;
 
-			// A TclClassLoader that is a child of the interp class loader
+			// A TclClassLoader that is a child of the mainInterp class loader
 			// will search only on a passed in -classpath not
 			// env(TCL_CLASSPATH).
 
 			if (parent instanceof TclClassLoader) {
 				if (pathList == null) {
-					throw new TclRuntimeError("TclClassLoader is a child of the interp "
+					throw new TclRuntimeError("TclClassLoader is a child of the mainInterp "
 							+ "class loader but it does not have a -classpath to search");
 				}
 				searchTclClasspath = false;
@@ -184,7 +184,7 @@ public class TclClassLoader extends ClassLoader {
 	}
 
 	/**
-	 * Release resources, to ensure that interp has no references (especially in
+	 * Release resources, to ensure that mainInterp has no references (especially in
 	 * a container environment.)
 	 */
 	public void dispose() {
@@ -285,7 +285,7 @@ public class TclClassLoader extends ClassLoader {
 
 		// Resolve with parent ClassLoader to see if it can resolve the class.
 		// The parent could be the system class loader, a thread context
-		// class loader, or the TclClassLoader for a specific interp.
+		// class loader, or the TclClassLoader for a specific mainInterp.
 
 		try {
 

@@ -61,7 +61,7 @@
             />
     </ScrollView>
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/SimpleToolbar"
         android:layout_width="match_parent"

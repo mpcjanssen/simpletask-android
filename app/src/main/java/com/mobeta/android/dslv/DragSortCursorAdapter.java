@@ -2,7 +2,7 @@ package com.mobeta.android.dslv;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;

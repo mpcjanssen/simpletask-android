@@ -125,7 +125,7 @@ public class TclIO {
 	/**
 	 * Table of channels currently registered for all interps. The
 	 * interpChanTable has "virtual" references into this table that stores the
-	 * registered channels for the individual interp.
+	 * registered channels for the individual mainInterp.
 	 */
 
 	private static StdChannel stdinChan = null;

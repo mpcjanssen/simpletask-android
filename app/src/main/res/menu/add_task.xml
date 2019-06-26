@@ -3,12 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
-    <item
-        android:id="@+id/menu_prefill_next"
-        android:title="@string/clone_tags"
-        android:checkable="true"
-        app:showAsAction="never"
-        />
+
     <item
         android:id="@+id/menu_word_wrap"
         android:title="@string/word_wrap"
@@ -18,12 +13,6 @@
     <item
         android:id="@+id/menu_capitalize_tasks"
         android:title="@string/menu_capitalize_tasks"
-        android:checkable="true"
-        app:showAsAction="never"
-        />
-    <item
-        android:id="@+id/menu_show_edittext_hint"
-        android:title="@string/show_edittext_hint_title"
         android:checkable="true"
         app:showAsAction="never"
         />

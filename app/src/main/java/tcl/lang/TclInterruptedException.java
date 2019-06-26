@@ -14,7 +14,7 @@
 package tcl.lang;
 
 /**
- * Signals that an interp has been interrupted via the Interp.setInterrupted()
+ * Signals that an mainInterp has been interrupted via the Interp.setInterrupted()
  * API. This exception is used to unwind the Tcl stack and remove pending events
  * from the Tcl event queue.
  */
@@ -37,10 +37,10 @@ public final class TclInterruptedException extends RuntimeException {
 }
 
 // This class implements an event that will raise
-// a TclInterruptedException in the interp. This
+// a TclInterruptedException in the mainInterp. This
 // event is queued from a thread other the one
-// the interp is executing in, so be careful
-// not to interact with the interp since it
+// the mainInterp is executing in, so be careful
+// not to interact with the mainInterp since it
 // would not be thread safe. This event will
 // wake up a Jacl thread waiting in a vwait
 // or in the main processing loop. This class is
@@ -57,8 +57,8 @@ class TclInterruptedExceptionEvent extends TclEvent implements EventDeleter {
 		this.exceptionRaised = false;
 	}
 
-	// processEvent() is invoked in the interp thread,
-	// so this code can interact with the interp.
+	// processEvent() is invoked in the mainInterp thread,
+	// so this code can interact with the mainInterp.
 
 	public int processEvent(int flags) {
 		wasProcessed = true;

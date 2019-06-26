@@ -657,7 +657,7 @@ public class Notifier implements EventDeleter {
 	 * refCount of the Notifier object. When the last active Interp in a thread
 	 * is disposed of, the Notifier is disposed of. This method will return true
 	 * for a Notifier object that has active Interp object and false when the
-	 * Notifier has been disposed of because the last active interp was disposed
+	 * Notifier has been disposed of because the last active mainInterp was disposed
 	 * of.
 	 * 
 	 * Results: None.
@@ -686,9 +686,9 @@ public class Notifier implements EventDeleter {
 	 * any code that could be invoked by Tcl. This method supports interps that
 	 * will make use of the setInterrupted() API.
 	 * 
-	 * If only one Interp exists in the thread and the interp is interrupted,
-	 * then this method will return. If more than one interp exists in the
-	 * thread and one interp is interrupted, then events for the other interps
+	 * If only one Interp exists in the thread and the mainInterp is interrupted,
+	 * then this method will return. If more than one mainInterp exists in the
+	 * thread and one mainInterp is interrupted, then events for the other interps
 	 * will continue to be processed. This method will return when all the
 	 * interps in the current thread have been disposed of. This is a convience
 	 * method only, there is no reason this logic could not appear in user code.
@@ -706,7 +706,7 @@ public class Notifier implements EventDeleter {
 		}
 
 		// The while loop will exit when the last
-		// interp is disposed of. If this was
+		// mainInterp is disposed of. If this was
 		// called by Thread.run() then the thread
 		// will die when that method terminates.
 		// If "exit" is called the process will

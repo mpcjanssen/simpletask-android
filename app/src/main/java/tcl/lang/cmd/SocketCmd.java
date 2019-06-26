@@ -150,7 +150,7 @@ public class SocketCmd implements Command {
 
 			// Register with the interpreter to let us know when the
 			// interpreter is deleted (by having the callback set the
-			// acceptCallbackPtr->interp field to NULL). This is to
+			// acceptCallbackPtr->mainInterp field to NULL). This is to
 			// avoid trying to eval the script in a deleted interpreter.
 
 			// Register a close callback. This callback will inform the

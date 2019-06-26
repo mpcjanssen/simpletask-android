@@ -2,6 +2,7 @@ package nl.mpcjanssen.simpletask.task
 
 import nl.mpcjanssen.simpletask.util.addInterval
 import java.util.*
+import java.util.regex.Pattern
 
 class Task(text: String, defaultPrependedDate: String? = null) {
 
@@ -31,31 +32,31 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
     private inline fun <reified T : TToken> upsertToken(newToken: T) {
 
-            if (getFirstToken<T>() == null) {
-                tokens += newToken
-            } else {
-                tokens = tokens.map {
-                    if (it is T) {
-                        newToken
-                    } else {
-                        it
-                    }
+        if (getFirstToken<T>() == null) {
+            tokens += newToken
+        } else {
+            tokens = tokens.map {
+                if (it is T) {
+                    newToken
+                } else {
+                    it
                 }
             }
+        }
 
     }
 
     val text: String
         get() {
-            return tokens.map { it.text }.joinToString(" ")
+            return tokens.joinToString(" ") { it.text }
         }
 
     val extensions: List<Pair<String, String>>
         get() {
-            return tokens.filter { it is KeyValueToken }.map {
+            return tokens.asSequence().filter { it is KeyValueToken }.map {
                 val token = it as KeyValueToken
                 Pair(token.key, token.valueStr)
-            }
+            }.toList()
         }
 
     var completionDate: String? = null
@@ -112,42 +113,53 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     var priority: Priority
         get() = getFirstToken<PriorityToken>()?.value ?: Priority.NONE
         set(prio) {
-            if (prio == Priority.NONE) {
-                tokens = tokens.filter { it !is PriorityToken }
-            } else if (tokens.any { it is PriorityToken }) {
-                upsertToken(PriorityToken(prio.fileFormat))
-            } else {
-                tokens = listOf(PriorityToken(prio.fileFormat)) + tokens
+            when {
+                prio == Priority.NONE -> tokens = tokens.filter { it !is PriorityToken }
+                tokens.any { it is PriorityToken } -> upsertToken(PriorityToken(prio.fileFormat))
+                else -> tokens = listOf(PriorityToken(prio.fileFormat)) + tokens
             }
         }
 
     var recurrencePattern: String? = null
         get() = getFirstToken<RecurrenceToken>()?.valueStr
 
-    var tags: SortedSet<String> = emptySet<String>().toSortedSet()
+    var tags: SortedSet<String>? = null
         get() {
-            return tokens.filter { it is TagToken }.map { it -> (it as TagToken).value }.toSortedSet()
+            tokens.filter { it is TagToken }.run {
+                return if (size > 0) {
+                    (map { it -> (it as TagToken).value }).toSortedSet()
+                } else {
+                    null
+                }
+            }
         }
 
-    var lists: SortedSet<String> = emptySet<String>().toSortedSet()
+    var lists: SortedSet<String>? = null
         get() {
-            return tokens.filter { it is ListToken }.map { it -> (it as ListToken).value }.toSortedSet()
+            tokens.filter { it is ListToken }.run {
+                return if (size > 0) {
+                    (map { it -> (it as ListToken).value }).toSortedSet()
+                } else {
+                    null
+                }
+            }
         }
 
     var links: Set<String> = emptySet()
         get() {
-            return tokens.filter { it is LinkToken }.map { it -> (it as LinkToken).text }.toSortedSet()
+            return tokens.asSequence().filter { it is LinkToken }.map { it -> (it as LinkToken).text }.toSet()
         }
 
     var phoneNumbers: Set<String> = emptySet()
         get() {
-            return tokens.filter { it is PhoneToken }.map { it -> (it as PhoneToken).text }.toSortedSet()
+            return tokens.asSequence().filter { it is PhoneToken }.map { it -> (it as PhoneToken).text }.toSet()
         }
     var mailAddresses: Set<String> = emptySet()
         get() {
-            return tokens.filter { it is MailToken }.map { it -> (it as MailToken).text }.toSortedSet()
+            return tokens.asSequence().filter { it is MailToken }.map { it -> (it as MailToken).text }.toSet()
         }
     var selected: Boolean = false
+    val alphaParts: String = showParts { it.isAlpha() }
 
     fun removeTag(tag: String) {
         tokens = tokens.filter {
@@ -161,7 +173,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         }
     }
 
-    fun markComplete(dateStr: String) : Task? {
+    fun markComplete(dateStr: String): Task? {
         if (!this.isCompleted()) {
             val textWithoutCompletedInfo = text
             tokens = listOf(CompletedToken(true), CompletedDateToken(dateStr)) + tokens
@@ -190,7 +202,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
     fun markIncomplete() {
         tokens = tokens.filter {
-             when (it) {
+            when (it) {
                 is CompletedDateToken -> false
                 is CompletedToken -> false
                 else -> true
@@ -199,48 +211,36 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     }
 
     fun deferThresholdDate(deferString: String, deferFromDate: String) {
-        if (deferString.matches(MATCH_SINGLE_DATE))
-        {
+        if (MATCH_SINGLE_DATE.reset(deferString).matches()) {
             thresholdDate = deferString
             return
         }
-        if (deferString == "")
-        {
+        if (deferString == "") {
             thresholdDate = null
             return
         }
-        val olddate: String?
-        if (deferFromDate.isEmpty())
-        {
-            olddate = thresholdDate
-        }
-        else
-        {
-            olddate = deferFromDate
+        val olddate: String? = if (deferFromDate.isEmpty()) {
+            thresholdDate
+        } else {
+            deferFromDate
         }
         val newDate = addInterval(olddate, deferString)
         thresholdDate = newDate?.format(DATE_FORMAT)
     }
 
     fun deferDueDate(deferString: String, deferFromDate: String) {
-        if (deferString.matches(MATCH_SINGLE_DATE))
-        {
+        if (MATCH_SINGLE_DATE.reset(deferString).matches()) {
             dueDate = deferString
             return
         }
-        if (deferString == "")
-        {
+        if (deferString == "") {
             dueDate = null
             return
         }
-        val olddate: String?
-        if (deferFromDate.isEmpty())
-        {
-            olddate = dueDate
-        }
-        else
-        {
-            olddate = deferFromDate
+        val olddate: String? = if (deferFromDate.isEmpty()) {
+            dueDate
+        } else {
+            deferFromDate
         }
         val newDate = addInterval(olddate, deferString)
         dueDate = newDate?.format(DATE_FORMAT)
@@ -265,36 +265,38 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     }
 
     fun showParts(filter: (TToken) -> Boolean): String {
-        return tokens.filter(filter)
-                .map { it.text }
-                .joinToString(" ")
+        return tokens.asSequence().filter(filter)
+                .joinToString(" ") { it.text }
     }
 
     fun getHeader(sort: String, empty: String, createIsThreshold: Boolean): String {
-        if (sort.contains("by_context")) {
-            if (lists.size > 0) {
-                return lists.first()
-            } else {
+        when {
+            sort.contains("by_context") -> {
+                lists?.run {
+                    if (size > 0) {
+                        return first()
+                    }
+                }
+                return empty
+
+            }
+            sort.contains("by_project") -> {
+                tags?.run {
+                    if (size > 0) {
+                        return first()
+                    }
+                }
                 return empty
             }
-        } else if (sort.contains("by_project")) {
-            if (tags.size > 0) {
-                return tags.first()
+            sort.contains("by_threshold_date") -> return if (createIsThreshold) {
+                thresholdDate ?: createDate ?: empty
             } else {
-                return empty
+                thresholdDate ?: empty
             }
-        } else if (sort.contains("by_threshold_date")) {
-            if (createIsThreshold) {
-                return thresholdDate ?: createDate ?: empty
-            } else {
-                return thresholdDate ?: empty
-            }
-        } else if (sort.contains("by_prio")) {
-            return priority.code
-        } else if (sort.contains("by_due_date")) {
-            return dueDate ?: empty
+            sort.contains("by_prio") -> return priority.code
+            sort.contains("by_due_date") -> return dueDate ?: empty
+            else -> return ""
         }
-        return ""
     }
 
     /* Adds the task to list Listname
@@ -302,8 +304,8 @@ class Task(text: String, defaultPrependedDate: String? = null) {
  */
     fun addList(listName: String) {
         listName.split(Regex("\\s+")).forEach {
-            if (!lists.contains(it)) {
-                tokens += ListToken("@" + it)
+            if (lists?.contains(it)!=true) {
+                tokens += ListToken("@$it")
             }
         }
     }
@@ -311,10 +313,10 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     /* Tags the task with tag
     ** If the task already has te tag, it does nothing
     */
-    fun addTag(tagName : String) {
+    fun addTag(tagName: String) {
         tagName.split(Regex("\\s+")).forEach {
-            if (!tags.contains(it)) {
-                tokens += TagToken("+" + it)
+            if (tags?.contains(it)!=true) {
+                tokens += TagToken("+$it")
             }
         }
     }
@@ -322,21 +324,23 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     companion object {
         var TAG = "Task"
         const val DATE_FORMAT = "YYYY-MM-DD"
-        private val MATCH_LIST = Regex("@(\\S+)")
-        private val MATCH_TAG = Regex("\\+(\\S+)")
-        private val MATCH_HIDDEN = Regex("[Hh]:([01])")
-        private val MATCH_UUID = Regex("[Uu][Uu][Ii][Dd]:([A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12})")
-        private val MATCH_DUE = Regex("[Dd][Uu][Ee]:(\\d{4}-\\d{2}-\\d{2})")
-        private val MATCH_THRESHOLD = Regex("[Tt]:(\\d{4}-\\d{2}-\\d{2})")
-        private val MATCH_RECURRENCE = Regex("[Rr][Ee][Cc]:((\\+?)\\d+[dDwWmMyYbB])")
-        private val MATCH_EXT = Regex("(.+):(.+)")
+        private val MATCH_LIST = Pattern.compile("@(\\S+)").matcher("")
+        private val MATCH_TAG = Pattern.compile("\\+(\\S+)").matcher("")
+        private val MATCH_HIDDEN = Pattern.compile("[Hh]:([01])").matcher("")
+        private val MATCH_UUID = Pattern
+                .compile("[Uu][Uu][Ii][Dd]:([A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12})")
+                .matcher("")
+        private val MATCH_DUE = Pattern.compile("[Dd][Uu][Ee]:(\\d{4}-\\d{2}-\\d{2})").matcher("")
+        private val MATCH_THRESHOLD = Pattern.compile("[Tt]:(\\d{4}-\\d{2}-\\d{2})").matcher("")
+        private val MATCH_RECURRENCE = Pattern.compile("[Rr][Ee][Cc]:((\\+?)\\d+[dDwWmMyYbB])").matcher("")
+        private val MATCH_EXT = Pattern.compile("(.+):(.+)").matcher("")
         private val MATCH_PRIORITY = Regex("\\(([A-Z])\\)")
-        private val MATCH_SINGLE_DATE = Regex("\\d{4}-\\d{2}-\\d{2}")
-        private val MATCH_PHONE_NUMBER = Regex("[+]?[0-9,#()-]{4,}")
-        private val MATCH_URI = Regex("[a-z]+://(\\S+)")
-        private val MATCH_MAIL = Regex("[a-zA-Z0-9\\+\\._%\\-]{1,256}" + "@"
+        private val MATCH_SINGLE_DATE = Pattern.compile("\\d{4}-\\d{2}-\\d{2}").matcher("")
+        private val MATCH_PHONE_NUMBER = Pattern.compile("[+]?[0-9,#()-]{4,}").matcher("")
+        private val MATCH_URI = Pattern.compile("[a-z]+://(\\S+)").matcher("")
+        private val MATCH_MAIL = Pattern.compile("[a-zA-Z0-9\\+\\._%\\-]{1,256}" + "@"
                 + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" + "(" + "\\."
-                + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" + ")+")
+                + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" + ")+").matcher("")
 
 //        fun parse(text: String): ArrayList<TToken> {
 //            val tokens = ArrayList<TToken>()
@@ -345,91 +349,121 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 //        }
 
         fun parse(text: String): ArrayList<TToken> {
-            var lexemes = text.lex()
-            val tokens = ArrayList<TToken>()
+            synchronized(this) {
+                var lexemes = text.lex()
+                val tokens = ArrayList<TToken>()
 
-            if (lexemes.take(1) == listOf("x")) {
-                tokens.add(CompletedToken(true))
-                lexemes = lexemes.drop(1)
-                var nextToken = lexemes.getOrElse(0, { "" })
-                MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
-                    tokens.add(CompletedDateToken(lexemes.first()))
+                if (lexemes.take(1) == listOf("x")) {
+                    tokens.add(CompletedToken(true))
                     lexemes = lexemes.drop(1)
-                    nextToken = lexemes.getOrElse(0, { "" })
-                    MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
+                    var nextToken = lexemes.getOrElse(0) { "" }
+                    MATCH_SINGLE_DATE.reset(nextToken).apply {
+                        if (matches()) {
+                            tokens.add(CompletedDateToken(lexemes.first()))
+                            lexemes = lexemes.drop(1)
+                            nextToken = lexemes.getOrElse(0) { "" }
+                            MATCH_SINGLE_DATE.reset(nextToken).apply {
+                                if (matches()) {
+                                    tokens.add(CreateDateToken(lexemes.first()))
+                                    lexemes = lexemes.drop(1)
+                                }
+                            }
+                        }
+                    }
+                }
+
+                var nextToken = lexemes.getOrElse(0) { "" }
+                MATCH_PRIORITY.matchEntire(nextToken)?.let {
+                    tokens.add(PriorityToken(nextToken))
+                    lexemes = lexemes.drop(1)
+                }
+
+                nextToken = lexemes.getOrElse(0) { "" }
+                MATCH_SINGLE_DATE.reset(nextToken)?.apply {
+                    if (matches()) {
                         tokens.add(CreateDateToken(lexemes.first()))
                         lexemes = lexemes.drop(1)
                     }
                 }
-            }
 
-            var nextToken = lexemes.getOrElse(0, { "" })
-            MATCH_PRIORITY.matchEntire(nextToken)?.let {
-                tokens.add(PriorityToken(nextToken))
-                lexemes = lexemes.drop(1)
-            }
+                lexemes.forEach { lexeme ->
+                    MATCH_LIST.reset(lexeme).apply {
+                        if (matches()) {
+                            tokens.add(ListToken(lexeme))
+                            return@forEach
+                        }
+                    }
+                    MATCH_TAG.reset(lexeme).apply {
+                        if (matches()) {
+                            tokens.add(TagToken(lexeme))
+                            return@forEach
+                        }
+                    }
+                    MATCH_HIDDEN.reset(lexeme)?.apply {
+                        if (matches()) {
+                            tokens.add(HiddenToken(group(1)))
+                            return@forEach
+                        }
+                    }
+                    // Match phone numbers before tags to support +31.....
+                    // This will make tags which can also be interpreted as phone numbers not possible
+                    MATCH_PHONE_NUMBER.reset(lexeme).apply {
+                        if (matches()) {
+                            tokens.add(PhoneToken(lexeme))
+                            return@forEach
+                        }
+                    }
 
-            nextToken = lexemes.getOrElse(0, { "" })
-            MATCH_SINGLE_DATE.matchEntire(nextToken)?.let {
-                tokens.add(CreateDateToken(lexemes.first()))
-                lexemes = lexemes.drop(1)
+                    MATCH_DUE.reset(lexeme).apply {
+                        if (matches()) {
+                            tokens.add(DueDateToken(group(1)))
+                            return@forEach
+                        }
+                    }
+                    MATCH_THRESHOLD.reset(lexeme).apply {
+                        if (matches()) {
+                            tokens.add(ThresholdDateToken(group(1)))
+                            return@forEach
+                        }
+                    }
+                    MATCH_RECURRENCE.reset(lexeme).apply {
+                        if (matches()) {
+                            tokens.add(RecurrenceToken(group(1)))
+                            return@forEach
+                        }
+                    }
+                    MATCH_UUID.reset(lexeme).apply {
+                        if (matches()) {
+                            tokens.add(UUIDToken(group(1)))
+                            return@forEach
+                        }
+                    }
+                    MATCH_URI.reset(lexeme).apply {
+                        if (matches()) {
+                            tokens.add(LinkToken(lexeme))
+                            return@forEach
+                        }
+                    }
+                    MATCH_MAIL.reset(lexeme).apply {
+                        if (matches()) {
+                            tokens.add(MailToken(lexeme))
+                            return@forEach
+                        }
+                    }
+                    MATCH_EXT.reset(lexeme).apply {
+                        if (matches()) {
+                            tokens.add(ExtToken(group(1), group(2)))
+                            return@forEach
+                        }
+                    }
+                    if (lexeme.isBlank()) {
+                        tokens.add(WhiteSpaceToken(lexeme))
+                    } else {
+                        tokens.add(TextToken(lexeme))
+                    }
+                }
+                return tokens
             }
-
-            lexemes.forEach { lexeme ->
-                MATCH_LIST.matchEntire(lexeme)?.let {
-                    tokens.add(ListToken(lexeme))
-                    return@forEach
-                }
-                // Match phone numbers before tags to support +31.....
-                // This will make tags which can also be interpreted as phone numbers not possible
-                MATCH_PHONE_NUMBER.matchEntire(lexeme)?.let {
-                    tokens.add(PhoneToken(lexeme))
-                    return@forEach
-                }
-                MATCH_TAG.matchEntire(lexeme)?.let {
-                    tokens.add(TagToken(lexeme))
-                    return@forEach
-                }
-                MATCH_DUE.matchEntire(lexeme)?.let {
-                    tokens.add(DueDateToken(it.groupValues[1]))
-                    return@forEach
-                }
-                MATCH_THRESHOLD.matchEntire(lexeme)?.let {
-                    tokens.add(ThresholdDateToken(it.groupValues[1]))
-                    return@forEach
-                }
-                MATCH_HIDDEN.matchEntire(lexeme)?.let {
-                    tokens.add(HiddenToken(it.groupValues[1]))
-                    return@forEach
-                }
-                MATCH_UUID.matchEntire(lexeme)?.let {
-                    tokens.add(UUIDToken(it.groupValues[1]))
-                    return@forEach
-                }
-                MATCH_RECURRENCE.matchEntire(lexeme)?.let {
-                    tokens.add(RecurrenceToken(it.groupValues[1]))
-                    return@forEach
-                }
-                MATCH_URI.matchEntire(lexeme)?.let {
-                    tokens.add(LinkToken(lexeme))
-                    return@forEach
-                }
-                MATCH_MAIL.matchEntire(lexeme)?.let {
-                    tokens.add(MailToken(lexeme))
-                    return@forEach
-                }
-                MATCH_EXT.matchEntire(lexeme)?.let {
-                    tokens.add(ExtToken(it.groupValues[1], it.groupValues[2]))
-                    return@forEach
-                }
-                if (lexeme.isBlank()) {
-                    tokens.add(WhiteSpaceToken(lexeme))
-                } else {
-                    tokens.add(TextToken(lexeme))
-                }
-
-            }
-            return tokens
         }
     }
 }
@@ -437,17 +471,18 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 interface TToken {
     val text: String
     val value: Any?
+    fun isAlpha() = false
 }
 
 data class CompletedToken(override val value: Boolean) : TToken {
     override val text: String
-    get() = if (value) "x" else ""
+        get() = if (value) "x" else ""
 
 }
 
 data class PriorityToken(override val text: String) : TToken {
     override val value: Priority
-    get() = Priority.toPriority(text.removeSurrounding("(", ")"))
+        get() = Priority.toPriority(text.removeSurrounding("(", ")"))
 
 }
 
@@ -471,41 +506,66 @@ interface StringValueToken : TToken {
 
 data class CreateDateToken(override val text: String) : StringValueToken
 data class CompletedDateToken(override val text: String) : StringValueToken
-data class TextToken(override val text: String) : StringValueToken
-data class WhiteSpaceToken(override val text: String) : StringValueToken
-data class MailToken(override val text: String) : StringValueToken
-data class LinkToken(override val text: String) : StringValueToken
-data class PhoneToken(override val text: String) : StringValueToken
+data class TextToken(override val text: String) : StringValueToken {
+    override fun isAlpha(): Boolean {
+        return true
+    }
+}
+
+data class WhiteSpaceToken(override val text: String) : StringValueToken {
+    override fun isAlpha(): Boolean {
+        return true
+    }
+}
+
+data class MailToken(override val text: String) : StringValueToken {
+    override fun isAlpha(): Boolean {
+        return true
+    }
+}
+
+data class LinkToken(override val text: String) : StringValueToken {
+    override fun isAlpha(): Boolean {
+        return true
+    }
+}
+
+data class PhoneToken(override val text: String) : StringValueToken {
+    override fun isAlpha(): Boolean {
+        return true
+    }
+}
 
 
 // Key Value tokens
 interface KeyValueToken : TToken {
-    val key : String
-    val valueStr : String
+    val key: String
+    val valueStr: String
     override val value: Any?
-    get() = valueStr
+        get() = valueStr
     override val text: String
         get() = "$key:$valueStr"
 }
 
-data class DueDateToken(override val valueStr : String) : KeyValueToken {
+data class DueDateToken(override val valueStr: String) : KeyValueToken {
     override val key = "due"
 }
-data class ThresholdDateToken(override val valueStr : String) : KeyValueToken {
+
+data class ThresholdDateToken(override val valueStr: String) : KeyValueToken {
     override val key = "t"
 }
 
-data class RecurrenceToken(override val valueStr : String) : KeyValueToken {
+data class RecurrenceToken(override val valueStr: String) : KeyValueToken {
     override val key = "rec"
 }
 
-data class HiddenToken(override val valueStr : String) : KeyValueToken {
+data class HiddenToken(override val valueStr: String) : KeyValueToken {
     override val key = "h"
     override val value: Boolean
         get() = valueStr == "1"
 }
 
-data class ExtToken(override val key : String, override val valueStr: String) : KeyValueToken
+data class ExtToken(override val key: String, override val valueStr: String) : KeyValueToken
 
 data class UUIDToken(override val valueStr: String) : KeyValueToken {
     override val key = "uuid"

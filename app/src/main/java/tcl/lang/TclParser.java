@@ -630,7 +630,7 @@ public class TclParser implements Command {
 	 * 
 	 * Results: A standard Tcl result.
 	 * 
-	 * Side effects: The interp's result is set.
+	 * Side effects: The mainInterp's result is set.
 	 * 
 	 * ----------------------------------------------------------------------
 	 */
@@ -654,7 +654,7 @@ public class TclParser implements Command {
 	 * 
 	 * Results: A standard Tcl result.
 	 * 
-	 * Side effects: The interp's result is set.
+	 * Side effects: The mainInterp's result is set.
 	 * 
 	 * ----------------------------------------------------------------------
 	 */
@@ -681,7 +681,7 @@ public class TclParser implements Command {
 	 * 
 	 * Results: A standard Tcl result.
 	 * 
-	 * Side effects: The interp's result is set.
+	 * Side effects: The mainInterp's result is set.
 	 * 
 	 * ----------------------------------------------------------------------
 	 */
@@ -717,7 +717,7 @@ public class TclParser implements Command {
 	 * 
 	 * Results: A standard Tcl result.
 	 * 
-	 * Side effects: The interp's result is set to the number of newlines
+	 * Side effects: The mainInterp's result is set to the number of newlines
 	 * counted.
 	 * 
 	 * ----------------------------------------------------------------------
