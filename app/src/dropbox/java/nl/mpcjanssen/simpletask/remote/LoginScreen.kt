@@ -50,7 +50,7 @@ class LoginScreen : ThemedNoActionBarActivity() {
         super.onCreate(savedInstanceState)
 
         m_app = application as TodoApplication
-        setTheme(Config.activeTheme)
+        setTheme(TodoApplication.config.activeTheme)
         setContentView(R.layout.login)
         localBroadcastManager = LocalBroadcastManager.getInstance(this)
 
@@ -67,13 +67,13 @@ class LoginScreen : ThemedNoActionBarActivity() {
 
         var m_LoginButton = findViewById(R.id.login) as Button
         m_LoginButton.setOnClickListener {
-            Config.fullDropBoxAccess = true
+            TodoApplication.config.fullDropBoxAccess = true
             startLogin()
         }
 
         m_LoginButton = findViewById(R.id.login_folder) as Button
         m_LoginButton.setOnClickListener {
-            Config.fullDropBoxAccess = false
+            TodoApplication.config.fullDropBoxAccess = false
             startLogin()
         }
 
@@ -103,7 +103,7 @@ class LoginScreen : ThemedNoActionBarActivity() {
             FileStore.accessToken = accessToken
             resumeAfterAuth = false
             //Proceed to MainActivity
-            Config.setTodoFile(FileStore.getDefaultPath())
+            TodoApplication.config.setTodoFile(FileStore.getDefaultPath())
             FileStore.remoteTodoFileChanged()
             switchToTodolist()
         }
@@ -115,9 +115,9 @@ class LoginScreen : ThemedNoActionBarActivity() {
         }
 
     internal fun startLogin() {
-        Config.clearCache()
+        TodoApplication.config.clearCache()
         val appKey =
-                if (Config.fullDropBoxAccess) {
+                if (TodoApplication.config.fullDropBoxAccess) {
                     m_app.getString(R.string.dropbox_consumer_key)
                 } else {
                     m_app.getString(R.string.dropbox_folder_consumer_key)
