@@ -24,39 +24,39 @@ object QueryStore {
     }
 
     fun exportFilters(exportFile: File) {
-        val json = Config.savedQueriesJSONString
+        val json = TodoApplication.config.savedQueriesJSONString
         FileStore.writeFile(exportFile, json)
     }
 
     fun ids() : List<String> {
-        return Config.savedQueries.map { it.name  }
+        return TodoApplication.config.savedQueries.map { it.name  }
     }
 
 
     fun get(id: String): NamedQuery {
-        return  Config.savedQueries.first { it.name == id }
+        return  TodoApplication.config.savedQueries.first { it.name == id }
     }
 
     fun save(query: Query, name: String) {
-        val queries = Config.savedQueries.toMutableList()
+        val queries = TodoApplication.config.savedQueries.toMutableList()
         queries.add(NamedQuery(name,query))
-        Config.savedQueries = queries
+        TodoApplication.config.savedQueries = queries
     }
 
 
 
     fun delete(id: String) {
-        val newQueries = Config.savedQueries.filterNot { it.name == id }
-        Config.savedQueries = newQueries
+        val newQueries = TodoApplication.config.savedQueries.filterNot { it.name == id }
+        TodoApplication.config.savedQueries = newQueries
     }
 
     fun rename(squery: NamedQuery, newName: String) {
-        val queries = Config.savedQueries.toMutableList()
+        val queries = TodoApplication.config.savedQueries.toMutableList()
         val idx = queries.indexOf(squery)
         if (idx != -1 ) {
             queries[idx] = NamedQuery(newName, squery.query)
         }
-        Config.savedQueries = queries
+        TodoApplication.config.savedQueries = queries
     }
 }
 

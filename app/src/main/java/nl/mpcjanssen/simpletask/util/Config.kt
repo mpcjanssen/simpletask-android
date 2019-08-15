@@ -1,5 +1,6 @@
 package nl.mpcjanssen.simpletask.util
 
+import android.content.Context
 import android.util.Log
 import me.smichel.android.KPreferences.Preferences
 import nl.mpcjanssen.simpletask.*
@@ -10,7 +11,7 @@ import java.io.File
 import java.io.IOException
 import java.util.*
 
-object Config : Preferences(TodoApplication.app) {
+class Config(app: TodoApplication) : Preferences(app) {
 
     val TAG = "Config"
 
@@ -316,7 +317,7 @@ object Config : Preferences(TodoApplication.app) {
         set(value) {
             // Update the intent so we wont get the old applyFilter after
             // switching back to app later. Fixes [1c5271ee2e]
-            value.saveInPrefs(Config.prefs)
+            value.saveInPrefs(prefs)
         }
 
 }

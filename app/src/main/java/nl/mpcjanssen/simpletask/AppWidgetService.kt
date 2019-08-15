@@ -74,7 +74,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         filter = currentFilter
 
         val newVisibleTasks = ArrayList<Task>()
-        val (tasks, _) = TodoList.getSortedTasks(currentFilter, Config.sortCaseSensitive)
+        val (tasks, _) = TodoApplication.todoList.getSortedTasks(currentFilter, TodoApplication.config.sortCaseSensitive)
         newVisibleTasks.addAll(tasks)
         Log.d(TAG, "Widget $widgetId: setFilteredTasks returned ${newVisibleTasks.size} tasks")
         visibleTasks = newVisibleTasks
@@ -95,7 +95,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
     private fun getExtendedView(item: Task, position: Int): RemoteViews {
         val currentFilter = filter
         val rv = RemoteViews(TodoApplication.app.packageName, R.layout.widget_list_item)
-        val extended_widget = Config.prefs.getBoolean("widget_extended", true)
+        val extended_widget = TodoApplication.config.prefs.getBoolean("widget_extended", true)
         val task = item
 
         val tokensToShowFilter: (it: TToken) -> Boolean = {
@@ -114,7 +114,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         val txt = Interpreter.onDisplayCallback(currentFilter.luaModule, task) ?: task.showParts(tokensToShowFilter).trim { it <= ' ' }
         val ss = SpannableString(txt)
 
-        if (Config.isDarkWidgetTheme) {
+        if (TodoApplication.config.isDarkWidgetTheme) {
             itemForDarkTheme(rv)
         } else {
             itemForLightTheme(rv)
@@ -177,7 +177,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
             //rv.setViewPadding(R.prefName.tasktext,
             //        4, 4, 4, 0);
         }
-        rv.setOnClickFillInIntent(R.id.taskline, createSelectedIntent(TodoList.getTaskIndex(task)))
+        rv.setOnClickFillInIntent(R.id.taskline, createSelectedIntent(TodoApplication.todoList.getTaskIndex(task)))
         return rv
     }
 

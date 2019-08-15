@@ -266,7 +266,7 @@ data class Query(val luaModule: String) {
         val today = todayAsString
         try {
             return  items.filter {
-                if (showSelected && TodoList.isSelected(it)) {
+                if (showSelected && TodoApplication.todoList.isSelected(it)) {
                     return@filter true
                 }
                 if (this.hideCompleted && it.isCompleted()) {

@@ -49,7 +49,7 @@ class AddTaskBackground : Activity() {
         val intent = intent
         val action = intent.action
 
-        val append_text = Config.shareAppendText
+        val append_text = TodoApplication.config.shareAppendText
         if (intent.type?.startsWith("text/") ?: false) {
             if (Intent.ACTION_SEND == action) {
                 Log.d(TAG, "Share")
@@ -105,7 +105,7 @@ class AddTaskBackground : Activity() {
     }
 
     private fun addBackgroundTask(sharedText: String, appendText: String) {
-        val todoList = TodoList
+        val todoList = TodoApplication.todoList
         Log.d(TAG, "Adding background tasks to todolist $todoList")
 
         val rawLines = sharedText.split("\r\n|\r|\n".toRegex()).filterNot(String::isBlank)
@@ -113,13 +113,13 @@ class AddTaskBackground : Activity() {
             rawLines.map { "$it $appendText" }
         }
         val tasks = lines.map { text ->
-            if (Config.hasPrependDate) { Task(text, todayAsString) } else { Task(text) }
+            if (TodoApplication.config.hasPrependDate) { Task(text, todayAsString) } else { Task(text) }
         }
 
-        todoList.add(tasks, Config.hasAppendAtEnd)
-        todoList.notifyTasklistChanged(Config.todoFileName,  true, true)
+        todoList.add(tasks, TodoApplication.config.hasAppendAtEnd)
+        todoList.notifyTasklistChanged(TodoApplication.config.todoFileName,  true, true)
         showToastShort(TodoApplication.app, R.string.task_added)
-        if (Config.hasShareTaskShowsEdit) {
+        if (TodoApplication.config.hasShareTaskShowsEdit) {
             todoList.editTasks(this, tasks, "")
         }
         finish()

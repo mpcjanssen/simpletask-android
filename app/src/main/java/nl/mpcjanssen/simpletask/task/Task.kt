@@ -565,7 +565,6 @@ data class UUIDToken(override val valueStr: String) : KeyValueToken {
 fun String.lex(): List<String> = this.split(" ")
 
 
-
 // Extension because ArrayList.filter requires API 24
 fun ArrayList<TToken>.removeWhen(body: (TToken) -> Boolean) {
     val iter = this.iterator()
