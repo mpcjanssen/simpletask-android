@@ -58,7 +58,11 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     val completionDate: String?
         get() = getFirstToken<CompletedDateToken>()?.value
 
-    var uuid: String? = getFirstToken<UUIDToken>()?.valueStr
+    var uuid: String?
+    get () = getFirstToken<UUIDToken>()?.valueStr
+    set (uuid: String?) {
+        uuid?.let { upsertToken(UUIDToken(it)) }
+    }
 
     var createDate: String?
         get() = getFirstToken<CreateDateToken>()?.value
