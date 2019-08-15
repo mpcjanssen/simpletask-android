@@ -172,7 +172,9 @@ class TodoList(val config: Config) {
             return todoItems.toList().filter { it.selected }
         }
 
-    val fileFormat : String =  todoItems.toList().joinToString(separator = "\n", transform = Task::inFileFormat)
+    val fileFormat : String =  todoItems.toList().joinToString(separator = "\n", transform = {
+        it.inFileFormat(config.useUUIDs)
+    })
 
 
 
@@ -266,7 +268,7 @@ class TodoList(val config: Config) {
                         config.cachedContents = remoteContents.contents.joinToString("\n")
                         config.lastSeenRemoteId = remoteContents.remoteId
                         // Backup
-                        Backupper.backup(filename, items.map { it.inFileFormat() })
+                        Backupper.backup(filename, items.map { it.inFileFormat(config.useUUIDs) })
                         notifyTasklistChanged(filename, false, true)
                     } catch (e: Exception) {
                         Log.e(TAG, "TodoList load failed: {}" + filename, e)
@@ -284,7 +286,7 @@ class TodoList(val config: Config) {
     private fun save(fileStore: IFileStore, todoFileName: String, backup: Boolean, eol: String) {
         broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
         val lines = todoItems.map {
-            it.inFileFormat()
+            it.inFileFormat(config.useUUIDs)
         }
         // Update cache
         config.cachedContents = lines.joinToString("\n")

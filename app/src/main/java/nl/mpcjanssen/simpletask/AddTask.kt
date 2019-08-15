@@ -83,7 +83,7 @@ class AddTask : ThemedActionBarActivity() {
 
         Log.d(TAG, "Fill addtask")
 
-        val pendingTasks = TodoApplication.todoList.pendingEdits.map { it.inFileFormat() }
+        val pendingTasks = TodoApplication.todoList.pendingEdits.map { it.inFileFormat(TodoApplication.config.useUUIDs) }
             val preFillString = when {
                 pendingTasks.isNotEmpty() -> {
                     setTitle(R.string.updatetask)
@@ -429,7 +429,7 @@ class AddTask : ThemedActionBarActivity() {
         if (currentLine != -1) {
             val t = Task(lines[currentLine])
             t.dueDate = newDueDate.toString()
-            lines[currentLine] = t.inFileFormat()
+            lines[currentLine] = t.inFileFormat(TodoApplication.config.useUUIDs)
             taskText.setText(join(lines, "\n"))
         }
         restoreSelection(start, length, false)
@@ -451,7 +451,7 @@ class AddTask : ThemedActionBarActivity() {
         if (currentLine != -1) {
             val t = Task(lines[currentLine])
             t.thresholdDate = newThresholdDate.toString()
-            lines[currentLine] = t.inFileFormat()
+            lines[currentLine] = t.inFileFormat(TodoApplication.config.useUUIDs)
             taskText.setText(join(lines, "\n"))
         }
         restoreSelection(start, length, false)
@@ -492,7 +492,7 @@ class AddTask : ThemedActionBarActivity() {
             val t = Task(lines[currentLine])
             Log.d(TAG, "Changing priority from " + t.priority.toString() + " to " + newPriority.toString())
             t.priority = Priority.toPriority(newPriority.toString())
-            lines[currentLine] = t.inFileFormat()
+            lines[currentLine] = t.inFileFormat(TodoApplication.config.useUUIDs)
             taskText.setText(join(lines, "\n"))
         }
         restoreSelection(start, length, true)
