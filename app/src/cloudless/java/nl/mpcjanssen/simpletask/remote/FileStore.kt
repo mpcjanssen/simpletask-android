@@ -90,7 +90,7 @@ object FileStore : IFileStore {
         val file = File(path)
         writeToFile(lines, eol, file, false)
         obs?.delayedStartListen(1000)
-        Config.lastSeenRemoteId = file.lastModified().toString()
+        TodoApplication.config.lastSeenRemoteId = file.lastModified().toString()
     }
 
     override fun appendTaskToFile(path: String, lines: List<String>, eol: String) {
