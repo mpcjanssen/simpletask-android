@@ -209,7 +209,7 @@ object Interpreter :  AbstractInterpreter() {
     // Fill the arguments for the onFilter callback
     private fun fillOnFilterVarargs(t: Task): Varargs {
         val args = ArrayList<LuaValue>()
-        args.add(LuaValue.valueOf(t.inFileFormat()))
+        args.add(LuaValue.valueOf(t.inFileFormat(TodoApplication.config.useUUIDs)))
         val fieldTable = LuaTable.tableOf()
         fieldTable.set("due", dateStringToLuaLong(t.dueDate))
         fieldTable.set("threshold", dateStringToLuaLong(t.thresholdDate))

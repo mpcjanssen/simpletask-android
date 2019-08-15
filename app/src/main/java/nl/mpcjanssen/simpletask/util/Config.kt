@@ -257,7 +257,7 @@ class Config(app: TodoApplication) : Preferences(app) {
             if (items == null) {
                 prefs.edit().remove(getString(R.string.cached_todo_file)).apply()
             } else {
-                cachedContents = items.joinToString("\n") { it.inFileFormat() }
+                cachedContents = items.joinToString("\n") { it.inFileFormat(useUUIDs) }
             }
         }
     var changesPending by BooleanPreference(R.string.changes_pending, false)

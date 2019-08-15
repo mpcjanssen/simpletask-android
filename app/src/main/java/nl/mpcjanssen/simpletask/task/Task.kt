@@ -236,7 +236,12 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         dueDate = deferDate(deferString, oldDate)
     }
 
-    fun inFileFormat() = text
+    fun inFileFormat(useUUIDs: Boolean) : String {
+        if (useUUIDs && text.isNotBlank() && uuid == null) {
+            uuid = UUID.randomUUID().toString()
+        }
+        return text
+    }
 
     fun inFuture(today: String): Boolean {
         val date = thresholdDate

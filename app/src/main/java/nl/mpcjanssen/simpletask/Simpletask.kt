@@ -375,7 +375,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         val result = ArrayList<String>()
         TodoApplication.todoList.selectedTasks.forEach { task ->
             val luaTxt = Interpreter.onDisplayCallback(TodoApplication.config.mainQuery.luaModule, task)
-            result.add(luaTxt ?: task.inFileFormat())
+            result.add(luaTxt ?: task.inFileFormat(TodoApplication.config.useUUIDs))
         }
         return join(result, "\n")
     }
