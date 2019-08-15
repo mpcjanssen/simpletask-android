@@ -91,7 +91,7 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
     }
 
     private fun requestCalendarPermission() {
-        if (Config.isSyncDues || Config.isSyncThresholds) {
+        if (TodoApplication.config.isSyncDues || TodoApplication.config.isSyncThresholds) {
             val writePermissionCheck = ContextCompat.checkSelfPermission(app,
             Manifest.permission.WRITE_CALENDAR)
 
@@ -210,7 +210,7 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
 
             val screen = preferenceScreen
             val toHide: Preference
-            if (Config.hasDonated()) {
+            if (TodoApplication.config.hasDonated()) {
                 toHide = screen.findPreference("donate")
             } else {
                 toHide = screen.findPreference("donated")

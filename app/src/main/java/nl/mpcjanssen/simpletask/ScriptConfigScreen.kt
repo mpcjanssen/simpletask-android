@@ -28,11 +28,11 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
 
         scriptEdit = findViewById<EditText>(R.id.lua_config)
-        script = Config.luaConfig
+        script = TodoApplication.config.luaConfig
 
         val fab = findViewById<FloatingActionButton>(R.id.lua_config_fab)
         fab?.setOnClickListener {
-            Config.luaConfig = script
+            TodoApplication.config.luaConfig = script
             // Run the script and refilter
             runScript()
             broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
@@ -66,10 +66,10 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
                 shareText(this, getString(R.string.lua_config_screen), script)
             }
             R.id.lua_config_import -> {
-                importLuaConfig(File(Config.todoFile.parent, "config.lua"))
+                importLuaConfig(File(TodoApplication.config.todoFile.parent, "config.lua"))
             }
             R.id.lua_config_export -> {
-                exportLuaConfig(File(Config.todoFile.parent, "config.lua"))
+                exportLuaConfig(File(TodoApplication.config.todoFile.parent, "config.lua"))
             }
         }
         return true
@@ -86,9 +86,9 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
 
     private fun exportLuaConfig (exportFile: File) {
         FileStoreActionQueue.add("Export Lua config") {
-            Config.luaConfig = script
+            TodoApplication.config.luaConfig = script
             try {
-                FileStore.writeFile(exportFile, Config.luaConfig)
+                FileStore.writeFile(exportFile, TodoApplication.config.luaConfig)
                 showToastShort(this, "Lua config exported")
             } catch (e: Exception) {
                 Log.e(TAG, "Export lua config failed", e)

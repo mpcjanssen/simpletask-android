@@ -58,13 +58,16 @@ class TodoApplication : MultiDexApplication() {
     lateinit var localBroadCastManager: LocalBroadcastManager
     private lateinit var m_broadcastReceiver: BroadcastReceiver
 
+
     override fun onCreate() {
         super.onCreate()
         app = this
+        config = Config(app)
+        todoList = TodoList(config)
         db = Room.databaseBuilder(this,
                 AppDatabase::class.java, DB_FILE).fallbackToDestructiveMigration()
                 .build()
-        if (Config.forceEnglish) {
+        if (config.forceEnglish) {
             val conf = resources.configuration
             conf.locale = Locale.ENGLISH
             resources.updateConfiguration(conf, resources.displayMetrics)
@@ -101,7 +104,7 @@ class TodoApplication : MultiDexApplication() {
 
         localBroadCastManager.registerReceiver(m_broadcastReceiver, intentFilter)
         Log.i(TAG, "onCreate()")
-        Log.i(TAG, "Created todolist $TodoList")
+        Log.i(TAG, "Created todolist $todoList")
         Log.i(TAG, "Started ${appVersion(this)}")
         scheduleOnNewDay()
         scheduleRepeating()
@@ -160,13 +163,13 @@ class TodoApplication : MultiDexApplication() {
     }
 
     fun switchTodoFile(newTodo: String) {
-        Config.setTodoFile(newTodo)
+        config.setTodoFile(newTodo)
         loadTodoList("from file switch")
     }
 
     fun loadTodoList(reason: String) {
         Log.i(TAG, "Loading todolist")
-        TodoList.reload(reason = reason)
+        todoList.reload(reason = reason)
     }
 
     fun updateWidgets() {
@@ -204,13 +207,13 @@ class TodoApplication : MultiDexApplication() {
         FileDialog.browseForNewFile(
                 act,
                 fileStore,
-                Config.todoFile.parent,
+                config.todoFile.parent,
                 object : FileDialog.FileSelectedListener {
                     override fun fileSelected(file: String) {
                         switchTodoFile(file)
                     }
                 },
-                Config.showTxtOnly)
+                config.showTxtOnly)
     }
 
 
@@ -219,6 +222,8 @@ class TodoApplication : MultiDexApplication() {
         private val TAG = TodoApplication::class.java.simpleName
         fun atLeastAPI(api: Int): Boolean = android.os.Build.VERSION.SDK_INT >= api
         lateinit var app : TodoApplication
+        lateinit var config : Config
+        lateinit var todoList: TodoList
         lateinit var db : AppDatabase
     }
 

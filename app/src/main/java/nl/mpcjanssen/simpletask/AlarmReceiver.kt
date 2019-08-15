@@ -16,7 +16,7 @@ class AlarmReceiver : BroadcastReceiver() {
         if (Constants.ALARM_RELOAD == intent.getStringExtra(Constants.ALARM_REASON_EXTRA)) {
             broadcastFileSync( lbm )
         } else {
-            TodoList.reload("Alarm")
+            TodoApplication.todoList.reload("Alarm")
         }
 
     }

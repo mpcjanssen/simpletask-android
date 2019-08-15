@@ -32,7 +32,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
     internal lateinit var mFilter: Query
 
     internal lateinit var m_app: TodoApplication
-    val prefs = Config.prefs
+    val prefs = TodoApplication.config.prefs
 
     private var pager: ViewPager? = null
     private var m_menu: Menu? = null
@@ -86,7 +86,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
 
         val contextTab = FilterListFragment()
         contextTab.arguments = Bundle().apply {
-            val contexts = alfaSort(TodoList.contexts, Config.sortCaseSensitive, "-")
+            val contexts = alfaSort(TodoApplication.todoList.contexts, TodoApplication.config.sortCaseSensitive, "-")
             putStringArrayList(FILTER_ITEMS, contexts)
             putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.contexts)
             putBoolean(INITIAL_NOT, mFilter.contextsNot)
@@ -96,7 +96,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
 
         val projectTab = FilterListFragment()
         projectTab.arguments = Bundle().apply {
-            val projects = alfaSort(TodoList.projects, Config.sortCaseSensitive, "-")
+            val projects = alfaSort(TodoApplication.todoList.projects, TodoApplication.config.sortCaseSensitive, "-")
             putStringArrayList(FILTER_ITEMS, projects)
             putStringArrayList(INITIAL_SELECTED_ITEMS, mFilter.projects)
             putBoolean(INITIAL_NOT, mFilter.projectsNot)
@@ -106,7 +106,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
 
         val prioTab = FilterListFragment()
         prioTab.arguments = Bundle().apply {
-            putStringArrayList(FILTER_ITEMS, Priority.inCode(TodoList.priorities))
+            putStringArrayList(FILTER_ITEMS, Priority.inCode(TodoApplication.todoList.priorities))
             putStringArrayList(INITIAL_SELECTED_ITEMS, Priority.inCode(mFilter.priorities))
             putBoolean(INITIAL_NOT, mFilter.prioritiesNot)
             putString(TAB_TYPE, PRIO_TAB)
@@ -129,7 +129,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
         // Fill arguments for fragment
         val sortTab = FilterSortFragment()
         sortTab.arguments = Bundle().apply {
-            putStringArrayList(FILTER_ITEMS, mFilter.getSort(Config.defaultSorts))
+            putStringArrayList(FILTER_ITEMS, mFilter.getSort(TodoApplication.config.defaultSorts))
             putString(TAB_TYPE, SORT_TAB)
         }
         pagerAdapter!!.add(sortTab)
@@ -218,7 +218,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
                     }).start()
                 }
             })
-            dialog.createFileDialog(this@FilterActivity, FileStore, File(Config.todoFileName).parent, txtOnly = false)
+            dialog.createFileDialog(this@FilterActivity, FileStore, File(TodoApplication.config.todoFileName).parent, txtOnly = false)
     }
 
     private fun createFilterIntent(): Intent {
@@ -382,8 +382,8 @@ class FilterActivity : ThemedNoActionBarActivity() {
             val f = fragments[position]
             val type = f.arguments?.getString(TAB_TYPE, "unknown") ?:"unknown"
             when (type) {
-                PROJECT_TAB -> return Config.tagTerm
-                CONTEXT_TAB -> return Config.listTerm
+                PROJECT_TAB -> return TodoApplication.config.tagTerm
+                CONTEXT_TAB -> return TodoApplication.config.listTerm
                 else -> return type
             }
         }

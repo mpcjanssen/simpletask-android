@@ -21,9 +21,9 @@ object Interpreter :  AbstractInterpreter() {
         globals.set("log", LuaLog())
         evalScript(null, TODOLIB)
         try {
-            evalScript(null, Config.luaConfig)
+            evalScript(null, TodoApplication.config.luaConfig)
         } catch (e: LuaError) {
-            Log.w(Config.TAG, "Lua execution failed " + e.message)
+            Log.w(TodoApplication.config.TAG, "Lua execution failed " + e.message)
             showToastLong(TodoApplication.app, "${getString(R.string.lua_error)}:  ${e.message}")
         }
 
