@@ -23,7 +23,7 @@ class TodoList(val config: Config) {
     private var mLists: MutableList<String>? = null
     private var mTags: MutableList<String>? = null
     private val todoItems = ArrayList<Task>()
-    val pendingEdits = ArrayList<Task>()
+    val pendingEdits = HashSet<Task>()
     internal val TAG = TodoList::class.java.simpleName
 
     init {
@@ -152,7 +152,7 @@ class TodoList(val config: Config) {
     }
 
     @Synchronized
-    fun update(org: List<Task>, updated: List<Task>, addAtEnd: Boolean) {
+    fun update(org: Collection<Task>, updated: List<Task>, addAtEnd: Boolean) {
         val smallestSize = org.zip(updated) { orgTask, updatedTask ->
             val idx = todoItems.indexOf(orgTask)
             if (idx != -1) {
