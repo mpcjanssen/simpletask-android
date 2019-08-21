@@ -936,7 +936,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
         // Explicitly set start and end date/time.
         // Some calendar providers need this.
-        val dueDate = checkedTasks[0].dueDate
+        val dueDate = checkedTasks.getOrNull(0)?.dueDate
         val calDate = if (checkedTasks.size == 1 && dueDate != null) {
             val year = dueDate.substring(0, 4).toInt()
             val month = dueDate.substring(5, 7).toInt() - 1
