@@ -486,4 +486,5 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <string name="force_english_title">Force English</string>
 
+    <string name="share_link">Share link</string>
 </resources>
