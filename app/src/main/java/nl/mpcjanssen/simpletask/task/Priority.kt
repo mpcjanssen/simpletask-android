@@ -43,11 +43,11 @@ enum class Priority {
             get() = values().map { it.code }.sorted()
 
         fun inCode(priorities: List<Priority>): ArrayList<String> {
-            return ArrayList(priorities.map { it.code })
+            return ArrayList<String>(priorities.map { it.code })
         }
 
         fun toPriority(codes: List<String>): ArrayList<Priority> {
-            return ArrayList(codes.map { toPriority(it) })
+            return ArrayList<Priority>(codes.map { toPriority(it) })
         }
 
         fun toPriority(s: String?): Priority {
