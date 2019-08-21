@@ -109,6 +109,9 @@ object FileStore : IFileStore {
     override fun loadFileList(path: String, txtOnly: Boolean): List<FileEntry> {
         val result = ArrayList<FileEntry>()
         val file = File(path)
+        if (path == "/") {
+            result.add(FileEntry(Environment.getExternalStorageDirectory().path, true))
+        }
 
         val filter = FilenameFilter { dir, filename ->
             val sel = File(dir, filename)
