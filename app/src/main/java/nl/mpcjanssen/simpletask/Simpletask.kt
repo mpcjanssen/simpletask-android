@@ -48,8 +48,6 @@ import kotlin.collections.ArrayList
 import android.R.id as androidId
 
 class Simpletask : ThemedNoActionBarActivity() {
-
-
     companion object {
         private val REQUEST_PREFERENCES = 1
 
@@ -146,7 +144,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                         build.setItems(titleArray) { _, which ->
                             val actionIntent: Intent
                             val url = links[which]
-                            Log.i(Simpletask.TAG, "" + actions[which] + ": " + url)
+                            Log.i(TAG, "" + actions[which] + ": " + url)
                             when (actions[which]) {
                                 Action.LINK -> when {
                                     url.startsWith("todo://") -> {
@@ -168,7 +166,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                                         actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                                         startActivity(actionIntent)
                                     } catch (e: ActivityNotFoundException) {
-                                        Log.i(Simpletask.TAG, "No handler for task action $url")
+                                        Log.i(TAG, "No handler for task action $url")
                                         showToastLong(TodoApplication.app, "No handler for $url")
                                     }
                                 }
@@ -182,7 +180,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                                 }
                                Action.MAIL -> {
                                     actionIntent = Intent(Intent.ACTION_SEND, Uri.parse(url))
-                                    actionIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
+                                    actionIntent.putExtra(Intent.EXTRA_EMAIL,
                                             arrayOf(url))
                                     actionIntent.type = "text/plain"
                                     startActivity(actionIntent)
@@ -903,7 +901,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
                     } catch (e: Exception) {
                         // Need to catch generic exception because Dropbox errors don't inherit from IOException
-                        Log.e(Simpletask.TAG, "Import filters, cant read file ${importFile.canonicalPath}", e)
+                        Log.e(TAG, "Import filters, cant read file ${importFile.canonicalPath}", e)
                         showToastLong(this, "Error reading file ${importFile.canonicalPath}")
                     }
                 }
