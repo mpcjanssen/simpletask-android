@@ -272,7 +272,7 @@ data class Query(val luaModule: String) {
                 if (this.hideCompleted && it.isCompleted()) {
                     return@filter false
                 }
-                if (this.hideFuture && it.inFuture(today)) {
+                if (this.hideFuture && it.inFuture(today, createIsThreshold)) {
                     return@filter false
                 }
                 if (this.hideHidden && it.isHidden()) {
