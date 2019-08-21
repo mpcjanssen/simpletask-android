@@ -33,9 +33,9 @@ object FileStore : IFileStore {
     internal val NEXTCLOUD_PASS = "ncPass"
     internal val NEXTCLOUD_URL = "ncURL"
 
-    var username by Config.StringOrNullPreference(NEXTCLOUD_USER)
-    var password by Config.StringOrNullPreference(NEXTCLOUD_PASS)
-    var serverUrl by Config.StringOrNullPreference(NEXTCLOUD_URL)
+    var username by TodoApplication.config.StringOrNullPreference(NEXTCLOUD_USER)
+    var password by TodoApplication.config.StringOrNullPreference(NEXTCLOUD_PASS)
+    var serverUrl by TodoApplication.config.StringOrNullPreference(NEXTCLOUD_URL)
     var mNextcloud : OwnCloudClient? = getClient()
 
     override val isAuthenticated: Boolean
@@ -152,7 +152,7 @@ object FileStore : IFileStore {
         val infoOp = ReadFileRemoteOperation(path)
         val infoRes = infoOp.execute(mNextcloud)
         val fileInfo = infoRes.data[0] as RemoteFile
-        Config.lastSeenRemoteId = fileInfo.etag
+        TodoApplication.config.lastSeenRemoteId = fileInfo.etag
 
     }
 

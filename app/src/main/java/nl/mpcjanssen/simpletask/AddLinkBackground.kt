@@ -32,6 +32,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import androidx.core.app.ShareCompat
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.Config
@@ -39,69 +40,22 @@ import nl.mpcjanssen.simpletask.util.showToastShort
 import nl.mpcjanssen.simpletask.util.todayAsString
 import java.io.IOException
 
-class AddTaskBackground : Activity() {
-    val TAG = "AddTaskBackground"
+class AddLinkBackground : Activity() {
+    val TAG = "AddLinkBackground"
 
     public override fun onCreate(instance: Bundle?) {
         Log.d(TAG, "onCreate()")
         super.onCreate(instance)
 
-        val intent = intent
-        val action = intent.action
 
         val append_text = TodoApplication.config.shareAppendText
-        if (intent.type?.startsWith("text/") ?: false) {
-            if (Intent.ACTION_SEND == action) {
-                Log.d(TAG, "Share")
-                var share_text = ""
-                if (TodoApplication.atLeastAPI(21) && intent.hasExtra(Intent.EXTRA_STREAM)) {
-                    val uri = intent.extras?.get(Intent.EXTRA_STREAM) as Uri?
-                    uri?.let {
-                        try {
-                            contentResolver.openInputStream(uri)?.let {
-                                share_text = it.reader().readText()
-                                it.close()
-                            }
-                        } catch (e: IOException) {
-                            e.printStackTrace()
-                        }
-                    }
-
-                } else if (intent.hasExtra(Intent.EXTRA_TEXT)) {
-                    val text = intent.getCharSequenceExtra(Intent.EXTRA_TEXT)
-                    if (text != null) {
-                        share_text = intent.getCharSequenceExtra(Intent.EXTRA_TEXT).toString()
-                    }
-                }
-                addBackgroundTask(share_text, append_text)
-            } else if ("com.google.android.gm.action.AUTO_SEND" == action) {
-                // Called as note to self from google search/now
-                noteToSelf(intent, append_text)
-
-            } else if (Constants.INTENT_BACKGROUND_TASK == action) {
-                Log.d(TAG, "Adding background task")
-                if (intent.hasExtra(Constants.EXTRA_BACKGROUND_TASK)) {
-                    addBackgroundTask(intent.getStringExtra(Constants.EXTRA_BACKGROUND_TASK), append_text)
-                } else {
-                    Log.w(TAG, "Task was not in extras")
-                }
-
-            }
-        } else {
-            val imageUri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
-            imageUri?.let {
-                Log.i(TAG, "Added link to content: $imageUri")
-                addBackgroundTask(imageUri.toString(), append_text)
-            }
-        }
-    }
-
-    private fun noteToSelf(intent: Intent, append_text: String) {
-        val task = intent.getStringExtra(Intent.EXTRA_TEXT)
-        if (intent.hasExtra(Intent.EXTRA_STREAM)) {
-            Log.d(TAG, "Voice note added.")
-        }
-        addBackgroundTask(task, append_text)
+        val intentReader = ShareCompat.IntentReader.from(this)
+        val uri = intentReader.stream ?: ""
+        val subject = intentReader.subject ?: ""
+        val mimeType = intentReader.type
+        Log.i(TAG, "Added link to content ($mimeType)")
+        addBackgroundTask("$subject $uri", append_text)
+        return
     }
 
     private fun addBackgroundTask(sharedText: String, appendText: String) {

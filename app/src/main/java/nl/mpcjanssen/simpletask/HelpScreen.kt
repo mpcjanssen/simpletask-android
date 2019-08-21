@@ -53,7 +53,7 @@ class HelpScreen : ThemedActionBarActivity() {
         wvHelp = findViewById<WebView>(R.id.help_view)
 
         // Prevent brief flash of white when loading WebView.
-        if (Config.isDarkTheme || Config.isBlackTheme) {
+        if (TodoApplication.config.isDarkTheme || TodoApplication.config.isBlackTheme) {
             val tv = TypedValue()
             theme.resolveAttribute(android.R.attr.windowBackground, tv, true)
             if (tv.type >= TypedValue.TYPE_FIRST_COLOR_INT && tv.type <= TypedValue.TYPE_LAST_COLOR_INT) {

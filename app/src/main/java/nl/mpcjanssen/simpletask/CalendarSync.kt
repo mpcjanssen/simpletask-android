@@ -70,8 +70,8 @@ private class Evt(
             : this(-1, date.getMilliseconds(CalendarSync.UTC), title, desc, -1, -1, EvtStatus.INSERT) {
 
         val localZone = Calendar.getInstance().timeZone
-        val remMargin = Config.reminderDays * 1440
-        val remTime = Config.reminderTime
+        val remMargin = TodoApplication.config.reminderDays * 1440
+        val remTime = TodoApplication.config.reminderTime
         val remDT = DateTime.forTimeOnly(remTime / 60, remTime % 60, 0, 0)
 
         // Reminder data:
@@ -221,7 +221,7 @@ private class EvtMap private constructor() : HashMap<EvtKey, LinkedList<Evt>>() 
 
             // Check due date:
             var dt = task.dueDate?.toDateTime()
-            if (Config.isSyncDues && dt != null) {
+            if (TodoApplication.config.isSyncDues && dt != null) {
                 text = task.showParts(CalendarSync.TASK_TOKENS)
                 val evt = Evt(dt, text, TodoApplication.app.getString(R.string.calendar_sync_desc_due))
                 mergeEvt(evt)
@@ -229,7 +229,7 @@ private class EvtMap private constructor() : HashMap<EvtKey, LinkedList<Evt>>() 
 
             // Check threshold date:
             dt = task.thresholdDate?.toDateTime()
-            if (Config.isSyncThresholds && dt != null) {
+            if (TodoApplication.config.isSyncThresholds && dt != null) {
                 if (text == null) text = task.showParts(CalendarSync.TASK_TOKENS)
                 val evt = Evt(dt, text, TodoApplication.app.getString(R.string.calendar_sync_desc_thre))
                 mergeEvt(evt)
@@ -312,7 +312,7 @@ object CalendarSync {
                 Manifest.permission.WRITE_CALENDAR)
 
         if (permissionCheck == PackageManager.PERMISSION_DENIED) {
-            if (Config.isSyncDues || Config.isSyncThresholds) {
+            if (TodoApplication.config.isSyncDues || TodoApplication.config.isSyncThresholds) {
                 throw IllegalStateException("no calendar access")
             } else {
                 return -1
@@ -369,7 +369,7 @@ object CalendarSync {
         try {
             var calID = findCalendar()
 
-            if (!Config.isSyncThresholds && !Config.isSyncDues) {
+            if (!TodoApplication.config.isSyncThresholds && !TodoApplication.config.isSyncDues) {
                 if (calID >= 0) {
                     Log.d(TAG, "Calendar sync not enabled")
                     removeCalendar()
@@ -393,7 +393,7 @@ object CalendarSync {
 
             Log.d(TAG, "Syncing due/threshold calendar reminders...")
             val evtmap = EvtMap(m_cr, calID)
-            TodoList.each {
+            TodoApplication.todoList.each {
                 evtmap.mergeTask(it)
             }
             val stats = evtmap.apply(m_cr, calID)

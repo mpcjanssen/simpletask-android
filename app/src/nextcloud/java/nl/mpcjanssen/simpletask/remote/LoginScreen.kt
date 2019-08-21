@@ -35,9 +35,9 @@ class LoginScreen : ThemedActionBarActivity() {
             }
         }
 
-    private var username by Config.StringOrNullPreference(FileStore.NEXTCLOUD_USER)
-    private var password by Config.StringOrNullPreference(FileStore.NEXTCLOUD_PASS)
-    private var serverUrl by Config.StringOrNullPreference(FileStore.NEXTCLOUD_URL)
+    private var username by TodoApplication.config.StringOrNullPreference(FileStore.NEXTCLOUD_USER)
+    private var password by TodoApplication.config.StringOrNullPreference(FileStore.NEXTCLOUD_PASS)
+    private var serverUrl by TodoApplication.config.StringOrNullPreference(FileStore.NEXTCLOUD_URL)
 
 
 
@@ -47,7 +47,7 @@ class LoginScreen : ThemedActionBarActivity() {
         if (TodoApplication.app.isAuthenticated) {
             switchToTodolist()
         }
-        setTheme(Config.activeTheme)
+        setTheme(TodoApplication.config.activeTheme)
         setContentView(R.layout.login)
 
         login.setOnClickListener {

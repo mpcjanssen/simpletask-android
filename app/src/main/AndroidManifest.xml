@@ -111,6 +111,23 @@ You should have received a copy of the GNU General Public License along with Sim
             </intent-filter>
         </activity>
 
+        <!-- Implemented in Kotlin, so fix lint complaining about it -->
+        <activity
+                tools:ignore="MissingRegistered"
+                android:name=".AddLinkBackground"
+                android:enabled="true"
+                android:label="@string/share_link"
+                android:theme="@android:style/Theme.NoDisplay"
+                android:exported="true"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <action android:name="nl.mpcjanssen.simpletask.BACKGROUND_LINK" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".AddTaskShortcut"
             android:label="@string/shortcut_addtask_name"

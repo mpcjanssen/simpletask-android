@@ -126,7 +126,6 @@ fun Interp.configTheme(): String? {
     }
 }
 
-
 fun Interp.hasOnFilterCallback(): Boolean {
     val cmd = this.getCommand(Callbacks.ON_FILTER_NAME)
     return cmd != null

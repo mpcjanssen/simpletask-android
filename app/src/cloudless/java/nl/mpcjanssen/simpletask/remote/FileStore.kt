@@ -90,7 +90,7 @@ object FileStore : IFileStore {
         val file = File(path)
         writeToFile(lines, eol, file, false)
         obs?.delayedStartListen(1000)
-        Config.lastSeenRemoteId = file.lastModified().toString()
+        TodoApplication.config.lastSeenRemoteId = file.lastModified().toString()
     }
 
     override fun appendTaskToFile(path: String, lines: List<String>, eol: String) {
@@ -109,6 +109,9 @@ object FileStore : IFileStore {
     override fun loadFileList(path: String, txtOnly: Boolean): List<FileEntry> {
         val result = ArrayList<FileEntry>()
         val file = File(path)
+        if (path == "/") {
+            result.add(FileEntry(Environment.getExternalStorageDirectory().path, true))
+        }
 
         val filter = FilenameFilter { dir, filename ->
             val sel = File(dir, filename)

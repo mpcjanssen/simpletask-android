@@ -266,19 +266,19 @@ data class Query(val luaModule: String) {
         val today = todayAsString
         try {
             return  items.filter {
-                if (showSelected && TodoList.isSelected(it)) {
+                if (showSelected && TodoApplication.todoList.isSelected(it)) {
                     return@filter true
                 }
                 if (this.hideCompleted && it.isCompleted()) {
                     return@filter false
                 }
-                if (this.hideFuture && it.inFuture(today)) {
+                if (this.hideFuture && it.inFuture(today, createIsThreshold)) {
                     return@filter false
                 }
                 if (this.hideHidden && it.isHidden()) {
                     return@filter false
                 }
-                if ("" == it.inFileFormat().trim { it <= ' ' }) {
+                if ("" == it.inFileFormat(false).trim { it <= ' ' }) {
                     return@filter false
                 }
                 if (!filter.apply(it)) {
