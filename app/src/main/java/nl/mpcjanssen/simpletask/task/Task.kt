@@ -6,7 +6,7 @@ import java.util.regex.Pattern
 
 class Task(text: String, defaultPrependedDate: String? = null) {
 
-    var tokens: List<TToken>
+    var tokens: ArrayList<TToken>
 
     init {
         tokens = parse(text)
@@ -33,14 +33,10 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     private inline fun <reified T : TToken> upsertToken(newToken: T) {
 
         if (getFirstToken<T>() == null) {
-            tokens += newToken
+            tokens.add(newToken)
         } else {
-            tokens = tokens.map {
-                if (it is T) {
-                    newToken
-                } else {
-                    it
-                }
+            tokens.forEachIndexed { idx, item ->
+                if (item is T) tokens[idx] = newToken
             }
         }
 
@@ -59,10 +55,14 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             }.toList()
         }
 
-    var completionDate: String? = null
+    val completionDate: String?
         get() = getFirstToken<CompletedDateToken>()?.value
 
-    var uuid: String? = getFirstToken<UUIDToken>()?.valueStr
+    var uuid: String?
+    get () = getFirstToken<UUIDToken>()?.valueStr
+    set (uuid: String?) {
+        uuid?.let { upsertToken(UUIDToken(it)) }
+    }
 
     var createDate: String?
         get() = getFirstToken<CreateDateToken>()?.value
@@ -70,18 +70,18 @@ class Task(text: String, defaultPrependedDate: String? = null) {
             val temp = ArrayList<TToken>()
             if (tokens.isNotEmpty() && (tokens.first() is CompletedToken)) {
                 temp.add(tokens[0])
-                tokens = tokens.drop(1)
+                tokens.removeAt(0)
                 if (tokens.isNotEmpty() && tokens.first() is CompletedDateToken) {
                     temp.add(tokens.first())
-                    tokens = tokens.drop(1)
+                    tokens.removeAt(0)
                 }
             }
             if (tokens.isNotEmpty() && tokens[0] is PriorityToken) {
                 temp.add(tokens.first())
-                tokens = tokens.drop(1)
+                tokens.removeAt(0)
             }
             if (tokens.isNotEmpty() && tokens[0] is CreateDateToken) {
-                tokens = tokens.drop(1)
+                tokens.removeAt(0)
             }
             newDate?.let {
                 temp.add(CreateDateToken(newDate))
@@ -94,9 +94,9 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         get() = getFirstToken<DueDateToken>()?.valueStr
         set(dateStr) {
             if (dateStr.isNullOrEmpty()) {
-                tokens = tokens.filter { it !is DueDateToken }
+                tokens.removeWhen { it is DueDateToken }
             } else {
-                upsertToken(DueDateToken(dateStr!!))
+                upsertToken(DueDateToken(dateStr))
             }
         }
 
@@ -104,9 +104,9 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         get() = getFirstToken<ThresholdDateToken>()?.valueStr
         set(dateStr) {
             if (dateStr.isNullOrEmpty()) {
-                tokens = tokens.filter { it !is ThresholdDateToken }
+                tokens.removeWhen { it is ThresholdDateToken }
             } else {
-                upsertToken(ThresholdDateToken(dateStr!!))
+                upsertToken(ThresholdDateToken(dateStr))
             }
         }
 
@@ -114,69 +114,69 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         get() = getFirstToken<PriorityToken>()?.value ?: Priority.NONE
         set(prio) {
             when {
-                prio == Priority.NONE -> tokens = tokens.filter { it !is PriorityToken }
+                prio == Priority.NONE -> tokens.removeWhen { it is PriorityToken }
                 tokens.any { it is PriorityToken } -> upsertToken(PriorityToken(prio.fileFormat))
-                else -> tokens = listOf(PriorityToken(prio.fileFormat)) + tokens
+                else -> tokens.add(0,PriorityToken(prio.fileFormat))
             }
         }
 
-    var recurrencePattern: String? = null
+    val recurrencePattern: String?
         get() = getFirstToken<RecurrenceToken>()?.valueStr
 
-    var tags: SortedSet<String>? = null
+    val tags: SortedSet<String>?
         get() {
-            tokens.filter { it is TagToken }.run {
+            tokens.filterIsInstance<TagToken>().run {
                 return if (size > 0) {
-                    (map { it -> (it as TagToken).value }).toSortedSet()
+                    map { it.value }.toSortedSet()
                 } else {
                     null
                 }
             }
         }
 
-    var lists: SortedSet<String>? = null
+    val lists: SortedSet<String>?
         get() {
-            tokens.filter { it is ListToken }.run {
+            tokens.filterIsInstance<ListToken>().run {
                 return if (size > 0) {
-                    (map { it -> (it as ListToken).value }).toSortedSet()
+                    map { it.value }.toSortedSet()
                 } else {
                     null
                 }
             }
         }
 
-    var links: Set<String> = emptySet()
+    val links: Set<String>
         get() {
-            return tokens.asSequence().filter { it is LinkToken }.map { it -> (it as LinkToken).text }.toSet()
+            return tokens.asSequence().filter { it is LinkToken }.map { it.text }.toSet()
         }
 
-    var phoneNumbers: Set<String> = emptySet()
+    val phoneNumbers: Set<String>
         get() {
-            return tokens.asSequence().filter { it is PhoneToken }.map { it -> (it as PhoneToken).text }.toSet()
+            return tokens.asSequence().filter { it is PhoneToken }.map { it.text }.toSet()
         }
-    var mailAddresses: Set<String> = emptySet()
+    val mailAddresses: Set<String>
         get() {
-            return tokens.asSequence().filter { it is MailToken }.map { it -> (it as MailToken).text }.toSet()
+            return tokens.asSequence().filter { it is MailToken }.map { it.text }.toSet()
         }
     var selected: Boolean = false
     val alphaParts: String = showParts { it.isAlpha() }
 
     fun removeTag(tag: String) {
-        tokens = tokens.filter {
-            !((it is TagToken) && it.value == tag)
+        tokens.removeWhen {
+            ((it is TagToken) && it.value == tag)
         }
     }
 
     fun removeList(list: String) {
-        tokens = tokens.filter {
-            !((it is ListToken) && (it.value == list))
+        tokens.removeWhen{
+            ((it is ListToken) && (it.value == list))
         }
     }
 
     fun markComplete(dateStr: String): Task? {
         if (!this.isCompleted()) {
             val textWithoutCompletedInfo = text
-            tokens = listOf(CompletedToken(true), CompletedDateToken(dateStr)) + tokens
+            tokens.addAll(0, listOf(CompletedToken(true), CompletedDateToken(dateStr)))
             val pattern = recurrencePattern
             if (pattern != null) {
                 var deferFromDate = ""
@@ -201,55 +201,54 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     }
 
     fun markIncomplete() {
-        tokens = tokens.filter {
+        tokens.removeWhen {
             when (it) {
-                is CompletedDateToken -> false
-                is CompletedToken -> false
-                else -> true
+                is CompletedDateToken -> true
+                is CompletedToken -> true
+                else -> false
             }
         }
     }
 
-    fun deferThresholdDate(deferString: String, deferFromDate: String) {
+    private fun deferDate(deferString: String, deferFromDate: String?) : String? {
         if (MATCH_SINGLE_DATE.reset(deferString).matches()) {
-            thresholdDate = deferString
-            return
+            return deferString
         }
         if (deferString == "") {
-            thresholdDate = null
-            return
+            return null
         }
-        val olddate: String? = if (deferFromDate.isEmpty()) {
+        val newDate = addInterval(deferFromDate, deferString)
+        return newDate?.format(DATE_FORMAT)
+    }
+
+    fun deferThresholdDate(deferString: String, deferFromDate: String) {
+
+        val oldDate: String? = if (deferFromDate.isEmpty()) {
             thresholdDate
         } else {
             deferFromDate
         }
-        val newDate = addInterval(olddate, deferString)
-        thresholdDate = newDate?.format(DATE_FORMAT)
+        thresholdDate = deferDate(deferString, oldDate)
     }
 
     fun deferDueDate(deferString: String, deferFromDate: String) {
-        if (MATCH_SINGLE_DATE.reset(deferString).matches()) {
-            dueDate = deferString
-            return
-        }
-        if (deferString == "") {
-            dueDate = null
-            return
-        }
-        val olddate: String? = if (deferFromDate.isEmpty()) {
+        val oldDate: String? = if (deferFromDate.isEmpty()) {
             dueDate
         } else {
             deferFromDate
         }
-        val newDate = addInterval(olddate, deferString)
-        dueDate = newDate?.format(DATE_FORMAT)
+        dueDate = deferDate(deferString, oldDate)
     }
 
-    fun inFileFormat() = text
+    fun inFileFormat(useUUIDs: Boolean) : String {
+        if (useUUIDs && text.isNotBlank() && uuid == null) {
+            uuid = UUID.randomUUID().toString()
+        }
+        return text
+    }
 
-    fun inFuture(today: String): Boolean {
-        val date = thresholdDate
+    fun inFuture(today: String, createIsThreshold: Boolean): Boolean {
+        val date = thresholdDate ?: if (createIsThreshold) createDate else null
         date?.let {
             return date > today
         }
@@ -305,7 +304,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     fun addList(listName: String) {
         listName.split(Regex("\\s+")).forEach {
             if (lists?.contains(it)!=true) {
-                tokens += ListToken("@$it")
+                tokens.add(ListToken("@$it"))
             }
         }
     }
@@ -316,7 +315,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     fun addTag(tagName: String) {
         tagName.split(Regex("\\s+")).forEach {
             if (tags?.contains(it)!=true) {
-                tokens += TagToken("+$it")
+                tokens.add(TagToken("+$it"))
             }
         }
     }
@@ -574,3 +573,15 @@ data class UUIDToken(override val valueStr: String) : KeyValueToken {
 // Extension functions
 fun String.lex(): List<String> = this.split(" ")
 
+
+// Extension because ArrayList.filter requires API 24
+fun ArrayList<TToken>.removeWhen(body: (TToken) -> Boolean) {
+    val iter = this.iterator()
+    while(iter.hasNext()) {
+        val e = iter.next()
+        if (body.invoke(e)) {
+            iter.remove()
+        }
+
+    }
+}

@@ -81,7 +81,7 @@ fun showConfirmationDialog(cxt: Context,
 private fun showConfirmationDialog(msgid: Int,
                            okListener: DialogInterface.OnClickListener,
                            builder: AlertDialog.Builder) {
-    val show = Config.showConfirmationDialogs
+    val show = TodoApplication.config.showConfirmationDialogs
     builder.setMessage(msgid)
     builder.setPositiveButton(android.R.string.ok, okListener)
     builder.setNegativeButton(android.R.string.cancel, null)
@@ -181,7 +181,7 @@ fun addHeaderLines(visibleTasks: List<Task>, sorts: List<String>, no_header: Str
 }
 
 fun addHeaderLines(visibleTasks: List<Task>, filter: Query, no_header: String): List<VisibleLine> {
-    val sorts = filter.getSort(Config.defaultSorts)
+    val sorts = filter.getSort(TodoApplication.config.defaultSorts)
     return addHeaderLines(visibleTasks, sorts, no_header, filter.createIsThreshold, filter.luaModule)
 }
 
@@ -435,7 +435,7 @@ fun createCachedDatabase(context: Context, dbFile: File) {
 
 fun alfaSort(
         items: Collection<String>,
-        caseSensitive: Boolean = Config.sortCaseSensitive,
+        caseSensitive: Boolean = TodoApplication.config.sortCaseSensitive,
         prefix: String? = null
 ): ArrayList<String> {
     val sorted = items.sortedWith ( compareBy<String> {
@@ -548,8 +548,8 @@ fun markdownAssetAsHtml(ctxt: Context, name: String): String {
 }
 
 fun getCssTheme(): String {
-    if (Config.isBlackTheme) return "black.css"
-    if (Config.isDarkTheme) return "dark.css"
+    if (TodoApplication.config.isBlackTheme) return "black.css"
+    if (TodoApplication.config.isDarkTheme) return "dark.css"
     return "light.css"
 }
 
@@ -619,7 +619,7 @@ private fun getRelativeDate(app: TodoApplication, prefix: String, dateString: St
 
     val ss = SpannableString(prefix + s)
 
-    if (Config.hasColorDueDates && prefix == "Due: ") {
+    if (TodoApplication.config.hasColorDueDates && prefix == "Due: ") {
         val dueTodayColor = ContextCompat.getColor(app, R.color.simple_green_light)
         val overDueColor = ContextCompat.getColor(app, R.color.simple_red_light)
         val dueTomorrowColor = ContextCompat.getColor(app, R.color.simple_blue_light)

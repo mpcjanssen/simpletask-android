@@ -28,7 +28,7 @@ object FileStore : IFileStore {
 
     private val mApp = TodoApplication.app
 
-    var accessToken by Config.StringOrNullPreference(OAUTH2_TOKEN)
+    var accessToken by TodoApplication.config.StringOrNullPreference(OAUTH2_TOKEN)
 
     var _dbxClient: DbxClientV2? = null
 
@@ -128,7 +128,7 @@ object FileStore : IFileStore {
         Log.i(TAG, "Saving ${lines.size} tasks to Dropbox.")
         val contents = join(lines, eol) + eol
 
-        val rev = Config.lastSeenRemoteId
+        val rev = TodoApplication.config.lastSeenRemoteId
         Log.i(TAG, "Last seen rev $rev")
 
         val toStore = contents.toByteArray(charset("UTF-8"))
@@ -141,7 +141,7 @@ object FileStore : IFileStore {
         }  finally {
             `in`.close()
         }
-        Config.lastSeenRemoteId = uploaded.rev
+        TodoApplication.config.lastSeenRemoteId = uploaded.rev
         Log.i(TAG, "New rev " + uploaded.rev)
         val newName = uploaded.pathDisplay
 
@@ -211,7 +211,7 @@ object FileStore : IFileStore {
     }
 
     override fun getDefaultPath(): String {
-        return if (Config.fullDropBoxAccess) {
+        return if (TodoApplication.config.fullDropBoxAccess) {
             "/todo/todo.txt"
         } else {
             "/todo.txt"

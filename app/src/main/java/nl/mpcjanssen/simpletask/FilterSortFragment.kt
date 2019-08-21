@@ -59,7 +59,7 @@ class FilterSortFragment : Fragment() {
         m_app = TodoApplication.app
 
         // Set the proper theme
-        if (Config.isDarkTheme || Config.isBlackTheme) {
+        if (TodoApplication.config.isDarkTheme || TodoApplication.config.isBlackTheme) {
             sortDownId = R.drawable.ic_action_sort_down_dark
             sortUpId = R.drawable.ic_action_sort_up_dark
         } else {
@@ -160,7 +160,7 @@ class FilterSortFragment : Fragment() {
             val row = super.getView(position, convertView, parent)
             val reverseButton = row.findViewById(R.id.reverse_button) as ImageButton
             val label = row.findViewById(R.id.text) as TextView
-            label.text = Config.getSortString(adapterList[position])
+            label.text = TodoApplication.config.getSortString(adapterList[position])
 
             if (directions[position] == Query.REVERSED_SORT) {
                 reverseButton.setBackgroundResource(sortUpId)

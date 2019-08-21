@@ -8,8 +8,8 @@ import java.util.*
 abstract class ThemedNoActionBarActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(Config.activeTheme)
-        if (Config.forceEnglish) {
+        setTheme(TodoApplication.config.activeTheme)
+        if (TodoApplication.config.forceEnglish) {
             val conf = resources.configuration
             conf.locale = Locale.ENGLISH
             resources.updateConfiguration(conf, resources.displayMetrics)
@@ -21,8 +21,8 @@ abstract class ThemedNoActionBarActivity : AppCompatActivity() {
 abstract class ThemedActionBarActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(Config.activeActionBarTheme)
-        if (Config.forceEnglish) {
+        setTheme(TodoApplication.config.activeActionBarTheme)
+        if (TodoApplication.config.forceEnglish) {
             val conf = resources.configuration
             conf.locale = Locale.ENGLISH
             resources.updateConfiguration(conf, resources.displayMetrics)
@@ -34,8 +34,8 @@ abstract class ThemedActionBarActivity : AppCompatActivity() {
 abstract class ThemedPreferenceActivity : AppCompatPreferenceActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(Config.activeActionBarTheme)
-        if (Config.forceEnglish) {
+        setTheme(TodoApplication.config.activeActionBarTheme)
+        if (TodoApplication.config.forceEnglish) {
             val conf = resources.configuration
             conf.locale = Locale.ENGLISH
             resources.updateConfiguration(conf, resources.displayMetrics)

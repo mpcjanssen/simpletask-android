@@ -32,6 +32,7 @@ import kotlinx.android.synthetic.cloudless.login.*
 import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.Simpletask
 import nl.mpcjanssen.simpletask.ThemedNoActionBarActivity
+import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.showToastLong
 
@@ -43,7 +44,7 @@ class LoginScreen : ThemedNoActionBarActivity() {
         if (FileStore.isAuthenticated) {
             switchToTodolist()
         }
-        setTheme(Config.activeTheme)
+        setTheme(TodoApplication.config.activeTheme)
         setContentView(R.layout.login)
 
         val loginButton = login
