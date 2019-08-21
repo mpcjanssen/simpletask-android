@@ -88,7 +88,7 @@ class FilterListFragment : Fragment() {
     fun getSelectedItems(): ArrayList<String> {
 
         val arr = ArrayList<String>()
-        if (mSelectedItems == null) {
+        if (mSelectedItems == null || lv == null) {
             // Tab was not displayed so no selections were changed
             return arguments?.getStringArrayList(FilterActivity.INITIAL_SELECTED_ITEMS) ?: ArrayList<String>()
         }

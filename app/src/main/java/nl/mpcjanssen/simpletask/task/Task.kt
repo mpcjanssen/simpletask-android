@@ -247,8 +247,8 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         return text
     }
 
-    fun inFuture(today: String): Boolean {
-        val date = thresholdDate
+    fun inFuture(today: String, createIsThreshold: Boolean): Boolean {
+        val date = thresholdDate ?: if (createIsThreshold) createDate else null
         date?.let {
             return date > today
         }
