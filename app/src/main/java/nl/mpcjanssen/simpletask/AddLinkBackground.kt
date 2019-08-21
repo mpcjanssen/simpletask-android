@@ -32,6 +32,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import androidx.core.app.ShareCompat
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.Config
@@ -46,15 +47,15 @@ class AddLinkBackground : Activity() {
         Log.d(TAG, "onCreate()")
         super.onCreate(instance)
 
-        val intent = intent
-
 
         val append_text = TodoApplication.config.shareAppendText
-            val imageUri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
-            imageUri?.let {
-                Log.i(TAG, "Added link to content: $imageUri")
-                addBackgroundTask(imageUri.toString(), append_text)
-            }
+        val intentReader = ShareCompat.IntentReader.from(this)
+        val uri = intentReader.stream ?: ""
+        val subject = intentReader.subject ?: ""
+        val mimeType = intentReader.type
+        Log.i(TAG, "Added link to content ($mimeType)")
+        addBackgroundTask("$subject $uri", append_text)
+        return
     }
 
     private fun addBackgroundTask(sharedText: String, appendText: String) {
