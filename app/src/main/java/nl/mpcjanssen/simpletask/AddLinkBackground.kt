@@ -36,6 +36,7 @@ import androidx.core.app.ShareCompat
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.Config
+import nl.mpcjanssen.simpletask.util.showToastLong
 import nl.mpcjanssen.simpletask.util.showToastShort
 import nl.mpcjanssen.simpletask.util.todayAsString
 import java.io.IOException
@@ -47,15 +48,17 @@ class AddLinkBackground : Activity() {
         Log.d(TAG, "onCreate()")
         super.onCreate(instance)
 
-
         val append_text = TodoApplication.config.shareAppendText
         val intentReader = ShareCompat.IntentReader.from(this)
-        val uri = intentReader.stream ?: ""
+        val uri = intentReader.stream
         val subject = intentReader.subject ?: ""
         val mimeType = intentReader.type
         Log.i(TAG, "Added link to content ($mimeType)")
-        addBackgroundTask("$subject $uri", append_text)
-        return
+        if (uri == null) {
+            showToastLong(TodoApplication.app, R.string.share_link_failed)
+        } else {
+            addBackgroundTask("$subject $uri", append_text)
+        }
     }
 
     private fun addBackgroundTask(sharedText: String, appendText: String) {
@@ -72,7 +75,7 @@ class AddLinkBackground : Activity() {
 
         todoList.add(tasks, TodoApplication.config.hasAppendAtEnd)
         todoList.notifyTasklistChanged(TodoApplication.config.todoFileName,  true, true)
-        showToastShort(TodoApplication.app, R.string.task_added)
+        showToastShort(TodoApplication.app, R.string.link_added)
         if (TodoApplication.config.hasShareTaskShowsEdit) {
             todoList.editTasks(this, tasks, "")
         }
