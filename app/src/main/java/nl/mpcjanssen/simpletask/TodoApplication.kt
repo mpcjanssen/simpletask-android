@@ -107,7 +107,7 @@ class TodoApplication : MultiDexApplication() {
         Log.i(TAG, "Created todolist $todoList")
         Log.i(TAG, "Started ${appVersion(this)}")
         scheduleOnNewDay()
-        scheduleRepeating()
+//        scheduleRepeating()
     }
 
     private fun setupUncaughtExceptionHandler() {
