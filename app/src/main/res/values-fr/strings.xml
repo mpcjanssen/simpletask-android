@@ -361,4 +361,8 @@ Décochez cette option pour définir les nouvelles dates par rapport à aujourd\
 \nà l\'aide du bouton de sauvegarde</string>
     <string name="invalid_certificate_msg">Le certificat de serveur n\'est pas valide. Voulez-vous continuer \?</string>
     <string name="invalid_certificate_title">Certificat invalide.</string>
+    <string name="use_list_and_tags_icons_title">Utiliser les icônes</string>
+    <string name="use_list_and_tags_icons_summary">Utiliser des icônes pour modifier la liste et l\'étiquette de la tâche. Désactiver pour utiliser les termes todo.txt @ et +.</string>
+    <string name="no_tasks_to_archive">Aucune tâche à archiver.</string>
+    <string name="force_english_title">Forcer l\'usage de l\'anglais</string>
 </resources>
