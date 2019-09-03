@@ -126,7 +126,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="show_txt_only_pref_title">Mostra solo i file .txt</string>
     <string name="show_txt_only_summary">Mostra solo i file .txt nel dialogo di selezione file.</string>
     <!--TODO: translate-->
-    <string name="calendar_sync_screen_title">Calendar reminders</string>
+    <string name="calendar_sync_screen_title">Notifiche</string>
     <string name="calendar_sync_screen_summary">Automatically create calendar reminders for due and/or threshold dates.</string>
     <string name="calendar_sync_dues_title">Due dates</string>
     <string name="calendar_sync_thresholds_title">Threshold dates</string>
