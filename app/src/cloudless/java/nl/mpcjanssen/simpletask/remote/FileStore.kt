@@ -24,14 +24,11 @@ object FileStore : IFileStore {
 
     override val isOnline = true
     private val TAG = "FileStore"
-    private var observer: TodoObserver? = null
 
 
     init {
         Log.i(TAG, "onCreate")
         Log.i(TAG, "Default path: ${getDefaultPath()}")
-        observer = null
-
     }
 
     override val isAuthenticated: Boolean
@@ -46,7 +43,6 @@ object FileStore : IFileStore {
         val file = File(path)
         val lines = file.readLines()
         Log.i(TAG, "Read ${lines.size} lines from $path")
-        setWatching(path)
         return RemoteContents(file.lastModified().toString(), lines)
     }
 
@@ -67,30 +63,11 @@ object FileStore : IFileStore {
         return LoginScreen::class
     }
 
-    private fun setWatching(path: String) {
-        Log.i(TAG, "Observer: adding folder watcher on ${File(path).parentFile.absolutePath}")
-        val obs = observer
-        if (obs != null && path == obs.path) {
-            Log.w(TAG, "Observer: already watching: $path")
-            return
-        } else if (obs != null) {
-            Log.w(TAG, "Observer: already watching different path: ${obs.path}")
-            obs.ignoreEvents(true)
-            obs.stopWatching()
-            observer = null
-        }
-        observer = TodoObserver(path)
-        Log.i(TAG, "Observer: modifying done")
-    }
 
     override fun saveTasksToFile(path: String, lines: List<String>, eol: String) {
         Log.i(TAG, "Saving tasks to file: $path")
-        val obs = observer
-        obs?.ignoreEvents(true)
         val file = File(path)
         writeToFile(lines, eol, file, false)
-        obs?.delayedStartListen(1000)
-        TodoApplication.config.lastSeenRemoteId = file.lastModified().toString()
     }
 
     override fun appendTaskToFile(path: String, lines: List<String>, eol: String) {
@@ -129,57 +106,5 @@ object FileStore : IFileStore {
         // Run the file applyFilter for side effects
         file.list(filter)
         return result
-    }
-
-    class TodoObserver(val path: String) : FileObserver(File(path).parentFile.absolutePath) {
-        private val TAG = "FileWatchService"
-        private val fileName: String
-        private var ignoreEvents: Boolean = false
-        private val handler: Handler
-
-        private val delayedEnable = Runnable {
-            Log.i(TAG, "Observer: Delayed enabling events for: " + path)
-            ignoreEvents(false)
-        }
-
-        init {
-            this.startWatching()
-            this.fileName = File(path).name
-            Log.i(TAG, "Observer: creating observer on: {}")
-            this.ignoreEvents = false
-            this.handler = Handler(Looper.getMainLooper())
-
-        }
-
-        fun ignoreEvents(ignore: Boolean) {
-            Log.i(TAG, "Observer: observing events on " + this.path + "? ignoreEvents: " + ignore)
-            this.ignoreEvents = ignore
-        }
-
-        override fun onEvent(event: Int, eventPath: String?) {
-            if (eventPath != null && eventPath == fileName) {
-                Log.d(TAG, "Observer event: $path:$event")
-                if (event == FileObserver.CLOSE_WRITE ||
-                        event == FileObserver.MODIFY ||
-                        event == FileObserver.MOVED_TO) {
-                    if (ignoreEvents) {
-                        Log.i(TAG, "Observer: ignored event on: " + path)
-                    } else {
-                        Log.i(TAG, "File changed {}" + path)
-                        FileStore.remoteTodoFileChanged()
-                    }
-                }
-            }
-
-        }
-
-        fun delayedStartListen(ms: Int) {
-            // Cancel any running timers
-            handler.removeCallbacks(delayedEnable)
-            // Reschedule
-            Log.i(TAG, "Observer: Adding delayed enabling to todoQueue")
-            handler.postDelayed(delayedEnable, ms.toLong())
-        }
-
     }
 }

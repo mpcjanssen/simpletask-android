@@ -2,8 +2,7 @@ package nl.mpcjanssen.simpletask
 
 
 import android.util.Log
-import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TextToken
+import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.*
 import org.luaj.vm2.*
 import org.luaj.vm2.lib.OneArgFunction
@@ -12,7 +11,7 @@ import java.util.*
 
 object Interpreter :  AbstractInterpreter() {
     private val globals = JsePlatform.standardGlobals()!!
-    const val tag = "LuaInterp"
+    const val TAG = "LuaInterp"
 
     private val TODOLIB = readAsset(TodoApplication.app.assets, "lua/todolib.lua")
 
@@ -161,7 +160,7 @@ object Interpreter :  AbstractInterpreter() {
             val args = fillOnFilterVarargs(t)
             try {
                 val result = callback.call(args.arg1(), args.arg(2), args.arg(3))
-                return Task(result.tojstring())
+                return parse(result.tojstring())
             } catch (e: LuaError) {
                 Log.d(TAG, "Lua execution failed " + e.message)
             }
@@ -211,31 +210,31 @@ object Interpreter :  AbstractInterpreter() {
         val args = ArrayList<LuaValue>()
         args.add(LuaValue.valueOf(t.inFileFormat(TodoApplication.config.useUUIDs)))
         val fieldTable = LuaTable.tableOf()
-        fieldTable.set("due", dateStringToLuaLong(t.dueDate))
-        fieldTable.set("threshold", dateStringToLuaLong(t.thresholdDate))
-        fieldTable.set("createdate", dateStringToLuaLong(t.createDate))
-        fieldTable.set("completiondate", dateStringToLuaLong(t.completionDate))
-        fieldTable.set("text", t.alphaParts)
+//        fieldTable.set("due", dateStringToLuaLong(t.dueDate))
+//        fieldTable.set("threshold", dateStringToLuaLong(t.thresholdDate))
+//        fieldTable.set("createdate", dateStringToLuaLong(t.createDate))
+//        fieldTable.set("completiondate", dateStringToLuaLong(t.completionDate))
+        fieldTable.set("text", t.alphaParts())
 
-        val recPat = t.recurrencePattern
+        val recPat = t.recurrencePattern()
         if (recPat != null) {
-            fieldTable.set("recurrence", t.recurrencePattern)
+            fieldTable.set("recurrence", t.recurrencePattern())
         }
         fieldTable.set("completed", LuaBoolean.valueOf(t.isCompleted()))
 
-        val prioCode = t.priority.code
+        val prioCode = t.priority().code
         if (prioCode != "-") {
             fieldTable.set("priority", prioCode)
         }
-        fieldTable.set("tags", javaListToLuaTable(t.tags))
-        fieldTable.set("lists", javaListToLuaTable(t.lists))
+        fieldTable.set("tags", javaListToLuaTable(t.tags()))
+        fieldTable.set("lists", javaListToLuaTable(t.lists()))
 
         args.add(fieldTable)
 
         val extensionTable = LuaTable.tableOf()
-        for ((key, value) in t.extensions) {
-            extensionTable.set(key, value)
-        }
+//        for ((key, value) in t.extensions) {
+//            extensionTable.set(key, value)
+//        }
         args.add(extensionTable)
 
         return LuaValue.varargsOf(args.toTypedArray())
@@ -285,7 +284,7 @@ object Interpreter :  AbstractInterpreter() {
 class LuaToastShort : OneArgFunction() {
     override fun call(text: LuaValue?): LuaValue? {
         val string = text?.tojstring() ?: ""
-        Log.i(Interpreter.tag, "Toasted: \"$string\"")
+        Log.i(Interpreter.TAG, "Toasted: \"$string\"")
         showToastShort(TodoApplication.app, string)
         return LuaValue.NIL
     }
@@ -294,7 +293,7 @@ class LuaToastShort : OneArgFunction() {
 class LuaLog : OneArgFunction() {
     override fun call(text: LuaValue?): LuaValue? {
         val string = text?.tojstring() ?: ""
-        Log.i(Interpreter.tag, string)
+        Log.i(Interpreter.TAG, string)
         return LuaValue.NIL
     }
 }
