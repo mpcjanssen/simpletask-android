@@ -1243,10 +1243,8 @@ class Simpletask : ThemedNoActionBarActivity() {
 //
             if (TodoApplication.config.changesPending) {
                 pendingchanges.visibility = View.VISIBLE
-                offline.visibility = View.GONE
             } else {
                 pendingchanges.visibility = View.GONE
-                offline.visibility = View.GONE
             }
         }
     }
