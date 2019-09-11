@@ -300,39 +300,41 @@ class TodoList(val config: Config) {
                 Backupper.backup(todoFileName, lines)
             }
         }
-        timer?.apply { cancel() }
+        runOnMainThread(Runnable {
+            timer?.apply { cancel() }
 
-        timer = object : CountDownTimer(3000, 1000) {
-            override fun onFinish() {
-                Log.d(TAG, "Executing pending Save")
-                FileStoreActionQueue.add("Save") {
-                    try {
-                        broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
-                        Log.i(TAG, "Saving todo list, size ${lines.size}")
-                        fileStore.saveTasksToFile(todoFileName, lines, eol = eol)
-                        val changesWerePending = config.changesPending
-                        config.changesPending = false
-                        if (changesWerePending) {
-                            // Remove the red bar
-                            broadcastUpdateStateIndicator(TodoApplication.app.localBroadCastManager)
-                        }
+            timer = object : CountDownTimer(3000, 1000) {
+                override fun onFinish() {
+                    Log.d(TAG, "Executing pending Save")
+                    FileStoreActionQueue.add("Save") {
+                        try {
+                            broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
+                            Log.i(TAG, "Saving todo list, size ${lines.size}")
+                            fileStore.saveTasksToFile(todoFileName, lines, eol = eol)
+                            val changesWerePending = config.changesPending
+                            config.changesPending = false
+                            if (changesWerePending) {
+                                // Remove the red bar
+                                broadcastUpdateStateIndicator(TodoApplication.app.localBroadCastManager)
+                            }
 
-                    } catch (e: Exception) {
-                        Log.e(TAG, "TodoList save to $todoFileName failed", e)
-                        config.changesPending = true
-                        if (fileStore.isOnline) {
-                            showToastShort(TodoApplication.app, "Saving of todo file failed")
+                        } catch (e: Exception) {
+                            Log.e(TAG, "TodoList save to $todoFileName failed", e)
+                            config.changesPending = true
+                            if (fileStore.isOnline) {
+                                showToastShort(TodoApplication.app, "Saving of todo file failed")
+                            }
                         }
+                        broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
                     }
-                    broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
+
                 }
 
-            }
-
-            override fun onTick(p0: Long) {
-                Log.d(TAG, "Scheduled save in ${p0}")
-            }
-        }.start()
+                override fun onTick(p0: Long) {
+                    Log.d(TAG, "Scheduled save in ${p0}")
+                }
+            }.start()
+        })
     }
 
     @Synchronized
