@@ -47,7 +47,9 @@ import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileDialog
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.Task
+import nl.mpcjanssen.simpletask.task.TodoItem
 import nl.mpcjanssen.simpletask.task.TodoList
+import nl.mpcjanssen.simpletask.task.inFileFormat
 import nl.mpcjanssen.simpletask.util.*
 import java.io.File
 import java.util.*
@@ -63,7 +65,7 @@ class TodoApplication : MultiDexApplication() {
         super.onCreate()
         app = this
         config = Config(app)
-        todoList = TodoList(config)
+        todoList = TodoList(config.todoList?.map { TodoItem(it) } ?: emptyList())
         db = Room.databaseBuilder(this,
                 AppDatabase::class.java, DB_FILE).fallbackToDestructiveMigration()
                 .build()
@@ -164,13 +166,68 @@ class TodoApplication : MultiDexApplication() {
 
     fun switchTodoFile(newTodo: String) {
         config.setTodoFile(newTodo)
-        loadTodoList("from file switch")
+        todoList = loadTodoList("from file switch")
     }
 
-    fun loadTodoList(reason: String) {
+
+    fun loadTodolist(reason: String): TodoList {
         Log.i(TAG, "Loading todolist")
-        todoList.reload(reason = reason)
+        Log.d(TAG, "Reload: $reason")
+        broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
+        if (!FileStore.isAuthenticated) {
+            broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
+            return TodoList(emptyList())
+        }
+        val filename = config.todoFileName
+        if (config.changesPending && FileStore.isOnline) {
+            Log.i(TAG, "Not loading, changes pending")
+            Log.i(TAG, "Saving instead of loading")
+            save(FileStore, filename, true, config.eol)
+            return todoList
+        } else {
+            FileStoreActionQueue.add("Reload") {
+                val needSync = try {
+                    val newerVersion = FileStore.getRemoteVersion(config.todoFileName)
+                    newerVersion != config.lastSeenRemoteId
+                } catch (e: Throwable) {
+                    Log.e(TAG, "Can't determine remote file version", e)
+                    false
+                }
+                if (needSync) {
+                    Log.i(TAG, "Remote version is different, sync")
+                } else {
+                    Log.i(TAG, "Remote version is same, load from cache")
+                }
+                val cachedList = config.todoList
+                if (cachedList == null || needSync) {
+                    try {
+                        val remoteContents = FileStore.loadTasksFromFile(filename)
+                        val items = ArrayList<Task>(
+                                remoteContents.contents.map { text ->
+                                    Task(text)
+                                })
+
+                        Log.d(TAG, "Fill todolist")
+                        todoItems.clear()
+                        todoItems.addAll(items)
+                        // Update cache
+                        config.cachedContents = remoteContents.contents.joinToString("\n")
+                        config.lastSeenRemoteId = remoteContents.remoteId
+                        // Backup
+                        Backupper.backup(filename, items.map { it.inFileFormat(config.useUUIDs) })
+                        notifyTasklistChanged(filename, false, true)
+                    } catch (e: Exception) {
+                        Log.e(TAG, "TodoList load failed: {}" + filename, e)
+                        showToastShort(TodoApplication.app, "Loading of todo file failed")
+                    }
+
+                    Log.i(TAG, "TodoList loaded from dropbox")
+                }
+            }
+            broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
+        }
     }
+
 
     fun updateWidgets() {
         val mgr = AppWidgetManager.getInstance(applicationContext)
