@@ -3,6 +3,7 @@ package nl.mpcjanssen.simpletask.task
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.os.CountDownTimer
 import android.os.SystemClock
 import android.util.Log
 import nl.mpcjanssen.simpletask.*
@@ -20,7 +21,7 @@ import kotlin.collections.ArrayList
  * @author Mark Janssen
  */
 class TodoList(val config: Config) {
-
+    private var timer: CountDownTimer? = null
     private var mLists: MutableList<String>? = null
     private var mTags: MutableList<String>? = null
     private val todoItems = ArrayList<Task>()
@@ -290,33 +291,49 @@ class TodoList(val config: Config) {
 
     @Synchronized
     private fun save(fileStore: IFileStore, uri: Uri, backup: Boolean, eol: String) {
-        broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
+        config.changesPending = true
+        broadcastUpdateStateIndicator(TodoApplication.app.localBroadCastManager)
         val lines = todoItems.map {
             it.inFileFormat(config.useUUIDs)
         }
         // Update cache
         config.cachedContents = lines.joinToString("\n")
-
-        FileStoreActionQueue.add("Save") {
+        FileStoreActionQueue.add("Backup") {
             if (backup) {
                 Backupper.backup(uri.toString(), lines)
             }
-            try {
-                Log.i(TAG, "Saving todo list, size ${lines.size}")
-                fileStore.saveTasksToFile(uri, lines, eol = eol)
-                val changesWerePending = config.changesPending
-                config.changesPending = false
-                if (changesWerePending) {
-                    // Remove the red bar
-                    broadcastUpdateStateIndicator(TodoApplication.app.localBroadCastManager)
+        }
+
+        timer?.apply { cancel() }
+
+        timer = object: CountDownTimer(3000, 1000) {
+            override fun onFinish() {
+                Log.d(TAG, "Executing pending Save")
+                FileStoreActionQueue.add("Save") {
+                    broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
+                    try {
+                        Log.i(TAG, "Saving todo list, size ${lines.size}")
+                        fileStore.saveTasksToFile(uri, lines, eol = eol)
+                        val changesWerePending = config.changesPending
+                        config.changesPending = false
+                        if (changesWerePending) {
+                            // Remove the red bar
+                            broadcastUpdateStateIndicator(TodoApplication.app.localBroadCastManager)
+                        }
+
+                    } catch (e: Exception) {
+                        Log.e(TAG, "TodoList save to $uri failed", e)
+                        config.changesPending = true
+                    }
+                    broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
                 }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "TodoList save to $uri failed", e)
-                config.changesPending = true
             }
-            broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
-        }
+
+            override fun onTick(p0: Long) {
+               Log.d(TAG, "Scheduled save in ${p0}")
+            }
+        }.start()
     }
 
     @Synchronized

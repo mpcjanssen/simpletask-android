@@ -17,13 +17,11 @@ import android.app.SearchManager
 import android.content.*
 import android.content.res.Configuration
 import android.content.res.TypedArray
-import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.CalendarContract
 import android.provider.CalendarContract.Events
-import android.provider.OpenableColumns
 import androidx.annotation.StyleableRes
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -35,7 +33,6 @@ import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.webkit.MimeTypeMap
 import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
 import hirondelle.date4j.DateTime
@@ -45,7 +42,6 @@ import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.metaData
 import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.*
-import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 import android.R.id as androidId
@@ -1119,7 +1115,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                         updateFilterBar()
                         updateSavedFilterDrawer()
                         updateQuickFilterDrawer()
-                        updateConnectivityIndicator()
+                        updateChangesPendingIndicator()
                     }
                     Event.FONT_SIZE_CHANGED -> {
                         updateTaskList(TodoApplication.config.mainQuery) {
@@ -1128,7 +1124,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                         }
                     }
                     Event.UPDATE_PENDING_CHANGES -> {
-                        updateConnectivityIndicator()
+                        updateChangesPendingIndicator()
                     }
                     Event.CLEAR_SELECTION -> {
                         invalidateOptionsMenu()
@@ -1243,20 +1239,15 @@ class Simpletask : ThemedNoActionBarActivity() {
             filter_drawer.deferNotifyDataSetChanged()
         }
 
-        private fun updateConnectivityIndicator() {
-            // Show connectivity status indicator
-            // Red -> changes pending
-            // Yellow -> offline
-//            if (TodoApplication.config.changesPending) {
-//                pendingchanges.visibility = View.VISIBLE
-//                offline.visibility = View.GONE
-//            } else if (!FileStore.isOnline) {
-//                pendingchanges.visibility = View.GONE
-//                offline.visibility = View.VISIBLE
-//            } else {
-//                pendingchanges.visibility = View.GONE
-//                offline.visibility = View.GONE
-//            }
+        private fun updateChangesPendingIndicator() {
+//
+            if (TodoApplication.config.changesPending) {
+                pendingchanges.visibility = View.VISIBLE
+                offline.visibility = View.GONE
+            } else {
+                pendingchanges.visibility = View.GONE
+                offline.visibility = View.GONE
+            }
         }
     }
 

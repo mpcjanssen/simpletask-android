@@ -41,19 +41,10 @@
                         android:id="@+id/pendingchanges"
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
-                        android:background="#FF0000"
-                        android:visibility="gone"
-                        android:elevation="3dp"
-                        tools:ignore="UnusedAttribute"/>
-                    <View
-                        android:id="@+id/offline"
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
                         android:background="@android:color/holo_orange_light"
                         android:visibility="gone"
                         android:elevation="3dp"
-                        tools:ignore="UnusedAttribute"
-                        />
+                        tools:ignore="UnusedAttribute"/>
 
                     <LinearLayout
                         android:id="@+id/actionbar"
