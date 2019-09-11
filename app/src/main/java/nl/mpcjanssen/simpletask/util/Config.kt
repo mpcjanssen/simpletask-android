@@ -1,6 +1,7 @@
 package nl.mpcjanssen.simpletask.util
 
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import me.smichel.android.KPreferences.Preferences
 import nl.mpcjanssen.simpletask.*
@@ -16,14 +17,6 @@ class Config(app: TodoApplication) : Preferences(app) {
     val TAG = "Config"
 
     init {
-        registerCallbacks(listOf<String>(
-                getString(R.string.widget_theme_pref_key),
-                getString(R.string.widget_extended_pref_key),
-                getString(R.string.widget_background_transparency),
-                getString(R.string.widget_header_transparency)
-        )) {
-            TodoApplication.app.redrawWidgets()
-        }
         registerCallbacks(listOf<String>(
                 getString(R.string.calendar_sync_dues),
                 getString(R.string.calendar_sync_thresholds),
@@ -68,7 +61,7 @@ class Config(app: TodoApplication) : Preferences(app) {
             }
         }
 
-    var lastSeenRemoteId by StringOrNullPreference(R.string.file_current_version_id)
+    var lastSeenRemoteId by StringOrNullPreference(R.string.file_last_modified)
 
     var lastScrollPosition by IntPreference(R.string.ui_last_scroll_position, -1)
 
@@ -190,33 +183,13 @@ class Config(app: TodoApplication) : Preferences(app) {
     val defaultSorts: Array<String>
         get() = TodoApplication.app.resources.getStringArray(R.array.sortKeys)
 
-    private var _todoFileName by StringOrNullPreference(R.string.todo_file_key)
-    val todoFileName: String
-        get() {
-            var name = _todoFileName
-            if (name == null) {
-                name = FileStore.getDefaultPath()
-                setTodoFile(name)
-            }
-            val todoFile = File(name)
-            try {
-                return todoFile.canonicalPath
-            } catch (e: IOException) {
-                return FileStore.getDefaultPath()
-            }
+    var _todoUri by StringOrNullPreference(R.string.todo_uri_key)
 
-        }
-
-    val todoFile: File
-        get() = File(todoFileName)
-
-    fun setTodoFile(todo: String) {
-        _todoFileName = todo
-        prefs.edit().remove(getString(R.string.file_current_version_id)).apply()
+    var todoUri : Uri?
+    get() = _todoUri?.let{Uri.parse(it) }
+    set(uri) {
+        _todoUri = uri.toString()
     }
-
-    val doneFileName: String
-        get() = File(todoFile.parentFile, "done.txt").absolutePath
 
     fun clearCache() {
         cachedContents = null

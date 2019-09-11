@@ -2,6 +2,7 @@ package nl.mpcjanssen.simpletask.task
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.SystemClock
 import android.util.Log
 import nl.mpcjanssen.simpletask.*
@@ -179,10 +180,13 @@ class TodoList(val config: Config) {
 
 
     @Synchronized
-    fun notifyTasklistChanged(todoName: String, save: Boolean, refreshMainUI: Boolean = true) {
+    fun notifyTasklistChanged(uri: Uri?, save: Boolean, refreshMainUI: Boolean = true) {
         Log.d(TAG, "Notified changed")
+        if (uri == null) {
+            return
+        }
         if (save) {
-            save(FileStore, todoName, true, config.eol)
+            save(FileStore, uri, true, config.eol)
         }
         if (!config.hasKeepSelection) {
             clearSelection()
@@ -229,19 +233,21 @@ class TodoList(val config: Config) {
     fun reload(reason: String = "") {
         Log.d(TAG, "Reload: $reason")
         broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
-        if (!FileStore.isAuthenticated) {
+        val uri = config.todoUri
+        if (uri == null) {
             broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
             return
         }
-        val filename = config.todoFileName
-        if (config.changesPending && FileStore.isOnline) {
+        if (config.changesPending ) {
             Log.i(TAG, "Not loading, changes pending")
             Log.i(TAG, "Saving instead of loading")
-            save(FileStore, filename, true, config.eol)
+            save(FileStore, uri, true, config.eol)
         } else {
+
             FileStoreActionQueue.add("Reload") {
+
                 val needSync = try {
-                    val newerVersion = FileStore.getRemoteVersion(config.todoFileName)
+                    val newerVersion = FileStore.getRemoteVersion(uri)
                     newerVersion != config.lastSeenRemoteId
                 } catch (e: Throwable) {
                     Log.e(TAG, "Can't determine remote file version", e)
@@ -255,7 +261,7 @@ class TodoList(val config: Config) {
                 val cachedList = config.todoList
                 if (cachedList == null || needSync) {
                     try {
-                        val remoteContents = FileStore.loadTasksFromFile(filename)
+                        val remoteContents = FileStore.loadTasksFromFile(uri)
                         val items = ArrayList<Task>(
                                 remoteContents.contents.map { text ->
                                     Task(text)
@@ -266,12 +272,12 @@ class TodoList(val config: Config) {
                         todoItems.addAll(items)
                         // Update cache
                         config.cachedContents = remoteContents.contents.joinToString("\n")
-                        config.lastSeenRemoteId = remoteContents.remoteId
+                        config.lastSeenRemoteId = remoteContents.lastModified
                         // Backup
-                        Backupper.backup(filename, items.map { it.inFileFormat(config.useUUIDs) })
-                        notifyTasklistChanged(filename, false, true)
+                        Backupper.backup(uri.toString(), items.map { it.inFileFormat(config.useUUIDs) })
+                        notifyTasklistChanged(uri, false, true)
                     } catch (e: Exception) {
-                        Log.e(TAG, "TodoList load failed: {}" + filename, e)
+                        Log.e(TAG, "TodoList load failed: {}" + uri, e)
                         showToastShort(TodoApplication.app, "Loading of todo file failed")
                     }
 
@@ -283,7 +289,7 @@ class TodoList(val config: Config) {
     }
 
     @Synchronized
-    private fun save(fileStore: IFileStore, todoFileName: String, backup: Boolean, eol: String) {
+    private fun save(fileStore: IFileStore, uri: Uri, backup: Boolean, eol: String) {
         broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
         val lines = todoItems.map {
             it.inFileFormat(config.useUUIDs)
@@ -293,11 +299,11 @@ class TodoList(val config: Config) {
 
         FileStoreActionQueue.add("Save") {
             if (backup) {
-                Backupper.backup(todoFileName, lines)
+                Backupper.backup(uri.toString(), lines)
             }
             try {
                 Log.i(TAG, "Saving todo list, size ${lines.size}")
-                fileStore.saveTasksToFile(todoFileName, lines, eol = eol)
+                fileStore.saveTasksToFile(uri, lines, eol = eol)
                 val changesWerePending = config.changesPending
                 config.changesPending = false
                 if (changesWerePending) {
@@ -306,11 +312,8 @@ class TodoList(val config: Config) {
                 }
 
             } catch (e: Exception) {
-                Log.e(TAG, "TodoList save to $todoFileName failed", e)
+                Log.e(TAG, "TodoList save to $uri failed", e)
                 config.changesPending = true
-                if (FileStore.isOnline) {
-                    showToastShort(TodoApplication.app, "Saving of todo file failed")
-                }
             }
             broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
         }
@@ -318,20 +321,20 @@ class TodoList(val config: Config) {
 
     @Synchronized
     fun archive(todoFilename: String, doneFileName: String, tasks: List<Task>, eol: String) {
-        Log.d(TAG, "Archive ${tasks.size} tasks")
-
-        FileStoreActionQueue.add("Append to file") {
-            broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
-            try {
-                FileStore.appendTaskToFile(doneFileName, tasks.map { it.text }, eol)
-                removeAll(tasks)
-                notifyTasklistChanged(todoFilename, true, true)
-            } catch (e: Exception) {
-                Log.e(TAG, "Task archiving failed", e)
-                showToastShort(TodoApplication.app, "Task archiving failed")
-            }
-            broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
-        }
+//        Log.d(TAG, "Archive ${tasks.size} tasks")
+//
+//        FileStoreActionQueue.add("Append to file") {
+//            broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
+//            try {
+//                FileStore.appendTaskToFile(doneFileName, tasks.map { it.text }, eol)
+//                removeAll(tasks)
+//                notifyTasklistChanged(todoFilename, true, true)
+//            } catch (e: Exception) {
+//                Log.e(TAG, "Task archiving failed", e)
+//                showToastShort(TodoApplication.app, "Task archiving failed")
+//            }
+//            broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
+//        }
     }
 
     fun isSelected(item: Task): Boolean = item.selected
