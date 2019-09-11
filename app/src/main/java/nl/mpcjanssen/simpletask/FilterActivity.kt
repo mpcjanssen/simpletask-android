@@ -16,10 +16,8 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
-import nl.mpcjanssen.simpletask.remote.FileDialog
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.Priority
-import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.*
 import java.io.File
 import java.io.IOException
@@ -190,7 +188,6 @@ class FilterActivity : ThemedNoActionBarActivity() {
                 when {
                     asWidgetConfigure -> askWidgetName()
                     asWidgetReConfigure -> {
-                        updateWidget()
                         finish()
                     }
                     else -> applyFilter()
@@ -205,20 +202,6 @@ class FilterActivity : ThemedNoActionBarActivity() {
     }
 
     private fun openScript(file_read: (String) -> Unit) {
-            val dialog = FileDialog()
-        dialog.addFileListener(object : FileDialog.FileSelectedListener {
-                override fun fileSelected(file: String) {
-                    Thread(Runnable {
-                        try {
-                            FileStore.readFile(file, file_read)
-                        } catch (e: IOException) {
-                            showToastShort(this@FilterActivity, "Failed to load script.")
-                            e.printStackTrace()
-                        }
-                    }).start()
-                }
-            })
-            dialog.createFileDialog(this@FilterActivity, FileStore, File(TodoApplication.config.todoFileName).parent, txtOnly = false)
     }
 
     private fun createFilterIntent(): Intent {
@@ -284,44 +267,6 @@ class FilterActivity : ThemedNoActionBarActivity() {
         }
     }
 
-    private fun updateWidget() {
-        updateFilterFromFragments()
-        val widgetId = intent.getIntExtra(Constants.EXTRA_WIDGET_ID, 0)
-        Log.i(TAG, "Saving settings for widget $widgetId")
-        val preferences = applicationContext.getSharedPreferences("" + widgetId, Context.MODE_PRIVATE)
-        mFilter.saveInPrefs(preferences)
-        broadcastRefreshWidgets(m_app.localBroadCastManager)
-    }
-
-    private fun createWidget(name: String) {
-        val mAppWidgetId: Int
-
-        val intent = intent
-        val extras = intent.extras
-        updateFilterFromFragments()
-        if (extras != null) {
-            mAppWidgetId = extras.getInt(
-                    AppWidgetManager.EXTRA_APPWIDGET_ID,
-                    AppWidgetManager.INVALID_APPWIDGET_ID)
-
-            val context = applicationContext
-
-            // Store widget applyFilter
-            val preferences = context.getSharedPreferences("" + mAppWidgetId, Context.MODE_PRIVATE)
-            val namedFilter = NamedQuery(name, mFilter)
-            namedFilter.saveInPrefs(preferences)
-
-            val appWidgetManager = AppWidgetManager.getInstance(context)
-            MyAppWidgetProvider.updateAppWidget(context, appWidgetManager,
-                    mAppWidgetId, name)
-
-            val resultValue = Intent(applicationContext, AppWidgetService::class.java)
-            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId)
-            setResult(Activity.RESULT_OK, resultValue)
-            finish()
-        }
-    }
-
     private fun applyFilter() {
         val data = createFilterIntent()
         startActivity(data)
@@ -347,7 +292,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
             if (value == "") {
                 showToastShort(applicationContext, R.string.widget_name_empty)
             } else {
-                createWidget(value)
+
             }
         }
 

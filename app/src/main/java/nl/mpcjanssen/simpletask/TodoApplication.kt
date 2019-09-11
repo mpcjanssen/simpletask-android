@@ -44,16 +44,15 @@ import nl.mpcjanssen.simpletask.dao.DB_FILE
 import nl.mpcjanssen.simpletask.dao.TodoFile
 
 import nl.mpcjanssen.simpletask.remote.BackupInterface
-import nl.mpcjanssen.simpletask.remote.FileDialog
 import nl.mpcjanssen.simpletask.remote.FileStore
-import nl.mpcjanssen.simpletask.task.Task
+import nl.mpcjanssen.simpletask.remote.OpenFileScreen
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.*
-import java.io.File
 import java.util.*
 
 class TodoApplication : MultiDexApplication() {
 
+    fun isAuthenticated(): Boolean = config._todoUri != null
     private lateinit var androidUncaughtExceptionHandler: Thread.UncaughtExceptionHandler
     lateinit var localBroadCastManager: LocalBroadcastManager
     private lateinit var m_broadcastReceiver: BroadcastReceiver
@@ -88,14 +87,8 @@ class TodoApplication : MultiDexApplication() {
                 when {
                     intent.action == Constants.BROADCAST_TASKLIST_CHANGED -> {
                         CalendarSync.syncLater()
-                        redrawWidgets()
-                        updateWidgets()
                     }
-                    intent.action == Constants.BROADCAST_UPDATE_WIDGETS -> {
-                        Log.i(TAG, "Refresh widgets from broadcast")
-                        redrawWidgets()
-                        updateWidgets()
-                    }
+
                     intent.action == Constants.BROADCAST_FILE_SYNC -> loadTodoList("From BROADCAST_FILE_SYNC")
                 }
             }
@@ -162,58 +155,15 @@ class TodoApplication : MultiDexApplication() {
         super.onTerminate()
     }
 
-    fun switchTodoFile(newTodo: String) {
-        config.setTodoFile(newTodo)
-        loadTodoList("from file switch")
-    }
-
     fun loadTodoList(reason: String) {
         Log.i(TAG, "Loading todolist")
         todoList.reload(reason = reason)
     }
 
-    fun updateWidgets() {
-        val mgr = AppWidgetManager.getInstance(applicationContext)
-        for (appWidgetId in mgr.getAppWidgetIds(ComponentName(applicationContext, MyAppWidgetProvider::class.java))) {
-            mgr.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widgetlv)
-            Log.i(TAG, "Updating widget: $appWidgetId")
-        }
-    }
-
-    fun redrawWidgets() {
-        val appWidgetManager = AppWidgetManager.getInstance(applicationContext)
-        val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(this, MyAppWidgetProvider::class.java))
-        Log.i(TAG, "Redrawing widgets ")
-        if (appWidgetIds.isNotEmpty()) {
-            MyAppWidgetProvider().onUpdate(this, appWidgetManager, appWidgetIds)
-        }
-    }
-
-    val isAuthenticated: Boolean
-        get() {
-            return FileStore.isAuthenticated
-        }
-
-    fun startLogin(caller: Activity) {
-        val loginActivity = FileStore.loginActivity()?.java
-        loginActivity?.let {
-            val intent = Intent(caller, it)
-            caller.startActivity(intent)
-        }
-    }
-
     fun browseForNewFile(act: Activity) {
-        val fileStore = FileStore
-        FileDialog.browseForNewFile(
-                act,
-                fileStore,
-                config.todoFile.parent,
-                object : FileDialog.FileSelectedListener {
-                    override fun fileSelected(file: String) {
-                        switchTodoFile(file)
-                    }
-                },
-                config.showTxtOnly)
+        val intent = Intent(act, OpenFileScreen::class.java)
+        act.startActivity(intent)
+        act.finish()
     }
 
 
