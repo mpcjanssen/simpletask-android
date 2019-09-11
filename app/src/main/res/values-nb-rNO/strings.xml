@@ -152,8 +152,8 @@
     <string name="sync_download_message">Laster ned todo.txt…</string>
     <string name="sync_conflict_dialog_title">Filkonflikt</string>
     <string name="first_title_word">Simpletask</string>
-    <string name="login_screen_button">Logg inn på Dropbox</string>
-    <string name="login_folder_screen_button">Logg inn på Dropbox
+    <string name="browse_existing">Logg inn på Dropbox</string>
+    <string name="browse_new">Logg inn på Dropbox
 \n(Programmappetilgang)</string>
     <string name="delete_task_title">Slett %s gjøremål</string>
     <string name="archive_task_title">Arkiver %s gjøremål</string>

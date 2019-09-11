@@ -186,8 +186,8 @@
 \nPretende enviar o ficheiro local ou descarregar o remoto no Dropbox\?</string>
     <!-- login -->
     <string name="first_title_word">Simpletask</string>
-    <string name="login_screen_button">Iniciar sessão no Dropbox</string>
-    <string name="login_folder_screen_button">Iniciar sessão no Dropbox
+    <string name="browse_existing">Iniciar sessão no Dropbox</string>
+    <string name="browse_new">Iniciar sessão no Dropbox
 \n(acesso à pasta da aplicação)</string>
     <string name="login_cloudless">Se não tem conta no Dropbox ou não quer usá-la para armazenar a sua lista de tarefas, pode descarregar o Simpletask Cloudless da Play Store. 
 \nhttps://goo.gl/X1C55P</string>

@@ -189,7 +189,7 @@ You should have received a copy of the GNU General Public License along with Tod
 \nSollen die lokalen Änderungen hoch- oder die Dropbox-Version heruntergeladen werden?</string>
     <!-- login -->
     <string name="first_title_word">Simpletask</string>
-    <string name="login_screen_button">In Dropbox einloggen</string>
+    <string name="browse_existing">In Dropbox einloggen</string>
     <string name="login_cloudless">Wenn du keinen Dropbox-Account hast oder keinen benutzen möchtest, um die Aufgabenliste zu speichern, kannst Du Simpletask Cloudless aus dem Play Store herunterladen. 
 \nhttps://goo.gl/X1C55P</string>
     <!-- delete -->
@@ -304,7 +304,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="date">Datum</string>
     <string name="filter_show_create_date">Zeige Alter einer Aufgabe</string>
     <string name="input_new">Neue Eingabe</string>
-    <string name="login_folder_screen_button">Bei Dropbox einloggen.\n(Zugang zum App-Verzeichnis)</string>
+    <string name="browse_new">Bei Dropbox einloggen.\n(Zugang zum App-Verzeichnis)</string>
     <string name="name">Name</string>
     <string name="project_prompt_todotxt">Projekt</string>
     <string name="share_database">Datenbank durchsuchen</string>

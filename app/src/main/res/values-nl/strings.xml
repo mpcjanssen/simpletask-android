@@ -221,8 +221,8 @@
 \nuw lokaal aangebrachte wijzigingen uploaden of de Dropbox-versie downloaden?</string>
 
     <string name="first_title_word">Simpletask</string>
-    <string name="login_screen_button">Inloggen op Dropbox</string>
-    <string name="login_folder_screen_button">Inloggen op Dropbox
+    <string name="browse_existing">Inloggen op Dropbox</string>
+    <string name="browse_new">Inloggen op Dropbox
 (maptoegang voor app)</string>
     <string name="login_cloudless">Als u geen Dropbox-account heeft of u wilt Dropbox niet gebruiken om uw takenlijst naar op te slaan, dan kunt u Simpletask Cloudless downloaden uit de Play Store. 
 \n 

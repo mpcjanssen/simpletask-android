@@ -245,8 +245,8 @@
 \nSzeretnéd a helyi fájl változásait feltölteni vagy letöltöd a Dropboxban lévőt?</string>
 
     <string name="first_title_word">Simpletask</string>
-    <string name="login_screen_button">Belépés Dropboxba</string>
-    <string name="login_folder_screen_button">Belépés Dropboxba
+    <string name="browse_existing">Belépés Dropboxba</string>
+    <string name="browse_new">Belépés Dropboxba
 \n(Hozzásférés az alkalmazás könyvtárához)</string>
     <string name="login_cloudless">Ha nincs Dropbox-fiókod vagy nem szeretnéd használni a feladatlistád tárolására, letöltheted a Simpletask Cloudless appot a Play Áruházból.
 \nhttp://goo.gl/X1C55P</string>

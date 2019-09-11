@@ -23,13 +23,14 @@ import nl.mpcjanssen.simpletask.Simpletask
 
 
 object FileStore : IFileStore {
-    override fun getRemoteVersion(uri: Uri): String? =   uri.metaData(TodoApplication.app).lastModified
+    override fun getRemoteVersion(uri: Uri): String? = uri.metaData(TodoApplication.app).lastModified
     private val TAG = "FileStore"
 
+    @Synchronized
     override fun loadTasksFromFile(uri: Uri): RemoteContents {
         val lines = ArrayList<String>()
         TodoApplication.app.contentResolver.openInputStream(uri)?.use { inputStream ->
-             inputStream.bufferedReader(Charsets.UTF_8).use { reader ->
+            inputStream.bufferedReader(Charsets.UTF_8).use { reader ->
                 var line: String? = reader.readLine()
                 while (line != null) {
                     lines.add(line)
@@ -40,12 +41,16 @@ object FileStore : IFileStore {
         return RemoteContents(uri.metaData(TodoApplication.app).lastModified, lines)
     }
 
+    @Synchronized
     override fun saveTasksToFile(uri: Uri, lines: List<String>, eol: String) {
         TodoApplication.app.contentResolver.openOutputStream(uri)?.use { stream ->
-            stream.bufferedWriter(Charsets.UTF_8).write(lines.joinToString(eol))
+            stream.bufferedWriter(Charsets.UTF_8).use { writer ->
+                writer.write(lines.joinToString(eol))
+            }
         }
 
     }
+
 
     override fun appendTaskToFile(uri: Uri, lines: List<String>, eol: String) {
         TodoApplication.app.contentResolver.openOutputStream(uri, "wa")?.use { stream ->
@@ -57,8 +62,8 @@ object FileStore : IFileStore {
 
 data class MetaData(val lastModified: String?, val displayName: String?)
 
-fun Uri.metaData(ctxt: Context) : MetaData {
-    val cursor: Cursor? = ctxt.contentResolver.query( this, null, null, null, null, null)
+fun Uri.metaData(ctxt: Context): MetaData {
+    val cursor: Cursor? = ctxt.contentResolver.query(this, null, null, null, null, null)
 
     cursor?.use {
         // moveToFirst() returns false if the cursor has 0 rows.  Very handy for
@@ -72,5 +77,5 @@ fun Uri.metaData(ctxt: Context) : MetaData {
             return MetaData(lastModified.toString(), displayName)
         }
     }
-    return MetaData(null,null)
+    return MetaData(null, null)
 }

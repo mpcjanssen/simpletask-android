@@ -219,8 +219,8 @@
     <string name="sync_conflict_dialog_msg">哎呀！Dropbox 中有个更新版本的 todo.txt 文件。 
 \n你打算上传本地改动还是下载 Dropbox 中的版本？</string>
     <string name="first_title_word">事务</string>
-    <string name="login_screen_button">登录到 Dropbox</string>
-    <string name="login_folder_screen_button">登录到 Dropbox 
+    <string name="browse_existing">登录到 Dropbox</string>
+    <string name="browse_new">登录到 Dropbox
 \n（应用程序文件夹访问）</string>
     <string name="login_cloudless">如果您没有 Dropbox 帐户，或者不想使用它来存储您的任务清单，您可以到 Play Store 下载 Simpletask Cloudless。 
 \nhttps://goo.gl/X1C55P</string>

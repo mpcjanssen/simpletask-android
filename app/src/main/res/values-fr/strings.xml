@@ -217,8 +217,8 @@ Décochez cette option pour définir les nouvelles dates par rapport à aujourd\
     <string name="sync_conflict_dialog_msg">Oups ! Il y a une version plus récente de votre fichier todo.txt dans Dropbox. 
 \nVoulez-vous envoyer vos modifications locales ou télécharger la version de Dropbox \?</string>
     <string name="first_title_word">Simpletask</string>
-    <string name="login_screen_button">Se connecter à Dropbox</string>
-    <string name="login_folder_screen_button">Se connecter à Dropbox
+    <string name="browse_existing">Se connecter à Dropbox</string>
+    <string name="browse_new">Se connecter à Dropbox
 \n(Accès au dossier de l\'application)</string>
     <string name="login_cloudless">Si vous n\'avez pas de compte Dropbox ou que vous ne voulez pas l\'utiliser pour stocker votre liste de tâches, vous pouvez télécharger Simpletask Cloudless depuis le Play Store.
 \nhttp://goo.gl/X1C55P</string>

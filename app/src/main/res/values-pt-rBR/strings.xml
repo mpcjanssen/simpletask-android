@@ -218,8 +218,8 @@
     <string name="sync_conflict_dialog_msg">Opa! Há uma nova versão do arquivo todo.txt no Dropbox. 
 \nPretende carregar o arquivo local ou o remoto\?</string>
     <string name="first_title_word">Simpletask</string>
-    <string name="login_screen_button">Entrar no Dropbox</string>
-    <string name="login_folder_screen_button">Entrar no Dropbox
+    <string name="browse_existing">Entrar no Dropbox</string>
+    <string name="browse_new">Entrar no Dropbox
 \n(Pasta do aplicativo)</string>
     <string name="login_cloudless">Se não tem conta no Dropbox ou não quer usá-la para armazenar sua lista de tarefas, você pode baixar o Simpletask Cloudless da Play Store. 
 \nhttps://goo.gl/X1C55P</string>

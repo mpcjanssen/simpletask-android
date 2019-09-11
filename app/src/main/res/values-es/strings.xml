@@ -61,7 +61,7 @@
 \n¿Quiere subir sus cambios locales, o descargar la versión de Dropbox?</string>
     <!-- login -->
     <string name="first_title_word">Simpletask</string>
-    <string name="login_screen_button">Iniciar sesión en Dropbox</string>
+    <string name="browse_existing">Iniciar sesión en Dropbox</string>
     <string name="login_cloudless">Si no tiene una cuenta de Dropbox o no quiere utilizarla para almacenar su lista de tareas, puede descargar Simpletask Cloudless de la Tienda de Aplicaciones de Google. http://goo.gl/X1C55P</string>
     <!-- delete -->
     <string name="delete_task_title">Eliminar %s tarea(s)</string>
@@ -305,7 +305,7 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="todotxt_terms_summary">Contexto y proyecto en lugar de lista y etiqueta</string>
     <string name="preference_title_debug_info">Ver registro de depuración</string>
     <string name="preference_summary_debug_info">Ver y compartir versión y registro de la aplicación.</string>
-    <string name="login_folder_screen_button">Iniciar sesión en Dropbox
+    <string name="browse_new">Iniciar sesión en Dropbox
 (Acceso a la carpeta de la aplicación)</string>
     <string name="by_project_todotxt">Proyecto</string>
     <string name="by_context_todotxt">Contexto</string>

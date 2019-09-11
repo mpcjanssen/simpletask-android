@@ -178,8 +178,8 @@
     <string name="sync_conflict_dialog_title">ファイルの競合</string>
     <string name="sync_conflict_dialog_msg">おっと！ Dropbox に、新しいバージョンの todo.txt ファイルがあります。 ローカルの変更をアップロードしますか、それとも Dropboxにあるものをダウンロードしますか?</string>
     <string name="first_title_word">シンプルタスク</string>
-    <string name="login_screen_button">Dropbox にログイン</string>
-    <string name="login_folder_screen_button">Dropbox にログイン
+    <string name="browse_existing">Dropbox にログイン</string>
+    <string name="browse_new">Dropbox にログイン
 (アプリ フォルダー アクセス)</string>
     <string name="login_cloudless">"Dropbox のアカウントを持っていないか、タスクリストの保存にそれを使用したくない場合、Play ストアから Simpletask Cloudless をダウンロードすることができます。
 \n 
