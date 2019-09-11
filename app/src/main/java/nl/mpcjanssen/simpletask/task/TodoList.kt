@@ -20,7 +20,7 @@ import kotlin.collections.ArrayList
  */
 
 data class TodoItem(val task: Task, val selected: Boolean = false, val pendingEdit: Boolean = false)
-data class TodoList(val config: Config, val items: List<TodoItem>) {
+data class TodoList(val items: List<TodoItem>) {
 
     private var mLists: MutableList<String>? = null
     private var mTags: MutableList<String>? = null
@@ -32,9 +32,9 @@ data class TodoList(val config: Config, val items: List<TodoItem>) {
             TodoItem(Interpreter.onAddCallback(item) ?: item)
         }
         return if (atEnd) {
-            TodoList(config, items.plus(updatedItems))
+            TodoList(items.plus(updatedItems))
         } else {
-            TodoList(config, updatedItems.plus(items))
+            TodoList(updatedItems.plus(items))
         }
 
     }
@@ -45,7 +45,7 @@ data class TodoList(val config: Config, val items: List<TodoItem>) {
 
     fun removeAll(tasks: List<Task>) : TodoList {
         Log.d(TAG, "Remove")
-        return TodoList(config, emptyList())
+        return TodoList(emptyList())
     }
 
     fun size(): Int {
@@ -212,62 +212,7 @@ data class TodoList(val config: Config, val items: List<TodoItem>) {
 //
 //    }
 //
-//    @Synchronized
-//    fun reload(reason: String = "") {
-//        Log.d(TAG, "Reload: $reason")
-//        broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
-//        if (!FileStore.isAuthenticated) {
-//            broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
-//            return
-//        }
-//        val filename = config.todoFileName
-//        if (config.changesPending && FileStore.isOnline) {
-//            Log.i(TAG, "Not loading, changes pending")
-//            Log.i(TAG, "Saving instead of loading")
-//            save(FileStore, filename, true, config.eol)
-//        } else {
-//            FileStoreActionQueue.add("Reload") {
-//                val needSync = try {
-//                    val newerVersion = FileStore.getRemoteVersion(config.todoFileName)
-//                    newerVersion != config.lastSeenRemoteId
-//                } catch (e: Throwable) {
-//                    Log.e(TAG, "Can't determine remote file version", e)
-//                    false
-//                }
-//                if (needSync) {
-//                    Log.i(TAG, "Remote version is different, sync")
-//                } else {
-//                    Log.i(TAG, "Remote version is same, load from cache")
-//                }
-//                val cachedList = config.todoList
-//                if (cachedList == null || needSync) {
-//                    try {
-//                        val remoteContents = FileStore.loadTasksFromFile(filename)
-//                        val items = ArrayList<Task>(
-//                                remoteContents.contents.map { text ->
-//                                    Task(text)
-//                                })
-//
-//                        Log.d(TAG, "Fill todolist")
-//                        todoItems.clear()
-//                        todoItems.addAll(items)
-//                        // Update cache
-//                        config.cachedContents = remoteContents.contents.joinToString("\n")
-//                        config.lastSeenRemoteId = remoteContents.remoteId
-//                        // Backup
-//                        Backupper.backup(filename, items.map { it.inFileFormat(config.useUUIDs) })
-//                        notifyTasklistChanged(filename, false, true)
-//                    } catch (e: Exception) {
-//                        Log.e(TAG, "TodoList load failed: {}" + filename, e)
-//                        showToastShort(TodoApplication.app, "Loading of todo file failed")
-//                    }
-//
-//                    Log.i(TAG, "TodoList loaded from dropbox")
-//                }
-//            }
-//            broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
-//        }
-//    }
+
 //
 //    @Synchronized
 //    private fun save(fileStore: IFileStore, todoFileName: String, backup: Boolean, eol: String) {
