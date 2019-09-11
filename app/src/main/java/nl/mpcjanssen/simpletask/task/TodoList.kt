@@ -303,7 +303,7 @@ class TodoList(val config: Config) {
                 Backupper.backup(uri.toString(), lines)
             }
         }
-
+        runOnMainThread(Runnable {
         timer?.apply { cancel() }
 
         timer = object: CountDownTimer(3000, 1000) {
@@ -327,13 +327,12 @@ class TodoList(val config: Config) {
                     }
                     broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
                 }
-
             }
 
             override fun onTick(p0: Long) {
                Log.d(TAG, "Scheduled save in ${p0}")
             }
-        }.start()
+        }.start()})
     }
 
     @Synchronized
