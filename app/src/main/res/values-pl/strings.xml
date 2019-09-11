@@ -208,8 +208,8 @@ You should have received a copy of the GNU General Public License along with Tod
     </string>
     <!-- login -->
     <string name="first_title_word">Simpletask</string>
-    <string name="login_screen_button">Zaloguj się do Dropboxa</string>
-    <string name="login_folder_screen_button">Zaloguj się do Dropboxa\n(Dostęp do folderu aplikacji)</string>
+    <string name="browse_existing">Zaloguj się do Dropboxa</string>
+    <string name="browse_new">Zaloguj się do Dropboxa\n(Dostęp do folderu aplikacji)</string>
     <string name="login_cloudless">Jeżeli nie posiadasz konta na Dropboxie lub nie chcesz go używać do przechowywania twojej listy todo,
         możesz pobrać Simpletask Cloudless z Play Store.
         \nhttp://goo.gl/X1C55P

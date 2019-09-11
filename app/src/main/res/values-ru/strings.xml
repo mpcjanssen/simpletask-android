@@ -132,8 +132,8 @@
     <string name="sync_dialog_download">Скачать на устройство</string>
     <string name="sync_upload_message">Загрузка Todo.txt…</string>
     <string name="sync_download_message">Скачивание Todo.txt…</string>
-    <string name="login_screen_button">Авторизоваться в Dropbox</string>
-    <string name="login_folder_screen_button">Авторизоваться в дропбокс
+    <string name="browse_existing">Авторизоваться в Dropbox</string>
+    <string name="browse_new">Авторизоваться в дропбокс
 (доступ к папке приложения)</string>
     <string name="search_hint">Поиск...</string>
     <string name="by_project">По метке</string>

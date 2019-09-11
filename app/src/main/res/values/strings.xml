@@ -296,12 +296,9 @@ You should have received a copy of the GNU General Public License along with Tod
 
     <!-- login -->
     <string name="first_title_word">Simpletask</string>
-    <string name="login_screen_button">Log in to Dropbox</string>
-    <string name="login_folder_screen_button">Log in to Dropbox\n(App folder access)</string>
-    <string name="login_cloudless">If you don\'t have a Dropbox account or don\'t want to use it to store your task list,
-        you can download Simpletask Cloudless from the Play Store.
-        \nhttps://goo.gl/X1C55P
-    </string>
+    <string name="browse_existing">Open exisiting todo file</string>
+    <string name="browse_new">Create new todo file</string>
+
 
     <!-- delete -->
     <string name="delete_task_title">Delete %s Task(s)</string>

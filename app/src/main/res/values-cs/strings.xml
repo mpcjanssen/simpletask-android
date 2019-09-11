@@ -154,7 +154,7 @@
     <string name="sync_dialog_download">Stáhnout si do zařízení</string>
     <string name="sync_upload_message">Nahrávání todo.txt…</string>
     <string name="sync_download_message">Stahování todo.txt…</string>
-    <string name="login_screen_button">Přihlásit k Dropbox</string>
+    <string name="browse_existing">Přihlásit k Dropbox</string>
     <string name="delete_task_title">Smazat %s úkolů</string>
     <string name="archive_task_title">Archivovat %s úkolů</string>
     <string name="delete_task_message">Toto není možné vrátit zpět. Opravdu chcete udělat?</string>
@@ -292,7 +292,7 @@
     <string name="show_calendarview_title">Pro zadání datumu použít kalendář</string>
     <string name="sync_conflict_dialog_title">Konflikt souboru</string>
     <string name="first_title_word">přihlášení</string>
-    <string name="login_folder_screen_button">Přihlášení do Dropbox
+    <string name="browse_new">Přihlášení do Dropbox
 \n(přístup do složky aplikace)</string>
     <string name="no_context">Příchozí</string>
     <string name="no_creation_date">Žádné datum vytvoření</string>

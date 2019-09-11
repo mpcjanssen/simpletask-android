@@ -261,7 +261,7 @@
     <string name="sync_download_message">Преузимање todo.txt…</string>
 
     <string name="sync_conflict_dialog_title">Конфликт са фајлом</string>
-    <string name="login_screen_button">Пријавите се на Dropbox</string>
+    <string name="browse_existing">Пријавите се на Dropbox</string>
     <string name="delete_task_title">Обриши %s задатак(а)</string>
     <string name="archive_task_title">Архивирај %s задатак(а)</string>
     <string name="delete_task_message">Ово се не може опозвати. Да ли сте сигурни?</string>
@@ -323,7 +323,7 @@
 
     <string name="sync_dialog_msg">Да ли желите да отпремите или скинете Ваш todo.txt фајл?</string>
     <string name="first_title_word">Simpletask</string>
-    <string name="login_folder_screen_button">Пријава на Dropbox
+    <string name="browse_new">Пријава на Dropbox
 \n(приступ апликативној фасцикли)</string>
     <string name="clone_tags">Одмах попуни</string>
     <string name="sort_help">Превлачите да мењате редослед сортирања. Кликните да ставке да промените смер сортирања.</string>

@@ -40,28 +40,53 @@ import nl.mpcjanssen.simpletask.util.showToastLong
 class OpenFileScreen : ThemedNoActionBarActivity() {
 
 
-    fun performFileSearch() {
+    fun performFileSearch(new: Boolean) {
 
         // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
         // browser.
-        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-            // Filter to only show results that can be "opened", such as a
-            // file (as opposed to a list of contacts or timezones)
-            addCategory(Intent.CATEGORY_OPENABLE)
 
-            // Filter to show only images, using the image MIME data type.
-            // If one wanted to search for ogg vorbis files, the type would be "audio/ogg".
-            // To search for all documents available via installed storage providers,
-            // it would be "*/*".
-            type = "*/*"
+        val intent = if (new) {
+            Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                // Filter to only show results that can be "opened", such as a
+                // file (as opposed to a list of contacts or timezones)
+                addCategory(Intent.CATEGORY_OPENABLE)
+
+                // Filter to show only images, using the image MIME data type.
+                // If one wanted to search for ogg vorbis files, the type would be "audio/ogg".
+                // To search for all documents available via installed storage providers,
+                // it would be "*/*".
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TITLE, "todo.txt")
+            }
+        } else {
+            Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                // Filter to only show results that can be "opened", such as a
+                // file (as opposed to a list of contacts or timezones)
+                addCategory(Intent.CATEGORY_OPENABLE)
+
+                // Filter to show only images, using the image MIME data type.
+                // If one wanted to search for ogg vorbis files, the type would be "audio/ogg".
+                // To search for all documents available via installed storage providers,
+                // it would be "*/*".
+                type = if (TodoApplication.config.showTxtOnly) "text/plain" else "*/*"
+            }
         }
-
         startActivityForResult(intent, READ_REQUEST_CODE)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        performFileSearch()
+        setTheme(TodoApplication.config.activeTheme)
+        setContentView(R.layout.login)
+
+
+        browse_new.setOnClickListener {
+            performFileSearch(true)
+        }
+
+        browse.setOnClickListener {
+            performFileSearch(false)
+        }
     }
 
     private fun switchToTodolist() {
@@ -82,8 +107,22 @@ class OpenFileScreen : ThemedNoActionBarActivity() {
             // provided to this method as a parameter.
             // Pull that URI using resultData.getData().
             resultData?.data?.also { uri ->
-                Log.i(TAG, "Uri: $uri")
+                Log.i(TAG, "Opened uri: $uri")
                 TodoApplication.config.todoUri = uri
+                val takeFlags: Int = intent.flags and
+                        (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                // Check for the freshest data.
+                contentResolver.takePersistableUriPermission(uri, takeFlags)
+            }
+        } else if (requestCode == CREATE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            // The document selected by the user won't be returned in the intent.
+            // Instead, a URI to that document will be contained in the return intent
+            // provided to this method as a parameter.
+            // Pull that URI using resultData.getData().
+            resultData?.data?.also { uri ->
+                Log.i(TAG, "Created uri: $uri")
+                TodoApplication.config.todoUri = uri
+                TodoApplication.config.todoList = emptyList()
                 val takeFlags: Int = intent.flags and
                         (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                 // Check for the freshest data.
@@ -95,6 +134,7 @@ class OpenFileScreen : ThemedNoActionBarActivity() {
 
     companion object {
         private val READ_REQUEST_CODE: Int = 42
+        private val CREATE_REQUEST_CODE: Int = 43
         internal val TAG = OpenFileScreen::class.java.simpleName
     }
 }
