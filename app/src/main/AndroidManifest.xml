@@ -128,15 +128,6 @@ You should have received a copy of the GNU General Public License along with Sim
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".AddTaskShortcut"
-            android:label="@string/shortcut_addtask_name"
-            >
-            <intent-filter>
-                <action android:name="android.intent.action.CREATE_SHORTCUT" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
 
         <activity
             android:name=".Simpletask"
@@ -168,6 +159,8 @@ You should have received a copy of the GNU General Public License along with Sim
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable"
                 />
+            <meta-data android:name="android.app.shortcuts"
+                       android:resource="@xml/shortcuts" />
         </activity>
 
         <activity
@@ -179,8 +172,20 @@ You should have received a copy of the GNU General Public License along with Sim
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
+        <activity
+                android:name="nl.mpcjanssen.simpletask.remote.OpenFileScreen"
+                android:label="@string/app_label">
+        </activity>
+        <provider
+                android:exported="true"
+                android:name="nl.mpcjanssen.simpletask.CachedFileProvider"
+                android:authorities="${applicationId}.provider.${providerFlavour}" tools:ignore="ExportedContentProvider">
+            <grant-uri-permission android:pathPattern=".*" />
+        </provider>
 
         <receiver android:name="nl.mpcjanssen.simpletask.AlarmReceiver"/>
+
+
         <uses-library
             android:name="com.sec.android.app.multiwindow"
             android:required="false"

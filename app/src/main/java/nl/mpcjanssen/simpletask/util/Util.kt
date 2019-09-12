@@ -5,11 +5,15 @@ package nl.mpcjanssen.simpletask.util
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
+import android.app.PendingIntent
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.ShortcutInfo
+import android.content.pm.ShortcutManager
 import android.content.res.AssetManager
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Icon
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
@@ -487,26 +491,6 @@ fun shareText(act: Activity, subject: String, text: String) {
     act.startActivity(Intent.createChooser(shareIntent, "Share"))
 }
 
-fun showLoadingOverlay(act: Activity, visibleDialog: Dialog?, show: Boolean): Dialog? {
-
-    if (show) {
-        if (visibleDialog != null && visibleDialog.isShowing) {
-            visibleDialog.dismiss()
-        }
-        return Dialog(act).apply {
-            requestWindowFeature(Window.FEATURE_NO_TITLE)
-            setContentView(R.layout.loading)
-            val pr = findViewById(R.id.progress) as ProgressBar?
-            pr?.indeterminateDrawable?.setColorFilter(-16737844, android.graphics.PorterDuff.Mode.MULTIPLY)
-            window.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
-            setCancelable(false)
-            show()
-        }
-    } else if (visibleDialog != null && visibleDialog.isShowing) {
-        visibleDialog.dismiss()
-    }
-    return null
-}
 
 fun showChangelogOverlay(act: Activity): Dialog? {
     val builder = AlertDialog.Builder(act)
@@ -677,10 +661,6 @@ fun broadcastTasklistChanged(broadcastManager: LocalBroadcastManager) {
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_TASKLIST_CHANGED))
 }
 
-fun broadcastAuthFailed(broadcastManager: LocalBroadcastManager) {
-    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_AUTH_FAILED))
-}
-
 fun broadcastRefreshSelection(broadcastManager: LocalBroadcastManager) {
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_HIGHLIGHT_SELECTION))
 }
@@ -695,11 +675,31 @@ fun broadcastUpdateStateIndicator(broadcastManager: LocalBroadcastManager) {
 }
 
 fun createShortcut(ctxt: Context, id: String, name: String, icon: Int, target: Intent) {
-    val iconRes = IconCompat.createWithResource(ctxt, icon)
-    val pinShortcutInfo = ShortcutInfoCompat.Builder(ctxt, "$id.$name")
-            .setIcon(iconRes)
-            .setShortLabel(name)
-            .setIntent(target)
-            .build()
-    ShortcutManagerCompat.requestPinShortcut(ctxt, pinShortcutInfo, null)
+    val shortcutManager = ctxt.getSystemService(ShortcutManager::class.java)
+    if (shortcutManager!!.isRequestPinShortcutSupported) {
+        // Assumes there's already a shortcut with the ID "my-shortcut".
+        // The shortcut must be enabled.
+        val pinShortcutInfo = ShortcutInfo.Builder(ctxt, id).apply {
+            setIntent(target)
+            setIcon(Icon.createWithResource(ctxt, icon))
+            setShortLabel(name)
+        }.build()
+
+        // Create the PendingIntent object only if your app needs to be notified
+        // that the user allowed the shortcut to be pinned. Note that, if the
+        // pinning operation fails, your app isn't notified. We assume here that the
+        // app has implemented a method called createShortcutResultIntent() that
+        // returns a broadcast intent.
+        val pinnedShortcutCallbackIntent = shortcutManager.createShortcutResultIntent(pinShortcutInfo)
+
+        // Configure the intent so that your app's broadcast receiver gets
+        // the callback successfully.For details, see PendingIntent.getBroadcast().
+        val successCallback = PendingIntent.getBroadcast(ctxt, /* request code */ 0,
+                pinnedShortcutCallbackIntent, /* flags */ 0)
+
+        shortcutManager.requestPinShortcut(pinShortcutInfo,
+                successCallback.intentSender)
+    }
+
 }
+

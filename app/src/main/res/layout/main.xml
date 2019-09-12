@@ -37,15 +37,6 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     >
-                    <View
-                        android:id="@+id/pendingchanges"
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:background="@android:color/holo_orange_light"
-                        android:visibility="gone"
-                        android:elevation="3dp"
-                        tools:ignore="UnusedAttribute"/>
-
                     <LinearLayout
                         android:id="@+id/actionbar"
                         android:layout_width="match_parent"
@@ -104,6 +95,14 @@
                     />
 
             </FrameLayout>
+            <View
+                    android:id="@+id/pendingchanges"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@android:color/holo_orange_light"
+                    android:visibility="gone"
+                    android:elevation="3dp"
+                    tools:ignore="UnusedAttribute"/>
             <ProgressBar android:layout_width="match_parent"
                          android:indeterminate="true"
                          android:layout_height="wrap_content"
