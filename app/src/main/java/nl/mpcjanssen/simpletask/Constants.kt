@@ -66,6 +66,10 @@ object Constants {
     const val ALARM_RELOAD = "reload"
     const val ALARM_NEW_DAY = "newday"
 
+    const val BROWSE_FOR_TODO_FILE = 0x1
+    const val BROWSE_FOR_DONE_FILE = 0x2
+    const val BROWSE_TYPE = "browse_type"
+
 
 }
 

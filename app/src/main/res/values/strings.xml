@@ -45,7 +45,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="log">Log</string>
     <string name="next">Next</string>
     <string name="prev">Previous</string>
-    <string name="open_file">Open task list file</string>
+    <string name="open_file">Open todo file</string>
+    <string name="open_archive_file">Set archive file</string>
     <string name="sync">Sync</string>
     <string name="changelist">Select list</string>
     <string name="search">Search</string>

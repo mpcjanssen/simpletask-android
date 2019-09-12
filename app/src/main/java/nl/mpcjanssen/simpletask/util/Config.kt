@@ -191,6 +191,14 @@ class Config(app: TodoApplication) : Preferences(app) {
         _todoUri = uri.toString()
     }
 
+    var _doneUri by StringOrNullPreference(R.string.done_uri_key)
+
+    var doneUri : Uri?
+        get() = _doneUri?.let{Uri.parse(it) }
+        set(uri) {
+            _doneUri = uri.toString()
+        }
+
     fun clearCache() {
         cachedContents = null
         todoList = null

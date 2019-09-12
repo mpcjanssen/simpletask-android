@@ -26,14 +26,20 @@ package nl.mpcjanssen.simpletask.remote
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import kotlinx.android.synthetic.main.login.*
+import nl.mpcjanssen.simpletask.Constants.BROWSE_FOR_DONE_FILE
+import nl.mpcjanssen.simpletask.Constants.BROWSE_FOR_TODO_FILE
+import nl.mpcjanssen.simpletask.Constants.BROWSE_TYPE
 
 import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.Simpletask
 import nl.mpcjanssen.simpletask.ThemedNoActionBarActivity
 import nl.mpcjanssen.simpletask.TodoApplication
+import nl.mpcjanssen.simpletask.task.TodoList
+import nl.mpcjanssen.simpletask.util.broadcastTasklistChanged
 
 class OpenFileScreen : ThemedNoActionBarActivity() {
 
@@ -43,7 +49,14 @@ class OpenFileScreen : ThemedNoActionBarActivity() {
         // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
         // browser.
 
-        val intent = if (new) {
+        val fileType = intent.getIntExtra(BROWSE_TYPE,BROWSE_FOR_TODO_FILE)
+        val name = when(fileType) {
+            BROWSE_FOR_TODO_FILE -> "todo.txt"
+            BROWSE_FOR_DONE_FILE -> "done.txt"
+            else -> ""
+        }
+
+        val browseIntent = if (new) {
             Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
                 // Filter to only show results that can be "opened", such as a
                 // file (as opposed to a list of contacts or timezones)
@@ -54,7 +67,7 @@ class OpenFileScreen : ThemedNoActionBarActivity() {
                 // To search for all documents available via installed storage providers,
                 // it would be "*/*".
                 type = "text/plain"
-                putExtra(Intent.EXTRA_TITLE, "todo.txt")
+                putExtra(Intent.EXTRA_TITLE, name)
             }
         } else {
             Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
@@ -69,7 +82,8 @@ class OpenFileScreen : ThemedNoActionBarActivity() {
                 type = if (TodoApplication.config.showTxtOnly) "text/plain" else "*/*"
             }
         }
-        startActivityForResult(intent, READ_REQUEST_CODE)
+        browseIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
+        startActivityForResult(browseIntent, if (new) CREATE_REQUEST_CODE else READ_REQUEST_CODE)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,6 +107,26 @@ class OpenFileScreen : ThemedNoActionBarActivity() {
         finish()
     }
 
+    fun updateUri(uri: Uri, new: Boolean) {
+        val fileType = intent.getIntExtra(BROWSE_TYPE,BROWSE_FOR_TODO_FILE)
+        when(fileType) {
+            BROWSE_FOR_TODO_FILE -> {
+                TodoApplication.config.clearCache()
+                if (new) {
+                    TodoApplication.config.todoList = emptyList()
+                }
+                TodoApplication.config.todoUri = uri
+                broadcastTasklistChanged(TodoApplication.app.localBroadCastManager)
+
+            }
+            BROWSE_FOR_DONE_FILE -> {
+                TodoApplication.config.doneUri = uri
+            }
+        }
+
+
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
         super.onActivityResult(requestCode, resultCode, resultData)
         // The ACTION_OPEN_DOCUMENT intent was sent with the request code
@@ -106,9 +140,10 @@ class OpenFileScreen : ThemedNoActionBarActivity() {
             // Pull that URI using resultData.getData().
             resultData?.data?.also { uri ->
                 Log.i(TAG, "Opened uri: $uri")
-                TodoApplication.config.todoUri = uri
+                updateUri(uri, false)
                 val takeFlags: Int = intent.flags and
-                        (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                        (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                         or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                 // Check for the freshest data.
                 contentResolver.takePersistableUriPermission(uri, takeFlags)
             }
@@ -119,8 +154,7 @@ class OpenFileScreen : ThemedNoActionBarActivity() {
             // Pull that URI using resultData.getData().
             resultData?.data?.also { uri ->
                 Log.i(TAG, "Created uri: $uri")
-                TodoApplication.config.todoUri = uri
-                TodoApplication.config.todoList = emptyList()
+                updateUri(uri, true)
                 val takeFlags: Int = intent.flags and
                         (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                 // Check for the freshest data.
@@ -133,6 +167,7 @@ class OpenFileScreen : ThemedNoActionBarActivity() {
     companion object {
         private val READ_REQUEST_CODE: Int = 42
         private val CREATE_REQUEST_CODE: Int = 43
+
         internal val TAG = OpenFileScreen::class.java.simpleName
     }
 }

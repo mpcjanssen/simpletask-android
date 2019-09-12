@@ -236,12 +236,13 @@ class AddTask : ThemedActionBarActivity() {
         }
         val origTasks = todoList.pendingEdits
         Log.i(TAG, "Saving ${enteredTasks.size} tasks, updating $origTasks tasks")
+        finishEdit(confirmation = false)
         todoList.update(origTasks, enteredTasks, TodoApplication.config.hasAppendAtEnd)
 
         // Save
         todoList.notifyTasklistChanged(TodoApplication.config.todoUri, true, false)
 
-        finishEdit(confirmation = false)
+
     }
 
     private fun finishEdit(confirmation: Boolean) {

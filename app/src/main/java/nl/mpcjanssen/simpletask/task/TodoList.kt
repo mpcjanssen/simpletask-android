@@ -336,21 +336,18 @@ class TodoList(val config: Config) {
     }
 
     @Synchronized
-    fun archive(todoFilename: String, doneFileName: String, tasks: List<Task>, eol: String) {
-//        Log.d(TAG, "Archive ${tasks.size} tasks")
-//
-//        FileStoreActionQueue.add("Append to file") {
-//            broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
-//            try {
-//                FileStore.appendTaskToFile(doneFileName, tasks.map { it.text }, eol)
-//                removeAll(tasks)
-//                notifyTasklistChanged(todoFilename, true, true)
-//            } catch (e: Exception) {
-//                Log.e(TAG, "Task archiving failed", e)
-//                showToastShort(TodoApplication.app, "Task archiving failed")
-//            }
-//            broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
-//        }
+    fun archive(todoFilename: Uri?, doneFileName: Uri, tasks: List<Task>, eol: String) {
+        Log.d(TAG, "Archive ${tasks.size} tasks")
+        if (todoFilename == null) return
+        removeAll(tasks)
+        FileStoreActionQueue.add("archive to file") {
+            try {
+                FileStore.appendTaskToFile(doneFileName, tasks.map { it.text }, eol)
+            } catch (e: Exception) {
+                Log.e(TAG, "Task archiving failed", e)
+                showToastShort(TodoApplication.app, "Task archiving failed")
+            }
+        }
     }
 
     fun isSelected(item: Task): Boolean = item.selected
