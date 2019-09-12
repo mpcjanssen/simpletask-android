@@ -571,7 +571,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     if (TodoApplication.config.showTodoPath) {
                         val uri = TodoApplication.config.todoUri
                         val displayName = uri?.metaData(this)?.displayName?:""
-                        title = displayName?.replace("([^/])[^/]*/".toRegex(), "$1/") ?: ""
+                        title = displayName.replace("([^/])[^/]*/".toRegex(), "$1/")
 
                     } else {
                         setTitle(R.string.app_label)

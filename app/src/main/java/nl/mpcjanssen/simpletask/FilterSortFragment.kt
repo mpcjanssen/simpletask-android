@@ -72,6 +72,10 @@ class FilterSortFragment : Fragment() {
 
         layout = inflater.inflate(R.layout.single_filter,
                 container, false) as LinearLayout
+        val act = activity
+        if (act == null) {
+            return layout
+        }
 
         val keys = resources.getStringArray(R.array.sortKeys)
         for (item in originalItems!!) {
@@ -109,7 +113,7 @@ class FilterSortFragment : Fragment() {
         lv!!.setDropListener(onDrop)
         lv!!.setRemoveListener(onRemove)
 
-        adapter = SortItemAdapter(activity, R.layout.sort_list_item, R.id.text, adapterList)
+        adapter = SortItemAdapter(act, R.layout.sort_list_item, R.id.text, adapterList)
         lv!!.adapter = adapter
         lv!!.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             var direction = directions[position]
@@ -148,7 +152,7 @@ class FilterSortFragment : Fragment() {
             return multiSort
         }
 
-    inner class SortItemAdapter(context: Context?, resource: Int, textViewResourceId: Int, objects: List<String>) : ArrayAdapter<String>(context, resource, textViewResourceId, objects) {
+    inner class SortItemAdapter(context: Context, resource: Int, textViewResourceId: Int, objects: List<String>) : ArrayAdapter<String>(context, resource, textViewResourceId, objects) {
 
         private val names: Array<String>
 
@@ -156,7 +160,7 @@ class FilterSortFragment : Fragment() {
             names = resources.getStringArray(R.array.sort)
         }
 
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val row = super.getView(position, convertView, parent)
             val reverseButton = row.findViewById(R.id.reverse_button) as ImageButton
             val label = row.findViewById(R.id.text) as TextView

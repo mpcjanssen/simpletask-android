@@ -24,18 +24,16 @@
  */
 package nl.mpcjanssen.simpletask.remote
 
-import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.core.app.ActivityCompat
-import kotlinx.android.synthetic.saf.login.*
+import kotlinx.android.synthetic.main.login.*
+
 import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.Simpletask
 import nl.mpcjanssen.simpletask.ThemedNoActionBarActivity
 import nl.mpcjanssen.simpletask.TodoApplication
-import nl.mpcjanssen.simpletask.util.showToastLong
 
 class OpenFileScreen : ThemedNoActionBarActivity() {
 

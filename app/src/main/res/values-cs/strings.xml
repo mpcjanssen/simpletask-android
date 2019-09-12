@@ -324,8 +324,7 @@
     <string name="use_create_backup_summary">Při řazení použít datum vytvoření úkolu jako hraniční datum pokud takové není nastavené</string>
     <string name="sync_conflict_dialog_msg">Jejda! Na Dropbox je novější verze vašeho todo.txt souboru.
 \nChcete nahrát své místní změny, nebo si stáhnout verzi z Dropbox?</string>
-    <string name="login_cloudless">Pokud nemáte Dropbox účet nebo ho nechcete používat pro ukládání svých seznamů úkolů, můžete si stáhnout Simpletask Cloudless z obchodu Play.
-\nhttps://goo.gl/X1C55P</string>
+
     <string name="logout_message">Ověřte že máte všechny změny synchronizovány s dropbox nebo sdílený svůj celý seznam úkolů pokud nejste připojení ke Dropbox.
 \nJakékoli změny které nebyly synchronizovány budou po odhlášení ztraceny.</string>
     <string name="dropbox_open">Ověřte že máte všechny změny synchronizovány s dropbox nebo sdílený svůj celý seznam úkolů pokud nejste připojení ke Dropbox.
