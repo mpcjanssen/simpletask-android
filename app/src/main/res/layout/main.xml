@@ -105,9 +105,10 @@
                     tools:ignore="UnusedAttribute"/>
             <ProgressBar android:layout_width="match_parent"
                          android:indeterminate="true"
-                         android:layout_height="wrap_content"
+                         android:layout_height="3dp"
                          style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                          android:id="@+id/sync_progress"
+                         android:elevation="3dp"
                          android:visibility="gone"/>
             <androidx.appcompat.widget.Toolbar
                 style="@style/SimpleSelectionBar"
