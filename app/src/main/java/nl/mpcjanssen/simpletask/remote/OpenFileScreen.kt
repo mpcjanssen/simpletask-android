@@ -26,6 +26,7 @@ package nl.mpcjanssen.simpletask.remote
 
 import android.app.Activity
 import android.content.Intent
+import android.content.Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -82,7 +83,9 @@ class OpenFileScreen : ThemedNoActionBarActivity() {
                 type = if (TodoApplication.config.showTxtOnly) "text/plain" else "*/*"
             }
         }
-        browseIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
+        browseIntent.flags =
+                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
+                        Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or FLAG_GRANT_PREFIX_URI_PERMISSION
         startActivityForResult(browseIntent, if (new) CREATE_REQUEST_CODE else READ_REQUEST_CODE)
     }
 
@@ -141,11 +144,6 @@ class OpenFileScreen : ThemedNoActionBarActivity() {
             resultData?.data?.also { uri ->
                 Log.i(TAG, "Opened uri: $uri")
                 updateUri(uri, false)
-                val takeFlags: Int = intent.flags and
-                        (Intent.FLAG_GRANT_READ_URI_PERMISSION
-                         or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-                // Check for the freshest data.
-                contentResolver.takePersistableUriPermission(uri, takeFlags)
             }
         } else if (requestCode == CREATE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             // The document selected by the user won't be returned in the intent.
@@ -155,10 +153,6 @@ class OpenFileScreen : ThemedNoActionBarActivity() {
             resultData?.data?.also { uri ->
                 Log.i(TAG, "Created uri: $uri")
                 updateUri(uri, true)
-                val takeFlags: Int = intent.flags and
-                        (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-                // Check for the freshest data.
-                contentResolver.takePersistableUriPermission(uri, takeFlags)
             }
         }
         switchToTodolist()
