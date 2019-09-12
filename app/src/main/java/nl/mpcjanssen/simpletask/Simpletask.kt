@@ -37,6 +37,8 @@ import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
 import hirondelle.date4j.DateTime
 import kotlinx.android.synthetic.main.main.*
+import nl.mpcjanssen.simpletask.Constants.BROWSE_FOR_DONE_FILE
+import nl.mpcjanssen.simpletask.Constants.BROWSE_FOR_TODO_FILE
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.metaData
@@ -360,7 +362,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     private fun handleIntent() {
         if (!TodoApplication.app.isAuthenticated()) {
             Log.i(TAG, "handleIntent: not authenticated")
-            TodoApplication.app.browseForNewFile(this)
+            TodoApplication.app.browseForNewFile(this, BROWSE_FOR_TODO_FILE)
             return
         }
 
@@ -458,7 +460,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
 
     private fun startLogin() {
-        TodoApplication.app.browseForNewFile(this)
+        TodoApplication.app.browseForNewFile(this,BROWSE_FOR_TODO_FILE)
         finish()
     }
 
@@ -788,11 +790,16 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
 
         val archiveAction = {
-//            if (TodoApplication.config.todoUri == TodoApplication.config.doneFileName) {
-//                showToastShort(this, "You have the done.txt file opened.")
-//            }
-//            TodoApplication.todoList.archive(TodoApplication.config.todoFileName, TodoApplication.config.doneFileName, tasksToArchive, TodoApplication.config.eol)
-//            invalidateOptionsMenu()
+            val archiveUri = TodoApplication.config.doneUri
+            if (archiveUri == null) {
+                TodoApplication.app.browseForNewFile(this, BROWSE_FOR_DONE_FILE)
+            } else if (TodoApplication.config.todoUri == TodoApplication.config.doneUri) {
+                showToastShort(this, "You have the done.txt file opened.")
+            } else {
+                TodoApplication.todoList.archive(TodoApplication.config.todoUri, archiveUri, tasksToArchive, TodoApplication.config.eol)
+                TodoApplication.todoList.notifyTasklistChanged(TodoApplication.config.todoUri,  true, true)
+            }
+            invalidateOptionsMenu()
         }
         val numTasks = tasksToArchive.size
         if (numTasks == 0) {
@@ -843,7 +850,8 @@ class Simpletask : ThemedNoActionBarActivity() {
                 broadcastFileSync(TodoApplication.app.localBroadCastManager)
             }
             R.id.archive -> archiveTasks(true)
-            R.id.open_file -> TodoApplication.app.browseForNewFile(this)
+            R.id.open_file -> TodoApplication.app.browseForNewFile(this, BROWSE_FOR_TODO_FILE)
+            R.id.open_archive_file -> TodoApplication.app.browseForNewFile(this, BROWSE_FOR_DONE_FILE)
             R.id.history -> startActivity(Intent(this, HistoryScreen::class.java))
             R.id.btn_filter_add -> onAddFilterClick()
             R.id.clear_filter -> clearFilter()

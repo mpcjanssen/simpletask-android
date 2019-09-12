@@ -39,6 +39,7 @@ import androidx.multidex.MultiDexApplication
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.util.Log
 import androidx.room.Room
+import nl.mpcjanssen.simpletask.Constants.BROWSE_TYPE
 import nl.mpcjanssen.simpletask.dao.AppDatabase
 import nl.mpcjanssen.simpletask.dao.DB_FILE
 import nl.mpcjanssen.simpletask.dao.TodoFile
@@ -160,8 +161,9 @@ class TodoApplication : MultiDexApplication() {
         todoList.reload(reason = reason)
     }
 
-    fun browseForNewFile(act: Activity) {
+    fun browseForNewFile(act: Activity, fileType: Int) {
         val intent = Intent(act, OpenFileScreen::class.java)
+        intent.putExtra(BROWSE_TYPE,fileType)
         act.startActivity(intent)
         act.finish()
     }

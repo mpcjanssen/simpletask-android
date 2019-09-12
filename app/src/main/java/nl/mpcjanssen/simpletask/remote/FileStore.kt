@@ -43,7 +43,7 @@ object FileStore : IFileStore {
 
     @Synchronized
     override fun saveTasksToFile(uri: Uri, lines: List<String>, eol: String) {
-        TodoApplication.app.contentResolver.openOutputStream(uri)?.use { stream ->
+        TodoApplication.app.contentResolver.openOutputStream(uri, "wt")?.use { stream ->
             stream.bufferedWriter(Charsets.UTF_8).use { writer ->
                 writer.write(lines.joinToString(eol))
             }
@@ -54,7 +54,9 @@ object FileStore : IFileStore {
 
     override fun appendTaskToFile(uri: Uri, lines: List<String>, eol: String) {
         TodoApplication.app.contentResolver.openOutputStream(uri, "wa")?.use { stream ->
-            stream.bufferedWriter(Charsets.UTF_8).write(lines.joinToString(eol))
+            stream.bufferedWriter(Charsets.UTF_8).use {
+                it.write(lines.joinToString(eol)+eol)
+            }
         }
     }
 }
