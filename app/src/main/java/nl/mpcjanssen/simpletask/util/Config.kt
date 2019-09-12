@@ -43,6 +43,8 @@ class Config(app: TodoApplication) : Preferences(app) {
 
     val reminderTime by IntPreference(R.string.calendar_reminder_time, 720)
 
+    val idleBeforeSaveSeconds by IntPreference(R.string.idle_before_save, 3)
+
     val listTerm: String
         get() {
             if (useTodoTxtTerms) {

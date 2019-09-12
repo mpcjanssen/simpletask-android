@@ -31,18 +31,15 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import kotlinx.android.synthetic.main.login.*
+import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.Constants.BROWSE_FOR_DONE_FILE
 import nl.mpcjanssen.simpletask.Constants.BROWSE_FOR_TODO_FILE
 import nl.mpcjanssen.simpletask.Constants.BROWSE_TYPE
 
-import nl.mpcjanssen.simpletask.R
-import nl.mpcjanssen.simpletask.Simpletask
-import nl.mpcjanssen.simpletask.ThemedNoActionBarActivity
-import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.broadcastTasklistChanged
 
-class OpenFileScreen : ThemedNoActionBarActivity() {
+class OpenFileScreen : ThemedActionBarActivity() {
 
 
     fun performFileSearch(new: Boolean) {
@@ -91,9 +88,12 @@ class OpenFileScreen : ThemedNoActionBarActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(TodoApplication.config.activeTheme)
         setContentView(R.layout.login)
-
+        val fileType = intent.getIntExtra(BROWSE_TYPE,BROWSE_FOR_TODO_FILE)
+        when(fileType) {
+            BROWSE_FOR_DONE_FILE -> title = getString(R.string.title_browse_done)
+            BROWSE_FOR_TODO_FILE -> title = getString(R.string.title_browse_todo)
+        }
 
         browse_new.setOnClickListener {
             performFileSearch(true)

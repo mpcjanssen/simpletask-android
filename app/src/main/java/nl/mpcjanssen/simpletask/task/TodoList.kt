@@ -306,7 +306,7 @@ class TodoList(val config: Config) {
         runOnMainThread(Runnable {
         timer?.apply { cancel() }
 
-        timer = object: CountDownTimer(3000, 1000) {
+        timer = object: CountDownTimer(TodoApplication.config.idleBeforeSaveSeconds*1000L, 1000) {
             override fun onFinish() {
                 Log.d(TAG, "Executing pending Save")
                 FileStoreActionQueue.add("Save") {
