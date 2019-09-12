@@ -165,7 +165,6 @@ class TodoApplication : MultiDexApplication() {
         val intent = Intent(act, OpenFileScreen::class.java)
         intent.putExtra(BROWSE_TYPE,fileType)
         act.startActivity(intent)
-        act.finish()
     }
 
 

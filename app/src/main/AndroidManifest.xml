@@ -173,7 +173,8 @@ You should have received a copy of the GNU General Public License along with Sim
             </intent-filter>
         </activity>
         <activity
-                android:name="nl.mpcjanssen.simpletask.remote.OpenFileScreen"
+                android:name=".remote.OpenFileScreen"
+                android:parentActivityName=".Simpletask"
                 android:label="@string/app_label">
         </activity>
         <provider
