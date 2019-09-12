@@ -2,6 +2,9 @@ package nl.mpcjanssen.simpletask.remote
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
+import android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION
 import android.database.Cursor
 import android.net.Uri
 import android.os.Environment
@@ -9,10 +12,6 @@ import android.util.Log
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.util.join
 import nl.mpcjanssen.simpletask.util.writeToFile
-import java.io.BufferedReader
-import java.io.File
-import java.io.FilenameFilter
-import java.io.InputStreamReader
 import java.util.*
 import kotlin.reflect.KClass
 import android.provider.DocumentsContract
@@ -20,22 +19,22 @@ import android.provider.OpenableColumns
 import androidx.room.util.CursorUtil.getColumnIndexOrThrow
 import androidx.documentfile.provider.DocumentFile
 import nl.mpcjanssen.simpletask.Simpletask
+import java.io.*
 
 
 object FileStore : IFileStore {
     override fun getRemoteVersion(uri: Uri): String? = uri.metaData(TodoApplication.app).lastModified
     private val TAG = "FileStore"
 
+
     @Synchronized
     override fun loadTasksFromFile(uri: Uri): RemoteContents {
         val lines = ArrayList<String>()
-        TodoApplication.app.contentResolver.openInputStream(uri)?.use { inputStream ->
+        val contentResolver = TodoApplication.app.contentResolver
+        contentResolver.takePersistableUriPermission(uri, FLAG_GRANT_READ_URI_PERMISSION)
+        contentResolver.openInputStream(uri)?.use { inputStream ->
             inputStream.bufferedReader(Charsets.UTF_8).use { reader ->
-                var line: String? = reader.readLine()
-                while (line != null) {
-                    lines.add(line)
-                    line = reader.readLine()
-                }
+                lines.addAll(reader.readLines())
             }
         }
         return RemoteContents(uri.metaData(TodoApplication.app).lastModified, lines)
@@ -43,7 +42,10 @@ object FileStore : IFileStore {
 
     @Synchronized
     override fun saveTasksToFile(uri: Uri, lines: List<String>, eol: String) {
-        TodoApplication.app.contentResolver.openOutputStream(uri, "wt")?.use { stream ->
+        val contentResolver = TodoApplication.app.contentResolver
+        contentResolver.takePersistableUriPermission(uri, FLAG_GRANT_WRITE_URI_PERMISSION)
+        contentResolver.openOutputStream(uri,"rwt")?.use { stream ->
+            (stream as FileOutputStream).channel.truncate(0)
             stream.bufferedWriter(Charsets.UTF_8).use { writer ->
                 writer.write(lines.joinToString(eol))
             }
@@ -53,7 +55,9 @@ object FileStore : IFileStore {
 
 
     override fun appendTaskToFile(uri: Uri, lines: List<String>, eol: String) {
-        TodoApplication.app.contentResolver.openOutputStream(uri, "wa")?.use { stream ->
+        val contentResolver = TodoApplication.app.contentResolver
+        contentResolver.takePersistableUriPermission(uri, FLAG_GRANT_WRITE_URI_PERMISSION)
+        contentResolver.openOutputStream(uri, "wa")?.use { stream ->
             stream.bufferedWriter(Charsets.UTF_8).use {
                 it.write(lines.joinToString(eol)+eol)
             }
