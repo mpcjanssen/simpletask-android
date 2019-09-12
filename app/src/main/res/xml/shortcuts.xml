@@ -3,7 +3,6 @@
     <shortcut
             android:shortcutId="add"
             android:enabled="true"
-            android:icon="@drawable/ic_insert_invitation_white_24dp"
             android:shortcutShortLabel="@string/addtask">
 
         <intent
