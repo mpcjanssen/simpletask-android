@@ -73,6 +73,7 @@ class AddLinkBackground : Activity() {
             if (TodoApplication.config.hasPrependDate) { Task(text, todayAsString) } else { Task(text) }
         }
 
+        todoList.reload("Background add")
         todoList.add(tasks, TodoApplication.config.hasAppendAtEnd)
         todoList.notifyTasklistChanged(TodoApplication.config.todoUri,  true, true)
         showToastShort(TodoApplication.app, R.string.link_added)
