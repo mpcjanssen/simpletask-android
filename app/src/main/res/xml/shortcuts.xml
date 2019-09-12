@@ -3,6 +3,7 @@
     <shortcut
             android:shortcutId="add"
             android:enabled="true"
+            android:icon="@drawable/ic_launcher"
             android:shortcutShortLabel="@string/addtask">
 
         <intent
