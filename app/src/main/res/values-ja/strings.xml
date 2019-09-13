@@ -181,10 +181,6 @@
     <string name="browse_existing">Dropbox にログイン</string>
     <string name="browse_new">Dropbox にログイン
 (アプリ フォルダー アクセス)</string>
-    <string name="login_cloudless">"Dropbox のアカウントを持っていないか、タスクリストの保存にそれを使用したくない場合、Play ストアから Simpletask Cloudless をダウンロードすることができます。
-\n 
-\nhttp://goo.gl/X1C55P
-\n "</string>
     <string name="delete_task_title">%s タスクを削除</string>
     <string name="archive_task_title">%s タスクをアーカイブ</string>
     <string name="delete_task_message">これは元に戻すことができません。よろしいですか?</string>

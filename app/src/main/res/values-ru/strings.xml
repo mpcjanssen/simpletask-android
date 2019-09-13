@@ -240,11 +240,6 @@
     <string name="sync_conflict_dialog_msg">Ой! Существует более новая версия файла todo.txt в Dropbox. 
 \nВы хотите загрузить ваши локальные изменения, или загрузить версию из Dropbox?</string>
     <string name="first_title_word">Simpletask</string>
-    <string name="login_cloudless">"Если у вас нет учетной записи Dropbox или не хотите использовать его, для хранения списка задач
-Вы можете скачать Simpletask Cloudless из Play Store.
-
-http://goo.gl/X1C55P
- "</string>
     <string name="delete_task_title">Удалить %s задачи</string>
     <string name="archive_task_title">Архивировать %s задачи</string>
     <string name="delete_task_message">Это не может быть отменено. Вы уверены?</string>

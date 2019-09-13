@@ -190,8 +190,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <!-- login -->
     <string name="first_title_word">Simpletask</string>
     <string name="browse_existing">In Dropbox einloggen</string>
-    <string name="login_cloudless">Wenn du keinen Dropbox-Account hast oder keinen benutzen möchtest, um die Aufgabenliste zu speichern, kannst Du Simpletask Cloudless aus dem Play Store herunterladen. 
-\nhttps://goo.gl/X1C55P</string>
     <!-- delete -->
     <string name="delete_task_title">%s Aufgabe(n) löschen</string>
     <string name="archive_task_title">%s Aufgabe(n) archivieren</string>

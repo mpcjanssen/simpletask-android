@@ -186,8 +186,6 @@
     <!-- login -->
     <string name="first_title_word">심플태스크</string>
     <string name="browse_existing">Dropbox에 로그인</string>
-    <string name="login_cloudless">Dropbox 계정이 없거나 일정 목록을 저장할 때 Dropbox를 사용하고 싶지 않다면, Play Store에서 Simpletask Cloudless를 사용하세요. \nhttp://goo.gl/X1C55P
-    </string>
 
     <!-- delete -->
     <string name="delete_task_title">일정 삭제</string>

@@ -62,7 +62,6 @@
     <!-- login -->
     <string name="first_title_word">Simpletask</string>
     <string name="browse_existing">Iniciar sesión en Dropbox</string>
-    <string name="login_cloudless">Si no tiene una cuenta de Dropbox o no quiere utilizarla para almacenar su lista de tareas, puede descargar Simpletask Cloudless de la Tienda de Aplicaciones de Google. http://goo.gl/X1C55P</string>
     <!-- delete -->
     <string name="delete_task_title">Eliminar %s tarea(s)</string>
     <string name="archive_task_title">Archivar %s tarea(s)</string>
