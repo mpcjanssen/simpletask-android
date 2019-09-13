@@ -248,8 +248,6 @@
     <string name="browse_existing">Belépés Dropboxba</string>
     <string name="browse_new">Belépés Dropboxba
 \n(Hozzásférés az alkalmazás könyvtárához)</string>
-    <string name="login_cloudless">Ha nincs Dropbox-fiókod vagy nem szeretnéd használni a feladatlistád tárolására, letöltheted a Simpletask Cloudless appot a Play Áruházból.
-\nhttp://goo.gl/X1C55P</string>
 
     <string name="delete_task_title">%s feladat törlése</string>
     <string name="archive_task_title">%s feladat archiválása</string>

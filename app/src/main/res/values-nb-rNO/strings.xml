@@ -329,8 +329,6 @@
     <string name="todotxt_terms_summary">Bindeleddsinformasjon og prosjekt istedenfor liste og etikett</string>
     <string name="sync_conflict_dialog_msg">Oida, det er en nyere versjon av din todo.txt-fil i Dropbox.
 \nØnsker du å laste opp dine lokale endringer, eller laste ned Dropbox-versjonen?</string>
-    <string name="login_cloudless">Hvis du ikke har en Dropbox-konto, eller ikke ønsker å bruke den til å lagre oppgavelisten din, kan du laste ned Skyfri Simpletask fra Play-butikken.
-\nhttps://goo.gl/X1C55P</string>
     <string name="logout_message">Forsikre deg om at du har synkronisert alle endringer med Dropbox, eller delt din fullstendige oppgaveliste hvis du ikke er tilkoblet Dropbox.
 \nAlle endringer som ikke har blitt synkroniserte vil gå tapt etter utlogging.</string>
     <string name="dropbox_open">Forsikre deg om at du ha synkronisert alle endringer med Dropbox, eller delt din fullstendige oppgaveliste hvis du ikke er tilkoblet Dropbox.

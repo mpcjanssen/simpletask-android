@@ -133,7 +133,6 @@ class TodoList(val config: Config) {
                 task.priority = Priority.NONE
             }
         }
-
     }
 
     @Synchronized
@@ -177,8 +176,6 @@ class TodoList(val config: Config) {
     val fileFormat : String =  todoItems.toList().joinToString(separator = "\n", transform = {
         it.inFileFormat(config.useUUIDs)
     })
-
-
 
     @Synchronized
     fun notifyTasklistChanged(uri: Uri?, save: Boolean, refreshMainUI: Boolean = true) {
@@ -233,10 +230,9 @@ class TodoList(val config: Config) {
     @Synchronized
     fun reload(reason: String = "") {
         Log.d(TAG, "Reload: $reason")
-        broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
+
         val uri = config.todoUri
         if (uri == null) {
-            broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
             return
         }
         if (config.changesPending ) {
@@ -244,9 +240,8 @@ class TodoList(val config: Config) {
             Log.i(TAG, "Saving instead of loading")
             save(FileStore, uri, true, config.eol)
         } else {
-
             FileStoreActionQueue.add("Reload") {
-
+                broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
                 val needSync = try {
                     val newerVersion = FileStore.getRemoteVersion(uri)
                     newerVersion != config.lastSeenRemoteId
@@ -284,8 +279,8 @@ class TodoList(val config: Config) {
 
                     Log.i(TAG, "TodoList loaded from dropbox")
                 }
+                broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
             }
-            broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
         }
     }
 

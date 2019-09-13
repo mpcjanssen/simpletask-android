@@ -222,8 +222,6 @@
     <string name="browse_existing">登录到 Dropbox</string>
     <string name="browse_new">登录到 Dropbox
 \n（应用程序文件夹访问）</string>
-    <string name="login_cloudless">如果您没有 Dropbox 帐户，或者不想使用它来存储您的任务清单，您可以到 Play Store 下载 Simpletask Cloudless。 
-\nhttps://goo.gl/X1C55P</string>
     <string name="delete_task_title">将删除 %s 条任务</string>
     <string name="archive_task_title">将归档 %s 条任务</string>
     <string name="delete_task_message">这不能撤销。你确定吗？</string>

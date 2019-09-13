@@ -220,8 +220,6 @@ Décochez cette option pour définir les nouvelles dates par rapport à aujourd\
     <string name="browse_existing">Se connecter à Dropbox</string>
     <string name="browse_new">Se connecter à Dropbox
 \n(Accès au dossier de l\'application)</string>
-    <string name="login_cloudless">Si vous n\'avez pas de compte Dropbox ou que vous ne voulez pas l\'utiliser pour stocker votre liste de tâches, vous pouvez télécharger Simpletask Cloudless depuis le Play Store.
-\nhttp://goo.gl/X1C55P</string>
     <string name="delete_task_title">Supprimer %s tâche(s)</string>
     <string name="archive_task_title">Archiver %s tâche(s)</string>
     <string name="delete_task_message">Cela ne peut pas être annulé. Êtes-vous sûr \?</string>
