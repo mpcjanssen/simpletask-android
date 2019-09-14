@@ -88,6 +88,13 @@ class TodoApplication : MultiDexApplication() {
                 when {
                     intent.action == Constants.BROADCAST_TASKLIST_CHANGED -> {
                         CalendarSync.syncLater()
+                        redrawWidgets()
+                        updateWidgets()
+                    }
+                    intent.action == Constants.BROADCAST_UPDATE_WIDGETS -> {
+                        Log.i(TAG, "Refresh widgets from broadcast")
+                        redrawWidgets()
+                        updateWidgets()
                     }
 
                     intent.action == Constants.BROADCAST_FILE_SYNC -> loadTodoList("From BROADCAST_FILE_SYNC")
@@ -102,6 +109,23 @@ class TodoApplication : MultiDexApplication() {
         Log.i(TAG, "Started ${appVersion(this)}")
         scheduleOnNewDay()
         scheduleRepeating()
+    }
+
+    fun updateWidgets() {
+        val mgr = AppWidgetManager.getInstance(applicationContext)
+        for (appWidgetId in mgr.getAppWidgetIds(ComponentName(applicationContext, MyAppWidgetProvider::class.java))) {
+            mgr.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widgetlv)
+            Log.i(TAG, "Updating widget: $appWidgetId")
+        }
+    }
+
+    fun redrawWidgets() {
+        val appWidgetManager = AppWidgetManager.getInstance(applicationContext)
+        val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(this, MyAppWidgetProvider::class.java))
+        Log.i(TAG, "Redrawing widgets ")
+        if (appWidgetIds.isNotEmpty()) {
+            MyAppWidgetProvider().onUpdate(this, appWidgetManager, appWidgetIds)
+        }
     }
 
     private fun setupUncaughtExceptionHandler() {

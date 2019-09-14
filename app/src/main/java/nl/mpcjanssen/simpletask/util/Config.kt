@@ -17,7 +17,15 @@ class Config(app: TodoApplication) : Preferences(app) {
     val TAG = "Config"
 
     init {
-        registerCallbacks(listOf<String>(
+        registerCallbacks(listOf(
+                getString(R.string.widget_theme_pref_key),
+                getString(R.string.widget_extended_pref_key),
+                getString(R.string.widget_background_transparency),
+                getString(R.string.widget_header_transparency)
+        )) {
+            TodoApplication.app.redrawWidgets()
+        }
+        registerCallbacks(listOf(
                 getString(R.string.calendar_sync_dues),
                 getString(R.string.calendar_sync_thresholds),
                 getString(R.string.calendar_reminder_days),

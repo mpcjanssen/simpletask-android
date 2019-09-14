@@ -273,6 +273,44 @@ class FilterActivity : ThemedNoActionBarActivity() {
         finish()
     }
 
+    private fun updateWidget() {
+        updateFilterFromFragments()
+        val widgetId = intent.getIntExtra(Constants.EXTRA_WIDGET_ID, 0)
+        Log.i(TAG, "Saving settings for widget $widgetId")
+        val preferences = applicationContext.getSharedPreferences("" + widgetId, Context.MODE_PRIVATE)
+        mFilter.saveInPrefs(preferences)
+        broadcastRefreshWidgets(m_app.localBroadCastManager)
+    }
+
+    private fun createWidget(name: String) {
+        val mAppWidgetId: Int
+
+        val intent = intent
+        val extras = intent.extras
+        updateFilterFromFragments()
+        if (extras != null) {
+            mAppWidgetId = extras.getInt(
+                    AppWidgetManager.EXTRA_APPWIDGET_ID,
+                    AppWidgetManager.INVALID_APPWIDGET_ID)
+
+            val context = applicationContext
+
+            // Store widget applyFilter
+            val preferences = context.getSharedPreferences("" + mAppWidgetId, Context.MODE_PRIVATE)
+            val namedFilter = NamedQuery(name, mFilter)
+            namedFilter.saveInPrefs(preferences)
+
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+            MyAppWidgetProvider.updateAppWidget(context, appWidgetManager,
+                    mAppWidgetId, name)
+
+            val resultValue = Intent(applicationContext, AppWidgetService::class.java)
+            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId)
+            setResult(Activity.RESULT_OK, resultValue)
+            finish()
+        }
+    }
+
     private fun askWidgetName() {
         val name: String
         val alert = AlertDialog.Builder(this)
@@ -292,7 +330,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
             if (value == "") {
                 showToastShort(applicationContext, R.string.widget_name_empty)
             } else {
-
+                createWidget(value)
             }
         }
 
