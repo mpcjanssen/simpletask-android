@@ -1,6 +1,6 @@
-package nl.mpcjanssen.simpletask.task;
+package nl.mpcjanssen.simpletask.task
 
-import junit.framework.TestCase;
+import junit.framework.TestCase
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,191 +9,192 @@ import junit.framework.TestCase;
  * Time: 12:28
  */
 
-public class TaskTestOld extends TestCase {
+class TaskTestOld : TestCase() {
 
-    public void testEquals() {
-        Task a = new Task( "Test abcd");
-        Task b = new Task( "Test abcd");
-        Task c = new Task( "Test abcd ");
-        Task d = new Task("Test abcd");
-        assertFalse(b.equals(c));
-        assertTrue(d.equals(d));
-        assertFalse(a.equals(b));
-    }
-    
-
-    public void testParseIdemPotence() {
-        String s = "Test abcd ";
-        String t = " ";
-        String v = "";
-        assertEquals(s,new Task(s).inFileFormat());
-        assertEquals(t,new Task(t).inFileFormat());
-        assertEquals(v,new Task(v).inFileFormat());
+    fun testEquals() {
+        val a = Task("Test abcd")
+        val b = Task("Test abcd")
+        val c = Task("Test abcd ")
+        val d = Task("Test abcd")
+        TestCase.assertFalse(b == c)
+        TestCase.assertTrue(d == d)
+        TestCase.assertFalse(a == b)
     }
 
-    public void testHidden() {
-        assertTrue(new Task("Test h:1").isHidden());
-        assertFalse(new Task("Test").isHidden());
-        assertTrue(new Task("h:1").isHidden());
+
+    fun testParseIdemPotence() {
+        val s = "Test abcd "
+        val t = " "
+        val v = ""
+        TestCase.assertEquals(s, Task(s).inFileFormat())
+        TestCase.assertEquals(t, Task(t).inFileFormat())
+        TestCase.assertEquals(v, Task(v).inFileFormat())
     }
 
-    public void testCompletion() {
-        String rawText = "Test";
-        Task t = new Task( rawText);
-        t.markComplete("2001-01-01");
-        assertTrue(t.isCompleted());
-        t.markIncomplete();
-        assertFalse(t.isCompleted());
-        assertEquals(rawText, t.inFileFormat());
+    fun testHidden() {
+        TestCase.assertTrue(Task("Test h:1").isHidden())
+        TestCase.assertFalse(Task("Test").isHidden())
+        TestCase.assertTrue(Task("h:1").isHidden())
     }
 
-    public void testCompletionWithPrependDate() {
-        String rawText = "Test";
-        Task t = new Task( rawText, "2000-10-10");
-        rawText = t.inFileFormat();
-        t.markComplete("2222-11-11");
-        assertTrue(t.isCompleted());
-        t.markIncomplete();
-        assertFalse(t.isCompleted());
-        assertEquals(rawText, t.inFileFormat());
-
-        t = new Task( "x 2000-01-01 2001-01-01 Test");
-        assertEquals("2000-01-01", t.getCompletionDate());
-        assertEquals("2001-01-01", t.getCreateDate());
-
-        t = new Task( "x 2000-01-01 (A) 2001-01-01 Test");
-        assertEquals("2000-01-01", t.getCompletionDate());
-        assertEquals("2001-01-01", t.getCreateDate());
-        assertEquals(Priority.A,t.getPriority());
+    fun testCompletion() {
+        val rawText = "Test"
+        val t = Task(rawText)
+        t.markComplete("2001-01-01")
+        TestCase.assertTrue(t.isCompleted())
+        t.markIncomplete()
+        TestCase.assertFalse(t.isCompleted())
+        TestCase.assertEquals(rawText, t.inFileFormat())
     }
 
-    public void testCompletionWithPriority1() {
-        String rawText = "(A) Test";
-        Task t = new Task( rawText);
-        assertEquals(Priority.A, t.getPriority());
+    fun testCompletionWithPrependDate() {
+        var rawText = "Test"
+        var t = Task(rawText, "2000-10-10")
+        rawText = t.inFileFormat()
+        t.markComplete("2222-11-11")
+        TestCase.assertTrue(t.isCompleted())
+        t.markIncomplete()
+        TestCase.assertFalse(t.isCompleted())
+        TestCase.assertEquals(rawText, t.inFileFormat())
 
-        t.markComplete("2010-01-01");
-        assertTrue(t.isCompleted());
-        t.setPriority(Priority.B);
-        t.markIncomplete();
-        assertFalse(t.isCompleted());
-        assertEquals(Priority.B , t.getPriority());
-        assertEquals("(B) Test", t.inFileFormat());
+        t = Task("x 2000-01-01 2001-01-01 Test")
+        TestCase.assertEquals("2000-01-01", t.completionDate)
+        TestCase.assertEquals("2001-01-01", t.createDate)
+
+        t = Task("x 2000-01-01 (A) 2001-01-01 Test")
+        TestCase.assertEquals("2000-01-01", t.completionDate)
+        TestCase.assertEquals("2001-01-01", t.createDate)
+        TestCase.assertEquals(Priority.A, t.priority)
     }
 
-    public void testCompletionWithPriority2() {
-        String rawText = "(A) Test";
-        Task t = new Task( rawText);
-        t.update(rawText);
-        assertEquals(t.getPriority(), Priority.A);
-        t.markComplete("2001-01-01");
-        assertTrue(t.isCompleted());
-        t.markIncomplete();
-        assertFalse(t.isCompleted());
-        assertEquals(Priority.A , t.getPriority());
-        assertEquals("(A) Test", t.inFileFormat());
-    }
-    public void testPriority() {
-        Task t = new Task( "(C) Test");
-        assertEquals(t.getPriority(), Priority.C);
-        t.setPriority(Priority.A);
-        assertEquals(t.getPriority(), Priority.A);
-        t.setPriority(Priority.NONE);
-        assertEquals(t.getPriority(), Priority.NONE);
-        t = new Task( "Test");
-        assertEquals(t.getPriority(), Priority.NONE);
-        t.setPriority(Priority.A);
-        assertEquals(t.getPriority(), Priority.A);
-        assertEquals("(A) Test", t.inFileFormat());
-        t.setPriority(Priority.NONE);
-        assertEquals(t.getPriority(), Priority.NONE);
-        assertEquals("Test", t.inFileFormat());
+    fun testCompletionWithPriority1() {
+        val rawText = "(A) Test"
+        val t = Task(rawText)
+        TestCase.assertEquals(Priority.A, t.priority)
+
+        t.markComplete("2010-01-01")
+        TestCase.assertTrue(t.isCompleted())
+        t.priority = Priority.B
+        t.markIncomplete()
+        TestCase.assertFalse(t.isCompleted())
+        TestCase.assertEquals(Priority.B, t.priority)
+        TestCase.assertEquals("(B) Test", t.inFileFormat())
     }
 
-    public void testCompletedPriority() {
-        Task t = new Task("x 1111-11-11 (A) Test");
-        assertTrue(t.isCompleted());
-        assertEquals(Priority.A,t.getPriority());
+    fun testCompletionWithPriority2() {
+        val rawText = "(A) Test"
+        val t = Task(rawText)
+        t.update(rawText)
+        TestCase.assertEquals(t.priority, Priority.A)
+        t.markComplete("2001-01-01")
+        TestCase.assertTrue(t.isCompleted())
+        t.markIncomplete()
+        TestCase.assertFalse(t.isCompleted())
+        TestCase.assertEquals(Priority.A, t.priority)
+        TestCase.assertEquals("(A) Test", t.inFileFormat())
     }
 
-    public void testRemoveTag() {
-        Task t = new Task( "Milk @@errands");
-        t.removeList("errands");
-        assertEquals("Milk @@errands", t.inFileFormat());
-        t.removeList("@errands");
-        assertEquals("Milk", t.inFileFormat());
-        assertEquals("Milk", t.getText());
-        t = new Task( "Milk @@errands +supermarket");
-        t.removeList("@errands");
-        assertEquals("Milk +supermarket", t.inFileFormat());
+    fun testPriority() {
+        var t = Task("(C) Test")
+        TestCase.assertEquals(t.priority, Priority.C)
+        t.priority = Priority.A
+        TestCase.assertEquals(t.priority, Priority.A)
+        t.priority = Priority.NONE
+        TestCase.assertEquals(t.priority, Priority.NONE)
+        t = Task("Test")
+        TestCase.assertEquals(t.priority, Priority.NONE)
+        t.priority = Priority.A
+        TestCase.assertEquals(t.priority, Priority.A)
+        TestCase.assertEquals("(A) Test", t.inFileFormat())
+        t.priority = Priority.NONE
+        TestCase.assertEquals(t.priority, Priority.NONE)
+        TestCase.assertEquals("Test", t.inFileFormat())
     }
 
-    public void testRecurrence() {
-        Task t1 = new Task( "Test");
-        Task t2 = new Task( "Test rec:1d");
-        assertEquals(null, t1.getRecurrencePattern());
-        assertEquals("1d", t2.getRecurrencePattern());
-        String t3 = "(B) 2014-07-05 Test t:2014-07-05 rec:2d";
-        String t3a = "(B) 2014-07-05 Test t:2014-07-05 rec:+2d";
-        Task t4 = new Task(t3).markComplete("2000-01-01");
-        Task t5 = new Task(t3a).markComplete("2000-01-01");
-        assertNotNull(t4);
-        assertNotNull(t5);
-        assertEquals("(B) 2000-01-01 Test t:2000-01-03 rec:2d", t4.inFileFormat());
-        assertEquals("(B) 2000-01-01 Test t:2014-07-07 rec:+2d", t5.inFileFormat());
-
-        String dt3 = "(B) 2014-07-05 Test due:2014-07-05 rec:2d";
-        String dt3a = "(B) 2014-07-05 Test due:2014-07-05 rec:+2d";
-        Task dt4 = new Task(dt3).markComplete("2000-01-01");
-        Task dt5 = new Task(dt3a).markComplete("2000-01-01");
-        assertNotNull(dt4);
-        assertNotNull(dt5);
-        assertEquals("(B) 2000-01-01 Test due:2000-01-03 rec:2d", dt4.inFileFormat());
-        assertEquals("(B) 2000-01-01 Test due:2014-07-07 rec:+2d", dt5.inFileFormat());
-
-        String text = "Test due:2014-07-05 rec:1y";
-        Task task = new Task(text).markComplete("2000-01-01");
-        assertNotNull(task);
-        assertEquals("Test due:2001-01-01 rec:1y", task.inFileFormat());
+    fun testCompletedPriority() {
+        val t = Task("x 1111-11-11 (A) Test")
+        TestCase.assertTrue(t.isCompleted())
+        TestCase.assertEquals(Priority.A, t.priority)
     }
 
-    public void testDue() {
-        Task t1 = new Task("Test");
-        t1.setDueDate("2013-01-01");
-        assertEquals("Test due:2013-01-01", t1.inFileFormat());
+    fun testRemoveTag() {
+        var t = Task("Milk @@errands")
+        t.removeList("errands")
+        TestCase.assertEquals("Milk @@errands", t.inFileFormat())
+        t.removeList("@errands")
+        TestCase.assertEquals("Milk", t.inFileFormat())
+        TestCase.assertEquals("Milk", t.text)
+        t = Task("Milk @@errands +supermarket")
+        t.removeList("@errands")
+        TestCase.assertEquals("Milk +supermarket", t.inFileFormat())
+    }
+
+    fun testRecurrence() {
+        val t1 = Task("Test")
+        val t2 = Task("Test rec:1d")
+        TestCase.assertEquals(null, t1.recurrencePattern)
+        TestCase.assertEquals("1d", t2.recurrencePattern)
+        val t3 = "(B) 2014-07-05 Test t:2014-07-05 rec:2d"
+        val t3a = "(B) 2014-07-05 Test t:2014-07-05 rec:+2d"
+        val t4 = Task(t3).markComplete("2000-01-01")
+        val t5 = Task(t3a).markComplete("2000-01-01")
+        TestCase.assertNotNull(t4)
+        TestCase.assertNotNull(t5)
+        TestCase.assertEquals("(B) 2000-01-01 Test t:2000-01-03 rec:2d", t4!!.inFileFormat())
+        TestCase.assertEquals("(B) 2000-01-01 Test t:2014-07-07 rec:+2d", t5!!.inFileFormat())
+
+        val dt3 = "(B) 2014-07-05 Test due:2014-07-05 rec:2d"
+        val dt3a = "(B) 2014-07-05 Test due:2014-07-05 rec:+2d"
+        val dt4 = Task(dt3).markComplete("2000-01-01")
+        val dt5 = Task(dt3a).markComplete("2000-01-01")
+        TestCase.assertNotNull(dt4)
+        TestCase.assertNotNull(dt5)
+        TestCase.assertEquals("(B) 2000-01-01 Test due:2000-01-03 rec:2d", dt4!!.inFileFormat())
+        TestCase.assertEquals("(B) 2000-01-01 Test due:2014-07-07 rec:+2d", dt5!!.inFileFormat())
+
+        val text = "Test due:2014-07-05 rec:1y"
+        val task = Task(text).markComplete("2000-01-01")
+        TestCase.assertNotNull(task)
+        TestCase.assertEquals("Test due:2001-01-01 rec:1y", task!!.inFileFormat())
+    }
+
+    fun testDue() {
+        val t1 = Task("Test")
+        t1.dueDate = "2013-01-01"
+        TestCase.assertEquals("Test due:2013-01-01", t1.inFileFormat())
         // Don't add extra whitespace
-        t1.setDueDate("2013-01-01");
-        assertEquals("Test due:2013-01-01", t1.inFileFormat());
+        t1.dueDate = "2013-01-01"
+        TestCase.assertEquals("Test due:2013-01-01", t1.inFileFormat())
         // Don't leave behind whitespace
-        t1.setDueDate("");
-        assertEquals("Test", t1.inFileFormat());
+        t1.dueDate = ""
+        TestCase.assertEquals("Test", t1.inFileFormat())
     }
 
-    public void testThreshold() {
-        Task t1 = new Task( "t:2013-12-12 Test");
-        Task t2 = new Task( "Test t:2013-12-12");
+    fun testThreshold() {
+        val t1 = Task("t:2013-12-12 Test")
+        val t2 = Task("Test t:2013-12-12")
 
-        assertEquals("2013-12-12", t1.getThresholdDate());
-        assertEquals("2013-12-12", t2.getThresholdDate());
-        Task t3 = new Task( "Test");
-        assertNull(t3.getThresholdDate());
-        t3.setThresholdDate("2013-12-12");
-        assertEquals("Test t:2013-12-12", t3.inFileFormat());
+        TestCase.assertEquals("2013-12-12", t1.thresholdDate)
+        TestCase.assertEquals("2013-12-12", t2.thresholdDate)
+        val t3 = Task("Test")
+        TestCase.assertNull(t3.thresholdDate)
+        t3.thresholdDate = "2013-12-12"
+        TestCase.assertEquals("Test t:2013-12-12", t3.inFileFormat())
     }
 
-    public void testInvalidThresholdDate() {
-        Task t1 = new Task( "Test t:2013-11-31");
-        assertFalse(t1.inFuture("2015-01-01"));
+    fun testInvalidThresholdDate() {
+        val t1 = Task("Test t:2013-11-31")
+        TestCase.assertFalse(t1.inFuture("2015-01-01", false))
     }
 
-    public void testInvalidDueDate() {
-        Task t1 = new Task( "Test due:2013-11-31");
-        assertEquals("2013-11-31",t1.getDueDate());
+    fun testInvalidDueDate() {
+        val t1 = Task("Test due:2013-11-31")
+        TestCase.assertEquals("2013-11-31", t1.dueDate)
     }
 
-    public void testInvalidCompleteDate() {
-        Task t1 = new Task( "x 2013-11-31 Test");
-        assertEquals("2013-11-31",t1.getCompletionDate());
+    fun testInvalidCompleteDate() {
+        val t1 = Task("x 2013-11-31 Test")
+        TestCase.assertEquals("2013-11-31", t1.completionDate)
     }
 
 }

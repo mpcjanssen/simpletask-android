@@ -240,7 +240,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         dueDate = deferDate(deferString, oldDate)
     }
 
-    fun inFileFormat(useUUIDs: Boolean) : String {
+    fun inFileFormat(useUUIDs: Boolean = false) : String {
         if (useUUIDs && text.isNotBlank() && uuid == null) {
             uuid = UUID.randomUUID().toString()
         }

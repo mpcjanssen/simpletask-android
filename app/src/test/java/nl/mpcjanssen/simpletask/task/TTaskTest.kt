@@ -98,7 +98,7 @@ class TaskTest : TestCase() {
 
     fun testHidden() {
         val test = "h:1"
-        Assert.assertEquals(test, Task(test).inFileFormat())
+        Assert.assertEquals(test, Task(test).inFileFormat(false))
     }
 
 

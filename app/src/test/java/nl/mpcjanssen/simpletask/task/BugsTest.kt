@@ -16,7 +16,7 @@ class BugsTest : TestCase() {
         // correctly it should not be changed in the file
         val taskContents = "x test"
         val t = Task(taskContents)
-        Assert.assertEquals(taskContents, t.inFileFormat())
+        Assert.assertEquals(taskContents, t.inFileFormat(false))
     }
 
     fun testActiveSortNullCrash() {
