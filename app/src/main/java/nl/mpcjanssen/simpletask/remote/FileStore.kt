@@ -1,30 +1,19 @@
 package nl.mpcjanssen.simpletask.remote
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
 import android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION
 import android.database.Cursor
 import android.net.Uri
-import android.os.Environment
-import android.util.Log
-import nl.mpcjanssen.simpletask.TodoApplication
-import nl.mpcjanssen.simpletask.util.join
-import nl.mpcjanssen.simpletask.util.writeToFile
-import java.util.*
-import kotlin.reflect.KClass
 import android.provider.DocumentsContract
-import android.provider.OpenableColumns
-import androidx.room.util.CursorUtil.getColumnIndexOrThrow
-import androidx.documentfile.provider.DocumentFile
-import nl.mpcjanssen.simpletask.Simpletask
-import java.io.*
+import nl.mpcjanssen.simpletask.TodoApplication
+import java.io.FileOutputStream
+import java.util.*
 
 
 object FileStore : IFileStore {
     override fun getRemoteVersion(uri: Uri): String? = uri.metaData(TodoApplication.app).lastModified
-    private val TAG = "FileStore"
+    private val tag = "FileStore"
 
 
     @Synchronized

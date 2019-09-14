@@ -31,24 +31,24 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import kotlinx.android.synthetic.main.login.*
-import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.Constants.BROWSE_FOR_DONE_FILE
 import nl.mpcjanssen.simpletask.Constants.BROWSE_FOR_TODO_FILE
 import nl.mpcjanssen.simpletask.Constants.BROWSE_TYPE
-
-import nl.mpcjanssen.simpletask.task.TodoList
+import nl.mpcjanssen.simpletask.R
+import nl.mpcjanssen.simpletask.Simpletask
+import nl.mpcjanssen.simpletask.ThemedActionBarActivity
+import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.util.broadcastTasklistChanged
 
 class OpenFileScreen : ThemedActionBarActivity() {
 
 
-    fun performFileSearch(new: Boolean) {
+    private fun performFileSearch(new: Boolean) {
 
         // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
         // browser.
 
-        val fileType = intent.getIntExtra(BROWSE_TYPE,BROWSE_FOR_TODO_FILE)
-        val name = when(fileType) {
+        val name = when(browseAction()) {
             BROWSE_FOR_TODO_FILE -> "todo.txt"
             BROWSE_FOR_DONE_FILE -> "done.txt"
             else -> ""
@@ -89,8 +89,7 @@ class OpenFileScreen : ThemedActionBarActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login)
-        val fileType = intent.getIntExtra(BROWSE_TYPE,BROWSE_FOR_TODO_FILE)
-        when(fileType) {
+        when(browseAction()) {
             BROWSE_FOR_DONE_FILE -> title = getString(R.string.title_browse_done)
             BROWSE_FOR_TODO_FILE -> title = getString(R.string.title_browse_todo)
         }
@@ -110,9 +109,8 @@ class OpenFileScreen : ThemedActionBarActivity() {
         finish()
     }
 
-    fun updateUri(uri: Uri, new: Boolean) {
-        val fileType = intent.getIntExtra(BROWSE_TYPE,BROWSE_FOR_TODO_FILE)
-        when(fileType) {
+    private fun updateUri(uri: Uri, new: Boolean) {
+        when(browseAction()) {
             BROWSE_FOR_TODO_FILE -> {
                 TodoApplication.config.clearCache()
                 if (new) {
@@ -129,6 +127,8 @@ class OpenFileScreen : ThemedActionBarActivity() {
 
 
     }
+
+    private fun browseAction() = intent.getIntExtra(BROWSE_TYPE, BROWSE_FOR_TODO_FILE)
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
         super.onActivityResult(requestCode, resultCode, resultData)
@@ -159,8 +159,8 @@ class OpenFileScreen : ThemedActionBarActivity() {
     }
 
     companion object {
-        private val READ_REQUEST_CODE: Int = 42
-        private val CREATE_REQUEST_CODE: Int = 43
+        private const val READ_REQUEST_CODE: Int = 42
+        private const val CREATE_REQUEST_CODE: Int = 43
 
         internal val TAG = OpenFileScreen::class.java.simpleName
     }
