@@ -1,6 +1,5 @@
 package nl.mpcjanssen.simpletask.dao
 
-import android.content.Context
 import androidx.room.*
 
 const val SCHEMA_VERSION=1013
