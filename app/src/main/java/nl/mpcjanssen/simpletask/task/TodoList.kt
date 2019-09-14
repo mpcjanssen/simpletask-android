@@ -309,13 +309,9 @@ class TodoList(val config: Config) {
                     try {
                         Log.i(TAG, "Saving todo list, size ${lines.size}")
                         fileStore.saveTasksToFile(uri, lines, eol = eol)
-                        val changesWerePending = config.changesPending
                         config.changesPending = false
-                        if (changesWerePending) {
-                            // Remove the red bar
-                            broadcastUpdateStateIndicator(TodoApplication.app.localBroadCastManager)
-                        }
-
+                        config.lastSeenRemoteId = fileStore.getRemoteVersion(uri)
+                        broadcastUpdateStateIndicator(TodoApplication.app.localBroadCastManager)
                     } catch (e: Exception) {
                         Log.e(TAG, "TodoList save to $uri failed", e)
                         config.changesPending = true
