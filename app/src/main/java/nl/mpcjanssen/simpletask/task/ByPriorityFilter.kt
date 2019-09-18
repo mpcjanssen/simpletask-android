@@ -24,8 +24,6 @@
  */
 package nl.mpcjanssen.simpletask.task
 
-import java.util.ArrayList
-
 /**
  * A applyFilter that matches Tasks containing the specified priorities
 
