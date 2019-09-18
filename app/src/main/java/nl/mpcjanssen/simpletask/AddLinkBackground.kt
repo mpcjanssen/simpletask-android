@@ -28,42 +28,37 @@
 package nl.mpcjanssen.simpletask
 
 import android.app.Activity
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.core.app.ShareCompat
 import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TodoList
-import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.showToastLong
 import nl.mpcjanssen.simpletask.util.showToastShort
 import nl.mpcjanssen.simpletask.util.todayAsString
-import java.io.IOException
 
 class AddLinkBackground : Activity() {
-    val TAG = "AddLinkBackground"
+    val tag = "AddLinkBackground"
 
     public override fun onCreate(instance: Bundle?) {
-        Log.d(TAG, "onCreate()")
+        Log.d(tag, "onCreate()")
         super.onCreate(instance)
 
-        val append_text = TodoApplication.config.shareAppendText
+        val appendText = TodoApplication.config.shareAppendText
         val intentReader = ShareCompat.IntentReader.from(this)
         val uri = intentReader.stream
         val subject = intentReader.subject ?: ""
         val mimeType = intentReader.type
-        Log.i(TAG, "Added link to content ($mimeType)")
+        Log.i(tag, "Added link to content ($mimeType)")
         if (uri == null) {
             showToastLong(TodoApplication.app, R.string.share_link_failed)
         } else {
-            addBackgroundTask("$subject $uri", append_text)
+            addBackgroundTask("$subject $uri", appendText)
         }
     }
 
     private fun addBackgroundTask(sharedText: String, appendText: String) {
         val todoList = TodoApplication.todoList
-        Log.d(TAG, "Adding background tasks to todolist $todoList")
+        Log.d(tag, "Adding background tasks to todolist $todoList")
 
         val rawLines = sharedText.split("\r\n|\r|\n".toRegex()).filterNot(String::isBlank)
         val lines = if (appendText.isBlank()) { rawLines } else {
@@ -75,7 +70,7 @@ class AddLinkBackground : Activity() {
 
         todoList.reload("Background add")
         todoList.add(tasks, TodoApplication.config.hasAppendAtEnd)
-        todoList.notifyTasklistChanged(TodoApplication.config.todoUri,  true, true)
+        todoList.notifyTasklistChanged(TodoApplication.config.todoUri, save = true, refreshMainUI = true)
         showToastShort(TodoApplication.app, R.string.link_added)
         if (TodoApplication.config.hasShareTaskShowsEdit) {
             todoList.editTasks(this, tasks, "")
