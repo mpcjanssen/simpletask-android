@@ -34,21 +34,23 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.*
+import android.os.LocaleList
 import android.os.SystemClock
-import androidx.multidex.MultiDexApplication
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.util.Log
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.multidex.MultiDexApplication
 import androidx.room.Room
 import nl.mpcjanssen.simpletask.Constants.BROWSE_TYPE
 import nl.mpcjanssen.simpletask.dao.AppDatabase
 import nl.mpcjanssen.simpletask.dao.DB_FILE
 import nl.mpcjanssen.simpletask.dao.TodoFile
-
 import nl.mpcjanssen.simpletask.remote.BackupInterface
-import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.remote.OpenFileScreen
 import nl.mpcjanssen.simpletask.task.TodoList
-import nl.mpcjanssen.simpletask.util.*
+import nl.mpcjanssen.simpletask.util.Config
+import nl.mpcjanssen.simpletask.util.FileStoreActionQueue
+import nl.mpcjanssen.simpletask.util.appVersion
+import nl.mpcjanssen.simpletask.util.todayAsString
 import java.util.*
 
 class TodoApplication : MultiDexApplication() {
@@ -69,7 +71,7 @@ class TodoApplication : MultiDexApplication() {
                 .build()
         if (config.forceEnglish) {
             val conf = resources.configuration
-            conf.locale = Locale.ENGLISH
+            conf.setLocales(LocaleList(Locale.ENGLISH))
             resources.updateConfiguration(conf, resources.displayMetrics)
         }
 
