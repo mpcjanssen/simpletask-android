@@ -195,7 +195,6 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         caller.runOnUiThread {
             // Replace the array in the main thread to prevent OutOfIndex exceptions
             visibleLines = newVisibleLines
-            notifyDataSetChanged()
             caller.showListViewProgress(false)
             if (TodoApplication.config.lastScrollPosition != -1) {
                 val manager = caller.listView?.layoutManager as LinearLayoutManager?
@@ -203,8 +202,8 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
                 val offset = TodoApplication.config.lastScrollOffset
                 Log.i(tag, "Restoring scroll offset $position, $offset")
                 manager?.scrollToPositionWithOffset(position, offset)
-                TodoApplication.config.lastScrollPosition = -1
             }
+            notifyDataSetChanged()
         }
     }
 

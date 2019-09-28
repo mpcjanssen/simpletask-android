@@ -244,7 +244,6 @@ class Simpletask : ThemedNoActionBarActivity() {
                 Log.w(TAG, "Not implemented search")
            // Only change intent if it actually contains a applyFilter
         }
-        TodoApplication.config.lastScrollPosition = -1
         Log.i(TAG, "onNewIntent: $intent")
 
     }
@@ -437,24 +436,14 @@ class Simpletask : ThemedNoActionBarActivity() {
 
             }
         }
-        taskAdapter.setFilteredTasks(this, query)
-
 
         listView?.layoutManager = LinearLayoutManager(this)
         listView?.adapter = this.taskAdapter
 
+        taskAdapter.setFilteredTasks(this, query)
+
+
         fab.setOnClickListener { startAddTaskActivity() }
-
-        // If we were started from the widget, select the pushed task
-        // next scroll to the first selected item
-
-
-        Log.d(TAG, "Scroll selection")
-        val selection = TodoApplication.todoList.selectedTasks
-        if (selection.isNotEmpty()) {
-            val selectedTask = selection[0]
-            m_scrollPosition = taskAdapter.getPosition(selectedTask)
-        }
     }
 
 
