@@ -316,8 +316,9 @@ class Config(app: TodoApplication) : Preferences(app) {
         get() = Query(this.prefs, luaModule = "mainui")
         set(value) {
             // Update the intent so we wont get the old applyFilter after
-            // switching back to app later. Fixes [1c5271ee2e]
+            // switching back to app later. Fixes [1c5271ee2e
             value.saveInPrefs(prefs)
+            TodoApplication.config.lastScrollPosition = -1
         }
 
 }
