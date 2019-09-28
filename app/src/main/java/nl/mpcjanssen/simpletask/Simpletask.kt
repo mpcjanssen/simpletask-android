@@ -445,7 +445,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         listView?.adapter = this.taskAdapter
 
         taskAdapter.setFilteredTasks(this, query)
-        listView?.setOnScrollChangeListener { view, i, i2, i3, i4 -> updateScrollPosition(view) }
+        listView?.setOnScrollChangeListener { view, i, i2, i3, i4 -> updateScrollPosition(view as RecyclerView) }
 
         fab.setOnClickListener { startAddTaskActivity() }
     }
