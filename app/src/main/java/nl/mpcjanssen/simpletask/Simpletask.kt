@@ -285,7 +285,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     override fun onPause() {
-        updateScrollPosition()
+        listView?.let{updateScrollPosition(it)}
         super.onPause()
     }
 
