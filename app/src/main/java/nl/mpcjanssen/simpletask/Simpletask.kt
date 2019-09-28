@@ -313,7 +313,12 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     override fun onPause() {
-        (listView?.layoutManager as LinearLayoutManager?)?.let { manager ->
+        updateScrollPosition()
+        super.onPause()
+    }
+
+    private fun updateScrollPosition(view: RecyclerView) {
+        (view.layoutManager as LinearLayoutManager?)?.let { manager ->
             val position = manager.findFirstVisibleItemPosition()
             val firstItemView = manager.findViewByPosition(position)
             val offset = firstItemView?.top ?: 0
@@ -321,7 +326,6 @@ class Simpletask : ThemedNoActionBarActivity() {
             TodoApplication.config.lastScrollPosition = position
             TodoApplication.config.lastScrollOffset = offset
         }
-        super.onPause()
     }
 
     override fun onBackPressed() {
@@ -469,7 +473,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         listView?.adapter = this.taskAdapter
 
         taskAdapter.setFilteredTasks(this, query)
-
+        listView?.setOnScrollChangeListener { view, i, i2, i3, i4 -> updateScrollPosition(view) }
 
         fab.setOnClickListener { startAddTaskActivity() }
     }
