@@ -26,9 +26,9 @@ public class TaskTestOld extends TestCase {
         String s = "Test abcd ";
         String t = " ";
         String v = "";
-        assertEquals(s,new Task(s).inFileFormat());
-        assertEquals(t,new Task(t).inFileFormat());
-        assertEquals(v,new Task(v).inFileFormat());
+        assertEquals(s,new Task(s).inFileFormat(false));
+        assertEquals(t,new Task(t).inFileFormat(false));
+        assertEquals(v,new Task(v).inFileFormat(false));
     }
 
     public void testHidden() {
@@ -44,18 +44,18 @@ public class TaskTestOld extends TestCase {
         assertTrue(t.isCompleted());
         t.markIncomplete();
         assertFalse(t.isCompleted());
-        assertEquals(rawText, t.inFileFormat());
+        assertEquals(rawText, t.inFileFormat(false));
     }
 
     public void testCompletionWithPrependDate() {
         String rawText = "Test";
         Task t = new Task( rawText, "2000-10-10");
-        rawText = t.inFileFormat();
+        rawText = t.inFileFormat(false);
         t.markComplete("2222-11-11");
         assertTrue(t.isCompleted());
         t.markIncomplete();
         assertFalse(t.isCompleted());
-        assertEquals(rawText, t.inFileFormat());
+        assertEquals(rawText, t.inFileFormat(false));
 
         t = new Task( "x 2000-01-01 2001-01-01 Test");
         assertEquals("2000-01-01", t.getCompletionDate());
@@ -78,7 +78,7 @@ public class TaskTestOld extends TestCase {
         t.markIncomplete();
         assertFalse(t.isCompleted());
         assertEquals(Priority.B , t.getPriority());
-        assertEquals("(B) Test", t.inFileFormat());
+        assertEquals("(B) Test", t.inFileFormat(false));
     }
 
     public void testCompletionWithPriority2() {
@@ -91,7 +91,7 @@ public class TaskTestOld extends TestCase {
         t.markIncomplete();
         assertFalse(t.isCompleted());
         assertEquals(Priority.A , t.getPriority());
-        assertEquals("(A) Test", t.inFileFormat());
+        assertEquals("(A) Test", t.inFileFormat(false));
     }
     public void testPriority() {
         Task t = new Task( "(C) Test");
@@ -104,10 +104,10 @@ public class TaskTestOld extends TestCase {
         assertEquals(t.getPriority(), Priority.NONE);
         t.setPriority(Priority.A);
         assertEquals(t.getPriority(), Priority.A);
-        assertEquals("(A) Test", t.inFileFormat());
+        assertEquals("(A) Test", t.inFileFormat(false));
         t.setPriority(Priority.NONE);
         assertEquals(t.getPriority(), Priority.NONE);
-        assertEquals("Test", t.inFileFormat());
+        assertEquals("Test", t.inFileFormat(false));
     }
 
     public void testCompletedPriority() {
@@ -119,13 +119,13 @@ public class TaskTestOld extends TestCase {
     public void testRemoveTag() {
         Task t = new Task( "Milk @@errands");
         t.removeList("errands");
-        assertEquals("Milk @@errands", t.inFileFormat());
+        assertEquals("Milk @@errands", t.inFileFormat(false));
         t.removeList("@errands");
-        assertEquals("Milk", t.inFileFormat());
+        assertEquals("Milk", t.inFileFormat(false));
         assertEquals("Milk", t.getText());
         t = new Task( "Milk @@errands +supermarket");
         t.removeList("@errands");
-        assertEquals("Milk +supermarket", t.inFileFormat());
+        assertEquals("Milk +supermarket", t.inFileFormat(false));
     }
 
     public void testRecurrence() {
@@ -139,8 +139,8 @@ public class TaskTestOld extends TestCase {
         Task t5 = new Task(t3a).markComplete("2000-01-01");
         assertNotNull(t4);
         assertNotNull(t5);
-        assertEquals("(B) 2000-01-01 Test t:2000-01-03 rec:2d", t4.inFileFormat());
-        assertEquals("(B) 2000-01-01 Test t:2014-07-07 rec:+2d", t5.inFileFormat());
+        assertEquals("(B) 2000-01-01 Test t:2000-01-03 rec:2d", t4.inFileFormat(false));
+        assertEquals("(B) 2000-01-01 Test t:2014-07-07 rec:+2d", t5.inFileFormat(false));
 
         String dt3 = "(B) 2014-07-05 Test due:2014-07-05 rec:2d";
         String dt3a = "(B) 2014-07-05 Test due:2014-07-05 rec:+2d";
@@ -148,25 +148,25 @@ public class TaskTestOld extends TestCase {
         Task dt5 = new Task(dt3a).markComplete("2000-01-01");
         assertNotNull(dt4);
         assertNotNull(dt5);
-        assertEquals("(B) 2000-01-01 Test due:2000-01-03 rec:2d", dt4.inFileFormat());
-        assertEquals("(B) 2000-01-01 Test due:2014-07-07 rec:+2d", dt5.inFileFormat());
+        assertEquals("(B) 2000-01-01 Test due:2000-01-03 rec:2d", dt4.inFileFormat(false));
+        assertEquals("(B) 2000-01-01 Test due:2014-07-07 rec:+2d", dt5.inFileFormat(false));
 
         String text = "Test due:2014-07-05 rec:1y";
         Task task = new Task(text).markComplete("2000-01-01");
         assertNotNull(task);
-        assertEquals("Test due:2001-01-01 rec:1y", task.inFileFormat());
+        assertEquals("Test due:2001-01-01 rec:1y", task.inFileFormat(false));
     }
 
     public void testDue() {
         Task t1 = new Task("Test");
         t1.setDueDate("2013-01-01");
-        assertEquals("Test due:2013-01-01", t1.inFileFormat());
+        assertEquals("Test due:2013-01-01", t1.inFileFormat(false));
         // Don't add extra whitespace
         t1.setDueDate("2013-01-01");
-        assertEquals("Test due:2013-01-01", t1.inFileFormat());
+        assertEquals("Test due:2013-01-01", t1.inFileFormat(false));
         // Don't leave behind whitespace
         t1.setDueDate("");
-        assertEquals("Test", t1.inFileFormat());
+        assertEquals("Test", t1.inFileFormat(false));
     }
 
     public void testThreshold() {
@@ -178,12 +178,12 @@ public class TaskTestOld extends TestCase {
         Task t3 = new Task( "Test");
         assertNull(t3.getThresholdDate());
         t3.setThresholdDate("2013-12-12");
-        assertEquals("Test t:2013-12-12", t3.inFileFormat());
+        assertEquals("Test t:2013-12-12", t3.inFileFormat(false));
     }
 
     public void testInvalidThresholdDate() {
         Task t1 = new Task( "Test t:2013-11-31");
-        assertFalse(t1.inFuture("2015-01-01"));
+        assertFalse(t1.inFuture("2015-01-01",false));
     }
 
     public void testInvalidDueDate() {
