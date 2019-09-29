@@ -36,6 +36,7 @@ import android.view.inputmethod.InputMethodManager
 import android.webkit.MimeTypeMap
 import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
+import androidx.core.widget.NestedScrollView
 import hirondelle.date4j.DateTime
 import kotlinx.android.synthetic.main.main.*
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
@@ -68,7 +69,6 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private var m_drawerToggle: ActionBarDrawerToggle? = null
     private var m_savedInstanceState: Bundle? = null
-    private var m_scrollPosition = 0
 
     private val uiHandler = UiHandler()
 
@@ -469,11 +469,21 @@ class Simpletask : ThemedNoActionBarActivity() {
             }
         }
 
+        Log.d(TAG, "Scroll selection")
+        val selection = TodoApplication.todoList.selectedTasks
+        if (selection.isNotEmpty()) {
+            val selectedTask = selection[0]
+            TodoApplication.config.lastScrollPosition = taskAdapter.getPosition(selectedTask)
+            TodoApplication.config.lastScrollOffset = 0
+        }
         listView?.layoutManager = LinearLayoutManager(this)
         listView?.adapter = this.taskAdapter
 
         taskAdapter.setFilteredTasks(this, query)
-        listView?.setOnScrollChangeListener { view, i, i2, i3, i4 -> updateScrollPosition(view as RecyclerView) }
+        val listener = ViewTreeObserver.OnScrollChangedListener {
+            listView?.let { updateScrollPosition(it) }
+        }
+        listView?.viewTreeObserver?.addOnScrollChangedListener(listener)
 
         fab.setOnClickListener { startAddTaskActivity() }
     }
