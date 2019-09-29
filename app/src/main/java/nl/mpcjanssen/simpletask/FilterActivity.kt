@@ -5,22 +5,19 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.tabs.TabLayout
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
-import androidx.viewpager.widget.ViewPager
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.Toolbar
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
-import nl.mpcjanssen.simpletask.remote.FileStore
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.tabs.TabLayout
 import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.util.*
-import java.io.File
-import java.io.IOException
 import java.util.*
 
 class FilterActivity : ThemedNoActionBarActivity() {
@@ -188,6 +185,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
                 when {
                     asWidgetConfigure -> askWidgetName()
                     asWidgetReConfigure -> {
+                        updateWidget()
                         finish()
                     }
                     else -> applyFilter()
