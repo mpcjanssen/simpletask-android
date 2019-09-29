@@ -464,14 +464,12 @@ class Simpletask : ThemedNoActionBarActivity() {
                 itemAtPosition?.let {
                     TodoApplication.todoList.clearSelection()
                     TodoApplication.todoList.selectTasks(listOf(itemAtPosition))
-                    TodoApplication.config.lastScrollPosition = position
+                    TodoApplication.config.lastScrollPosition = taskAdapter.getPosition(it)
                     TodoApplication.config.lastScrollOffset = 0
                 }
 
             }
         }
-
-        Log.d(TAG, "Scroll selection")
 
         listView?.layoutManager = LinearLayoutManager(this)
         listView?.adapter = this.taskAdapter
