@@ -55,14 +55,15 @@ object FileStore : IFileStore {
     }
 
     private fun wikiPath(path: String): String {
-        return path.replace("/",":3+")
+        return path.replace("/",":")
     }
+
 
 
 
     override fun getRemoteVersion(filename: String): String {
         val result = client.execute("wiki.getPageInfo", arrayOf(wikiPath(filename)))
-        return result as String
+        return (result as HashMap<String,Any>).getOrElse("version", {""}).toString()
     }
 
     override val isOnline: Boolean
@@ -72,7 +73,7 @@ object FileStore : IFileStore {
 
     override fun loadTasksFromFile(path: String): RemoteContents {
         val content = client.execute("wiki.getPage", arrayOf(wikiPath(path))) as String
-        return RemoteContents("", content.lines())
+        return RemoteContents(getRemoteVersion(wikiPath(path)), content.lines())
     }
 
 
@@ -113,7 +114,7 @@ object FileStore : IFileStore {
     }
 
     override fun getDefaultPath(): String {
-        return "todo:todo.txt"
+        return "/todo/todo.txt"
     }
 
 }
