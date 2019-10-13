@@ -4,6 +4,7 @@ package nl.mpcjanssen.simpletask.remote
 
 import kotlinx.android.synthetic.dokuwiki.login.*
 import nl.mpcjanssen.simpletask.TodoApplication
+import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.util.Config
 
 import nl.mpcjanssen.simpletask.util.join
@@ -20,7 +21,7 @@ import kotlin.reflect.KClass
 private val s1 = System.currentTimeMillis().toString()
 
 /**
- * FileStore implementation backed by Nextcloud
+ * FileStore implementation backed by a Dokuwiki page
  */
 object FileStore : IFileStore {
 
@@ -69,8 +70,9 @@ object FileStore : IFileStore {
         }
 
     override fun loadTasksFromFile(path: String): RemoteContents {
-        val content = client.execute("wiki.getPage", arrayOf(wikiPath(path))) as String
-        return RemoteContents(getRemoteVersion(wikiPath(path)), content.lines())
+        var content = client.execute("wiki.getPage", arrayOf(wikiPath(path))) as String
+        content = content.replace("  * <todo>","").replace("</todo>", "\n")
+        return RemoteContents(getRemoteVersion(wikiPath(path)), content.lines().map {Task(it)})
     }
 
 
@@ -80,15 +82,20 @@ object FileStore : IFileStore {
 
     @Synchronized
     @Throws(IOException::class)
-    override fun saveTasksToFile(path: String, lines: List<String>, eol: String) {
-        client.execute("wiki.putPage", arrayOf(wikiPath(path), lines.joinToString(eol), emptyArray<String>()))
+    override fun saveTasksToFile(path: String, lines: List<Task>, eol: String) {
+        client.execute("wiki.putPage", arrayOf(wikiPath(path),
+                lines.joinToString(separator = "\n") {"  * <todo>${it.inFileFormat(false)}</todo>"},
+                emptyArray<String>()))
     }
 
     @Throws(IOException::class)
-    override fun appendTaskToFile(path: String, lines: List<String>, eol: String) {
+    override fun appendTaskToFile(path: String, lines: List<Task>, eol: String) {
         if (!isOnline) {
             throw IOException("Device is offline")
         }
+        client.execute("dokuwiki.appendPage", arrayOf(wikiPath(path),
+                "\n"+lines.joinToString(separator = "\n") {"  * <todo>${it.inFileFormat(false)}</todo>"},
+                emptyArray<String>()))
 
 
     }

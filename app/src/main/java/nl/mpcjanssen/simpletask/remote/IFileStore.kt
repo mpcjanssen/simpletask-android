@@ -1,6 +1,7 @@
 package nl.mpcjanssen.simpletask.remote
 
 import nl.mpcjanssen.simpletask.TodoApplication
+import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.util.broadcastFileSync
 import java.io.File
 import java.io.IOException
@@ -21,14 +22,14 @@ interface IFileStore {
 
     @Throws(IOException::class)
     fun loadTasksFromFile(path: String): RemoteContents
-    fun saveTasksToFile(path: String, lines: List<String>, eol: String)
+    fun saveTasksToFile(path: String, lines: List<Task>, eol: String)
 
     // Handle login and logout
     fun loginActivity(): KClass<*>?
     fun logout()
 
     @Throws(IOException::class)
-    fun appendTaskToFile(path: String, lines: List<String>, eol: String)
+    fun appendTaskToFile(path: String, lines: List<Task>, eol: String)
 
     fun readFile(file: String, fileRead: (String) -> Unit)
     fun writeFile(file: File, contents: String)
@@ -62,7 +63,7 @@ interface IFileStore {
 }
 
 // Data class to return the lines and verion of a remote file.
-data class RemoteContents(val remoteId: String, val contents: List<String>)
+data class RemoteContents(val remoteId: String, val contents: List<Task>)
 
 // Generic file entry class for use in File dialogs
 data class FileEntry(val name: String, val isFolder: Boolean)
