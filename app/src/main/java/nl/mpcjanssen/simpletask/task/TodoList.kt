@@ -259,10 +259,7 @@ class TodoList(val config: Config) {
                 if (cachedList == null || needSync) {
                     try {
                         val remoteContents = FileStore.loadTasksFromFile(filename)
-                        val items = ArrayList<Task>(
-                                remoteContents.contents.map { text ->
-                                    Task(text)
-                                })
+                        val items = remoteContents.contents
 
                         Log.d(TAG, "Fill todolist")
                         todoItems.clear()
@@ -310,7 +307,7 @@ class TodoList(val config: Config) {
                         try {
                             broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
                             Log.i(TAG, "Saving todo list, size ${lines.size}")
-                            fileStore.saveTasksToFile(todoFileName, lines, eol = eol)
+                            fileStore.saveTasksToFile(todoFileName, lines.map{Task(it)}, eol = eol)
                             val changesWerePending = config.changesPending
                             config.changesPending = false
                             if (changesWerePending) {
@@ -344,7 +341,7 @@ class TodoList(val config: Config) {
         FileStoreActionQueue.add("Append to file") {
             broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
             try {
-                FileStore.appendTaskToFile(doneFileName, tasks.map { it.text }, eol)
+                FileStore.appendTaskToFile(doneFileName, tasks, eol)
                 removeAll(tasks)
                 notifyTasklistChanged(todoFilename, true, true)
             } catch (e: Exception) {
