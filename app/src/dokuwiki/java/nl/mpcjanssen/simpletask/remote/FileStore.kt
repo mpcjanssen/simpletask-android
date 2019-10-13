@@ -58,9 +58,6 @@ object FileStore : IFileStore {
         return path.replace("/",":")
     }
 
-
-
-
     override fun getRemoteVersion(filename: String): String {
         val result = client.execute("wiki.getPageInfo", arrayOf(wikiPath(filename)))
         return (result as HashMap<String,Any>).getOrElse("version", {""}).toString()
