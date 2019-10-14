@@ -2,21 +2,18 @@ package nl.mpcjanssen.simpletask.remote
 
 
 
-import kotlinx.android.synthetic.dokuwiki.login.*
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.util.Config
 
-import nl.mpcjanssen.simpletask.util.join
-import nl.mpcjanssen.simpletask.util.showToastLong
 import org.apache.xmlrpc.client.XmlRpcClient
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl
 import java.io.File
 import java.io.IOException
-import java.lang.Exception
 import java.net.URL
 
 import kotlin.reflect.KClass
+
+internal val RE_TODO = Regex("<todo([^>]*)>([^<]*)</todo>")
 
 private val s1 = System.currentTimeMillis().toString()
 
@@ -28,6 +25,7 @@ object FileStore : IFileStore {
     internal val NEXTCLOUD_USER = "ncUser"
     internal val NEXTCLOUD_PASS = "ncPass"
     internal val NEXTCLOUD_URL = "ncURL"
+
     var username by TodoApplication.config.StringOrNullPreference(NEXTCLOUD_USER)
     var password by TodoApplication.config.StringOrNullPreference(NEXTCLOUD_PASS)
     var serverUrl by TodoApplication.config.StringOrNullPreference(NEXTCLOUD_URL)
@@ -53,6 +51,8 @@ object FileStore : IFileStore {
         username = null
         password = null
         serverUrl = null
+        TodoApplication.config.setTodoFile(getDefaultPath())
+        TodoApplication.config.clearCache()
     }
 
     private fun wikiPath(path: String): String {
@@ -70,9 +70,11 @@ object FileStore : IFileStore {
         }
 
     override fun loadTasksFromFile(path: String): RemoteContents {
-        var content = client.execute("wiki.getPage", arrayOf(wikiPath(path))) as String
-        content = content.replace("  * <todo>","").replace("</todo>", "\n")
-        return RemoteContents(getRemoteVersion(wikiPath(path)), content.lines().map {Task(it)})
+        val content = client.execute("wiki.getPage", arrayOf(wikiPath(path))) as String
+        val tasks = RE_TODO.findAll(content).map {
+            fromDokuwiki(it.value)
+        }
+        return RemoteContents(getRemoteVersion(wikiPath(path)), tasks.toList())
     }
 
 
@@ -84,7 +86,7 @@ object FileStore : IFileStore {
     @Throws(IOException::class)
     override fun saveTasksToFile(path: String, lines: List<Task>, eol: String) {
         client.execute("wiki.putPage", arrayOf(wikiPath(path),
-                lines.joinToString(separator = "\n") {"  * <todo>${it.inFileFormat(false)}</todo>"},
+                lines.joinToString(separator = "\n") {"  * ${it.asDokuwiki()}"},
                 emptyArray<String>()))
     }
 
@@ -118,7 +120,18 @@ object FileStore : IFileStore {
     }
 
     override fun getDefaultPath(): String {
-        return "/todo/todo.txt"
+        return "/todo/todo"
     }
 
+}
+
+fun Task.asDokuwiki() : String {
+    return "<todo " + if (this.isCompleted()) "#$completionDate" else "" + ">" +
+    this.inFileFormat(false) + "</todo>"
+}
+
+fun fromDokuwiki(content: String) : Task {
+    val matches = RE_TODO.matchEntire(content)
+    val t = Task(matches?.groupValues?.getOrElse(2, {""})?:"")
+    return t
 }
