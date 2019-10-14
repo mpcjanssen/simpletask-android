@@ -265,7 +265,7 @@ class TodoList(val config: Config) {
                         todoItems.clear()
                         todoItems.addAll(items)
                         // Update cache
-                        config.cachedContents = remoteContents.contents.joinToString("\n")
+                        config.cachedContents = items.map { it.inFileFormat(config.useUUIDs)}.joinToString("\n")
                         config.lastSeenRemoteId = remoteContents.remoteId
                         // Backup
                         Backupper.backup(filename, items.map { it.inFileFormat(config.useUUIDs) })
