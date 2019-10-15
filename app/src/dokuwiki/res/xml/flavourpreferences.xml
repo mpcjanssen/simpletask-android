@@ -2,7 +2,7 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
         <Preference
-                android:key="logout_nextcloud"
-                android:summary="@string/nextcloud_logout_pref_summary"
-                android:title="@string/nextcloud_logout_pref_title"/>
+                android:key="logout"
+                android:summary="@string/logout_pref_summary"
+                android:title="@string/logout_pref_title"/>
 </PreferenceScreen>

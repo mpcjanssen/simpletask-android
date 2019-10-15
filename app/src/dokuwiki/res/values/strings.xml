@@ -5,17 +5,15 @@
     <string name="account_type">nl.mpcjanssen.simpletask.nextcloud</string>
     <string name="login_unsuccesfull">Login unsuccessfull</string>
     <string name="unexpected_result">Unexpected result</string>
-    <string name="nextcloud_login_screen_button">Log in to Nextcloud</string>
-    <string name="nextcloud_logging_screen_button">View log</string>
-    <string name="nextcloud_login_server_url">Server URL</string>
-    <string name="nextcloud_login_username">Username</string>
-    <string name="nextcloud_login_password">Password</string>
-    <string name="nextcloud_logout_message">Please make sure you have synced all changes with Nextcloud or
-        shared your complete task list if not connected to Nextcloud.\n
+    <string name="login_screen_button">Log in to Dokuwiki</string>
+    <string name="logging_screen_button">View log</string>
+    <string name="login_server_url">Server URL</string>
+    <string name="login_username">Username</string>
+    <string name="login_password">Password</string>
+    <string name="logout_message">Please make sure you have synced all changes with Dokuwiki or
+        shared your complete task list if not connected to Dokuwiki.\n
         Any changes that have not been synced will be lost after logging out.</string>
-    <string name="nextcloud_logout_pref_summary">Log out of Nextcloud.</string>
-    <string name="nextcloud_logout_pref_title">Log out</string>
-    <string name="user_agent">Mozilla/5.0 (Android) ownCloud-android/%1$s</string>
-    <string name="nextcloud_user_agent">Mozilla/5.0 (Android) Nextcloud-android/%1$s</string>
-    <string name="auth_method_saml_web_sso">off</string>
+    <string name="logout_pref_summary">Log out of Dokuwiki.</string>
+    <string name="logout_pref_title">Log out</string>
+
 </resources>

@@ -24,14 +24,14 @@
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/nextcloud_login_server_url"/>
+            android:text="@string/login_server_url"/>
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
     >
         <EditText
-                android:id="@+id/nextcloud_server_url"
+                android:id="@+id/server_url"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -41,10 +41,10 @@
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/nextcloud_login_username"/>
+            android:text="@string/login_username"/>
 
     <EditText
-            android:id="@+id/nextcloud_username"
+            android:id="@+id/username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -54,10 +54,10 @@
             android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/nextcloud_login_password"/>
+            android:text="@string/login_password"/>
 
     <EditText
-            android:id="@+id/nextcloud_password"
+            android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -74,14 +74,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/nextcloud_login_screen_button"
+                android:text="@string/login_screen_button"
                 android:textSize="8pt"/>
         <Button
                 android:id="@+id/logging"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/nextcloud_logging_screen_button"
+                android:text="@string/logging_screen_button"
                 android:textSize="8pt"/>
     </LinearLayout>
 

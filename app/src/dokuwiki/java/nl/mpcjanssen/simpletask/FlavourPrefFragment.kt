@@ -17,15 +17,15 @@ class FlavourPrefFragment : PreferenceFragment() {
         super.onCreate(savedInstanceState)
         addPreferencesFromResource(R.xml.flavourpreferences)
 
-        val nextcloudPref = findPreference("logout_nextcloud")
+        val nextcloudPref = findPreference("logout")
         nextcloudPref.setOnPreferenceClickListener {
-            Log.i(TAG, "Logging out from Nextcloud")
-            showConfirmationDialog(activity, R.string.nextcloud_logout_message,
+            Log.i(TAG, "Logging out from Dokuwiki")
+            showConfirmationDialog(activity, R.string.logout_message,
                     DialogInterface.OnClickListener { dialogInterface, i ->
                         FileStore.logout()
                         activity.finish()
                         LocalBroadcastManager.getInstance(activity).sendBroadcast(Intent(Constants.BROADCAST_ACTION_LOGOUT))
-                    }, R.string.nextcloud_logout_pref_title)
+                    }, R.string.logout_pref_title)
             true
         }
     }
