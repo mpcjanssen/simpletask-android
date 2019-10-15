@@ -2,21 +2,13 @@ package nl.mpcjanssen.simpletask.remote
 
 
 import android.content.*
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import kotlinx.android.synthetic.dokuwiki.login.*
 
 import nl.mpcjanssen.simpletask.*
-import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.FileStoreActionQueue
-import nl.mpcjanssen.simpletask.util.showConfirmationDialog
 import nl.mpcjanssen.simpletask.util.showToastLong
-import java.io.File
-import androidx.core.app.ComponentActivity
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import org.apache.xmlrpc.client.XmlRpcClient
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl
 
@@ -26,7 +18,7 @@ import java.net.URL
 class LoginScreen : ThemedActionBarActivity() {
     private val url: String
         get () {
-            val enteredUrl = nextcloud_server_url.text.toString().trimEnd('/')
+            val enteredUrl = server_url.text.toString().trimEnd('/')
             return if (enteredUrl.startsWith("http://", ignoreCase = true) ||
                     enteredUrl.startsWith("https://", ignoreCase = true)) {
                 return enteredUrl
@@ -35,9 +27,9 @@ class LoginScreen : ThemedActionBarActivity() {
             }
         }
 
-    private var username by TodoApplication.config.StringOrNullPreference(FileStore.NEXTCLOUD_USER)
-    private var password by TodoApplication.config.StringOrNullPreference(FileStore.NEXTCLOUD_PASS)
-    private var serverUrl by TodoApplication.config.StringOrNullPreference(FileStore.NEXTCLOUD_URL)
+    private var usernamePref by TodoApplication.config.StringOrNullPreference(FileStore.DOKUWIKI_USER)
+    private var passwordPref by TodoApplication.config.StringOrNullPreference(FileStore.DOKUWIKI_PASS)
+    private var serverUrlPref by TodoApplication.config.StringOrNullPreference(FileStore.DOKUWIKI_URL)
 
 
 
@@ -66,9 +58,9 @@ class LoginScreen : ThemedActionBarActivity() {
     }
 
     private fun finishLogin() {
-        username = nextcloud_username.text.toString()
-        password = nextcloud_password.text.toString()
-        serverUrl = url
+        usernamePref = username.text.toString()
+        passwordPref = password.text.toString()
+        serverUrlPref = url
         Log.d(TAG, "Saved credentials for $username")
         switchToTodolist()
     }
@@ -78,8 +70,8 @@ class LoginScreen : ThemedActionBarActivity() {
         FileStoreActionQueue.add("login") {
             try {
                 val config = XmlRpcClientConfigImpl()
-                config.basicUserName = nextcloud_username.text.toString()
-                config.basicPassword = nextcloud_password.text.toString()
+                config.basicUserName = username.text.toString()
+                config.basicPassword = password.text.toString()
                 config.setServerURL(URL(url + "/lib/exe/xmlrpc.php"))
                 val client = XmlRpcClient()
                 client.setConfig(config)

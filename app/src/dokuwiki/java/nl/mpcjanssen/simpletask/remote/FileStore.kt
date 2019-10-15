@@ -22,13 +22,13 @@ private val s1 = System.currentTimeMillis().toString()
  */
 object FileStore : IFileStore {
 
-    internal val NEXTCLOUD_USER = "ncUser"
-    internal val NEXTCLOUD_PASS = "ncPass"
-    internal val NEXTCLOUD_URL = "ncURL"
+    internal val DOKUWIKI_USER = "dwUser"
+    internal val DOKUWIKI_PASS = "dwPass"
+    internal val DOKUWIKI_URL = "dwURL"
 
-    var username by TodoApplication.config.StringOrNullPreference(NEXTCLOUD_USER)
-    var password by TodoApplication.config.StringOrNullPreference(NEXTCLOUD_PASS)
-    var serverUrl by TodoApplication.config.StringOrNullPreference(NEXTCLOUD_URL)
+    var username by TodoApplication.config.StringOrNullPreference(DOKUWIKI_USER)
+    var password by TodoApplication.config.StringOrNullPreference(DOKUWIKI_PASS)
+    var serverUrl by TodoApplication.config.StringOrNullPreference(DOKUWIKI_URL)
 
     val client : XmlRpcClient
     get() {
@@ -61,6 +61,7 @@ object FileStore : IFileStore {
 
     override fun getRemoteVersion(filename: String): String {
         val result = client.execute("wiki.getPageInfo", arrayOf(wikiPath(filename)))
+        @Suppress("UNCHECKED_CAST")
         return (result as HashMap<String,Any>).getOrElse("version", {""}).toString()
     }
 
@@ -71,12 +72,8 @@ object FileStore : IFileStore {
 
     override fun loadTasksFromFile(path: String): RemoteContents {
         val content = client.execute("wiki.getPage", arrayOf(wikiPath(path))) as String
-        val tasks = RE_TODO.findAll(content).map {
-            fromDokuwiki(it.value)
-        }
-        return RemoteContents(getRemoteVersion(wikiPath(path)), tasks.toList())
+        return RemoteContents(getRemoteVersion(wikiPath(path)), content.lines())
     }
-
 
     override fun loginActivity(): KClass<*>? {
         return LoginScreen::class
@@ -84,34 +81,30 @@ object FileStore : IFileStore {
 
     @Synchronized
     @Throws(IOException::class)
-    override fun saveTasksToFile(path: String, lines: List<Task>, eol: String) {
+    override fun saveTasksToFile(path: String, lines: List<String>, eol: String) {
         client.execute("wiki.putPage", arrayOf(wikiPath(path),
-                lines.joinToString(separator = "\n") {"  * ${it.asDokuwiki()}"},
+                lines.joinToString(separator = "\n"),
                 emptyArray<String>()))
     }
 
     @Throws(IOException::class)
-    override fun appendTaskToFile(path: String, lines: List<Task>, eol: String) {
-        if (!isOnline) {
-            throw IOException("Device is offline")
-        }
+    override fun appendTaskToFile(path: String, lines: List<String>, eol: String) {
         client.execute("dokuwiki.appendPage", arrayOf(wikiPath(path),
-                "\n"+lines.joinToString(separator = "\n") {"  * <todo>${it.inFileFormat(false)}</todo>"},
+                "\n"+lines.joinToString(separator = "\n"),
                 emptyArray<String>()))
-
-
     }
 
     override fun writeFile(file: File, contents: String) {
-
-
+        client.execute("wiki.putPage", arrayOf(wikiPath(file.absolutePath),
+                contents,
+                emptyArray<String>()))
     }
 
-    private fun timeStamp() = (System.currentTimeMillis() / 1000).toString()
 
     @Throws(IOException::class)
     override fun readFile(file: String, fileRead: (String) -> Unit) {
-
+        val content = client.execute("wiki.getPage", arrayOf(wikiPath(file))) as String
+        fileRead.invoke(content)
     }
 
 
@@ -123,15 +116,4 @@ object FileStore : IFileStore {
         return "/todo/todo"
     }
 
-}
-
-fun Task.asDokuwiki() : String {
-    return "<todo " + if (this.isCompleted()) "#$completionDate" else "" + ">" +
-    this.inFileFormat(false) + "</todo>"
-}
-
-fun fromDokuwiki(content: String) : Task {
-    val matches = RE_TODO.matchEntire(content)
-    val t = Task(matches?.groupValues?.getOrElse(2, {""})?:"")
-    return t
 }

@@ -263,12 +263,12 @@ class TodoList(val config: Config) {
 
                         Log.d(TAG, "Fill todolist")
                         todoItems.clear()
-                        todoItems.addAll(items)
+                        todoItems.addAll(items.map { Task(it) })
                         // Update cache
-                        config.cachedContents = items.map { it.inFileFormat(config.useUUIDs)}.joinToString("\n")
+                        config.cachedContents = items.joinToString("\n")
                         config.lastSeenRemoteId = remoteContents.remoteId
                         // Backup
-                        Backupper.backup(filename, items.map { it.inFileFormat(config.useUUIDs) })
+                        Backupper.backup(filename, items)
                         notifyTasklistChanged(filename, false, true)
                     } catch (e: Exception) {
                         Log.e(TAG, "TodoList load failed: {}" + filename, e)
@@ -307,7 +307,7 @@ class TodoList(val config: Config) {
                         try {
                             broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
                             Log.i(TAG, "Saving todo list, size ${lines.size}")
-                            fileStore.saveTasksToFile(todoFileName, lines.map{Task(it)}, eol = eol)
+                            fileStore.saveTasksToFile(todoFileName, lines, eol = eol)
                             val changesWerePending = config.changesPending
                             config.changesPending = false
                             if (changesWerePending) {
@@ -341,7 +341,7 @@ class TodoList(val config: Config) {
         FileStoreActionQueue.add("Append to file") {
             broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
             try {
-                FileStore.appendTaskToFile(doneFileName, tasks, eol)
+                FileStore.appendTaskToFile(doneFileName, tasks.map {it.inFileFormat(useUUIDs = TodoApplication.config.useUUIDs)}, eol)
                 removeAll(tasks)
                 notifyTasklistChanged(todoFilename, true, true)
             } catch (e: Exception) {
