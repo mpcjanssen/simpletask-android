@@ -37,7 +37,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="main_no_items">Brak zadań do wyświetlenia.</string>
     <string name="set_preferences">Ustawienia</string>
     <string name="preferences">Ustawienia</string>
-    <string name="archive">Archiwum</string>
+    <string name="archive">Archiwizuj</string>
     <string name="help">Pomoc</string>
     <string name="history">Historia</string>
     <string name="log">Log</string>
@@ -360,4 +360,5 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="saved_filters_exported"/>
     <string name="saved_filters_imported"/>
     <string name="taskview_extended_pref_title">Pokaż daty w osobnym wierszu</string>
+    <string name="force_english_title">Wymuś angielski</string>
 </resources>
