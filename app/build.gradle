@@ -14,7 +14,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath 'com.android.tools.build:gradle:3.5.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokka_version}"
         classpath("com.github.triplet.gradle:play-publisher:2.2.0")
@@ -139,20 +139,18 @@ repositories {
 
 dependencies {
     dropboxImplementation 'com.dropbox.core:dropbox-core-sdk:3.0.6'
-
-
     implementation 'org.jetbrains.anko:anko-commons:0.10.8'
     nextcloudImplementation 'com.github.nextcloud:android-library:1.4.2'
     nextcloudImplementation 'com.google.code.gson:gson:2.8.5'
     implementation "org.jetbrains.anko:anko-commons:0.10.8"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "androidx.legacy:legacy-support-v4:$android_support_version"
-    implementation 'androidx.core:core:1.0.2'
+    implementation 'androidx.core:core:1.1.0'
     implementation "com.google.android.material:material:$android_support_version"
 //    implementation "androidx.preference:preference:1.0.0"
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation "androidx.recyclerview:recyclerview:$android_support_version"
-    def room_version = "2.1.0-alpha06"
+    def room_version = "2.2.1"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     // For Kotlin use kapt instead of annotationProcessor
