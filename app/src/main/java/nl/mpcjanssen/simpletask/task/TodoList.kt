@@ -245,6 +245,7 @@ class TodoList(val config: Config) {
             FileStoreActionQueue.add("Reload") {
                 val needSync = try {
                     val newerVersion = FileStore.getRemoteVersion(config.todoFileName)
+                    Log.i(TAG,"Remote version: $newerVersion (current local ${config.lastSeenRemoteId})")
                     newerVersion != config.lastSeenRemoteId
                 } catch (e: Throwable) {
                     Log.e(TAG, "Can't determine remote file version", e)
