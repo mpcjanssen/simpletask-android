@@ -76,6 +76,7 @@ object FileStore : IFileStore {
         val op = ReadFileRemoteOperation(filename)
         val res = op.execute(mNextcloud)
         val file = res.data[0] as RemoteFile
+        Log.d("FileStore", "Remote versions of $filename: id: ${file.remoteId} tag: ${file.etag} modified: ${file.modifiedTimestamp} ")
         return file.etag
     }
 
@@ -152,6 +153,7 @@ object FileStore : IFileStore {
         val infoOp = ReadFileRemoteOperation(path)
         val infoRes = infoOp.execute(mNextcloud)
         val fileInfo = infoRes.data[0] as RemoteFile
+        Log.i(TAG,"New remote version tag: ${fileInfo.etag}, id: ${fileInfo.remoteId}, modified: ${fileInfo.modifiedTimestamp}")
         TodoApplication.config.lastSeenRemoteId = fileInfo.etag
 
     }
