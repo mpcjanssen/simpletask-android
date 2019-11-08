@@ -37,15 +37,12 @@ object FileStore : IFileStore {
             val newclient = _dbxClient ?: initDbxClient()
             _dbxClient = newclient
             return newclient
-
-
         }
 
     private fun initDbxClient(): DbxClientV2 {
         val requestConfig = DbxRequestConfig.newBuilder("simpletask").build()
         return DbxClientV2(requestConfig, accessToken)
     }
-
 
     override val isAuthenticated: Boolean
         get() {
@@ -124,7 +121,7 @@ object FileStore : IFileStore {
     }
 
     @Throws(IOException::class)
-    override fun saveTasksToFile(path: String, lines: List<String>, eol: String) {
+    override fun saveTasksToFile(path: String, lines: List<String>, eol: String) : String {
         Log.i(TAG, "Saving ${lines.size} tasks to Dropbox.")
         val contents = join(lines, eol) + eol
 
@@ -141,7 +138,6 @@ object FileStore : IFileStore {
         }  finally {
             `in`.close()
         }
-        TodoApplication.config.lastSeenRemoteId = uploaded.rev
         Log.i(TAG, "New rev " + uploaded.rev)
         val newName = uploaded.pathDisplay
 
@@ -152,6 +148,7 @@ object FileStore : IFileStore {
             showToastLong(mApp, "Filename was changed remotely. New name is: $newName")
             mApp.switchTodoFile(newName)
         }
+        return uploaded.rev
     }
 
     override fun appendTaskToFile(path: String, lines: List<String>, eol: String) {

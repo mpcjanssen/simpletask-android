@@ -22,7 +22,7 @@ interface IFileStore {
 
     @Throws(IOException::class)
     fun loadTasksFromFile(path: String): RemoteContents
-    fun saveTasksToFile(path: String, lines: List<String>, eol: String)
+    fun saveTasksToFile(path: String, lines: List<String>, eol: String) : String
 
     // Handle login and logout
     fun loginActivity(): KClass<*>?

@@ -253,11 +253,6 @@ class TodoList(val config: Config) {
                 }
                 if (needSync) {
                     Log.i(TAG, "Remote version is different, sync")
-                } else {
-                    Log.i(TAG, "Remote version is same, load from cache")
-                }
-                val cachedList = config.todoList
-                if (cachedList == null || needSync) {
                     try {
                         val remoteContents = FileStore.loadTasksFromFile(filename)
                         val items = remoteContents.contents
@@ -266,17 +261,22 @@ class TodoList(val config: Config) {
                         todoItems.clear()
                         todoItems.addAll(items.map { Task(it) })
                         // Update cache
+                        Log.i(TAG, "Updating cache with remote version ${remoteContents.remoteId}")
                         config.cachedContents = items.joinToString("\n")
                         config.lastSeenRemoteId = remoteContents.remoteId
                         // Backup
-                        Backupper.backup(filename, items)
+                        FileStoreActionQueue.add("Backup") {
+                            Backupper.backup(filename, items)
+                        }
                         notifyTasklistChanged(filename, false, true)
                     } catch (e: Exception) {
-                        Log.e(TAG, "TodoList load failed: {}" + filename, e)
+                        Log.e(TAG, "TodoList load failed: $filename", e)
                         showToastShort(TodoApplication.app, "Loading of todo file failed")
                     }
 
-                    Log.i(TAG, "TodoList loaded from dropbox")
+                    Log.i(TAG, "TodoList loaded from filestore")
+                } else {
+                    Log.i(TAG, "Remote version is same, load from cache")
                 }
             }
             broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
@@ -285,6 +285,7 @@ class TodoList(val config: Config) {
 
     @Synchronized
     private fun save(fileStore: IFileStore, todoFileName: String, backup: Boolean, eol: String) {
+        Log.d(TAG, "Save: $todoFileName")
         config.changesPending = true
         broadcastUpdateStateIndicator(TodoApplication.app.localBroadCastManager)
         val lines = todoItems.map {
@@ -308,11 +309,12 @@ class TodoList(val config: Config) {
                         try {
                             broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
                             Log.i(TAG, "Saving todo list, size ${lines.size}")
-                            fileStore.saveTasksToFile(todoFileName, lines, eol = eol)
-                            val changesWerePending = config.changesPending
-                            config.changesPending = false
-                            if (changesWerePending) {
+                            config.lastSeenRemoteId  = fileStore.saveTasksToFile(todoFileName, lines, eol = eol)
+                            Log.i(TAG, "Remote version is ${config.lastSeenRemoteId}")
+
+                            if (config.changesPending) {
                                 // Remove the red bar
+                                config.changesPending = false
                                 broadcastUpdateStateIndicator(TodoApplication.app.localBroadCastManager)
                             }
 
