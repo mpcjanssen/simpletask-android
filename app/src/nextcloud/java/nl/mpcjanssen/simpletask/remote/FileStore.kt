@@ -120,7 +120,7 @@ object FileStore : IFileStore {
 
     @Synchronized
     @Throws(IOException::class)
-    override fun saveTasksToFile(path: String, lines: List<String>, eol: String) {
+    override fun saveTasksToFile(path: String, lines: List<String>, eol: String) : String {
         val contents = join(lines, eol) + eol
 
         val timestamp = timeStamp()
@@ -154,7 +154,7 @@ object FileStore : IFileStore {
         val infoRes = infoOp.execute(mNextcloud)
         val fileInfo = infoRes.data[0] as RemoteFile
         Log.i(TAG,"New remote version tag: ${fileInfo.etag}, id: ${fileInfo.remoteId}, modified: ${fileInfo.modifiedTimestamp}")
-        TodoApplication.config.lastSeenRemoteId = fileInfo.etag
+        return fileInfo.etag
 
     }
 

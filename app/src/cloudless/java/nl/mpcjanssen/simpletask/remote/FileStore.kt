@@ -83,14 +83,14 @@ object FileStore : IFileStore {
         Log.i(TAG, "Observer: modifying done")
     }
 
-    override fun saveTasksToFile(path: String, lines: List<String>, eol: String) {
+    override fun saveTasksToFile(path: String, lines: List<String>, eol: String) : String {
         Log.i(TAG, "Saving tasks to file: $path")
         val obs = observer
         obs?.ignoreEvents(true)
         val file = File(path)
         writeToFile(lines, eol, file, false)
         obs?.delayedStartListen(1000)
-        TodoApplication.config.lastSeenRemoteId = file.lastModified().toString()
+        return file.lastModified().toString()
     }
 
     override fun appendTaskToFile(path: String, lines: List<String>, eol: String) {
