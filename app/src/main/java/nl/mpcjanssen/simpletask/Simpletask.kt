@@ -451,8 +451,6 @@ class Simpletask : ThemedNoActionBarActivity() {
             TodoApplication.config.mainQuery
         }
 
-
-        showListViewProgress(true)
         if (currentIntent.hasExtra(Constants.INTENT_SELECTED_TASK_LINE)) {
             Log.d(TAG, "Selection from intent")
             val position = currentIntent.getIntExtra(Constants.INTENT_SELECTED_TASK_LINE, -1)
