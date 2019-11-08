@@ -231,9 +231,7 @@ class TodoList(val config: Config) {
     @Synchronized
     fun reload(reason: String = "") {
         Log.d(TAG, "Reload: $reason")
-        broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
         if (!FileStore.isAuthenticated) {
-            broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
             return
         }
         val filename = config.todoFileName
@@ -243,6 +241,7 @@ class TodoList(val config: Config) {
             save(FileStore, filename, true, config.eol)
         } else {
             FileStoreActionQueue.add("Reload") {
+                broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
                 val needSync = try {
                     val newerVersion = FileStore.getRemoteVersion(config.todoFileName)
                     Log.i(TAG,"Remote version: $newerVersion (current local ${config.lastSeenRemoteId})")
@@ -278,8 +277,8 @@ class TodoList(val config: Config) {
                 } else {
                     Log.i(TAG, "Remote version is same, load from cache")
                 }
+                broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
             }
-            broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
         }
     }
 
@@ -306,8 +305,8 @@ class TodoList(val config: Config) {
                 override fun onFinish() {
                     Log.d(TAG, "Executing pending Save")
                     FileStoreActionQueue.add("Save") {
+                        broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
                         try {
-                            broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
                             Log.i(TAG, "Saving todo list, size ${lines.size}")
                             config.lastSeenRemoteId  = fileStore.saveTasksToFile(todoFileName, lines, eol = eol)
                             Log.i(TAG, "Remote version is ${config.lastSeenRemoteId}")
