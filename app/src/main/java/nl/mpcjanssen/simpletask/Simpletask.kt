@@ -322,7 +322,6 @@ class Simpletask : ThemedNoActionBarActivity() {
             val position = manager.findFirstVisibleItemPosition()
             val firstItemView = manager.findViewByPosition(position)
             val offset = firstItemView?.top ?: 0
-            Log.i(TAG, "Saving scroll offset $position, $offset")
             TodoApplication.config.lastScrollPosition = position
             TodoApplication.config.lastScrollOffset = offset
         }
