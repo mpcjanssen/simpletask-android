@@ -59,7 +59,7 @@ object FileStore : IFileStore {
     private fun getClient () : OwnCloudClient? {
         serverUrl?.let { url ->
             val ctx = TodoApplication.app.applicationContext
-            OwnCloudClientManagerFactory.setUserAgent("Mozilla/5.0 (Android) ownCloud-android/3.8.1")
+            OwnCloudClientManagerFactory.setUserAgent("Mozilla/5.0 (Android) Nextcloud-android/3.8.1")
             val client = OwnCloudClientFactory.createOwnCloudClient(Uri.parse(url), ctx, true)
             client.credentials = OwnCloudCredentialsFactory.newBasicCredentials(
                     username,
