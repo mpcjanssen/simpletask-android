@@ -6,6 +6,7 @@ import android.net.Uri
 import android.util.Log
 import com.owncloud.android.lib.common.OwnCloudClient
 import com.owncloud.android.lib.common.OwnCloudClientFactory
+import com.owncloud.android.lib.common.OwnCloudClientManagerFactory
 import com.owncloud.android.lib.common.OwnCloudCredentialsFactory
 import com.owncloud.android.lib.common.operations.RemoteOperationResult
 import com.owncloud.android.lib.resources.files.DownloadFileRemoteOperation
@@ -58,7 +59,8 @@ object FileStore : IFileStore {
     private fun getClient () : OwnCloudClient? {
         serverUrl?.let { url ->
             val ctx = TodoApplication.app.applicationContext
-            val client = OwnCloudClientFactory.createOwnCloudClient(Uri.parse(url), ctx, true, true)
+            OwnCloudClientManagerFactory.setUserAgent("Mozilla/5.0 (Android) ownCloud-android/3.8.1")
+            val client = OwnCloudClientFactory.createOwnCloudClient(Uri.parse(url), ctx, true)
             client.credentials = OwnCloudCredentialsFactory.newBasicCredentials(
                     username,
                     password
