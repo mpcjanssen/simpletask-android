@@ -6,13 +6,15 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import com.owncloud.android.lib.common.OwnCloudClientFactory
+import com.owncloud.android.lib.common.OwnCloudClientManagerFactory
 import com.owncloud.android.lib.common.OwnCloudCredentialsFactory
 import com.owncloud.android.lib.common.network.CertificateCombinedException
 import com.owncloud.android.lib.common.network.NetworkUtils
 import com.owncloud.android.lib.common.operations.RemoteOperationResult
 import com.owncloud.android.lib.resources.files.ReadFolderRemoteOperation
-import com.owncloud.android.lib.resources.users.GetRemoteUserInfoOperation
+
 import com.owncloud.android.lib.resources.files.FileUtils
+import com.owncloud.android.lib.resources.users.GetUserInfoRemoteOperation
 
 import kotlinx.android.synthetic.nextcloud.login.*
 import nl.mpcjanssen.simpletask.*
@@ -77,12 +79,13 @@ class LoginScreen : ThemedActionBarActivity() {
 
     private fun startLogin(retrySsl: Boolean) {
         FileStoreActionQueue.add("login") {
-            val client = OwnCloudClientFactory.createOwnCloudClient(Uri.parse(url), this, true, true)
+            OwnCloudClientManagerFactory.setUserAgent("Mozilla/5.0 (Android) ownCloud-android/3.8.1")
+            val client = OwnCloudClientFactory.createOwnCloudClient(Uri.parse(url), this, true)
             client.credentials = OwnCloudCredentialsFactory.newBasicCredentials(
                     nextcloud_username.text.toString(),
                     nextcloud_password.text.toString()
             )
-            val op = GetRemoteUserInfoOperation()
+            val op = GetUserInfoRemoteOperation()
             val res: RemoteOperationResult = op.execute(client)
             Log.d(TAG, res.logMessage)
             Log.d(TAG, res.exception?.localizedMessage?:"No exception")
