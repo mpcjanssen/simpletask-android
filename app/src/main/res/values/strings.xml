@@ -294,6 +294,9 @@ You should have received a copy of the GNU General Public License along with Tod
         want to upload your local changes, or download the Dropbox version?
     </string>
 
+    <string name="idle_before_safe_title">Time before save</string>
+    <string name="idle_before_safe_summary">Idle time required before changes are saved (in seconds)</string>
+
     <!-- login -->
     <string name="first_title_word">Simpletask</string>
     <string name="login_screen_button">Log in to Dropbox</string>

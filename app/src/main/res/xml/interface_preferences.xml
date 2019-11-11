@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.robobunny.SeekBarPreference xmlns:robobunny="http://robobunny.com"
+
+                                     android:max="10"
+                                     robobunny:min="1"
+                                     robobunny:unitsLeft="s"
+                                     robobunny:unitsRight=""
+                                     android:defaultValue="3"
+                                     android:key="@string/idle_before_save"
+
+                                     android:summary="@string/idle_before_safe_summary"
+                                     android:title="@string/idle_before_safe_title"
+    />
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="@string/ui_show_confirmation_dialogs"
