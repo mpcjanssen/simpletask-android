@@ -321,6 +321,6 @@ class Config(app: TodoApplication) : Preferences(app) {
             TodoApplication.config.lastScrollPosition = -1
         }
 
-    val idleBeforeSaveSeconds by IntPreference(R.string.idle_before_save, 3)
+    val idleBeforeSaveSeconds by IntPreference(R.string.idle_before_save, 5)
 
 }
