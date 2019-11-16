@@ -1,5 +1,10 @@
 ﻿# Changelog
 
+## 10.3.3
+
+### Fixed
+
+- Change theme for background activities. Should fix #1025.
 
 ## 10.3.2
 
