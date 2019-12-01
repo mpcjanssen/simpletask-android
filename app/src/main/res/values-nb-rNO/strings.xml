@@ -350,4 +350,9 @@
     <string name="use_list_and_tags_icons_summary">Bruk ikoner for å endre gjøremålenes liste og etiketter. Skru av for å bruke todo.txt @ og + begrepene.</string>
     <string name="no_tasks_to_archive">Ingen gjøremål å arkivere.</string>
     <string name="force_english_title">Påtving engelsk tittel</string>
+    <string name="idle_before_safe_title">Tid før lagring</string>
+    <string name="idle_before_safe_summary">Uvirksom tid før endriger lagres (i sekunder)</string>
+    <string name="link_added">Lenke lagt til i Simpletask</string>
+    <string name="share_link_failed">Kunne ikke legge til lenke: Lenkeadresse tom</string>
+    <string name="share_link">Del lenke</string>
 </resources>
