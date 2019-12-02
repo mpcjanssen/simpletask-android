@@ -356,6 +356,6 @@
     <string name="idle_before_safe_title">保存するまでの時間</string>
     <string name="idle_before_safe_summary">変更が保存されるまでのアイドル時間 (秒)</string>
     <string name="link_added">Simpletask にリンクが追加されました</string>
-    <string name="share_link_failed">リンクの追加に失敗しました: リンクが空でした。</string>
+    <string name="share_link_failed">空のリンクは追加できません。</string>
     <string name="share_link">リンクの共有</string>
 </resources>
