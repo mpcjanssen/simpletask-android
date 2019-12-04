@@ -1,2 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="invalid_context">Geçersiz liste adı</string>
+    <string name="invalid_project">Geçersiz etiket adı</string>
+    <string name="added_task">Görev eklendi</string>
+    <string name="add_task_failed">Görev eklenemedi</string>
+    <string name="save_task">Görevi kaydet</string>
+    <string name="update_task_failed">Görev güncellenemedi</string>
+    <string name="sort">Sırala</string>
+    <string name="script">Komut dosyası</string>
+    <string name="filter">Filtre</string>
+    <string name="main_no_items">Görüntülenecek görev yok.</string>
+    <string name="set_preferences">Ayarlar</string>
+    <string name="preferences">Ayarlar</string>
+    <string name="archive">Arşiv</string>
+    <string name="help">Yardım</string>
+    <string name="history">Geçmiş</string>
+    <string name="debug_info">Hata ayıklama bilgisi</string>
+    <string name="log">Kayıtlar</string>
+    <string name="next">Sonraki</string>
+    <string name="prev">Önceki</string>
+    <string name="open_file">Görev listesi dosyasını aç</string>
+    <string name="sync">Eşitleme</string>
+    <string name="changelist">Liste seç</string>
+    <string name="search">Arama</string>
+    <string name="add">Ekle</string>
+    <string name="task">Görev</string>
+    <string name="addtask">Görev Ekle</string>
+    <string name="updatetask">Güncelle</string>
+    <string name="viewtask">Görevi Görüntüle</string>
+    <string name="cleartask">Görevi Temizle</string>
+    <string name="clear_database">Veritabanını boşalt</string>
+    <string name="done">Tamamlandı</string>
+    <string name="priority">Öncelik tanı</string>
+    <string name="select_priority">Öncelik seç</string>
+    <string name="select_all">Hepsini seç</string>
+    <string name="add_list_or_tag">Liste ve etiket ekle</string>
+    <string name="update_lists">Listeleri güncelle</string>
+    <string name="update_tags">Etiketleri güncelle</string>
+    <string name="remove_list_or_tag">Liste ve etiketleri kaldır</string>
+    <string name="update">Güncelle</string>
+    <string name="delete">Sil</string>
+    <string name="defer_due">Bitiş tarihi ayarla</string>
+    <string name="defer_threshold">Eşik tarihini ayarla</string>
+    <string name="insert_due">Bitiş tarihi ekle</string>
+    <string name="insert_threshold">Eşik tarihi ekle</string>
+    <string name="share">Paylaş</string>
+    <string name="share_database">Veritabanını paylaş</string>
+    <string name="unComplete">Tamamlamayı geri al</string>
+    <string name="ok">Tamam</string>
+    <string name="cancel">İptal</string>
+    <string name="cancel_changes">Değişiklikler kaybolacak.</string>
+    <string name="clear_filter">Filtreyi temizle</string>
+    <string name="write_failed">Dosya yazılamadı. Değişiklikleriniz KAYDEDİLMEDİ.</string>
+    <string name="tasktexthint">\@Troy\'da +Hector ile +Paris konusunu @Tartış 
+\n+Hector\'a @Troy\'da ayak bağı olmamasını söyle 
+\n@Telefonda Bu metni menüden kaldır</string>
+    <string name="filter_name_empty">İsim belirtilmedi, filtre eklenmiyor</string>
+    <string name="widget_name_empty">Widget adı belirtilmedi, widget eklenmiyor</string>
+    <string name="add_task_help">"Görev listesini güncelleyin veya ilaveler yapın. Satır başına bir görev. &lt;b&gt;Öncelik&lt;/b&gt; Satırı (.) ile başlatın, (A) gibi &lt;b&gt;Etiketler&lt;/b&gt; + işareti ile başlatın, +Mutfak gibi &lt;b&gt;Listeler&lt;/b&gt; @ işareti ile başlatın , @ev gibi. Bir görev, herhangi bir sayıda etiket içerebilir veya birden fazla listede bulunabilir. "<b>Priority</b>
+
+ Start the line with (.), like (A)
+
+ <b>Tags</b>
+ Start with a + sign, like +Kitchen
+
+ <b>Lists</b>
+ Start with an @ sign, like @home
+
+ A task can include any number of tags or be on multiple lists.
+ </string>
+    <string name="preference_appearance">Görünüm</string>
+    <string name="preference_interface">Arayüz</string>
+    <string name="preference_widget">Widget</string>
+    <string name="preference_other">Diğer</string>
+    <string name="ARCHIVE_settings_header">Arşiv</string>
+    <string name="ARCHIVE_settings_summary">Tamamlanan görevlerin done.txt dosyasında arşivlenmesi için ayarlar</string>
+    <string name="auto_archive_pref_title">Otomatik arşivleme</string>
+    <string name="auto_archive_pref_summary">Tamamlandıkları anda görevleri arşivle.</string>
+    <string name="archive_now_pref_title">Şimdi arşivle</string>
+    <string name="archive_now_pref_summary">Tamamlanan görevleri todo.txt dosyasından done.txt dosyasına taşı.</string>
+    <string name="dropbox_logout_pref_title">Çıkış yap</string>
+    <string name="dropbox_logout_pref_summary">Dropbox\'tan çıkış yapın.</string>
+    <string name="TODOTXTPATH_title">Dosya konumu</string>
+    <string name="TODOTXTPATH_summary">todo.txt dosyasının saklandığı Dropbox klasörü.</string>
+    <string name="TODOTXTPATH_defaultPath">/todo</string>
+    <string name="DROPBOX_settings_header">Dropbox</string>
+    <string name="DROPBOX_settings_summary">Dropbox senkronizasyon ayarları</string>
+    <string name="todotxt_features_settings_header">Özellikler</string>
+    <string name="todotxt_features_settings_summary">Özellikleri etkinleştir veya devre dışı bırak</string>
+    <string name="todotxt_configuration_settings_header">Yapılandırma</string>
+    <string name="todotxt_configuration_settings_summary">Uygulama davranışını yapılandır</string>
+    <string name="todotxt_creation_settings_header">Görev Oluşturma</string>
+    <string name="todotxt_ui_settings_header">Özellikler</string>
+    <string name="todotxt_ui_settings_summary">Neyin gösterildiğini kontrol edin</string>
+    <string name="todotxt_behavior_settings_header">Davranış</string>
+    <string name="todotxt_settings_summary">Uygulamanın tamamı için ayarlar</string>
+    <string name="sort_complete_last_pref_title">Tamamlananı en son göster</string>
+    <string name="sort_complete_last_pref_summary">Tamamlanan görevleri her zaman listenin altında göster</string>
+    <string name="keep_prio_header">Tamamlanan görevlerde önceliği koru</string>
+    <string name="keep_prio_summary">Todo.txt tamamlandığında önceliği kaldırır</string>
+    <string name="prepend_date_pref_title">Yeni görevlere tarih damgası ekle</string>
+    <string name="prepend_date_pref_summary">Oluşturma tarihini otomatik olarak ekle</string>
+    <string name="line_breaks_pref_title">Windows dostu satır sonları</string>
+    <string name="line_breaks_pref_summary">Windows dostu satır sonları kullan</string>
+    <string name="recur_from_original_date_pref_title">Orijinal tarihleri kullanarak görevi tekrarla</string>
+    <string name="recur_from_original_date_pref_summary">Tekrarlayan görevi oluştururken görevdeki orijinal tarihleri artırın. Yeni tarihleri bugüne göre ayarlamak için bu seçeneğin işaretini kaldırın.</string>
+    <string name="swipe_complete_pref_title">Tamamlamak için kaydırın</string>
+    <string name="swipe_complete_pref_summary">Bir görevi tamamlamak için üzerinden kaydırın.</string>
+    <string name="manual_sync_pref_title">Manuel senkronizasyon</string>
+    <string name="manual_sync_pref_summary">Her değişikliği otomatik olarak Dropbox\'a yükleme.</string>
+    <string name="resume_sync_pref_title">Senkronizasyonu devam ettir</string>
+    <string name="resume_sync_pref_summary">Uygulamayı açarken Dropbox ile senkronize et.</string>
+    <string name="font_size_delta_pref_title">Özel yazı tipi boyutu</string>
+    <string name="datebar_relative_size_summary">Göreceli tarih satırı boyutu</string>
+    <string name="font_size_delta_pref_summary">Yazı tipi boyutunu değiştir.</string>
+    <string name="theme_pref_title">Tema</string>
+    <string name="theme_pref_summary">Uygulama temasını değiştir.</string>
+    <string name="share_task_show_edit_pref_title">Paylaşılan görevleri düzenle</string>
+    <string name="share_task_show_edit_summary">Kaydetmeden önce Simpletasked görevlerini düzenle</string>
+    <string name="share_task_append_text_title">Arka plan metni</string>
+    <string name="share_task_append_text_summary">Arka planda eklenen görevlerin sonuna \"%s\" ekle.</string>
+    <string name="local_file_root_title">root:// dizini</string>
+    <string name="local_file_root_summary">%s</string>
+    <string name="menu_capitalize_tasks">Büyük harfe çevir</string>
+    <string name="back_saves_pref_title">Geri butonu</string>
+    <string name="back_saves_summary">Geri butonuna basıldığında açık görev listesini kaydet veya filtreyi uygula.</string>
+    <string name="show_txt_only_pref_title">Sadece TXT dosyalarını göster</string>
+    <string name="show_txt_only_summary">Dosya seçimi iletişim kutusunda sadece .txt dosyalarını göster.</string>
+    <string name="calendar_sync_screen_title">Bildirimler</string>
+    <string name="calendar_sync_screen_summary">Takvim hatırlatmaları (deneysel)</string>
+    <string name="calendar_sync_dues_title">Bitiş tarihi hatırlatmaları</string>
+    <string name="calendar_sync_thresholds_title">Eşik tarihi hatırlatmaları</string>
+    <string name="calendar_reminder_days_title">Öncesindeki gün sayısı</string>
+    <string name="calendar_reminder_days_summary">Hatırlatma ne kadar öncesinden ayarlanacak</string>
+    <string name="calendar_reminder_time_title">Hatırlatma zamanı</string>
+    <string name="calendar_reminder_time_summary">Hatırlatmanın ayarlanacağı günün saati</string>
+    <string name="drawer_fixed_landscape_title">Çekmeceleri yatay modda aç</string>
+    <string name="drawer_fixed_landscape_summary">Çekmeceleri her zaman yatay modda aç.</string>
+    <string name="widget_theme_pref_title">Tema</string>
+    <string name="widget_theme_pref_summary">Widget\'lar için kullanılan temayı değiştirin.</string>
+    <string name="task_text_ellipsizing_pref_title">Görev metnini kısaltma</string>
+    <string name="task_text_ellipsizing_pref_summary">2 satırdan fazla tutarsa, ana penceredeki görev metnini kısalt.</string>
+    <string name="task_text_ellipsizing_none">Yok: Çok uzun görev metni</string>
+    <string name="task_text_ellipsizing_start">Başlangıç: …görev metni</string>
+    <string name="task_text_ellipsizing_middle">Orta: Çok… metni</string>
+    <string name="task_text_ellipsizing_end">Bitiş: Çok uzun…</string>
+    <string name="task_text_ellipsizing_marquee">Kayan yazı: Çok uzun gö</string>
+</resources>
