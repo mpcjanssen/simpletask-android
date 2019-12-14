@@ -376,6 +376,6 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="idle_before_safe_title">Espera antes de guardar cambios</string>
     <string name="idle_before_safe_summary">Tiempo en espera antes de guardar los cambios (en segundos)</string>
     <string name="link_added">Enlace agregado a Simpletask</string>
-    <string name="share_link_failed">Fallo al agregar el enlace: el enlace estaba vacío.</string>
+    <string name="share_link_failed">Fallo al agregar enlace vacío.</string>
     <string name="share_link">Compartir enlace</string>
 </resources>
