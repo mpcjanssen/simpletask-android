@@ -312,6 +312,8 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
     }
 
+
+
     override fun onPause() {
         listView?.let{updateScrollPosition(it)}
         super.onPause()
@@ -1244,6 +1246,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             filter_drawer.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
             filter_drawer.onItemClickListener = DrawerItemClickListener()
 
+
             TodoApplication.config.mainQuery.contexts.asSequence()
                     .map { drawerAdapter.getIndexOf("@$it") }
                     .filter { it != -1 }
@@ -1255,6 +1258,17 @@ class Simpletask : ThemedNoActionBarActivity() {
                     .forEach { filter_drawer.setItemChecked(it, true) }
             filter_drawer.setItemChecked(drawerAdapter.contextHeaderPosition, TodoApplication.config.mainQuery.contextsNot)
             filter_drawer.setItemChecked(drawerAdapter.projectsHeaderPosition, TodoApplication.config.mainQuery.projectsNot)
+            filter_drawer.scrollTo(TodoApplication.config.leftDrawerScrollPosition, 0)
+            filter_drawer.setOnScrollListener(object: AbsListView.OnScrollListener {
+                override fun onScroll(p0: AbsListView?, p1: Int, p2: Int, p3: Int) {
+
+                }
+
+                override fun onScrollStateChanged(p0: AbsListView?, firstVisiblePostion: Int) {
+                    TodoApplication.config.leftDrawerScrollPosition =  firstVisiblePostion;
+                }
+
+            });
             filter_drawer.deferNotifyDataSetChanged()
         }
 
