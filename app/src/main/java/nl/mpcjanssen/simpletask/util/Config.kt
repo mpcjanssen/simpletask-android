@@ -74,6 +74,10 @@ class Config(app: TodoApplication) : Preferences(app) {
 
     var lastScrollOffset by IntPreference(R.string.ui_last_scroll_offset, -1)
 
+    var leftDrawerScrollPosition by IntPreference(R.string.ui_left_drawer_scroll_position, -1)
+
+    var leftDrawerScrollOffset by IntPreference(R.string.ui_left_drawer_scroll_offset, -1)
+
     var luaConfig by StringPreference(R.string.lua_config, "")
 
     var isWordWrap by BooleanPreference(R.string.word_wrap_key, true)
@@ -242,7 +246,7 @@ class Config(app: TodoApplication) : Preferences(app) {
 
     val hasColorDueDates by BooleanPreference(R.string.color_due_date_key, true)
 
-    var cachedContents by StringOrNullPreference(R.string.cached_todo_file)
+    private var cachedContents by StringOrNullPreference(R.string.cached_todo_file)
 
     var todoList: List<Task>?
         get() = cachedContents?.let {
