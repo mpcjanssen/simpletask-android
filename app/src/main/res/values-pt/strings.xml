@@ -366,4 +366,9 @@
     <string name="use_list_and_tags_icons_summary">Usar ícones para trocar a lista de tarefas e etiqueta. Desativar para usar o @ e + nos padrões todo.txt.</string>
     <string name="no_tasks_to_archive">Sem tarefas para arquivar.</string>
     <string name="force_english_title">Forçar o uso do inglês</string>
+    <string name="idle_before_safe_title"></string>
+    <string name="idle_before_safe_summary"></string>
+    <string name="link_added"></string>
+    <string name="share_link_failed"></string>
+    <string name="share_link"></string>
 </resources>
