@@ -1,0 +1,15 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: "Run build"
+    - uses: msfjarvis/setup-android@1.0
+    - with:
+      - entrypoint: ./gradlew
+      - args: dependencies assembleCloudless
