@@ -9,7 +9,7 @@ jobs:
 
     steps:
     - name: "Run build"
-    - uses: msfjarvis/setup-android@1.0
-    - with:
-      - entrypoint: ./gradlew
-      - args: dependencies assembleCloudless
+      uses: msfjarvis/setup-android@1.0
+      with:
+        entrypoint: ./gradlew
+        args: dependencies assembleCloudless
