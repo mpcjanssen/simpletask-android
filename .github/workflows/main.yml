@@ -1,5 +1,5 @@
-- name: "Run test suite"
-  uses: msfjarvis/setup-android@1.0
-  with:
-    entrypoint: ./gradlew
-    args: assembleCloudless
+name: "Run test suite"
+uses: msfjarvis/setup-android@1.0
+with:
+  entrypoint: ./gradlew
+  args: assembleCloudless
