@@ -17,5 +17,5 @@ jobs:
     - name: "Save artifacts"
       uses: actions/upload-artifact@v1
       with:
-        name: cloudless-debug.apk
+        name: cloudless
         path: app/build/outputs/apk/cloudless/debug/app-cloudless-debug.apk
