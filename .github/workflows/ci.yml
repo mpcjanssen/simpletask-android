@@ -13,9 +13,14 @@ jobs:
     - name: "Setup android"
       uses: msfjarvis/setup-android@1.0
     - name: "Run build"  
-      run: ./gradlew assembleCloudless
-    - name: "Save artifacts"
+      run: ./gradlew assembleCloudless assembleNextcloud
+    - name: "Save cloudless artifacts"
       uses: actions/upload-artifact@v1
       with:
         name: cloudless
         path: app/build/outputs/apk/cloudless/debug/app-cloudless-debug.apk
+    - name: "Save nextcloud artifacts"
+      uses: actions/upload-artifact@v1
+      with:
+        name: nextcloud
+        path: app/build/outputs/apk/nextcloud/*/*
