@@ -14,3 +14,8 @@ jobs:
       uses: msfjarvis/setup-android@1.0
     - name: "Run build"  
       run: ./gradlew assembleCloudless
+    - name: "Save artifacts"
+      uses: actions/upload-artifact@v1
+      with:
+        name: cloudless-debug.apk
+        path: app/build/outputs/apk/cloudless/debug/app-cloudless-debug.apk
