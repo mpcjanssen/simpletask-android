@@ -17,10 +17,5 @@ jobs:
     - name: "Save cloudless artifacts"
       uses: actions/upload-artifact@v1
       with:
-        name: cloudless
-        path: app/build/outputs/apk/cloudless/debug/app-cloudless-debug.apk
-    - name: "Save nextcloud artifacts"
-      uses: actions/upload-artifact@v1
-      with:
-        name: nextcloud
-        path: app/build/outputs/apk/nextcloud/*/*
+        name: apks
+        path: app/build/outputs/apk
