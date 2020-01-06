@@ -10,7 +10,7 @@ jobs:
     steps:
     - name: "Checkout"
       uses: actions/checkout@v1
-    - name: "Run build"
+    - name: "Setup android"
       uses: msfjarvis/setup-android@1.0
-      with:
-        run: ./gradlew assembleCloudless
+    - name: "Run build"  
+      run: ./gradlew assembleCloudless
