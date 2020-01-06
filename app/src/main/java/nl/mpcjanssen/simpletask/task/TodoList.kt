@@ -261,7 +261,7 @@ class TodoList(val config: Config) {
                         todoItems.addAll(items.map { Task(it) })
                         // Update cache
                         Log.i(TAG, "Updating cache with remote version ${remoteContents.remoteId}")
-                        config.cachedContents = items.joinToString("\n")
+                        config.todoList = todoItems
                         config.lastSeenRemoteId = remoteContents.remoteId
                         // Backup
                         FileStoreActionQueue.add("Backup") {
@@ -287,12 +287,11 @@ class TodoList(val config: Config) {
         Log.d(TAG, "Save: $todoFileName")
         config.changesPending = true
         broadcastUpdateStateIndicator(TodoApplication.app.localBroadCastManager)
+        config.todoList = todoItems
         val lines = todoItems.map {
             it.inFileFormat(config.useUUIDs)
         }
         // Update cache
-        config.cachedContents = lines.joinToString("\n")
-
         FileStoreActionQueue.add("Backup") {
             if (backup) {
                 Backupper.backup(todoFileName, lines)

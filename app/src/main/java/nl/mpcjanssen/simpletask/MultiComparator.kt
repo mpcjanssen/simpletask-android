@@ -70,9 +70,10 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                        continue@label
                     }
                     comp = {
-                        luaCache[it] ?: Interpreter.onSortCallback(moduleName, it).also { str ->
-                            luaCache[it] = str
-                        }
+                        Interpreter.onSortCallback(moduleName, it)
+//                            luaCache[it] ?: Interpreter.onSortCallback(moduleName, it).also { str ->
+//                            luaCache[it] = str
+//                        }
                     }
                 }
                 else -> {

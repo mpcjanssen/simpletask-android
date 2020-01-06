@@ -242,7 +242,7 @@ class Config(app: TodoApplication) : Preferences(app) {
 
     val hasColorDueDates by BooleanPreference(R.string.color_due_date_key, true)
 
-    var cachedContents by StringOrNullPreference(R.string.cached_todo_file)
+    private var cachedContents by StringOrNullPreference(R.string.cached_todo_file)
 
     var todoList: List<Task>?
         get() = cachedContents?.let {
