@@ -312,6 +312,8 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
     }
 
+
+
     override fun onPause() {
         listView?.let{updateScrollPosition(it)}
         super.onPause()
@@ -1243,6 +1245,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             filter_drawer.adapter = drawerAdapter
             filter_drawer.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
             filter_drawer.onItemClickListener = DrawerItemClickListener()
+
 
             TodoApplication.config.mainQuery.contexts.asSequence()
                     .map { drawerAdapter.getIndexOf("@$it") }
