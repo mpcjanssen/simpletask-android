@@ -1,5 +1,6 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="invalid_context">Ongeldige lijstnaam</string>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="invalid_context">Ongeldige lijstnaam</string>
     <string name="invalid_project">Ongeldige labelnaam</string>
     <string name="app_label">Simpletask</string>
     <string name="added_task">De taak is toegevoegd</string>
@@ -12,7 +13,7 @@
     <string name="main_no_items">Er zijn geen taken om weer te geven.</string>
     <string name="set_preferences">Instellingen</string>
     <string name="preferences">Instellingen</string>
-    <string name="archive">Archief</string>
+    <string name="archive">Archiveer</string>
     <string name="help">Hulp</string>
     <string name="history">Geschiedenis</string>
     <string name="debug_info">Foutopsporingsinformatie</string>
@@ -51,20 +52,16 @@
     <string name="cancel">Annuleren</string>
     <string name="clear_filter">Filter wissen</string>
     <string name="write_failed">Het schrijven van het bestand is mislukt! Uw wijzigingen zijn NIET opgeslagen.</string>
-
     <string name="tasktexthint">\@Bespreek het +Paris-probleem met +Hektor @Troy 
 \nZeg tegen +Hektor dat hij niet zo\'n spelbreker moet zijn @Troy 
 \nVerwijder deze tekst uit het menu @Phone</string>
-
     <string name="filter_name_empty">Geen naam opgegeven; filter wordt niet toegevoegd</string>
     <string name="widget_name_empty">Geen widgetnaam opgegeven; widget wordt niet toegevoegd</string>
     <string name="add_task_help">Voeg een taak toe aan de taaklijst of werk deze bij. Eén taak per regel. <b>Prioriteit</b> begin de regel met (.), bijv. (A) <b>Labels</b> begin met het +-teken, bijv. +Keuken <b>Lijsten</b> begin met het @-teken, bijv. @thuis Een taak mag een oneindig aantal labels bevatten of zich bevinden op meerdere lijsten. </string>
-
     <string name="preference_appearance">Uiterlijk</string>
     <string name="preference_interface">App-uiterlijk</string>
     <string name="preference_widget">Widget</string>
     <string name="preference_other">Overig</string>
-
     <string name="ARCHIVE_settings_header">Archiveren</string>
     <string name="ARCHIVE_settings_summary">Instellingen voor voltooide taken in done.txt</string>
     <string name="auto_archive_pref_title">Automatisch archiveren</string>
@@ -78,15 +75,11 @@
     <string name="TODOTXTPATH_defaultPath">/todo</string>
     <string name="DROPBOX_settings_header">Dropbox</string>
     <string name="DROPBOX_settings_summary">Instellingen voor Dropbox-synchronisatie</string>
-
     <string name="todotxt_features_settings_header">Mogelijkheden</string>
     <string name="todotxt_features_settings_summary">Mogelijkheden inschakelen of uitschakelen</string>
-
     <string name="todotxt_configuration_settings_header">Instellen</string>
     <string name="todotxt_configuration_settings_summary">App-gedrag instellen</string>
-
     <string name="todotxt_creation_settings_header">Taakcreatie</string>
-
     <string name="todotxt_ui_settings_header">Mogelijkheden</string>
     <string name="todotxt_ui_settings_summary">Bepaal wat er moet worden weergegeven</string>
     <string name="todotxt_behavior_settings_header">Gedrag</string>
@@ -113,23 +106,17 @@
     <string name="font_size_delta_pref_summary">Wijzig de lettertypegrootte.</string>
     <string name="theme_pref_title">Thema</string>
     <string name="theme_pref_summary">Wijzig het gebruikte applicatiethema.</string>
-
     <string name="share_task_show_edit_pref_title">Gedeelde taken bewerken</string>
     <string name="share_task_show_edit_summary">Bewerk met Simpletask gedeelde taken alvorens ze op te slaan</string>
-
     <string name="share_task_append_text_title">Achtergrondtekst</string>
     <string name="share_task_append_text_summary">\"%s\" toevoegen aan taken die worden toegevoegd op de achtergrond.</string>
-
     <string name="local_file_root_title">root://-map</string>
     <string name="local_file_root_summary">%s</string>
-
     <string name="menu_capitalize_tasks">Van hoofdletters voorzien</string>
     <string name="back_saves_pref_title">Terugknop</string>
     <string name="back_saves_summary">De geopende takenlijkst opslaan of het filter toepassen na het drukken op de terugknop.</string>
-
     <string name="show_txt_only_pref_title">Alleen TXT-bestanden weergeven</string>
     <string name="show_txt_only_summary">Alleen .txt-bestanden weergeven in het bestandsselectievenster.</string>
-
     <string name="calendar_sync_screen_title">Meldingen</string>
     <string name="calendar_sync_screen_summary">Kalenderherinneringen (experimenteel)</string>
     <string name="calendar_sync_dues_title">Vervaldatum-herinneringen</string>
@@ -138,88 +125,63 @@
     <string name="calendar_reminder_days_summary">Hoe vroeg de herinnering moet worden weergegeven</string>
     <string name="calendar_reminder_time_title">Herinneringstijd</string>
     <string name="calendar_reminder_time_summary">Tijdstip waarop de herinnering moet worden weergegeven</string>
-
     <string name="drawer_fixed_landscape_title">Laden openen in landschapsmodus</string>
     <string name="drawer_fixed_landscape_summary">Laden altijd openen in landschapsmodus.</string>
-
     <string name="widget_theme_pref_title">Thema</string>
     <string name="widget_theme_pref_summary">Wijzig het door de widgets gebruikte thema.</string>
-
     <string name="task_text_ellipsizing_pref_title">Taaktekst-inkorting</string>
     <string name="task_text_ellipsizing_pref_summary">Taaktekst elipseren in het hoofdvenster als er meer dan 2 regels zijn.</string>
-
     <string name="widget_header_transparency_title">Kopdoorzichtigheid</string>
     <string name="widget_background_transparency_title">Achtergronddoorzichtigheid</string>
-
     <string name="widget_extended_pref_title">Datumbalk weergeven</string>
     <string name="widget_extended_pref_summary">Datums weergeven op een aparte regel</string>
-
     <string name="taskview_extended_pref_title">Datums weergeven op een aparte regel</string>
-
     <string name="append_tasks_at_end_title">Bijvoegen bij bestand</string>
     <string name="append_tasks_at_end_summary">Nieuwe taken invoegen aan het eind van het bestand</string>
-
     <string name="color_due_pref_title">Kleur</string>
     <string name="color_due_pref_summary">Verval- en drempeldatums</string>
-
     <string name="show_hidden_title">Verborgen taken weergeven</string>
     <string name="show_hidden_summary">Verborgen (h:1) taken weergeven zodat u ze kunt bewerken. Vink deze instelling uit als u klaar bent met bewerken.</string>
-
     <string name="show_empty_lists_title">Lege koppen weergeven</string>
     <string name="show_empty_lists_summary">Kop weergeven, zelfs als alle taken eronder verborgen zijn.</string>
-
     <string name="split_actionbar_pref_title">Gesplitste actiebalk gebruiken</string>
     <string name="split_actionbar_pref_summary">Gesplitste actiebalk gebruiken zodat de menuknoppen onderaan het scherm worden weergegeven. Schakel dit uit als u meer ruimte voor de takenlijst wilt.</string>
-
     <string name="show_edittext_hint_title">Tips weergeven</string>
     <string name="show_edittext_hint_summary">Tips weergeven tijdens het toevoegen van taken.</string>
-
     <string name="show_complete_checkbox_title">Afvinkvakjes weergeven</string>
     <string name="show_complete_checkbox_summary">Vakje weergeven naast taken om ze af of uit te vinken.</string>
-
     <string name="show_confirmation_dialogs_title">Bevestigingsdialoogvensters</string>
     <string name="show_confirmation_dialogs_summary">Om bevestiging vragen alvorens taken te archiveren of verwijderen</string>
-
     <string name="show_todo_path_title">Toon pad van todo-bestand</string>
     <string name="show_todo_path_summary">Mappen inkorten naar eerste letter</string>
-
     <string name="show_fast_scroll_title">Snel scrollen</string>
     <string name="show_fast_scroll_summary">Gebruik snel scrollen voor langere todo-lijsten</string>
-
     <string name="show_calendarview_title">Kalender gebruiken voor datuminvoer</string>
-
     <string name="sort_case_sensitive_title">Hoofdlettergevoelig sorteren</string>
     <string name="sort_case_sensitive_summary">Hoofdlettergebruik observeren tijdens sorteren van lijsten, labels en opgeslagen filter.</string>
-
     <string name="use_create_as_threshold_title">Creëren betekent drempel</string>
     <string name="use_create_backup_summary">Gebruik de taakcreatiedatum als drempeldatum tijdens het sorteren als er geen drempeldatum is ingesteld</string>
-
     <string name="todotxt_terms_title">Todo.txt-termen gebruiken</string>
     <string name="todotxt_terms_summary">Context en project in plaats van lijst en label</string>
-
     <string name="about_settings_header">Over</string>
     <string name="about_settings_summary">App-informatie</string>
     <string name="visit_website_title">Hulp</string>
     <string name="visit_website_summary">Bezoek de website</string>
     <string name="visit_website_data">https://mpcjanssen.nl/</string>
-
     <string name="visit_tracker_title">Ideeën aandragen of een fout (bug) melden</string>
     <string name="visit_tracker_summary">Draag ideeën of verbeteringen aan of rapporteer een probleem.</string>
     <string name="visit_tracker_data">https://github.com/mpcjanssen/simpletask-android/issues</string>
     <string name="preference_title_debug_info">Foutopsporingslog weergeven</string>
     <string name="preference_summary_debug_info">Bekijk en deel de appversie en -log.</string>
-
     <string name="sync_dialog_title">Handmatige synchronisatie</string>
     <string name="sync_dialog_msg">Wilt u uw todo.txt-bestand uploaden of downloaden?</string>
     <string name="sync_dialog_upload">Uploaden naar Dropbox</string>
     <string name="sync_dialog_download">Downloaden naar apparaat</string>
     <string name="sync_upload_message">Bezig met uploaden van todo.txt…</string>
     <string name="sync_download_message">Bezig met downloaden van todo.txt…</string>
-
     <string name="sync_conflict_dialog_title">Bestandsconflict</string>
     <string name="sync_conflict_dialog_msg">Oeps! Er is al een nieuwere versie van uw todo.txt-bestand aanwezig op Dropbox. Wilt u
 \nuw lokaal aangebrachte wijzigingen uploaden of de Dropbox-versie downloaden?</string>
-
     <string name="first_title_word">Simpletask</string>
     <string name="login_screen_button">Inloggen op Dropbox</string>
     <string name="login_folder_screen_button">Inloggen op Dropbox
@@ -227,7 +189,6 @@
     <string name="login_cloudless">Als u geen Dropbox-account heeft of u wilt Dropbox niet gebruiken om uw takenlijst naar op te slaan, dan kunt u Simpletask Cloudless downloaden uit de Play Store. 
 \n 
 \nhttps://goo.gl/X1C55P</string>
-
     <string name="delete_task_title">%s ta(a)k(en) verwijderen</string>
     <string name="archive_task_title">%s ta(a)k(en) acrhiveren</string>
     <string name="delete_task_message">Dit kan niet ongedaan worden gemaakt. Weet u het zeker?</string>
@@ -235,16 +196,14 @@
  dat u uw volledige taaklijst heeft gedeeld (indien niet verbonden met Dropbox).
 
  Niet-gesynchroniseerde wijzigingen zullen verloren gaan zodra u uitlogt.</string>
-     <string name="dropbox_open">Zorg ervoor dat u alle wijzigingen heeft gesynchroniseerd met Dropbox of
+    <string name="dropbox_open">Zorg ervoor dat u alle wijzigingen heeft gesynchroniseerd met Dropbox of
  dat u uw volledige taaklijst heeft gedeeld (indien niet verbonden met Dropbox).
 
  Niet-gesynchroniseerde wijzigingen zullen verloren gaan zora u een ander bestand opent.</string>
     <string name="delete_task_confirm">Verwijderen</string>
-
     <string name="clone_tags">Automatisch invullen</string>
     <string name="word_wrap">Woordomslag</string>
     <string name="search_hint">Zoeken…</string>
-
     <string name="sort_help">Gebruik slepen-en-neerzetten om de sorteervolgorde te wijzigen. Druk op de items om de sorteerrichting te wijzigen.</string>
     <string name="file_order">Bestandsvolgorde (ongesorteerd)</string>
     <string name="alphabetical">Op alfabet</string>
@@ -259,7 +218,6 @@
     <string name="by_due_date">Vervaldatum</string>
     <string name="by_threshold_date">Drempeldatum</string>
     <string name="by_completion_date">Voltooidatum</string>
-	
     <string name="filter_select_all">Alles selecteren</string>
     <string name="filter_clear_all">Filter wissen</string>
     <string name="filter_invert">Filter omkeren</string>
@@ -277,15 +235,12 @@
     <string name="filter_show_lists">Lijsten weergeven in taken</string>
     <string name="filter_show_tags">Labels weergeven in taken</string>
     <string name="filter_show_create_date">Ouderdom van taken weergeven</string>
-
     <string name="filter_show_completed_short">Voltooid</string>
     <string name="filter_show_future_short">Toekomst</string>
     <string name="filter_show_prompt">Weergeven</string>
     <string name="filter_saved_prompt">Opgeslagen filters</string>
-
     <string name="task_select_parts">Taakonderdelen selecteren</string>
     <string name="task_show_all">Alles</string>
-
     <string name="title_filter_applied">Gefilterd op:</string>
     <string name="add_task_help_btn">Hulp</string>
     <string name="priority_prompt">Prioriteit</string>
@@ -295,16 +250,12 @@
     <string name="project_prompt_todotxt">Project</string>
     <string name="context_prompt_todotxt">Context</string>
     <string name="priority_format">(prio)</string>
-
     <string name="separator">Scheidingsteken</string>
-
     <string name="shortcut_addtask_name">Taak toevoegen</string>
     <string name="share_addtask_name">Simpletask het</string>
-
     <string name="none">geen</string>
     <string name="keep">behouden</string>
     <string name="all">alles</string>
-
     <string name="dates_days_ago">%d dagen geleden</string>
     <string name="dates_one_day_ago">gisteren</string>
     <string name="dates_years_ago">%d jaar geleden</string>
@@ -313,15 +264,12 @@
     <string name="dates_one_month_ago">vorige maand</string>
     <string name="dates_weeks_ago">%d weken geleden</string>
     <string name="dates_one_week_ago">vorige week</string>
-
     <string name="dates_one_week">een week</string>
     <string name="dates_two_weeks">twee weken</string>
     <string name="dates_one_month">een maand</string>
-
     <string name="dates_today">vandaag</string>
     <string name="date_pick">datum kiezen</string>
     <string name="dates_tomorrow">morgen</string>
-
     <string name="title_activity_filter">Filter</string>
     <string name="selected">geselecteerd</string>
     <string name="no_context">Postvak IN</string>
@@ -334,50 +282,38 @@
     <string name="calendar_title">Simpletask-herinnering</string>
     <string name="share_title">Simpletask-taak</string>
     <string name="version_copied">Versie-informatie is gekopieerd naar het klembord</string>
-
     <string name="task_added">Taak is toegevoegd aan Simpletask</string>
     <string name="default_sort">Standaard sortering</string>
     <string name="pull_to_refresh_refreshing_label">Bezig met synchroniseren met Dropbox…</string>
     <string name="input_new">Nieuwe invoer</string>
     <string name="no_filter">Geen filter</string>
     <string name="dropbox">Dropbox</string>
-
     <string name="save_filter">Huidig filter opslaan</string>
     <string name="save_filter_message">Voer een naam in voor het huidige filter; deze wordt weergegeven in de opgeslagen filters-lade.</string>
-
     <string name="filter_import_export">Filters importeren/exporteren</string>
-
     <string name="donate_title">Doneren</string>
     <string name="donate_summary">U gratis aangeboden en bovendien vrije software. Veel hard werk is er in gestoken, en omdat u de keuze heeft, wordt elke schenking sterk gewaardeerd.</string>
     <string name="donated_summary">Bedankt voor uw donatie.</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Andersom sorteren</string>
-
     <string name="calendar_disp_name">Simpletask-herinneringen</string>
     <string name="calendar_sync_desc_due">Vervaldatum-herinnering; automatisch gegenereerd door Simpletask</string>
     <string name="calendar_sync_desc_thre">Drempeldatum-herinnering; automatisch gegenereerd door Simpletask</string>
     <string name="calendar_exists_warning">Waarschuwing: er bestaat al een kalender met deze naam. Bezig met overschrijven…</string>
     <string name="calendar_write_error">Fout: het schrijven van de kalender is mislukt</string>
-
     <string name="click_to_copy">Druk om te kopiëren naar het klembord.</string>
-
     <string name="share_history">Bekijk en deel de interne todo.txt-geschiedenisdatabase voor herstel.</string>
     <string name="share_history_title">Taakgeschiedenis</string>
-
     <string name="hello_world">Hallo wereld!</string>
     <string name="action_settings">Instellingen</string>
-
     <string name="help_locale">nl</string>
-
     <string name="task_action">Actie</string>
-
     <string name="name">Naam</string>
     <string name="date">Datum</string>
     <string name="back_clears_filter_title">\"Terug\" wist filter</string>
     <string name="back_clears_filter_summary">Terugknop wist het filter alvorens de app af te sluiten.</string>
     <string name="experimental_title">Experimenteel</string>
     <string name="experimental_summary">Experimentele mogelijkheden inschakelen</string>
-
     <string name="lua_error">Lua-fout</string>
     <string name="lua_config_screen">Lua instellen</string>
     <string name="lua_run">Uitvoeren</string>
@@ -386,21 +322,17 @@
     <string name="lua_config_import">Importeren</string>
     <string name="lua_config_share">Delen</string>
     <string name="lua_open_config">Lua-instellingen</string>
-<string name="keep_selection_title">Selectie behouden</string>
+    <string name="keep_selection_title">Selectie behouden</string>
     <string name="keep_selection_summary">Taakselectie behouden na wijzigingen.</string>
-
-
     <string name="task_text_ellipsizing_none">Geen: Hele lange taaktekst</string>
     <string name="task_text_ellipsizing_start">Begin: …taaktekst</string>
     <string name="task_text_ellipsizing_middle">Midden: Erg… tekst</string>
     <string name="task_text_ellipsizing_end">Einde: Hele lange…</string>
     <string name="task_text_ellipsizing_marquee">Selectiekader: Hele lange ta</string>
-
     <string name="filter_tab_header_prio">Prio</string>
     <string name="filter_tab_header_other">Overig</string>
     <string name="filter_tab_header_sort">Sorteren</string>
     <string name="filter_tab_header_script">Script</string>
-
     <string name="script_tab_script_from_file">Script uit bestand</string>
     <string name="script_tab_use_script">Script gebruiken</string>
     <string name="script_tab_test">Test</string>
@@ -408,21 +340,17 @@
     <string name="script_tab_script">Script</string>
     <string name="script_tab_true_task_shown">Weergegeven</string>
     <string name="script_tab_false_task_not_shown">Niet weergegeven</string>
-
     <string name="action_pop_up_call">Bellen:</string>
     <string name="action_pop_up_sms">SMS:</string>
-
     <string name="quick_filter_tag_header_inverted">Omgekeerd</string>
     <string name="saved_filters_exported">Filters zijn geëxporteerd</string>
     <string name="toast_lua_config_imported">Lua-configuratie is geïmporteerd</string>
-
     <string name="saved_filters_imported">Filters zijn geïmporteerd</string>
     <string name="cancel_changes">Wijzigingen zullen verloren gaan.</string>
     <string name="by_lua">Lua Script</string>
-
     <string name="use_uuid_title">Wijs een UUID toe aan elke taak</string>
     <string name="nav_drawer_hint">Het huidig filter opslaan
 \n met de Save knop</string>
-<string name="invalid_certificate_msg">Ongeldig server certificaat. Doorgaan?</string>
-    <string name="invalid_certificate_title">Ongeldig cert.</string>
+    <string name="invalid_certificate_msg">Ongeldig server certificaat. Doorgaan?</string>
+    <string name="invalid_certificate_title">Ongeldig certificaat.</string>
 </resources>
