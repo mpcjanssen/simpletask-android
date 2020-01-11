@@ -2172,9 +2172,9 @@ public class DragSortListView extends ListView {
         return true;
     }
 
-    private void invalidateFloatView() {
-        boolean mFloatViewInvalidated = true;
-    }
+    private static void invalidateFloatView() {
+		boolean mFloatViewInvalidated = true;
+	}
 
     /**
      * Start a drag of item at <code>position</code> using the
