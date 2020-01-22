@@ -14,6 +14,10 @@ jobs:
           decoded-file: app/src/dropbox/res/values/dropbox.xml 
           encoded-file: app/src/dropbox/res/values/dropbox.xml.enc
           encryption-key: $DSSECRET
+      - common-tasks/decrypt-env:
+          decoded-file: app/src/dropbox/res/values/dropbox-folder.xml 
+          encoded-file: app/src/dropbox/res/values/dropbox-folder.xml.enc
+          encryption-key: $DSSECRET
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
 #      - run:
