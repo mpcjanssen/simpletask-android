@@ -264,7 +264,7 @@ class TodoList(val config: Config) {
                         config.todoList = todoItems
                         config.lastSeenRemoteId = remoteContents.remoteId
                         // Backup
-                        FileStoreActionQueue.add("Backup") {
+                        BackupQueue.add("Backup") {
                             Backupper.backup(filename, items)
                         }
                         notifyTasklistChanged(filename, false, true)
@@ -292,7 +292,7 @@ class TodoList(val config: Config) {
             it.inFileFormat(config.useUUIDs)
         }
         // Update cache
-        FileStoreActionQueue.add("Backup") {
+        BackupQueue.add("Backup") {
             if (backup) {
                 Backupper.backup(todoFileName, lines)
             }
