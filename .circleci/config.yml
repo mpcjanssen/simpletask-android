@@ -1,6 +1,6 @@
-version: 2
+version: 2.1
 orbs:
-  common-pipeline-tasks: grainger-di/common-pipeline-tasks@0.0.3
+  common-tasks: grainger-di/common-pipeline-tasks@0.0.3
 jobs:
   build:
     working_directory: ~/code
