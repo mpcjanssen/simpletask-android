@@ -32,13 +32,13 @@ jobs:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
           name: Build nextcloud version
-          command: ./gradlew assembleNextcloud
+          command: ./gradlew assembleNextcloudDebug
       - run:
           name: Build dropbox version
-          command: ./gradlew assembleDropbox
+          command: ./gradlew assembleDropboxDebug
       - run:
           name: Build cloudless version
-          command: ./gradlew assembleCloudless
+          command: ./gradlew assembleCloudlessDebug
       - run:
           name: Run tests
           command: ./gradlew test
