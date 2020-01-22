@@ -31,8 +31,17 @@ jobs:
             - ~/.gradle
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
-          name: Run build and tests
-          command: ./gradlew assemble test
+          name: Build nextcloud version
+          command: ./gradlew assembleNextcloud
+      - run:
+          name: Build dropbox version
+          command: ./gradlew assembleDropbox
+      - run:
+          name: Build cloudless version
+          command: ./gradlew assembleCloudless
+      - run:
+          name: Run tests
+          command: ./gradlew test
       - store_artifacts: # for display in Artifacts: https://circleci.com/docs/2.0/artifacts/ 
           path: app/build/outputs
           destination: outputs
