@@ -233,6 +233,7 @@ class TodoApplication : MultiDexApplication() {
 
 object Backupper : BackupInterface {
     override fun backup(name: String, lines: List<String>) {
+        val start = SystemClock.elapsedRealtime()
         val now = Date().time
         val fileToBackup = TodoFile(lines.joinToString ("\n"), name, now)
         val dao =  TodoApplication.db.todoFileDao()
@@ -240,5 +241,7 @@ object Backupper : BackupInterface {
             dao.update(fileToBackup)
         }
         dao.removeBefore( now - 2 * 24 * 60 * 60 * 1000)
+        val end = SystemClock.elapsedRealtime()
+        Log.d(TAG, "Backing up of tasks took ${end - start} ms")
     }
 }
