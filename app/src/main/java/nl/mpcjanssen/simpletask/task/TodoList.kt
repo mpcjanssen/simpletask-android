@@ -241,45 +241,50 @@ class TodoList(val config: Config) {
             save(FileStore, filename, true, config.eol)
         } else {
             FileStoreActionQueue.add("Reload") {
-                broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
-                val needSync = try {
-                    val newerVersion = FileStore.getRemoteVersion(config.todoFileName)
-                    Log.i(TAG,"Remote version: $newerVersion (current local ${config.lastSeenRemoteId})")
-                    newerVersion != config.lastSeenRemoteId
-                } catch (e: Throwable) {
-                    Log.e(TAG, "Can't determine remote file version", e)
-                    false
-                }
-                if (needSync) {
-                    Log.i(TAG, "Remote version is different, sync")
-                    try {
-                        val remoteContents = FileStore.loadTasksFromFile(filename)
-                        val items = remoteContents.contents
-
-                        Log.d(TAG, "Fill todolist")
-                        todoItems.clear()
-                        todoItems.addAll(items.map { Task(it) })
-                        // Update cache
-                        Log.i(TAG, "Updating cache with remote version ${remoteContents.remoteId}")
-                        config.todoList = todoItems
-                        config.lastSeenRemoteId = remoteContents.remoteId
-                        // Backup
-                        BackupQueue.add("Backup") {
-                            Backupper.backup(filename, items)
-                        }
-                        notifyTasklistChanged(filename, false, true)
-                    } catch (e: Exception) {
-                        Log.e(TAG, "TodoList load failed: $filename", e)
-                        showToastShort(TodoApplication.app, "Loading of todo file failed")
-                    }
-
-                    Log.i(TAG, "TodoList loaded from filestore")
-                } else {
-                    Log.i(TAG, "Remote version is same, load from cache")
-                }
-                broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
+                reloadaction(filename)
             }
         }
+    }
+
+    @Synchronized
+    private fun reloadaction(filename: String) {
+        broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
+        val needSync = try {
+            val newerVersion = FileStore.getRemoteVersion(config.todoFileName)
+            Log.i(TAG, "Remote version: $newerVersion (current local ${config.lastSeenRemoteId})")
+            newerVersion != config.lastSeenRemoteId
+        } catch (e: Throwable) {
+            Log.e(TAG, "Can't determine remote file version", e)
+            false
+        }
+        if (needSync) {
+            Log.i(TAG, "Remote version is different, sync")
+            try {
+                val remoteContents = FileStore.loadTasksFromFile(filename)
+                val items = remoteContents.contents
+
+                Log.d(TAG, "Fill todolist with ${items.size} items")
+                todoItems.clear()
+                todoItems.addAll(items.map { Task(it) })
+                // Update cache
+                Log.i(TAG, "Updating cache with remote version ${remoteContents.remoteId}")
+                config.todoList = todoItems
+                config.lastSeenRemoteId = remoteContents.remoteId
+                // Backup
+                FileStoreActionQueue.add("Backup") {
+                    Backupper.backup(filename, items)
+                }
+                notifyTasklistChanged(filename, false, true)
+            } catch (e: Exception) {
+                Log.e(TAG, "TodoList load failed: $filename", e)
+                showToastShort(TodoApplication.app, "Loading of todo file failed")
+            }
+
+            Log.i(TAG, "TodoList loaded from filestore")
+        } else {
+            Log.i(TAG, "Remote version is same, load from cache")
+        }
+        broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
     }
 
     @Synchronized
@@ -292,7 +297,7 @@ class TodoList(val config: Config) {
             it.inFileFormat(config.useUUIDs)
         }
         // Update cache
-        BackupQueue.add("Backup") {
+        FileStoreActionQueue.add("Backup") {
             if (backup) {
                 Backupper.backup(todoFileName, lines)
             }
@@ -421,4 +426,3 @@ class TodoList(val config: Config) {
         pendingEdits.clear()
     }
 }
-
