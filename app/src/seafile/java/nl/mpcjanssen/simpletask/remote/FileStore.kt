@@ -55,9 +55,7 @@ object FileStore : IFileStore {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getDefaultPath(): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun getDefaultPath(): String = "todo/todo.txt"
 
     override fun loadFileList(path: String, txtOnly: Boolean): List<FileEntry> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

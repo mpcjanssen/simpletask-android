@@ -1,5 +1,12 @@
 ﻿# Changelog
 
+## 10.4.0
+
+### Fixed
+
+- Ensure only one load operation of the list occurs at the same time. Fixes #1027.
+- Remove Lua caching. Fixes #1029. 
+
 ## 10.3.3
 
 ### Fixed
