@@ -1,0 +1,26 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: "Checkout"
+      uses: actions/checkout@v1
+    - name: "Setup android"
+      uses: msfjarvis/setup-android@1.0
+    - name: "Run build"  
+      run: ./gradlew assembleCloudless assembleNextcloud
+    - name: "Save output artifacts"
+      uses: actions/upload-artifact@v1
+      with:
+        name: apks
+        path: app/build/outputs/apk
+    - name: "Save report artifacts"
+      uses: actions/upload-artifact@v1
+      with:
+        name: reports
+        path: app/build/reports

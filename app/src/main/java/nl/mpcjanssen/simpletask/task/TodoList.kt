@@ -426,4 +426,3 @@ class TodoList(val config: Config) {
         pendingEdits.clear()
     }
 }
-

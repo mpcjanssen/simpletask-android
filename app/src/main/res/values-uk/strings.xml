@@ -1,5 +1,6 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="invalid_context">Невірна назва списку</string>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="invalid_context">Невірна назва списку</string>
     <string name="invalid_project">Невірна назва мітки</string>
     <string name="app_label">Simpletask</string>
     <string name="added_task">Додана задача</string>
@@ -19,8 +20,8 @@
     <string name="log">Журнал</string>
     <string name="next">Наступне</string>
     <string name="prev">Попереднє</string>
-    <string name="open_file">Відкрити todo-файл</string>
-    <string name="sync">Оновити</string>
+    <string name="open_file">Відкрити файл питального листа</string>
+    <string name="sync">Синхронізувати</string>
     <string name="changelist">Обрати список</string>
     <string name="search">Пошук</string>
     <string name="add">Додати</string>
@@ -50,11 +51,9 @@
     <string name="ok">Гаразд</string>
     <string name="cancel">Скасувати</string>
     <string name="clear_filter">Очистити фільтр</string>
-    <string name="write_failed">Помилка запису файлу! Ваші зміни НЕ ЗБЕРЕЖЕНО.</string>
-
+    <string name="write_failed">Помилка запису файлу. Ваші зміни НЕ ЗБЕРЕЖЕНО.</string>
     <string name="tasktexthint">\@Написати листа +Султан
 \nПереглянути налаштування +Simpletask щоби це прибрати</string>
-
     <string name="filter_name_empty">Ім\'я не вказано, фільтр не додано</string>
     <string name="widget_name_empty">Ім\'я віджету не вказано, тому його не додано</string>
     <string name="add_task_help"><b>Priority</b>
@@ -69,12 +68,10 @@
 
  A task can include any number of tags or be on multiple lists.
  </string>
-
     <string name="preference_appearance">Зовнішній вигляд</string>
     <string name="preference_interface">Інтерфейс</string>
     <string name="preference_widget">Віджет</string>
     <string name="preference_other">Інше</string>
-
     <string name="ARCHIVE_settings_header">Архівування</string>
     <string name="ARCHIVE_settings_summary">"Налаштування архівування виконаних задач в  done.txt"</string>
     <string name="auto_archive_pref_title">Автоархівування</string>
@@ -88,15 +85,11 @@
     <string name="TODOTXTPATH_defaultPath">/todo</string>
     <string name="DROPBOX_settings_header">Dropbox</string>
     <string name="DROPBOX_settings_summary">Налаштування синхронізації через Dropbox</string>
-
     <string name="todotxt_features_settings_header">Можливості</string>
     <string name="todotxt_features_settings_summary">Ввімкнути чи вимкнути можливості</string>
-
     <string name="todotxt_configuration_settings_header">Налаштування</string>
     <string name="todotxt_configuration_settings_summary">Налаштувати поведінку додатку</string>
-
     <string name="todotxt_creation_settings_header">Створення задачі</string>
-
     <string name="todotxt_ui_settings_header">Можливості</string>
     <string name="todotxt_ui_settings_summary">Визначення того, що відображатиметься</string>
     <string name="todotxt_behavior_settings_header">Поведінка</string>
@@ -123,21 +116,16 @@
     <string name="font_size_delta_pref_summary">Змінити розмір шрифту.</string>
     <string name="theme_pref_title">Оформлення</string>
     <string name="theme_pref_summary">Змінити оформлення додатку.</string>
-
     <string name="share_task_show_edit_pref_title">Правити надані завдання</string>
     <string name="share_task_show_edit_summary">Правити надіслані до Simpletask завдання перед їх збереженням</string>
-
     <string name="share_task_append_text_title">Текст до доданих у тлі завдань</string>
     <string name="share_task_append_text_summary">Дописувати \"%s\" до завдань доданих на тлі.</string>
-
     <string name="local_file_root_title">Коренева тека</string>
     <string name="menu_capitalize_tasks">З великої літери</string>
     <string name="back_saves_pref_title">Кнопка Назад</string>
     <string name="back_saves_summary">Зберігати введене завдання або застосовувати фільтр при натисканні \"Назад\".</string>
-
     <string name="show_txt_only_pref_title">Показувати лише текстові файли</string>
     <string name="show_txt_only_summary">Показувати лише файли з розширенням .txt при виборі файлу.</string>
-
     <string name="calendar_sync_screen_title">Повідомлення</string>
     <string name="calendar_sync_screen_summary">Нагадування в календарі (експериментально)</string>
     <string name="calendar_sync_dues_title">Нагадування про строки</string>
@@ -146,35 +134,25 @@
     <string name="calendar_reminder_days_summary">Як рано встановлювати нагадування</string>
     <string name="calendar_reminder_time_title">Час нагадування</string>
     <string name="calendar_reminder_time_summary">Час доби для встановлення нагадування</string>
-
     <string name="drawer_fixed_landscape_title">Відкривати шухляди в альбомній орієнтації</string>
     <string name="drawer_fixed_landscape_summary">Завжди показувати шухляди в альбомній орієнтації.</string>
-
     <string name="widget_theme_pref_title">Оформлення</string>
     <string name="widget_theme_pref_summary">Змінити оформлення віджетів.</string>
-
     <string name="task_text_ellipsizing_pref_title">Скорочення тексту</string>
     <string name="task_text_ellipsizing_pref_summary">Скорочувати текст завдання в основному вікні якщо він більший від 2-х рядків.</string>
-
     <string name="widget_header_transparency_title">Прозорість заголовку</string>
     <string name="widget_background_transparency_title">Прозорість тла</string>
-
     <string name="widget_extended_pref_title">Показувати рядок дати</string>
     <string name="widget_extended_pref_summary">Показувати дати на окремому рядку</string>
-
     <string name="taskview_extended_pref_title">Показувати дати на окремому рядку</string>
-
     <string name="append_tasks_at_end_title">Дописувати до файлу</string>
     <string name="append_tasks_at_end_summary">Додавати нові завдання у кінець файлу</string>
-
     <string name="color_due_pref_title">Колір</string>
     <string name="color_due_pref_summary">Строки та порогові дати</string>
-
     <string name="show_hidden_title">Показувати приховані задачі</string>
     <string name="show_hidden_summary">"Показувати приховані (h:1)  завдання для їх правки. Після редагування знову приберіть цю відмітку."</string>
-
     <string name="show_empty_lists_title">Показувати порожні заголовки</string>
     <string name="show_empty_lists_summary">Показувати заголовок навіть якщо всі завдання під ним приховані.</string>
-
     <string name="split_actionbar_pref_title">Використовувати розділений рядок дій</string>
-    </resources>
+    <string name="cancel_changes">Зміни були втрачені.</string>
+</resources>

@@ -1,0 +1,50 @@
+version: 2.1
+orbs:
+  common-tasks: grainger-di/common-pipeline-tasks@0.0.3
+jobs:
+  build:
+    working_directory: ~/code
+    docker:
+      - image: circleci/android:api-28
+    environment:
+      JVM_OPTS: -Xmx8200m
+    steps:
+      - checkout
+      - common-tasks/decrypt-env:
+          decoded-file: app/src/dropbox/res/values/dropbox.xml 
+          encoded-file: secrets/dropbox.xml.enc
+          encryption-key: $DSSECRET
+      - common-tasks/decrypt-env:
+          decoded-file: app/src/dropbox/res/values/dropbox-folder.xml 
+          encoded-file: secrets/dropbox-folder.xml.enc
+          encryption-key: $DSSECRET
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+#      - run:
+#         name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
+#         command: sudo chmod +x ./gradlew
+      - run:
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Build nextcloud version
+          command: ./gradlew assembleNextcloudDebug
+      - run:
+          name: Build dropbox version
+          command: ./gradlew assembleDropboxDebug
+      - run:
+          name: Build cloudless version
+          command: ./gradlew assembleCloudlessDebug
+      - run:
+          name: Run tests
+          command: ./gradlew testCloudlessDebug
+      - store_artifacts: # for display in Artifacts: https://circleci.com/docs/2.0/artifacts/ 
+          path: app/build/outputs
+          destination: outputs
+      - store_test_results: # for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+          path: app/build/test-results
+      # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples

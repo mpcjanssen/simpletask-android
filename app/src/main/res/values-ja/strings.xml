@@ -353,4 +353,9 @@
     <string name="use_list_and_tags_icons_title">アイコンを使用する</string>
     <string name="use_list_and_tags_icons_summary">タスクの一覧とタグを変更するためにアイコンを使用します。 todo.txt @ および + 条件の使用を不可にします。</string>
     <string name="force_english_title">強制的に英語を使用する</string>
+    <string name="idle_before_safe_title">保存するまでの時間</string>
+    <string name="idle_before_safe_summary">変更が保存されるまでのアイドル時間 (秒)</string>
+    <string name="link_added">Simpletask にリンクが追加されました</string>
+    <string name="share_link_failed">空のリンクは追加できません。</string>
+    <string name="share_link">リンクの共有</string>
 </resources>
