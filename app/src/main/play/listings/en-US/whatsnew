@@ -1,5 +1,6 @@
-## 10.3.3
+## 10.4.0
 
 ### Fixed
 
-- Change theme for background activities. Should fix #1025.
+- Ensure only one load operation of the list occurs at the same time. Fixes #1027.
+- Remove Lua caching. Fixes #1029. 
