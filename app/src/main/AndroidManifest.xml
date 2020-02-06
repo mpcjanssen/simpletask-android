@@ -99,7 +99,7 @@ You should have received a copy of the GNU General Public License along with Sim
             tools:ignore="MissingRegistered"
             android:name=".AddTaskBackground"
             android:enabled="true"
-            android:theme="@android:style/Theme.NoDisplay"
+            android:theme="@android:style/Theme.Translucent"
             android:exported="true"
             >
             <intent-filter>
@@ -117,7 +117,7 @@ You should have received a copy of the GNU General Public License along with Sim
                 android:name=".AddLinkBackground"
                 android:enabled="true"
                 android:label="@string/share_link"
-                android:theme="@android:style/Theme.NoDisplay"
+                android:theme="@android:style/Theme.Translucent"
                 android:exported="true"
         >
             <intent-filter>

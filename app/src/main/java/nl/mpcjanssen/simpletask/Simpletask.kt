@@ -35,6 +35,7 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
+import androidx.core.widget.NestedScrollView
 import hirondelle.date4j.DateTime
 import kotlinx.android.synthetic.main.main.*
 import nl.mpcjanssen.simpletask.Constants.BROWSE_FOR_DONE_FILE
@@ -69,7 +70,6 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private var m_drawerToggle: ActionBarDrawerToggle? = null
     private var m_savedInstanceState: Bundle? = null
-    private var m_scrollPosition = 0
 
     private val uiHandler = UiHandler()
 
@@ -284,6 +284,8 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
     }
 
+
+
     override fun onPause() {
         listView?.let{updateScrollPosition(it)}
         super.onPause()
@@ -294,7 +296,6 @@ class Simpletask : ThemedNoActionBarActivity() {
             val position = manager.findFirstVisibleItemPosition()
             val firstItemView = manager.findViewByPosition(position)
             val offset = firstItemView?.top ?: 0
-            Log.i(TAG, "Saving scroll offset $position, $offset")
             TodoApplication.config.lastScrollPosition = position
             TodoApplication.config.lastScrollOffset = offset
         }
@@ -424,8 +425,6 @@ class Simpletask : ThemedNoActionBarActivity() {
             TodoApplication.config.mainQuery
         }
 
-
-        showListViewProgress(true)
         if (currentIntent.hasExtra(Constants.INTENT_SELECTED_TASK_LINE)) {
             Log.d(TAG, "Selection from intent")
             val position = currentIntent.getIntExtra(Constants.INTENT_SELECTED_TASK_LINE, -1)
@@ -447,7 +446,11 @@ class Simpletask : ThemedNoActionBarActivity() {
         listView?.adapter = this.taskAdapter
 
         taskAdapter.setFilteredTasks(this, query)
-        listView?.setOnScrollChangeListener { view, i, i2, i3, i4 -> updateScrollPosition(view as RecyclerView) }
+        val listener = ViewTreeObserver.OnScrollChangedListener {
+            listView?.let { updateScrollPosition(it) }
+        }
+        listView?.viewTreeObserver?.addOnScrollChangedListener(listener)
+
 
         fab.setOnClickListener { startAddTaskActivity() }
     }
@@ -1224,6 +1227,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             filter_drawer.adapter = drawerAdapter
             filter_drawer.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
             filter_drawer.onItemClickListener = DrawerItemClickListener()
+
 
             TodoApplication.config.mainQuery.contexts.asSequence()
                     .map { drawerAdapter.getIndexOf("@$it") }

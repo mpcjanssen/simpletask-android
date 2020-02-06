@@ -7,13 +7,13 @@
                                      robobunny:min="1"
                                      robobunny:unitsLeft="s"
                                      robobunny:unitsRight=""
-            android:defaultValue="3"
-            android:key="@string/idle_before_save"
 
-            android:summary="@string/idle_before_safe_summary"
-            android:title="@string/idle_before_safe_title"
+                                     android:defaultValue="3"
+                                     android:key="@string/idle_before_save"
+
+                                     android:summary="@string/idle_before_safe_summary"
+                                     android:title="@string/idle_before_safe_title"
     />
-
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="@string/ui_show_confirmation_dialogs"
