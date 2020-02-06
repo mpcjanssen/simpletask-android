@@ -147,7 +147,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="local_file_root"                translatable="false">local_file_root</string>
     <string name="cached_todo_file"                translatable="false">cached_todo_file</string>
     <string name="ui_show_confirmation_dialogs"   translatable="false">ui_show_confirmation_dialogs</string>
-    <string name="idle_before_save"               translatable="false">idle_before_save</string>
     <string name="widget_header_transparency"     translatable="false">widget_header_transparency</string>
     <string name="widget_background_transparency" translatable="false">widget_background_transparency</string>
     <string name="last_open_filter_tab"           translatable="false">last_open_filter_tab</string>
@@ -179,8 +178,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="ui_show_calendarview"           translatable="false">ui_show_calendarview</string>
     <string name="ui_last_scroll_position"        translatable="false">ui_last_scroll_position</string>
     <string name="ui_last_scroll_offset"          translatable="false">ui_last_scroll_offset</string>
-    <string name="changes_pending" translatable="false">changes_pending</string>
-    <string name="use_list_and_tags_icons" translatable="false">use_list_and_tags_icons</string>
-    <string name="query_store" translatable="false">query_store</string>
-    <string name="force_english" translatable="false">force_english</string>
+    <string name="changes_pending"                translatable="false">changes_pending</string>
+    <string name="use_list_and_tags_icons"        translatable="false">use_list_and_tags_icons</string>
+    <string name="query_store"                    translatable="false">query_store</string>
+    <string name="force_english"                  translatable="false">force_english</string>
+    <string name="idle_before_save"               translatable="false">idle_before_save</string>
 </resources>

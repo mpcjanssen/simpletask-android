@@ -51,8 +51,6 @@ class Config(app: TodoApplication) : Preferences(app) {
 
     val reminderTime by IntPreference(R.string.calendar_reminder_time, 720)
 
-    val idleBeforeSaveSeconds by IntPreference(R.string.idle_before_save, 3)
-
     val listTerm: String
         get() {
             if (useTodoTxtTerms) {
@@ -233,7 +231,7 @@ class Config(app: TodoApplication) : Preferences(app) {
 
     val hasColorDueDates by BooleanPreference(R.string.color_due_date_key, true)
 
-    var cachedContents by StringOrNullPreference(R.string.cached_todo_file)
+    private var cachedContents by StringOrNullPreference(R.string.cached_todo_file)
 
     var todoList: List<Task>?
         get() = cachedContents?.let {
@@ -311,5 +309,7 @@ class Config(app: TodoApplication) : Preferences(app) {
             value.saveInPrefs(prefs)
             TodoApplication.config.lastScrollPosition = -1
         }
+
+    val idleBeforeSaveSeconds by IntPreference(R.string.idle_before_save, 5)
 
 }

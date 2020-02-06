@@ -106,6 +106,7 @@ class AddTaskBackground : Activity() {
 
     private fun addBackgroundTask(sharedText: String, appendText: String) {
         val todoList = TodoApplication.todoList
+        todoList.reload("Background add")
         Log.d(TAG, "Adding background tasks to todolist $todoList")
 
         val rawLines = sharedText.split("\r\n|\r|\n".toRegex()).filterNot(String::isBlank)

@@ -1,5 +1,46 @@
 ﻿# Changelog
 
+## 10.4.0
+
+### Fixed
+
+- Ensure only one load operation of the list occurs at the same time. Fixes #1027.
+- Remove Lua caching. Fixes #1029. 
+
+## 10.3.3
+
+### Fixed
+
+- Change theme for background activities. Should fix #1025.
+
+## 10.3.2
+
+### Added
+
+- Add support for automatic task UUIDs for #806.
+- Add dedicated "Share link" target to be able to share a content link to text files. Workaround for #1013.
+- Schedule save with a countdown timer to batch multiple changes.
+- Reload task list before adding background task.
+
+### Fixed
+
+- Also use create date to determine if tasks is in future when `create is threshold` is enabled.
+- Run SSL cert dialog on UI thread. Fixes #971.
+- Improve vertical space utilization on Edit screen, fixes #990.
+- Don't duplicate tasks in pending edits. Fixes #993.
+- Allow selecting default storage location from file picker root, fixes #1012.
+- Fix out of index exception in Calendar Sync.
+- Properly restore scroll position. Fixes #941.
+- Set proper User Agent for Nextcloud. Fixes #973.
+
+###  Changed
+
+- Several translation updates.
+
+## 10.3.1
+
+Nextcloud only emergency release
+
 ## 10.3.0
 
 ### Fixed
