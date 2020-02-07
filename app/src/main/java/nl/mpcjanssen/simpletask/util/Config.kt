@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import me.smichel.android.KPreferences.Preferences
 import nl.mpcjanssen.simpletask.*
-import nl.mpcjanssen.simpletask.remote.FileStore
+import nl.mpcjanssen.simpletask.client.FileStore
 import nl.mpcjanssen.simpletask.task.Task
 import org.json.JSONObject
 import java.io.File
@@ -195,14 +195,14 @@ class Config(app: TodoApplication) : Preferences(app) {
         get() {
             var name = _todoFileName
             if (name == null) {
-                name = FileStore.getDefaultPath()
+                name = FileStore?.getDefaultPath()?: ""
                 setTodoFile(name)
             }
             val todoFile = File(name)
             try {
                 return todoFile.canonicalPath
             } catch (e: IOException) {
-                return FileStore.getDefaultPath()
+                return FileStore?.getDefaultPath() ?: ""
             }
 
         }

@@ -45,6 +45,16 @@ You should have received a copy of the GNU General Public License along with Sim
         android:theme="@style/LaunchScreen"
         android:supportsRtl="true"
         >
+        <activity
+                android:name="nl.mpcjanssen.simpletask.remote.LoginScreen"
+                android:label="@string/app_label">
+        </activity>
+        <provider
+                android:exported="true"
+                android:name="nl.mpcjanssen.simpletask.CachedFileProvider"
+                android:authorities="${applicationId}.provider.${providerFlavour}" tools:ignore="ExportedContentProvider">
+            <grant-uri-permission android:pathPattern=".*" />
+        </provider>
         <!-- tools:ignore="UnusedAttribute" -->
         <activity
             android:name=".HelpScreen"
@@ -226,5 +236,11 @@ You should have received a copy of the GNU General Public License along with Sim
             android:resource="@dimen/app_minimumsize_h"
             />
 
+        <service android:name="nl.mpcjanssen.simpletask.remote.CloudlessFileStorePluginService">
+            <intent-filter>
+                <action android:name="nl.mpcjanssen.simpletask.FileStorePlugin"></action>
+            </intent-filter>
+        </service>
     </application>
+
 </manifest>

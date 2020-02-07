@@ -16,10 +16,10 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
-import nl.mpcjanssen.simpletask.remote.FileDialog
-import nl.mpcjanssen.simpletask.remote.FileStore
+import nl.mpcjanssen.simpletask.client.FileDialog
+import nl.mpcjanssen.simpletask.client.FileStore
+
 import nl.mpcjanssen.simpletask.task.Priority
-import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.*
 import java.io.File
 import java.io.IOException
@@ -205,12 +205,15 @@ class FilterActivity : ThemedNoActionBarActivity() {
     }
 
     private fun openScript(file_read: (String) -> Unit) {
+        FileStore?.let { fs ->
             val dialog = FileDialog()
-        dialog.addFileListener(object : FileDialog.FileSelectedListener {
+            dialog.addFileListener(object : FileDialog.FileSelectedListener {
                 override fun fileSelected(file: String) {
                     Thread(Runnable {
                         try {
-                            FileStore.readFile(file, file_read)
+                            FileStore?.apply {
+                                file_read(readFile(file))
+                            }
                         } catch (e: IOException) {
                             showToastShort(this@FilterActivity, "Failed to load script.")
                             e.printStackTrace()
@@ -218,7 +221,9 @@ class FilterActivity : ThemedNoActionBarActivity() {
                     }).start()
                 }
             })
-            dialog.createFileDialog(this@FilterActivity, FileStore, File(TodoApplication.config.todoFileName).parent, txtOnly = false)
+            dialog.createFileDialog(this@FilterActivity, fs, File(TodoApplication.config.todoFileName).parent, txtOnly = false)
+
+        }
     }
 
     private fun createFilterIntent(): Intent {

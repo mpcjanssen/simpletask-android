@@ -40,7 +40,8 @@ import androidx.core.widget.NestedScrollView
 import hirondelle.date4j.DateTime
 import kotlinx.android.synthetic.main.main.*
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
-import nl.mpcjanssen.simpletask.remote.FileStore
+import nl.mpcjanssen.simpletask.client.FileStore
+
 import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.*
 import java.io.File
@@ -204,11 +205,10 @@ class Simpletask : ThemedNoActionBarActivity() {
                     finish()
                     FileStoreActionQueue.add("Logout") {
                         try {
-                            FileStore.logout()
+                            FileStore?.logout()
                         } catch (e: Exception) {
                             Log.e(TAG, "Error logging out.", e)
                         }
-                        startLogin()
                     }
                 } else if (receivedIntent.action == Constants.BROADCAST_TASKLIST_CHANGED) {
                     Log.i(TAG, "Tasklist changed, refiltering adapter")
@@ -231,8 +231,6 @@ class Simpletask : ThemedNoActionBarActivity() {
                 } else if (receivedIntent.action == Constants.BROADCAST_THEME_CHANGED ||
                         receivedIntent.action == Constants.BROADCAST_DATEBAR_SIZE_CHANGED) {
                     recreate()
-                } else if (receivedIntent.action == Constants.BROADCAST_AUTH_FAILED) {
-                    startLogin()
                 }
             }
         }
@@ -394,7 +392,6 @@ class Simpletask : ThemedNoActionBarActivity() {
     private fun handleIntent() {
         if (!TodoApplication.app.isAuthenticated) {
             Log.i(TAG, "handleIntent: not authenticated")
-            startLogin()
             return
         }
 
@@ -480,13 +477,6 @@ class Simpletask : ThemedNoActionBarActivity() {
         listView?.viewTreeObserver?.addOnScrollChangedListener(listener)
 
         fab.setOnClickListener { startAddTaskActivity() }
-    }
-
-
-
-    private fun startLogin() {
-        TodoApplication.app.startLogin(this)
-        finish()
     }
 
     private fun updateCompletionCheckboxState() {
@@ -1268,9 +1258,6 @@ class Simpletask : ThemedNoActionBarActivity() {
             if (TodoApplication.config.changesPending) {
                 pendingchanges.visibility = View.VISIBLE
                 offline.visibility = View.GONE
-            } else if (!FileStore.isOnline) {
-                pendingchanges.visibility = View.GONE
-                offline.visibility = View.VISIBLE
             } else {
                 pendingchanges.visibility = View.GONE
                 offline.visibility = View.GONE
