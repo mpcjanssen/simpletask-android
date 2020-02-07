@@ -251,16 +251,8 @@ class TodoList(val config: Config) {
     @Synchronized
     private fun reloadaction(filename: Uri) {
         broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
-        val needSync = try {
-            val newerVersion = FileStore.getRemoteVersion(filename)
-            Log.i(TAG, "Remote version: $newerVersion (current local ${config.lastSeenRemoteId})")
-            newerVersion != config.lastSeenRemoteId
-        } catch (e: Throwable) {
-            Log.e(TAG, "Can't determine remote file version", e)
-            false
-        }
-        if (needSync) {
-            Log.i(TAG, "Remote version is different, sync")
+
+
             try {
                 val remoteContents = FileStore.loadTasksFromFile(filename)
                 val items = remoteContents.contents
@@ -283,9 +275,7 @@ class TodoList(val config: Config) {
             }
 
             Log.i(TAG, "TodoList loaded from filestore")
-        } else {
-            Log.i(TAG, "Remote version is same, load from cache")
-        }
+
         broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
     }
 
@@ -313,7 +303,6 @@ class TodoList(val config: Config) {
                             Log.i(tag, "Saving todo list, size ${lines.size}")
                             fileStore.saveTasksToFile(uri, lines, eol = eol)
                             config.changesPending = false
-                            config.lastSeenRemoteId = fileStore.getRemoteVersion(uri)
                             broadcastUpdateStateIndicator(TodoApplication.app.localBroadCastManager)
                         } catch (e: Exception) {
                             Log.e(tag, "TodoList save to $uri failed", e)

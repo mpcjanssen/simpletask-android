@@ -12,7 +12,7 @@ import java.util.*
 
 
 object FileStore : IFileStore {
-    override fun getRemoteVersion(uri: Uri): String? = uri.metaData(TodoApplication.app).lastModified
+
     private val tag = "FileStore"
 
 
@@ -20,7 +20,7 @@ object FileStore : IFileStore {
     override fun loadTasksFromFile(uri: Uri): RemoteContents {
         val lines = ArrayList<String>()
         val contentResolver = TodoApplication.app.contentResolver
-        contentResolver.takePersistableUriPermission(uri, FLAG_GRANT_READ_URI_PERMISSION)
+        contentResolver.takePersistableUriPermission(uri, FLAG_GRANT_READ_URI_PERMISSION or FLAG_GRANT_READ_URI_PERMISSION)
         contentResolver.openInputStream(uri)?.use { inputStream ->
             inputStream.bufferedReader(Charsets.UTF_8).use { reader ->
                 lines.addAll(reader.readLines())
@@ -32,7 +32,7 @@ object FileStore : IFileStore {
     @Synchronized
     override fun saveTasksToFile(uri: Uri, lines: List<String>, eol: String) {
         val contentResolver = TodoApplication.app.contentResolver
-        contentResolver.takePersistableUriPermission(uri, FLAG_GRANT_WRITE_URI_PERMISSION)
+        contentResolver.takePersistableUriPermission(uri, FLAG_GRANT_READ_URI_PERMISSION or FLAG_GRANT_READ_URI_PERMISSION)
         contentResolver.openOutputStream(uri,"rwt")?.use { stream ->
             (stream as FileOutputStream).channel.truncate(0)
             stream.bufferedWriter(Charsets.UTF_8).use { writer ->
