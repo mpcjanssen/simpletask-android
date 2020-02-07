@@ -23,7 +23,6 @@ interface IFileStore {
     fun saveTasksToFile(uri: Uri, lines: List<String>, eol: String)
     fun appendTaskToFile(uri: Uri, lines: List<String>, eol: String)
     // Retrieve the remote file version
-    fun getRemoteVersion(uri: Uri): String?
 }
 
 // Data class to return the lines and verion of a remote file.
