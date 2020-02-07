@@ -10,7 +10,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
-import nl.mpcjanssen.simpletask.remote.FileStore
+import nl.mpcjanssen.simpletask.client.FileStore
 import nl.mpcjanssen.simpletask.util.*
 import java.io.File
 import java.io.IOException
@@ -66,10 +66,10 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
                 shareText(this, getString(R.string.lua_config_screen), script)
             }
             R.id.lua_config_import -> {
-                importLuaConfig(File(TodoApplication.config.todoFile.parent, "config.lua"))
+                importLuaConfig(File(TodoApplication.config.todoFile.parent, "config.lua").absolutePath)
             }
             R.id.lua_config_export -> {
-                exportLuaConfig(File(TodoApplication.config.todoFile.parent, "config.lua"))
+                exportLuaConfig(File(TodoApplication.config.todoFile.parent, "config.lua").absolutePath)
             }
         }
         return true
@@ -84,11 +84,11 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
         }
     }
 
-    private fun exportLuaConfig (exportFile: File) {
+    private fun exportLuaConfig (path: String) {
         FileStoreActionQueue.add("Export Lua config") {
             TodoApplication.config.luaConfig = script
             try {
-                FileStore.writeFile(exportFile, TodoApplication.config.luaConfig)
+                FileStore?.writeFile(path, TodoApplication.config.luaConfig)
                 showToastShort(this, "Lua config exported")
             } catch (e: Exception) {
                 Log.e(TAG, "Export lua config failed", e)
@@ -98,19 +98,19 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
 
     }
 
-    private fun importLuaConfig (importFile: File) {
+    private fun importLuaConfig (path: String) {
         FileStoreActionQueue.add("Import Lua config") {
             try {
-                FileStore.readFile(importFile.canonicalPath) { contents ->
-                    showToastShort(this, getString(R.string.toast_lua_config_imported))
-                    runOnUiThread {
-                        script = contents
-                    }
+                val contents = FileStore?.readFile(path) ?: ""
+                showToastShort(this, getString(R.string.toast_lua_config_imported))
+                runOnUiThread {
+                    script = contents
                 }
 
+
             } catch (e: IOException) {
-                Log.e(TAG, "Import lua config, cant read file ${importFile.canonicalPath}", e)
-                showToastLong(this, "Error reading file ${importFile.canonicalPath}")
+                Log.e(TAG, "Import lua config, cant read file $path", e)
+                showToastLong(this, "Error reading file $path")
             }
         }
     }

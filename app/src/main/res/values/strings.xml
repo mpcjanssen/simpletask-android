@@ -24,6 +24,12 @@ You should have received a copy of the GNU General Public License along with Tod
 @copyright © 2013 Mark Janssen
 @copyright © 2015 Vojtech Kral
 --><!--suppress ALL --><resources>
+
+    <string name="app_label">Simpletask</string>
+    <string name="flavour_settings_label">Cloudless</string>
+    <string name="login_text">Simpletask Cloudless needs access to your storage to be able to save the todo file.
+        Press OK to give access.
+    </string>
     <string name="invalid_context">Invalid list name</string>
     <string name="invalid_project">Invalid tag name</string>
     <string name="added_task">Added task</string>

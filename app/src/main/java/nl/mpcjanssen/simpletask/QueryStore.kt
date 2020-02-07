@@ -3,7 +3,6 @@ package nl.mpcjanssen.simpletask
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.util.Config
 import org.json.JSONObject
 
@@ -13,19 +12,11 @@ object QueryStore {
     val TAG = "QueryStore"
 
     fun importFilters(importFile: File) {
-        FileStore.readFile(importFile.canonicalPath) { contents ->
-            val jsonFilters = JSONObject(contents)
-            jsonFilters.keys().forEach { name ->
-                val json = jsonFilters.getJSONObject(name)
-                val newQuery = Query(json, luaModule = "mainui")
-                QueryStore.save(newQuery, name)
-            }
-        }
+
     }
 
     fun exportFilters(exportFile: File) {
-        val json = TodoApplication.config.savedQueriesJSONString
-        FileStore.writeFile(exportFile, json)
+
     }
 
     fun ids() : List<String> {

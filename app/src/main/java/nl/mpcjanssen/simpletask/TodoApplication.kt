@@ -34,23 +34,26 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.*
+import android.os.IBinder
 import android.os.SystemClock
-import androidx.multidex.MultiDexApplication
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.util.Log
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.multidex.MultiDexApplication
 import androidx.room.Room
 import nl.mpcjanssen.simpletask.dao.AppDatabase
 import nl.mpcjanssen.simpletask.dao.DB_FILE
 import nl.mpcjanssen.simpletask.dao.TodoFile
+import nl.mpcjanssen.simpletask.client.BackupInterface
+import nl.mpcjanssen.simpletask.client.FileDialog
+import nl.mpcjanssen.simpletask.client.FileStore
+import nl.mpcjanssen.simpletask.client.mConnection
+import nl.mpcjanssen.simpletask.remote.CloudlessFileStorePluginService
 
-import nl.mpcjanssen.simpletask.remote.BackupInterface
-import nl.mpcjanssen.simpletask.remote.FileDialog
-import nl.mpcjanssen.simpletask.remote.FileStore
-import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.*
-import java.io.File
+
 import java.util.*
+
 
 class TodoApplication : MultiDexApplication() {
 
@@ -58,8 +61,14 @@ class TodoApplication : MultiDexApplication() {
     lateinit var localBroadCastManager: LocalBroadcastManager
     private lateinit var m_broadcastReceiver: BroadcastReceiver
 
+    fun bindPlugin() {
+        val intent = Intent("nl.mpcjanssen.simpletask.FileStorePlugin")
+        intent.setPackage(packageName)
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
+    }
 
     override fun onCreate() {
+        bindPlugin()
         super.onCreate()
         app = this
         config = Config(app)
@@ -191,29 +200,23 @@ class TodoApplication : MultiDexApplication() {
 
     val isAuthenticated: Boolean
         get() {
-            return FileStore.isAuthenticated
+            return FileStore?.isAuthenticated ?: false
         }
 
-    fun startLogin(caller: Activity) {
-        val loginActivity = FileStore.loginActivity()?.java
-        loginActivity?.let {
-            val intent = Intent(caller, it)
-            caller.startActivity(intent)
-        }
-    }
 
     fun browseForNewFile(act: Activity) {
-        val fileStore = FileStore
-        FileDialog.browseForNewFile(
-                act,
-                fileStore,
-                config.todoFile.parent,
-                object : FileDialog.FileSelectedListener {
-                    override fun fileSelected(file: String) {
-                        switchTodoFile(file)
-                    }
-                },
-                config.showTxtOnly)
+        FileStore?.let {
+            FileDialog.browseForNewFile(
+                    act,
+                    it,
+                    config.todoFile.parent,
+                    object : FileDialog.FileSelectedListener {
+                        override fun fileSelected(file: String) {
+                            switchTodoFile(file)
+                        }
+                    },
+                    config.showTxtOnly)
+        }
     }
 
 
