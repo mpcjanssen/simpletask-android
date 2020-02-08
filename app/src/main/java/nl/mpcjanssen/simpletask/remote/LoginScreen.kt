@@ -33,7 +33,6 @@ import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.Simpletask
 import nl.mpcjanssen.simpletask.ThemedNoActionBarActivity
 import nl.mpcjanssen.simpletask.TodoApplication
-import nl.mpcjanssen.simpletask.util.showToastLong
 
 class LoginScreen : ThemedNoActionBarActivity() {
 
@@ -51,6 +50,7 @@ class LoginScreen : ThemedNoActionBarActivity() {
     }
 
     private fun finishLogin() {
+        this.authDone()
         finish()
     }
 

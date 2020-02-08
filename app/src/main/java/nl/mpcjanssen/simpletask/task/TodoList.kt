@@ -6,7 +6,6 @@ import android.os.CountDownTimer
 import android.os.SystemClock
 import android.util.Log
 import nl.mpcjanssen.simpletask.*
-import nl.mpcjanssen.simpletask.client.FileStore
 import nl.mpcjanssen.simpletask.remote.IFileStorePlugin
 
 import nl.mpcjanssen.simpletask.util.*

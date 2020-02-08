@@ -17,7 +17,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import nl.mpcjanssen.simpletask.client.FileDialog
-import nl.mpcjanssen.simpletask.client.FileStore
 
 import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.util.*
