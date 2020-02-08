@@ -10,14 +10,6 @@ jobs:
       JVM_OPTS: -Xmx8200m
     steps:
       - checkout
-      - common-tasks/decrypt-env:
-          decoded-file: app/src/dropbox/res/values/dropbox.xml 
-          encoded-file: secrets/dropbox.xml.enc
-          encryption-key: $DSSECRET
-      - common-tasks/decrypt-env:
-          decoded-file: app/src/dropbox/res/values/dropbox-folder.xml 
-          encoded-file: secrets/dropbox-folder.xml.enc
-          encryption-key: $DSSECRET
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
 #      - run:
@@ -31,17 +23,11 @@ jobs:
             - ~/.gradle
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
-          name: Build nextcloud version
-          command: ./gradlew assembleNextcloudDebug
-      - run:
-          name: Build dropbox version
-          command: ./gradlew assembleDropboxDebug
-      - run:
-          name: Build cloudless version
-          command: ./gradlew assembleCloudlessDebug
+          name: Build debug version
+          command: ./gradlew assembleDebug
       - run:
           name: Run tests
-          command: ./gradlew testCloudlessDebug
+          command: ./gradlew testDebug
       - store_artifacts: # for display in Artifacts: https://circleci.com/docs/2.0/artifacts/ 
           path: app/build/outputs
           destination: outputs
