@@ -43,6 +43,7 @@ object Constants {
     const val BROADCAST_HIGHLIGHT_SELECTION = "HIGHLIGHT_SELECTION"
     const val BROADCAST_STATE_INDICATOR = "STATE_INDICATOR"
     const val BROADCAST_MAIN_FONTSIZE_CHANGED = "MAIN_FONT_SIZE_CHANGED"
+    const val BROADCAST_PLUGIN_STARTED = "PLUGIN_STARTED"
 
     // Sharing constants
     const val SHARE_FILE_NAME = "simpletask.txt"

@@ -10,7 +10,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
-import nl.mpcjanssen.simpletask.client.FileStore
 import nl.mpcjanssen.simpletask.util.*
 import java.io.File
 import java.io.IOException

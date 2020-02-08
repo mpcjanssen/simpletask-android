@@ -40,7 +40,7 @@ import androidx.core.widget.NestedScrollView
 import hirondelle.date4j.DateTime
 import kotlinx.android.synthetic.main.main.*
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
-import nl.mpcjanssen.simpletask.client.FileStore
+import nl.mpcjanssen.simpletask.remote.PluginIntents
 
 import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.*
@@ -78,6 +78,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         Log.i(TAG, "onCreate")
         m_savedInstanceState = savedInstanceState
         val intentFilter = IntentFilter()
+        intentFilter.addAction(Constants.BROADCAST_PLUGIN_STARTED)
         intentFilter.addAction(Constants.BROADCAST_ACTION_LOGOUT)
         intentFilter.addAction(Constants.BROADCAST_AUTH_FAILED)
         intentFilter.addAction(Constants.BROADCAST_TASKLIST_CHANGED)
@@ -231,6 +232,8 @@ class Simpletask : ThemedNoActionBarActivity() {
                 } else if (receivedIntent.action == Constants.BROADCAST_THEME_CHANGED ||
                         receivedIntent.action == Constants.BROADCAST_DATEBAR_SIZE_CHANGED) {
                     recreate()
+                } else if (receivedIntent.action == Constants.BROADCAST_PLUGIN_STARTED) {
+                    redrawUI()
                 }
             }
         }
@@ -278,6 +281,10 @@ class Simpletask : ThemedNoActionBarActivity() {
         super.onResume()
 
         Log.i(TAG, "onResume")
+        redrawUI()
+    }
+
+    private fun redrawUI() {
         TodoApplication.todoList.reload(reason = "Main activity resume")
         handleIntent()
         uiHandler.forEvent(Event.RESUME)
@@ -390,6 +397,10 @@ class Simpletask : ThemedNoActionBarActivity() {
 
 
     private fun handleIntent() {
+        if (FileStore == null) {
+            Log.i(TAG, "handleIntent: filestore plugin not connected")
+            return
+        }
         if (!TodoApplication.app.isAuthenticated) {
             Log.i(TAG, "handleIntent: not authenticated")
             return
@@ -946,7 +957,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun startPreferencesActivity() {
         val settingsActivity = Intent(baseContext,
-                nl.mpcjanssen.simpletask.Preferences::class.java)
+                Preferences::class.java)
         startActivityForResult(settingsActivity, REQUEST_PREFERENCES)
     }
 

@@ -45,17 +45,36 @@ import nl.mpcjanssen.simpletask.dao.DB_FILE
 import nl.mpcjanssen.simpletask.dao.TodoFile
 import nl.mpcjanssen.simpletask.client.BackupInterface
 import nl.mpcjanssen.simpletask.client.FileDialog
-import nl.mpcjanssen.simpletask.client.FileStore
-import nl.mpcjanssen.simpletask.client.mConnection
 import nl.mpcjanssen.simpletask.remote.CloudlessFileStorePluginService
+import nl.mpcjanssen.simpletask.remote.IFileStorePlugin
 
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.*
 
 import java.util.*
 
+var FileStore: IFileStorePlugin? = null
 
-class TodoApplication : MultiDexApplication() {
+class TodoApplication : MultiDexApplication() ,  ServiceConnection {
+
+    // Called when the connection with the service is established
+    override fun onServiceConnected(className: ComponentName, service: IBinder) {
+        // Following the example above for an AIDL interface,
+        // this gets an instance of the IRemoteInterface, which we can use to call on the service
+        Log.v(TAG, "$className connected")
+        FileStore = IFileStorePlugin.Stub.asInterface(service).also {
+            if (!it.isAuthenticated) {
+                it.login()
+            }
+        }
+        broadcastPluginStarted(localBroadCastManager)
+    }
+
+    // Called when the connection with the service disconnects unexpectedly
+    override fun onServiceDisconnected(className: ComponentName) {
+        Log.e(TAG, "Service $className has unexpectedly disconnected")
+        FileStore = null
+    }
 
     private lateinit var androidUncaughtExceptionHandler: Thread.UncaughtExceptionHandler
     lateinit var localBroadCastManager: LocalBroadcastManager
@@ -64,7 +83,7 @@ class TodoApplication : MultiDexApplication() {
     fun bindPlugin() {
         val intent = Intent("nl.mpcjanssen.simpletask.FileStorePlugin")
         intent.setPackage(packageName)
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
+        bindService(intent, this, Context.BIND_AUTO_CREATE)
     }
 
     override fun onCreate() {
