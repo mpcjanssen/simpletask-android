@@ -82,8 +82,8 @@ class TodoApplication : MultiDexApplication() ,  ServiceConnection {
 
     fun bindPlugin() {
         val intent = Intent("nl.mpcjanssen.simpletask.FileStorePlugin")
-        intent.setPackage(packageName)
-        bindService(intent, this, Context.BIND_AUTO_CREATE)
+        intent.setPackage("nl.mpcjanssen.simpletask.plugin.dokuwiki")
+        Log.v(TAG, "XXXX " + bindService(intent, this, Context.BIND_AUTO_CREATE))
     }
 
     override fun onCreate() {
