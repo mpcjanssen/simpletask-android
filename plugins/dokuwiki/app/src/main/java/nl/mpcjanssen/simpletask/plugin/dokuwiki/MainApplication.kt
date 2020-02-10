@@ -10,6 +10,8 @@ class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         app = this
+
+        // Allow network on the main thread.
         val policy = ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
     }
