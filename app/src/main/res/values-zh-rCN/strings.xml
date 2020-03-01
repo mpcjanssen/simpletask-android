@@ -60,8 +60,8 @@
     <string name="lua_config_export">保存并导出</string>
     <string name="lua_config_import">导入</string>
     <string name="archive_now_pref_summary">将已完成的任务从 todo.txt 移动到 done.txt。</string>
-    <string name="dropbox_logout_pref_title">退出</string>
-    <string name="dropbox_logout_pref_summary">退出 Dropbox。</string>
+    <string name="dropbox_logout_pref_title">退出登录</string>
+    <string name="dropbox_logout_pref_summary">退出 Dropbox 登录。</string>
     <string name="TODOTXTPATH_title">文件位置</string>
     <string name="TODOTXTPATH_defaultPath">/待办</string>
     <string name="DROPBOX_settings_header">Dropbox云</string>
@@ -133,7 +133,7 @@
     <string name="experimental_title">实验性</string>
     <string name="experimental_summary">启用实验性功能</string>
     <string name="keep_selection_title">保留选择</string>
-    <string name="keep_selection_summary">在更改后保留任务选择。</string>
+    <string name="keep_selection_summary">在更改后保留任务选中。</string>
     <string name="share_history_title">任务历史</string>
     <string name="hello_world">你好世界！</string>
     <string name="action_settings">设置</string>
@@ -162,7 +162,7 @@
     <string name="calendar_sync_thresholds_title">启动日期提醒</string>
     <string name="calendar_reminder_days_summary">设置提醒的提前时间</string>
     <string name="color_due_pref_summary">截止和启动日期</string>
-    <string name="show_hidden_summary">显示隐藏的 (h:1) 任务以便编辑。完成编辑后可重新取消选择。</string>
+    <string name="show_hidden_summary">显示隐藏 (h:1) 任务以便编辑。完成编辑后可重新取消选择。</string>
     <string name="split_actionbar_pref_summary">使用分割操作栏，将菜单按钮置于屏幕底部。可关闭此项以显示更多的任务列表。</string>
     <string name="show_edittext_hint_summary">在添加任务时显示提示。</string>
     <string name="show_complete_checkbox_summary">在任务前显示复选框以标识或取消完成状态。</string>
@@ -185,7 +185,7 @@
     <string name="filter_tab_header_other">其他</string>
     <string name="filter_tab_header_sort">排序</string>
     <string name="filter_tab_header_script">脚本</string>
-    <string name="script_tab_script_from_file">文件中的脚本</string>
+    <string name="script_tab_script_from_file">文件脚本</string>
     <string name="script_tab_use_script">使用脚本</string>
     <string name="script_tab_test">测试</string>
     <string name="script_tab_test_task">测试任务</string>
@@ -204,7 +204,7 @@
     <string name="visit_website_title">帮助</string>
     <string name="visit_website_summary">访问网站</string>
     <string name="visit_website_data">https://mpcjanssen.nl/</string>
-    <string name="visit_tracker_title">请求新功能或报告 bug</string>
+    <string name="visit_tracker_title">请求新功能或报告问题</string>
     <string name="visit_tracker_summary">请求新功能或请求增强功能或报告问题。</string>
     <string name="visit_tracker_data">https://github.com/mpcjanssen/simpletask-android/issues</string>
     <string name="preference_title_debug_info">浏览调试日志</string>
@@ -228,15 +228,15 @@
     <string name="archive_task_title">将归档 %s 条任务</string>
     <string name="delete_task_message">这不能撤销。你确定吗？</string>
     <string name="cancel_changes">将丢失己做的更改。</string>
-    <string name="tasktexthint">"\@讨论 +巴黎  +Hector 相关事宜 @Troy
-\n告诉 +Hector 不要这么拖拉 @Troy
-\n将这段文字从菜单中移除 @Phone"</string>
+    <string name="tasktexthint">和 +Hector @讨论 +巴黎 相关事宜 @Troy 
+\n告诉 +Hector 不要这么拖拉 @Troy 
+\n将这段文字从菜单中移除 @Phone</string>
     <string name="drawer_fixed_landscape_title">横屏时打开侧滑抽屉</string>
     <string name="drawer_fixed_landscape_summary">在横屏模式下总是打开侧滑抽屉。</string>
     <string name="task_text_ellipsizing_middle">省略中间：很……本</string>
     <string name="task_text_ellipsizing_marquee">滚动：很长的任</string>
     <string name="saved_filters_imported">筛选器已导入</string>
-    <string name="use_create_as_threshold_title">创建时间作为启动时间</string>
+    <string name="use_create_as_threshold_title">创建日期作为启动日期</string>
     <string name="logout_message">请确保您已经将所有的更改与dropbox云同步或者在未连接到dropbox时分享了您全部的任务清单。
 \n所有未同步的更改将会在退出登录后丢失。</string>
     <string name="dropbox_open">请确保您已经将所有的更改与dropbox云同步或者在未连接到dropbox时分享了您全部的任务清单。
@@ -268,22 +268,22 @@
     <string name="import_filter">导入</string>
     <string name="rename_filter">重命名</string>
     <string name="rename_filter_message">输入已保存筛选器的新名称：</string>
-    <string name="title_filter_drawer">快速筛选</string>
+    <string name="title_filter_drawer">快捷筛选</string>
     <string name="update_filter">更新</string>
     <string name="create_widget">创建窗口小部件</string>
     <string name="config_widget">配置窗口小部件</string>
     <string name="filter_show_completed">显示已完成任务</string>
-    <string name="filter_show_future">显示未到启动日期的任务</string>
+    <string name="filter_show_future">显示启动日期未到的任务</string>
     <string name="filter_show_lists">在任务文本中显示清单</string>
     <string name="filter_show_tags">在任务文本中显示标签</string>
-    <string name="filter_show_create_date">显示任务创建时间</string>
+    <string name="filter_show_create_date">显示任务创建日期</string>
     <string name="filter_show_completed_short">已完成</string>
     <string name="filter_show_future_short">未启动</string>
     <string name="filter_show_prompt">显示</string>
     <string name="filter_saved_prompt">已保存筛选器</string>
     <string name="task_select_parts">选择任务的部分</string>
     <string name="task_show_all">全部</string>
-    <string name="title_filter_applied">已筛选：</string>
+    <string name="title_filter_applied">筛选：</string>
     <string name="add_task_help_btn">帮助</string>
     <string name="priority_prompt">优先级</string>
     <string name="priority_short_prompt">优先级</string>
@@ -334,12 +334,12 @@
     <string name="save_filter_message">为当前筛选器输入名称（将显示在已保存筛选器列表中）。</string>
     <string name="filter_import_export">导入/导出筛选器</string>
     <string name="donate_title">捐助</string>
-    <string name="donate_summary">本软件是遵循CopyLeft版权的自由软件，无偿提供给您使用。软件开发者投入了很多辛勤的劳动，如果您选择任何捐赠，都非常感谢。</string>
+    <string name="donate_summary">本软件是CopyLeft自由软件，软件开发者投入了很多辛勤的劳动，无偿提供给您使用。您可以选择各种方式捐助，我们都非常感谢。</string>
     <string name="calendar_sync_desc_due">由事务自动生成的任务截止日期提醒</string>
     <string name="calendar_sync_desc_thre">由事务自动生成的任务启动日期提醒</string>
     <string name="calendar_exists_warning">警告：日历已存在同名事件，覆盖中……</string>
     <string name="share_history">查看和分享内部 todo.txt 历史数据库以用于恢复。</string>
-    <string name="task_action">动作</string>
+    <string name="task_action">行动</string>
     <string name="back_clears_filter_title">返回键清除筛选</string>
     <string name="back_clears_filter_summary">在退出应用程序之前按返回键将清除筛选器。</string>
     <string name="use_uuid_title">为每个任务分配一个 UUID</string>
@@ -348,6 +348,11 @@
     <string name="invalid_certificate_title">证书无效。</string>
     <string name="no_tasks_to_archive">没有要归档的任务。</string>
     <string name="use_list_and_tags_icons_title">使用图标</string>
-    <string name="use_list_and_tags_icons_summary">使用图标更改任务的列表和标记。如使用todo.txt@和+来更改请禁用此项。</string>
+    <string name="use_list_and_tags_icons_summary">使用图标更改任务相关的清单和标签。如使用todo.txt习惯的@和+符号请禁用此项。</string>
     <string name="force_english_title">强制使用英文</string>
+    <string name="idle_before_safe_title">保存前时间</string>
+    <string name="idle_before_safe_summary">保存更改前所需的空闲时间（秒）</string>
+    <string name="link_added">链接已添加到事务</string>
+    <string name="share_link_failed">无法添加空链接。</string>
+    <string name="share_link">分享链接</string>
 </resources>
