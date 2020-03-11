@@ -4,14 +4,12 @@ on: [push]
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    docker:
+      - image: circleci/android:api-28-alpha
 
     steps:
     - name: "Checkout"
       uses: actions/checkout@v1
-    - name: "Setup android"
-      uses: msfjarvis/setup-android@1.0
     - name: "Run build"  
       run: ./gradlew assembleCloudless assembleNextcloud
     - name: "Save output artifacts"
