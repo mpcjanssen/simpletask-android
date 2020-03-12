@@ -41,7 +41,7 @@ object FileStore : IFileStore {
 
     override val isAuthenticated: Boolean
         get() {
-            Log.d("FileStore is authenticated $username $mNextcloud?")
+            Log.d("FileStore", "FileStore is authenticated $username $mNextcloud?")
             return username != null && mNextcloud != null
         }
 
@@ -88,7 +88,7 @@ object FileStore : IFileStore {
             val cm = mApp.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val netInfo = cm.activeNetworkInfo
             val online =  netInfo != null && netInfo.isConnected
-            Log.d("Filestore online: $online")
+            Log.d("FileStore","Filestore online: $online")
             return online
         }
 
