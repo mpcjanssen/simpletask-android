@@ -41,6 +41,7 @@ object FileStore : IFileStore {
 
     override val isAuthenticated: Boolean
         get() {
+            Log.d("FileStore is authenticated $username $mNextcloud?")
             return username != null && mNextcloud != null
         }
 
@@ -86,7 +87,9 @@ object FileStore : IFileStore {
         get() {
             val cm = mApp.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val netInfo = cm.activeNetworkInfo
-            return netInfo != null && netInfo.isConnected
+            val online =  netInfo != null && netInfo.isConnected
+            Log.d("Filestore online: $online")
+            return online
         }
 
     override fun loadTasksFromFile(path: String): RemoteContents {
