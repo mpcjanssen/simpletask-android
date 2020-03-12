@@ -193,8 +193,6 @@ dependencies {
     seafileImplementation("com.squareup.okhttp3:okhttp:4.3.1")
 }
 
-
-
 // Only sign if we have keystore properties in the gradle.properties in ~/.gradle
 if (project.hasProperty('storeFile') &&
         project.hasProperty('storePassword') &&
@@ -211,12 +209,8 @@ if (project.hasProperty('storeFile') &&
 task cleanPublish(type: GradleBuild) {
     group = 'deployment'
     description = 'Build and deploy all versions to Google Play'
-
     setTasks(["clean", "publishNextcloudRelease", "publishCloudlessRelease", "publishDropboxRelease"])
 }
-
-
-
 
 allprojects {
     gradle.projectsEvaluated {
