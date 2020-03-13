@@ -230,18 +230,19 @@ class TodoList(val config: Config) {
 
     @Synchronized
     fun reload(reason: String = "") {
-        Log.d(TAG, "Reload: $reason")
-        if (!FileStore.isAuthenticated) {
-            return
-        }
-        val filename = config.todoFileName
-        if (config.changesPending && FileStore.isOnline) {
-            Log.i(TAG, "Not loading, changes pending")
-            Log.i(TAG, "Saving instead of loading")
-            save(FileStore, filename, true, config.eol)
-        } else {
-            FileStoreActionQueue.add("Reload") {
-                reloadaction(filename)
+        FileStoreActionQueue.add("Reload") {
+            Log.d(TAG, "Reload: $reason")
+            if (FileStore.isAuthenticated) {
+                val filename = config.todoFileName
+                if (config.changesPending && FileStore.isOnline) {
+                    Log.i(TAG, "Not loading, changes pending")
+                    Log.i(TAG, "Saving instead of loading")
+                    save(FileStore, filename, true, config.eol)
+                } else {
+                    reloadaction(filename)
+                }
+            } else {
+                Log.d(TAG, "Not authenticatd")
             }
         }
     }

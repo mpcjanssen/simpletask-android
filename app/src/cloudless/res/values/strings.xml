@@ -7,5 +7,6 @@
     <string name="login_text">Simpletask Cloudless needs access to your storage to be able to save the todo file.
         Press OK to give access.
     </string>
+    <string name="sync">Reload</string>
 
 </resources>
