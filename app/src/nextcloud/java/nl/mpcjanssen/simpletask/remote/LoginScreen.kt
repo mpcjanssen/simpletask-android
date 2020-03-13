@@ -72,7 +72,6 @@ class LoginScreen : ThemedActionBarActivity() {
         password = nextcloud_password.text.toString()
         serverUrl = url
         Log.d(TAG, "Saved credentials for $username")
-        FileStore.resetClient()
         switchToTodolist()
     }
 
