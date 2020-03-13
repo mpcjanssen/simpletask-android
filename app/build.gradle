@@ -22,6 +22,7 @@ buildscript {
 
 plugins {
      id 'com.github.triplet.play' version '2.6.2'
+    id 'com.gladed.androidgitversion' version '0.4.13'
 }
 
 apply plugin: 'com.android.application'
@@ -58,8 +59,8 @@ android {
     }
 
     defaultConfig {
-        versionName '10.4.0'
-        versionCode 3222
+        versionName androidGitVersion.name()
+        versionCode androidGitVersion.code()
         multiDexEnabled true
         minSdkVersion 15
         targetSdkVersion 28
