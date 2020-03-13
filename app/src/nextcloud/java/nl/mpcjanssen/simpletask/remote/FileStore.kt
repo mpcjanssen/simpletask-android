@@ -40,9 +40,8 @@ object FileStore : IFileStore {
 
     override val isAuthenticated: Boolean
         get() {
-            val client = getClient()
-            Log.d("FileStore", "FileStore is authenticated $username $client")
-            return username != null && client != null
+            Log.d("FileStore", "FileStore is authenticated ${username != null}")
+            return username != null
         }
 
     override fun logout() {
