@@ -283,6 +283,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         TodoApplication.todoList.reload(reason = "Main activity resume")
         Log.i(TAG,"onResume -> handleIntent")
         handleIntent()
+        Log.i(TAG,"onResume <- handleIntent")
         uiHandler.forEvent(Event.RESUME)
     }
 
