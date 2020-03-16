@@ -75,7 +75,7 @@ object FileStore : IFileStore {
         val op = ReadFileRemoteOperation(filename)
         val res = op.execute(getClient())
         val file = res.data[0] as RemoteFile
-        Log.d("FileStore", "Remote versions of $filename: id: ${file.remoteId} tag: ${file.etag} modified: ${file.modifiedTimestamp} ")
+        Log.d(TAG, "Remote versions of $filename: id: ${file.remoteId} tag: ${file.etag} modified: ${file.modifiedTimestamp} ")
         return file.etag
     }
 
