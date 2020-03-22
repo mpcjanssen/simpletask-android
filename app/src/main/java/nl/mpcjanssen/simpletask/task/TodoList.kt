@@ -314,7 +314,7 @@ class TodoList(val config: Config) {
                         broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
                         try {
                             Log.i(TAG, "Saving todo list, size ${lines.size}")
-                            config.lastSeenRemoteId  = fileStore.saveTasksToFile(todoFileName, lines, eol = eol)
+                            config.lastSeenRemoteId  = fileStore.saveTasksToFile(todoFileName, lines, eol = eol, lastRemote = config.lastSeenRemoteId)
                             Log.i(TAG, "Remote version is ${config.lastSeenRemoteId}")
 
                             if (config.changesPending) {
