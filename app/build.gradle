@@ -95,10 +95,10 @@ android {
             setApplicationId("nl.mpcjanssen.simpletask.dokuwiki")
             manifestPlaceholders = [providerFlavour: "dokuwiki"]
         }
-        seafile {
+        webdav {
             dimension "main"
-            setApplicationId("nl.mpcjanssen.simpletask.seafile")
-            manifestPlaceholders = [providerFlavour: "seafile"]
+            setApplicationId("nl.mpcjanssen.simpletask.webdav")
+            manifestPlaceholders = [providerFlavour: "webdav"]
         }
     }
 
@@ -191,7 +191,11 @@ dependencies {
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-3'
     def withoutJUnit = { exclude group: 'junit', module: 'junit' }
     dokuwikiImplementation 'org.apache.xmlrpc:xmlrpc-client:3.1.3', withoutJUnit
-    seafileImplementation("com.squareup.okhttp3:okhttp:4.3.1")
+    webdavImplementation('com.thegrizzlylabs.sardine-android:sardine-android:0.6') {
+        exclude module: 'stax'
+        exclude module: 'stax-api'
+        exclude module: 'xpp3'
+    }
 }
 
 // Only sign if we have keystore properties in the gradle.properties in ~/.gradle

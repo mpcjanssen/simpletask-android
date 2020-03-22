@@ -5,28 +5,32 @@ import android.content.*
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import kotlinx.android.synthetic.seafile.login.*
 
+import com.thegrizzlylabs.sardineandroid.impl.OkHttpSardine
+
+import kotlinx.android.synthetic.webdav.login.*
 import nl.mpcjanssen.simpletask.*
-import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.FileStoreActionQueue
 import nl.mpcjanssen.simpletask.util.showConfirmationDialog
 import nl.mpcjanssen.simpletask.util.showToastLong
-import java.io.File
+import java.lang.Exception
 
 
 class LoginScreen : ThemedActionBarActivity() {
     private val url: String
         get () {
-            val enteredUrl = nextcloud_server_url.text.toString().trimEnd('/')
+            val enteredUrl = webdav_server_url.text.toString().trimEnd('/')
             return if (enteredUrl.startsWith("http://", ignoreCase = true) ||
                     enteredUrl.startsWith("https://", ignoreCase = true)) {
-                return enteredUrl
+                 enteredUrl
             } else {
                 "https://$enteredUrl"
-            }
+            }.trimEnd('/')
         }
 
+    private var username by TodoApplication.config.StringOrNullPreference(FileStore.USER)
+    private var password by TodoApplication.config.StringOrNullPreference(FileStore.PASS)
+    private var serverUrl by TodoApplication.config.StringOrNullPreference(FileStore.URL)
 
 
 
@@ -40,7 +44,7 @@ class LoginScreen : ThemedActionBarActivity() {
         setContentView(R.layout.login)
 
         login.setOnClickListener {
-            startLogin()
+            startLogin(true)
         }
 
         logging.setOnClickListener {
@@ -55,19 +59,26 @@ class LoginScreen : ThemedActionBarActivity() {
     }
 
     private fun finishLogin() {
-        val username = nextcloud_username.text.toString()
-        val password = nextcloud_password.text.toString()
-        val serverUrl = url
-        Log.d(TAG, "Getting API token for $username")
-        FileStore.getAccessToken(username, password, serverUrl)
+        username = webdav_username.text.toString()
+        password = webdav_password.text.toString()
+        serverUrl = url
+        Log.d(TAG, "Saved credentials for $username")
         switchToTodolist()
     }
 
 
-    private fun startLogin() {
+    private fun startLogin(retrySsl: Boolean) {
         FileStoreActionQueue.add("login") {
-            finishLogin()
+            try {
+                val client = OkHttpSardine().also { it.setCredentials(webdav_username.text.toString(), webdav_password.text.toString()) }
+                client.exists(webdav_server_url.text.toString() + "/")
+                finishLogin()
+            } catch (e: Exception) {
+                Log.i(TAG, "Login failed", e)
+                showToastLong(this, "Login failed: ${e.message}")
+            }
         }
+
     }
 
     companion object {

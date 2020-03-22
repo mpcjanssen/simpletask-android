@@ -20,12 +20,12 @@ class FlavourPrefFragment : PreferenceFragment() {
         val nextcloudPref = findPreference("logout_nextcloud")
         nextcloudPref.setOnPreferenceClickListener {
             Log.i(TAG, "Logging out from Nextcloud")
-            showConfirmationDialog(activity, R.string.nextcloud_logout_message,
+            showConfirmationDialog(activity, R.string.webdav_logout_message,
                     DialogInterface.OnClickListener { dialogInterface, i ->
                         FileStore.logout()
                         activity.finish()
                         LocalBroadcastManager.getInstance(activity).sendBroadcast(Intent(Constants.BROADCAST_ACTION_LOGOUT))
-                    }, R.string.nextcloud_logout_pref_title)
+                    }, R.string.webdav_logout_pref_title)
             true
         }
     }
