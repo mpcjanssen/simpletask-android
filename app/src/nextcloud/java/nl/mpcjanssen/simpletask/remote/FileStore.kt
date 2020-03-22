@@ -122,7 +122,7 @@ object FileStore : IFileStore {
 
     @Synchronized
     @Throws(IOException::class)
-    override fun saveTasksToFile(path: String, lines: List<String>, eol: String) : String {
+    override fun saveTasksToFile(path: String, lines: List<String>, lastRemote: String?, eol: String) : String {
         val contents = join(lines, eol) + eol
 
         val timestamp = timeStamp()

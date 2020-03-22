@@ -83,7 +83,7 @@ object FileStore : IFileStore {
         Log.i(TAG, "Observer: modifying done")
     }
 
-    override fun saveTasksToFile(path: String, lines: List<String>, eol: String) : String {
+    override fun saveTasksToFile(path: String, lines: List<String>, lastRemote: String?, eol: String) : String {
         Log.i(TAG, "Saving tasks to file: $path")
         val obs = observer
         obs?.ignoreEvents(true)

@@ -81,7 +81,7 @@ object FileStore : IFileStore {
 
     @Synchronized
     @Throws(IOException::class)
-    override fun saveTasksToFile(path: String, lines: List<String>, eol: String) : String {
+    override fun saveTasksToFile(path: String, lines: List<String>, lastRemote: String?,  eol: String) : String {
         client.execute("wiki.putPage", arrayOf(wikiPath(path),
                 lines.joinToString(separator = "\n"),
                 emptyArray<String>()))

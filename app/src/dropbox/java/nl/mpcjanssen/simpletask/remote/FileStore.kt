@@ -121,11 +121,11 @@ object FileStore : IFileStore {
     }
 
     @Throws(IOException::class)
-    override fun saveTasksToFile(path: String, lines: List<String>, eol: String) : String {
+    override fun saveTasksToFile(path: String, lines: List<String>, lastSeen: String?, eol: String) : String {
         Log.i(TAG, "Saving ${lines.size} tasks to Dropbox.")
         val contents = join(lines, eol) + eol
 
-        val rev = TodoApplication.config.lastSeenRemoteId
+        val rev = lastSeen
         Log.i(TAG, "Last seen rev $rev")
 
         val toStore = contents.toByteArray(charset("UTF-8"))
