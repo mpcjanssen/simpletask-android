@@ -146,30 +146,13 @@ class Simpletask : ThemedNoActionBarActivity() {
                             val url = links[which]
                             Log.i(TAG, "" + actions[which] + ": " + url)
                             when (actions[which]) {
-                                Action.LINK -> when {
-                                    url.startsWith("todo://") -> {
-                                        val todoFolder = TodoApplication.config.todoFile.parentFile
-                                        val newName = File(todoFolder, url.substring(7))
-                                        TodoApplication.app.switchTodoFile(newName.absolutePath)
-                                    }
-                                    url.startsWith("root://") -> {
-                                        val rootFolder = TodoApplication.config.localFileRoot
-                                        val file = File(rootFolder, url.substring(7))
-                                        actionIntent = Intent(Intent.ACTION_VIEW)
-                                        val contentUri = Uri.fromFile(file)
-                                        val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension)
-                                        actionIntent.setDataAndType(contentUri, mime)
-                                        actionIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                        startActivity(actionIntent)
-                                    }
-                                    else -> try {
+                                Action.LINK -> try {
                                         actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                                         startActivity(actionIntent)
                                     } catch (e: ActivityNotFoundException) {
                                         Log.i(TAG, "No handler for task action $url")
                                         showToastLong(TodoApplication.app, "No handler for $url")
                                     }
-                                }
                                 Action.PHONE -> {
                                     actionIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + Uri.encode(url)))
                                     startActivity(actionIntent)
@@ -816,9 +799,10 @@ class Simpletask : ThemedNoActionBarActivity() {
         val archiveAction = {
             if (TodoApplication.config.todoFileName == TodoApplication.config.doneFileName) {
                 showToastShort(this, "You have the done.txt file opened.")
+            } else {
+                TodoApplication.todoList.archive(TodoApplication.config.todoFileName, TodoApplication.config.doneFileName, tasksToArchive, TodoApplication.config.eol)
+                invalidateOptionsMenu()
             }
-            TodoApplication.todoList.archive(TodoApplication.config.todoFileName, TodoApplication.config.doneFileName, tasksToArchive, TodoApplication.config.eol)
-            invalidateOptionsMenu()
         }
         val numTasks = tasksToArchive.size
         if (numTasks == 0) {
@@ -882,7 +866,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             R.id.menu_export_filter_export -> {
                 FileStoreActionQueue.add("Exporting filters") {
                     try {
-                        QueryStore.exportFilters(File(TodoApplication.config.todoFile.parent, "saved_filters.txt"))
+                        QueryStore.exportFilters(FileStore.sibling(TodoApplication.config.todoFileName, "saved_filters.txt"))
                         showToastShort(this, R.string.saved_filters_exported)
                     } catch (e: Exception) {
                         Log.e(TAG, "Export filters failed", e)
@@ -892,7 +876,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             }
             R.id.menu_export_filter_import -> {
                 FileStoreActionQueue.add("Importing filters") {
-                    val importFile = File(TodoApplication.config.todoFile.parent, "saved_filters.txt")
+                    val importFile = FileStore.sibling(TodoApplication.config.todoFileName, "saved_filters.txt")
                     try {
                         QueryStore.importFilters(importFile)
                         showToastShort(this, R.string.saved_filters_imported)
@@ -900,8 +884,8 @@ class Simpletask : ThemedNoActionBarActivity() {
 
                     } catch (e: Exception) {
                         // Need to catch generic exception because Dropbox errors don't inherit from IOException
-                        Log.e(TAG, "Import filters, cant read file ${importFile.canonicalPath}", e)
-                        showToastLong(this, "Error reading file ${importFile.canonicalPath}")
+                        Log.e(TAG, "Import filters, cant read file ${importFile}", e)
+                        showToastLong(this, "Error reading file ${importFile}")
                     }
                 }
             }
