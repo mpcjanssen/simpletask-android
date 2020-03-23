@@ -95,8 +95,9 @@ object FileStore : IFileStore {
                 emptyArray<String>()))
     }
 
-    override fun writeFile(file: File, contents: String) {
-        client.execute("wiki.putPage", arrayOf(wikiPath(file.absolutePath),
+    override fun writeFile(path: String, contents: String) {
+        client.execute("wiki.putPage", arrayOf(
+                wikiPath(path),
                 contents,
                 emptyArray<String>()))
     }

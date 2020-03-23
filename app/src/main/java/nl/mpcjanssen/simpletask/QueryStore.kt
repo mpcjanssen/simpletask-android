@@ -12,8 +12,8 @@ import java.io.File
 object QueryStore {
     val TAG = "QueryStore"
 
-    fun importFilters(importFile: File) {
-        FileStore.readFile(importFile.canonicalPath) { contents ->
+    fun importFilters(importFile: String) {
+        FileStore.readFile(importFile) { contents ->
             val jsonFilters = JSONObject(contents)
             jsonFilters.keys().forEach { name ->
                 val json = jsonFilters.getJSONObject(name)
@@ -23,7 +23,7 @@ object QueryStore {
         }
     }
 
-    fun exportFilters(exportFile: File) {
+    fun exportFilters(exportFile: String) {
         val json = TodoApplication.config.savedQueriesJSONString
         FileStore.writeFile(exportFile, json)
     }

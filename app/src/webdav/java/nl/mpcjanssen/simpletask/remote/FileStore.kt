@@ -57,18 +57,13 @@ object FileStore : IFileStore {
         return null
     }
 
-    private fun resourceUrl(path: String) : String {
-        return "$serverUrl/$path".replace("//", "/")
-    }
-
     fun DavResource.remoteVersion() : String {
         return "${this.etag}:${this.modified}"
     }
 
-    override fun getRemoteVersion(filename: String): String {
+    override fun getRemoteVersion(url: String): String {
         getClient()?.let {
-            val url = resourceUrl(filename)
-            val res = it.list(resourceUrl(filename))[0]
+            val res = it.list(url)[0]
             Log.e(TAG, "Getting metadata for ${url}, etag: ${res.etag}, modified: ${res.modified}")
             return res.remoteVersion()
 
@@ -84,17 +79,16 @@ object FileStore : IFileStore {
             return online
         }
 
-    override fun loadTasksFromFile(path: String): RemoteContents {
+    override fun loadTasksFromFile(url: String): RemoteContents {
 
         // If we load a file and changes are pending, we do not want to overwrite
         // our local changes, instead we try to upload local
-        val url = resourceUrl(path)
         Log.i(TAG, "Loading file from: $url")
         if (!isAuthenticated) {
             throw IOException("Not authenticated")
         }
         getClient()?.let {
-            val version = getRemoteVersion(path)
+            val version = getRemoteVersion(url)
             val readLines = it.get(url).bufferedReader(Charsets.UTF_8).readLines()
             return RemoteContents(version, readLines)
         }?:  throw TodoException("WebDav exception client is null")
@@ -107,9 +101,8 @@ object FileStore : IFileStore {
 
     @Synchronized
     @Throws(IOException::class)
-    override fun saveTasksToFile(path: String, lines: List<String>, lastRemote: String? , eol: String) : String {
+    override fun saveTasksToFile(url: String, lines: List<String>, lastRemote: String? , eol: String) : String {
         getClient()?.let { client ->
-            val url = resourceUrl(path)
             Log.i(TAG, "Uploading file to $url")
             val contents = join(lines, eol) + eol
             val remoteVersion = getRemoteVersion(url)
@@ -128,9 +121,8 @@ object FileStore : IFileStore {
     }
 
     @Throws(IOException::class)
-    override fun appendTaskToFile(path: String, lines: List<String>, eol: String) {
+    override fun appendTaskToFile(url: String, lines: List<String>, eol: String) {
         getClient()?.let { client ->
-            val url = resourceUrl(path)
             Log.i(TAG, "Appending to file $url")
             val newLines = client.get(url).bufferedReader(Charsets.UTF_8).readLines().toMutableList()
             newLines.addAll(lines)
@@ -141,10 +133,8 @@ object FileStore : IFileStore {
 
     }
 
-    override fun writeFile(file: File, contents: String) {
-        val url = resourceUrl(file.canonicalPath)
+    override fun writeFile(url: String, contents: String) {
         getClient()?.let { client ->
-            val url = resourceUrl(url)
             Log.i(TAG, "Writing file to $url")
             client.put(url, contents.toByteArray(Charsets.UTF_8))
         } ?:  throw TodoException("WebDav exception client is null")
@@ -153,19 +143,17 @@ object FileStore : IFileStore {
     private fun timeStamp() = (System.currentTimeMillis() / 1000).toString()
 
     @Throws(IOException::class)
-    override fun readFile(file: String, fileRead: (String) -> Unit) {
-        val url = resourceUrl(file)
+    override fun readFile(url: String, fileRead: (String) -> Unit) {
         getClient()?.let { client ->
-            val url = resourceUrl(url)
             Log.i(TAG, "Writing file to $url")
             fileRead.invoke(client.get(url).bufferedReader(Charsets.UTF_8).readText())
         } ?:  throw TodoException("WebDav exception client is null")
     }
 
 
-    override fun loadFileList(path: String, txtOnly: Boolean): List<FileEntry> {
+    override fun loadFileList(url: String, txtOnly: Boolean): List<FileEntry> {
         getClient()?.let { client ->
-            val url = resourceUrl(File(path).canonicalPath + "/")
+            val url = url + "/"
             val result = ArrayList<FileEntry>()
             val resList = client.list(url)
             // Loop over the resulting files
@@ -176,6 +164,18 @@ object FileStore : IFileStore {
             }
             return result
         } ?:  throw TodoException("WebDav exception client is null")
+    }
+
+    override fun parent(todoFileName: String): String {
+        val parts  = todoFileName.split('/').toMutableList()
+        return parts.subList(0,parts.size-1).joinToString("/")
+    }
+    override fun sibling(todoFileName: String, name: String): String {
+        val parts  = todoFileName.split('/').toMutableList()
+        return "${parent(todoFileName)}/$name"
+    }
+    override fun doneFile(todoFileName: String): String {
+        return sibling(todoFileName,"done.txt")
     }
 
     override fun getDefaultPath(): String {

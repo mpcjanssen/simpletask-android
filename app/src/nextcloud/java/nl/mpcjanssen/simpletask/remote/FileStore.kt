@@ -188,18 +188,18 @@ object FileStore : IFileStore {
 
     }
 
-    override fun writeFile(file: File, contents: String) {
+    override fun writeFile(path: String, contents: String) {
         if (!isAuthenticated) {
-            Log.e(TAG, "Not authenticated, file ${file.canonicalPath} not written.")
+            Log.e(TAG, "Not authenticated, file $path not written.")
             throw IOException("Not authenticated")
         }
 
         val cacheDir = mApp.applicationContext.cacheDir
         val tmpFile = File(cacheDir, "tmp.txt")
         tmpFile.writeText(contents)
-        val op = UploadFileRemoteOperation(tmpFile.absolutePath, file.canonicalPath, "text/plain", timeStamp())
+        val op = UploadFileRemoteOperation(tmpFile.absolutePath, path, "text/plain", timeStamp())
         val result = op.execute(getClient())
-        Log.i(TAG, "Wrote file to ${file.path}, result ${result.isSuccess}")
+        Log.i(TAG, "Wrote file to $path, result ${result.isSuccess}")
 
     }
 

@@ -66,10 +66,11 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
                 shareText(this, getString(R.string.lua_config_screen), script)
             }
             R.id.lua_config_import -> {
-                importLuaConfig(File(TodoApplication.config.todoFile.parent, "config.lua"))
+                val importFile = FileStore.sibling(TodoApplication.config.todoFileName, "config.lua")
+                importLuaConfig(importFile)
             }
             R.id.lua_config_export -> {
-                exportLuaConfig(File(TodoApplication.config.todoFile.parent, "config.lua"))
+                exportLuaConfig(FileStore.sibling(TodoApplication.config.todoFileName, "config.lue"))
             }
         }
         return true
@@ -84,7 +85,7 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
         }
     }
 
-    private fun exportLuaConfig (exportFile: File) {
+    private fun exportLuaConfig (exportFile: String) {
         FileStoreActionQueue.add("Export Lua config") {
             TodoApplication.config.luaConfig = script
             try {
@@ -98,10 +99,10 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
 
     }
 
-    private fun importLuaConfig (importFile: File) {
+    private fun importLuaConfig (importFile: String) {
         FileStoreActionQueue.add("Import Lua config") {
             try {
-                FileStore.readFile(importFile.canonicalPath) { contents ->
+                FileStore.readFile(importFile) { contents ->
                     showToastShort(this, getString(R.string.toast_lua_config_imported))
                     runOnUiThread {
                         script = contents
@@ -109,8 +110,8 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
                 }
 
             } catch (e: IOException) {
-                Log.e(TAG, "Import lua config, cant read file ${importFile.canonicalPath}", e)
-                showToastLong(this, "Error reading file ${importFile.canonicalPath}")
+                Log.e(TAG, "Import lua config, cant read file ${importFile}", e)
+                showToastLong(this, "Error reading file ${importFile}")
             }
         }
     }

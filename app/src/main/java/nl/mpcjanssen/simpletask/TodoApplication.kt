@@ -194,6 +194,10 @@ class TodoApplication : MultiDexApplication() {
             return FileStore.isAuthenticated
         }
 
+    fun clearTodoFile() {
+        config.clearCache()
+        config.setTodoFile(null)
+    }
     fun startLogin(caller: Activity) {
         val loginActivity = FileStore.loginActivity()?.java
         loginActivity?.let {
@@ -207,7 +211,7 @@ class TodoApplication : MultiDexApplication() {
         FileDialog.browseForNewFile(
                 act,
                 fileStore,
-                config.todoFile.parent,
+                fileStore.parent(config.todoFileName),
                 object : FileDialog.FileSelectedListener {
                     override fun fileSelected(file: String) {
                         switchTodoFile(file)
