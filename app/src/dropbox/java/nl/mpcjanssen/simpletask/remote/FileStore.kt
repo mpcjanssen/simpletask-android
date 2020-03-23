@@ -177,15 +177,15 @@ object FileStore : IFileStore {
         dbxClient.files().uploadBuilder(path).withAutorename(true).withMode(if (rev != null) WriteMode.update(rev) else null).uploadAndFinish(`in`)
     }
 
-    override fun writeFile(file: File, contents: String) {
+    override fun writeFile(path: String, contents: String) {
         if (!isAuthenticated) {
-            Log.e(TAG, "Not authenticated, file ${file.canonicalPath} not written.")
+            Log.e(TAG, "Not authenticated, file ${path} not written.")
             return
         }
         val toStore = contents.toByteArray(charset("UTF-8"))
-        Log.d(TAG, "Write to file ${file.canonicalPath}")
+        Log.d(TAG, "Write to file ${path}")
         val inStream = ByteArrayInputStream(toStore)
-        dbxClient.files().uploadBuilder(file.path).withMode(WriteMode.OVERWRITE).uploadAndFinish(inStream)
+        dbxClient.files().uploadBuilder(path).withMode(WriteMode.OVERWRITE).uploadAndFinish(inStream)
     }
 
     @Throws(IOException::class)

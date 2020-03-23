@@ -62,6 +62,7 @@ class LoginScreen : ThemedActionBarActivity() {
         username = webdav_username.text.toString()
         password = webdav_password.text.toString()
         serverUrl = url
+        TodoApplication.config.setTodoFile("$url/${FileStore.getDefaultPath()}")
         Log.d(TAG, "Saved credentials for $username")
         switchToTodolist()
     }

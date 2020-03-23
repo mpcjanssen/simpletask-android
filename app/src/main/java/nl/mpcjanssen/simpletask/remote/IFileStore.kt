@@ -32,7 +32,7 @@ interface IFileStore {
     fun appendTaskToFile(path: String, lines: List<String>, eol: String)
 
     fun readFile(file: String, fileRead: (String) -> Unit)
-    fun writeFile(file: File, contents: String)
+    fun writeFile(file: String, contents: String)
 
     val isOnline: Boolean
 
@@ -52,6 +52,17 @@ interface IFileStore {
     fun remoteTodoFileChanged() {
         broadcastFileSync(TodoApplication.app.localBroadCastManager)
 
+    }
+
+    fun doneFile(todoFileName: String): String {
+        return sibling(todoFileName, "done.txt")
+    }
+
+    fun parent(todoFileName: String): String {
+        return File(todoFileName).parent
+    }
+    fun sibling(todoFileName: String, name: String): String {
+        return File(parent(todoFileName), name).canonicalPath
     }
 
     // Generic special folder names for use in File dialogs

@@ -23,6 +23,7 @@ class FlavourPrefFragment : PreferenceFragment() {
             showConfirmationDialog(activity, R.string.webdav_logout_message,
                     DialogInterface.OnClickListener { dialogInterface, i ->
                         FileStore.logout()
+                        TodoApplication.app.clearTodoFile()
                         activity.finish()
                         LocalBroadcastManager.getInstance(activity).sendBroadcast(Intent(Constants.BROADCAST_ACTION_LOGOUT))
                     }, R.string.webdav_logout_pref_title)

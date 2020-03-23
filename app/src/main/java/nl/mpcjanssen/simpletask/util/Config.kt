@@ -192,31 +192,17 @@ class Config(app: TodoApplication) : Preferences(app) {
 
     private var _todoFileName by StringOrNullPreference(R.string.todo_file_key)
     val todoFileName: String
-        get() {
-            var name = _todoFileName
-            if (name == null) {
-                name = FileStore.getDefaultPath()
-                setTodoFile(name)
-            }
-            val todoFile = File(name)
-            try {
-                return todoFile.canonicalPath
-            } catch (e: IOException) {
-                return FileStore.getDefaultPath()
-            }
+        get()  = _todoFileName ?: FileStore.getDefaultPath()
 
-        }
 
-    val todoFile: File
-        get() = File(todoFileName)
 
-    fun setTodoFile(todo: String) {
+    fun setTodoFile(todo: String?) {
         _todoFileName = todo
         prefs.edit().remove(getString(R.string.file_current_version_id)).apply()
     }
 
     val doneFileName: String
-        get() = File(todoFile.parentFile, "done.txt").absolutePath
+        get() = FileStore.doneFile(todoFileName)
 
     fun clearCache() {
         cachedContents = null

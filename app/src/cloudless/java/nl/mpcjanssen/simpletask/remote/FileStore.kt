@@ -50,9 +50,9 @@ object FileStore : IFileStore {
         return RemoteContents(file.lastModified().toString(), lines)
     }
 
-    override fun writeFile(file: File, contents: String) {
-        Log.i(TAG, "Writing file to  ${file.canonicalPath}")
-        file.writeText(contents)
+    override fun writeFile(path: String, contents: String) {
+        Log.i(TAG, "Writing file to  $path")
+        File(path).writeText(contents)
     }
 
     override fun readFile(file: String, fileRead: (String) -> Unit) {
