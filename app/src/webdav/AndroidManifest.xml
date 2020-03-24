@@ -25,7 +25,8 @@ You should have received a copy of the GNU General Public License along with Sim
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <application>
+    <application
+            android:networkSecurityConfig="@xml/network_security_config">
         <activity
                 android:name="nl.mpcjanssen.simpletask.remote.LoginScreen"
                 android:label="@string/app_label" >
