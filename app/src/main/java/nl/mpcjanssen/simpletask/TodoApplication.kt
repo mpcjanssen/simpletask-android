@@ -220,8 +220,6 @@ class TodoApplication : MultiDexApplication() {
                 config.showTxtOnly)
     }
 
-
-
     companion object {
         private val TAG = TodoApplication::class.java.simpleName
         fun atLeastAPI(api: Int): Boolean = android.os.Build.VERSION.SDK_INT >= api
@@ -230,7 +228,6 @@ class TodoApplication : MultiDexApplication() {
         lateinit var todoList: TodoList
         lateinit var db : AppDatabase
     }
-
     var today: String = todayAsString
 }
 

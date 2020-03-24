@@ -131,7 +131,6 @@ public final class SardineUtil {
         return serializer;
     }
 
-    @SuppressWarnings("unchecked")
     public static <T> T unmarshal(Class<? extends T> type, InputStream in) throws IOException {
         try {
             return getSerializer().read(type, in);
