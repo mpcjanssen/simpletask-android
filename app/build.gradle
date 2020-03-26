@@ -124,7 +124,7 @@ android {
     }
     dexOptions {
         preDexLibraries = true
-        javaMaxHeapSize "6g"
+        javaMaxHeapSize "4g"
         dexInProcess = true
     }
     compileOptions {
@@ -161,14 +161,13 @@ dependencies {
     implementation "org.jetbrains.anko:anko-commons:0.10.8"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "androidx.legacy:legacy-support-v4:$android_support_version"
-    implementation 'androidx.core:core:1.1.0'
-    implementation "com.google.android.material:material:$android_support_version"
+    implementation 'androidx.core:core:1.2.0'
+    implementation "com.google.android.material:material:1.1.0"
 //    implementation "androidx.preference:preference:1.0.0"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation "androidx.recyclerview:recyclerview:1.1.0"
-    def room_version = "2.2.3"
-    kapt "androidx.room:room-compiler:$room_version"
-    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:2.2.5"
+    implementation "androidx.room:room-runtime:2.2.5"
 
     // For Kotlin use kapt instead of annotationProcessor
     implementation 'com.atlassian.commonmark:commonmark:0.11.0'
