@@ -1,6 +1,11 @@
-## 10.4.0
+## 10.5.0
+
+### Added
+
+- Added WebDAV version. Fixes #1040.
+- Add git version in version string.
 
 ### Fixed
 
-- Ensure only one load operation of the list occurs at the same time. Fixes #1027.
-- Remove Lua caching. Fixes #1029. 
+- Fixed archiving when `done.txt` is opened.
+- Removed thread synchronisation to fix slow startup. Fixes #1043.

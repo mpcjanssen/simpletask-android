@@ -1,5 +1,19 @@
 ﻿# Changelog
 
+## 10.5.0
+
+### Added
+
+- Added WebDAV version. Fixes #1040.
+- Add git version in version string.
+
+### Fixed
+
+- Fixed archiving when `done.txt` is opened.
+- Removed thread synchronisation to fix slow startup. Fixes #1043.
+
+
+
 ## 10.4.0
 
 ### Fixed
