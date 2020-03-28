@@ -365,4 +365,9 @@ Décochez cette option pour définir les nouvelles dates par rapport à aujourd\
     <string name="use_list_and_tags_icons_summary">Utiliser des icônes pour modifier la liste et l\'étiquette de la tâche. Désactiver pour utiliser les termes todo.txt @ et +.</string>
     <string name="no_tasks_to_archive">Aucune tâche à archiver.</string>
     <string name="force_english_title">Forcer l\'usage de l\'anglais</string>
+    <string name="link_added">Lien ajouté à Simpletask</string>
+    <string name="share_link">Lien de partage</string>
+    <string name="share_link_failed">Impossible d\'ajouter un lien vide.</string>
+    <string name="idle_before_safe_summary">Temps d\'inactivité nécessaire avant que les modifications soient enregistrées (en secondes)</string>
+    <string name="idle_before_safe_title">Durée avant enregistrement</string>
 </resources>
