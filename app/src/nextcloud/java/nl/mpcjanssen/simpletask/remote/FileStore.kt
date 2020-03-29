@@ -15,15 +15,13 @@ import com.owncloud.android.lib.resources.files.ReadFolderRemoteOperation
 import com.owncloud.android.lib.resources.files.UploadFileRemoteOperation
 import com.owncloud.android.lib.resources.files.model.RemoteFile
 import nl.mpcjanssen.simpletask.TodoApplication
-import nl.mpcjanssen.simpletask.util.Config
+import nl.mpcjanssen.simpletask.TodoException
 import nl.mpcjanssen.simpletask.util.join
 import nl.mpcjanssen.simpletask.util.showToastLong
 import java.io.File
 import java.io.IOException
 import java.util.*
 import kotlin.reflect.KClass
-
-private val s1 = System.currentTimeMillis().toString()
 
 /**
  * FileStore implementation backed by Nextcloud
@@ -52,8 +50,6 @@ object FileStore : IFileStore {
 
     private val TAG = "FileStore"
 
-    private var mOnline: Boolean = false
-
     private val mApp = TodoApplication.app
 
     private fun getClient () : OwnCloudClient? {
@@ -74,9 +70,13 @@ object FileStore : IFileStore {
     override fun getRemoteVersion(filename: String): String {
         val op = ReadFileRemoteOperation(filename)
         val res = op.execute(getClient())
-        val file = res.data[0] as RemoteFile
-        Log.d(TAG, "Remote versions of $filename: id: ${file.remoteId} tag: ${file.etag} modified: ${file.modifiedTimestamp} ")
-        return file.etag
+        return if (res.isSuccess) {
+            val file = res.data[0] as RemoteFile
+            Log.d(TAG, "Remote versions of $filename: id: ${file.remoteId} tag: ${file.etag} modified: ${file.modifiedTimestamp} ")
+            file.etag
+        } else {
+            throw TodoException("${res.code}: ${res.exception}")
+        }
     }
 
     override val isOnline: Boolean
@@ -188,18 +188,18 @@ object FileStore : IFileStore {
 
     }
 
-    override fun writeFile(path: String, contents: String) {
+    override fun writeFile(file: String, contents: String) {
         if (!isAuthenticated) {
-            Log.e(TAG, "Not authenticated, file $path not written.")
+            Log.e(TAG, "Not authenticated, file $file not written.")
             throw IOException("Not authenticated")
         }
 
         val cacheDir = mApp.applicationContext.cacheDir
         val tmpFile = File(cacheDir, "tmp.txt")
         tmpFile.writeText(contents)
-        val op = UploadFileRemoteOperation(tmpFile.absolutePath, path, "text/plain", timeStamp())
+        val op = UploadFileRemoteOperation(tmpFile.absolutePath, file, "text/plain", timeStamp())
         val result = op.execute(getClient())
-        Log.i(TAG, "Wrote file to $path, result ${result.isSuccess}")
+        Log.i(TAG, "Wrote file to $file, result ${result.isSuccess}")
 
     }
 
