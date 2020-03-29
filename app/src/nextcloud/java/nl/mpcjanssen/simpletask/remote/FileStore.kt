@@ -75,6 +75,7 @@ object FileStore : IFileStore {
             Log.d(TAG, "Remote versions of $filename: id: ${file.remoteId} tag: ${file.etag} modified: ${file.modifiedTimestamp} ")
             file.etag
         } else {
+            Log.w(TAG, "Failed to get remote version of $filename: ${res.code}")
             throw TodoException("${res.code}: ${res.exception}")
         }
     }
