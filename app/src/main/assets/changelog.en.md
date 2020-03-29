@@ -1,5 +1,11 @@
 ﻿# Changelog
 
+## 10.5.1
+
+### Fixed
+
+- Prevent ConcurrentModificationExceptions if the tasklist is updated during a save.
+
 ## 10.5.0
 
 ### Added
