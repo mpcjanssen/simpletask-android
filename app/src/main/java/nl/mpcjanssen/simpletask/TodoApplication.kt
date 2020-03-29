@@ -31,6 +31,7 @@ package nl.mpcjanssen.simpletask
 
 import android.app.Activity
 import android.app.AlarmManager
+import android.app.Application
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.*
@@ -52,7 +53,7 @@ import nl.mpcjanssen.simpletask.util.*
 import java.io.File
 import java.util.*
 
-class TodoApplication : MultiDexApplication() {
+class TodoApplication : Application() {
 
     private lateinit var androidUncaughtExceptionHandler: Thread.UncaughtExceptionHandler
     lateinit var localBroadCastManager: LocalBroadcastManager

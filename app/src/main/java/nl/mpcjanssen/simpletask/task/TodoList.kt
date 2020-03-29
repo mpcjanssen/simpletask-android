@@ -12,6 +12,7 @@ import nl.mpcjanssen.simpletask.remote.IFileStore
 import nl.mpcjanssen.simpletask.util.*
 
 import java.util.*
+import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.collections.ArrayList
 
 /**
@@ -25,7 +26,7 @@ class TodoList(val config: Config) {
     private var timer: CountDownTimer? = null
     private var mLists: MutableList<String>? = null
     private var mTags: MutableList<String>? = null
-    private val todoItems = ArrayList<Task>()
+    private val todoItems = CopyOnWriteArrayList<Task>()
     val pendingEdits = HashSet<Task>()
     internal val TAG = TodoList::class.java.simpleName
 
