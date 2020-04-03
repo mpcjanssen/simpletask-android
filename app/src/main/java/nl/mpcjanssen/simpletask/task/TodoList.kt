@@ -266,13 +266,15 @@ class TodoList(val config: Config) {
                 val remoteContents = FileStore.loadTasksFromFile(filename)
                 val items = remoteContents.contents
 
-                Log.d(TAG, "Fill todolist with ${items.size} items")
-                todoItems.clear()
-                todoItems.addAll(items.map { Task(it) })
+                val newTodoItems = items.map { Task(it) }
+                synchronized(todoItems) {
+                    Log.d(TAG, "Fill todolist with ${items.size} items")
+                    Log.i(TAG, "Updating cache with remote version ${remoteContents.remoteId}")
+                    todoItems = newTodoItems
+                    config.todoList = todoItems
+                    config.lastSeenRemoteId = remoteContents.remoteId
+                }
                 // Update cache
-                Log.i(TAG, "Updating cache with remote version ${remoteContents.remoteId}")
-                config.todoList = todoItems
-                config.lastSeenRemoteId = remoteContents.remoteId
                 // Backup
                 FileStoreActionQueue.add("Backup") {
                     Backupper.backup(filename, items)
