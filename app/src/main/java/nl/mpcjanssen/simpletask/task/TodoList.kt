@@ -26,7 +26,7 @@ class TodoList(val config: Config) {
     private var timer: CountDownTimer? = null
     private var mLists: MutableList<String>? = null
     private var mTags: MutableList<String>? = null
-    private val todoItems = CopyOnWriteArrayList<Task>()
+    private var todoItems = emptyList<Task>().toMutableList()
     val pendingEdits = HashSet<Task>()
     internal val TAG = TodoList::class.java.simpleName
 
@@ -266,7 +266,7 @@ class TodoList(val config: Config) {
                 val remoteContents = FileStore.loadTasksFromFile(filename)
                 val items = remoteContents.contents
 
-                val newTodoItems = items.map { Task(it) }
+                val newTodoItems = items.map { Task(it) }.toMutableList()
                 synchronized(todoItems) {
                     Log.d(TAG, "Fill todolist with ${items.size} items")
                     Log.i(TAG, "Updating cache with remote version ${remoteContents.remoteId}")
