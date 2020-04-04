@@ -59,8 +59,8 @@ android {
     }
 
     defaultConfig {
-        versionName "10.5.1"
-        versionCode 10005001
+        versionName "10.5.2"
+        versionCode 10005002
         buildConfigField "String", "GIT_VERSION", "\"" + androidGitVersion.name() + "\""
         multiDexEnabled false
         minSdkVersion 21
@@ -212,11 +212,11 @@ if (project.hasProperty('storeFile') &&
 
 
 
-task cleanPublish(type: GradleBuild) {
-    group = 'deployment'
-    description = 'Build and deploy all versions to Google Play'
-    setTasks(["clean", "publishNextcloudRelease", "publishCloudlessRelease", "publishDropboxRelease"])
-}
+task publishFlavours (type: GradleBuild,
+        dependsOn: ['publishNextcloudRelease',
+                    'publishDropboxRelease',
+                    'publishCloudlessRelease']) {}
+
 
 allprojects {
     gradle.projectsEvaluated {
