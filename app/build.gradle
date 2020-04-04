@@ -211,13 +211,6 @@ if (project.hasProperty('storeFile') &&
 }
 
 
-
-task publishFlavours (type: GradleBuild,
-        dependsOn: ['publishNextcloudRelease',
-                    'publishDropboxRelease',
-                    'publishCloudlessRelease']) {}
-
-
 allprojects {
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile) {
