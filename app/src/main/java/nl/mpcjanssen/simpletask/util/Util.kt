@@ -454,7 +454,7 @@ fun alfaSort(
 fun appVersion(ctx: Context): String {
     val packageInfo = ctx.packageManager.getPackageInfo(
             ctx.packageName, 0)
-    return "Simpletask " + BuildConfig.FLAVOR + " v" + packageInfo.versionName + " (" + BuildConfig.VERSION_CODE + ")"
+    return "Simpletask " + BuildConfig.FLAVOR + " v" + packageInfo.versionName + " (" + BuildConfig.VERSION_CODE + ")" + " Git: " + BuildConfig.GIT_VERSION
 }
 
 fun shortAppVersion(): String {
