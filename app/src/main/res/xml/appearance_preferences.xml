@@ -18,6 +18,11 @@
         android:title="Custom Font"
         /> -->
     <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/force_english"
+            android:title="@string/force_english_title"
+            />
+    <CheckBoxPreference
         android:defaultValue="false"
         android:key="@string/custom_font_size"
         android:title="@string/font_size_delta_pref_title"
