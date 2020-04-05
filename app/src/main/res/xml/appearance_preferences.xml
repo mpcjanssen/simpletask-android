@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
     <ListPreference
         android:defaultValue="light_darkactionbar"
         android:entries="@array/themes"
@@ -30,7 +32,8 @@
         android:key="@string/font_size"
         android:defaultValue="14"
         android:max="36"
-        android:showSeekBarValue="true"
+        app:showSeekBarValue="true"
+        app:min="12"
         />
     <CheckBoxPreference
         android:defaultValue="true"
@@ -49,7 +52,7 @@
         android:key="@string/datebar_relative_size"
         android:max="100"
         android:title="@string/datebar_relative_size_summary"
-        android:showSeekBarValue="true"
+        app:showSeekBarValue="true"
         />
     <CheckBoxPreference
         android:defaultValue="true"
