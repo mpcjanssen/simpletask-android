@@ -31,7 +31,8 @@
 	@copyright 2015 Vojtech Kral
 -->
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<!-- suppress ALL -->
+<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="@string/show_todo_path"
@@ -89,4 +90,4 @@
         android:title="@string/preference_title_debug_info"
         android:summary="@string/preference_summary_debug_info"
         />
-</PreferenceScreen>
+</android.support.v7.preference.PreferenceScreen>

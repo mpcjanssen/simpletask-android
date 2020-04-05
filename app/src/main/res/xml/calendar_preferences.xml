@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
+<android.support.v7.preference.PreferenceScreen
         android:key="@string/calendar_sync_screen"
         android:summary="@string/calendar_sync_screen_summary"
         android:title="@string/calendar_sync_screen_title"
@@ -29,4 +29,4 @@
                 android:defaultValue="720"
                 />
     </PreferenceCategory>
-</PreferenceScreen>
+</android.support.v7.preference.PreferenceScreen>
