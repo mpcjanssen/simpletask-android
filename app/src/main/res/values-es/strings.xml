@@ -371,7 +371,7 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="invalid_certificate_title">Certificado no válido.</string>
     <string name="no_tasks_to_archive">No hay tareas para archivar.</string>
     <string name="use_list_and_tags_icons_title">Usar iconos</string>
-    <string name="use_list_and_tags_icons_summary">Utilice iconos para cambiar la lista y la etiqueta de la tarea. Deshabilite para utilizar los términos todo.txt @ y + .</string>
+    <string name="use_list_and_tags_icons_summary">Utilizar íconos para cambiar lista y etiqueta de la tarea. Desactivar para utilizar los términos todo.txt @ y + .</string>
     <string name="force_english_title">Forzar idioma Inglés</string>
     <string name="idle_before_safe_title">Espera antes de guardar cambios</string>
     <string name="idle_before_safe_summary">Tiempo en espera antes de guardar los cambios (en segundos)</string>
