@@ -1,5 +1,7 @@
 package nl.mpcjanssen.simpletask.remote
 
+import nl.mpcjanssen.simpletask.TodoApplication
+import nl.mpcjanssen.simpletask.util.broadcastFileSync
 import java.io.File
 import java.io.IOException
 import kotlin.reflect.KClass
@@ -57,6 +59,11 @@ interface IFileStore {
     companion object {
         const val ROOT_DIR = "/"
         const val PARENT_DIR = ".."
+
+    }
+    @Suppress("unused")
+    fun remoteTodoFileChanged() {
+        broadcastFileSync(TodoApplication.app.localBroadCastManager)
 
     }
 }

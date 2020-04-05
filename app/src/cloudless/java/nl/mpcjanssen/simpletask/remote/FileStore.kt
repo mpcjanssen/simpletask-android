@@ -9,7 +9,6 @@ import android.os.Looper
 import androidx.core.content.ContextCompat
 import android.util.Log
 import nl.mpcjanssen.simpletask.TodoApplication
-import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.join
 import nl.mpcjanssen.simpletask.util.writeToFile
 import java.io.File
@@ -50,9 +49,9 @@ object FileStore : IFileStore {
         return RemoteContents(file.lastModified().toString(), lines)
     }
 
-    override fun writeFile(path: String, contents: String) {
-        Log.i(TAG, "Writing file to  $path")
-        File(path).writeText(contents)
+    override fun writeFile(file: String, contents: String) {
+        Log.i(TAG, "Writing file to  $file")
+        File(file).writeText(contents)
     }
 
     override fun readFile(file: String, fileRead: (String) -> Unit) {

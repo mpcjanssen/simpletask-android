@@ -30,3 +30,50 @@
 @file:JvmName("TaskIo")
 package nl.mpcjanssen.simpletask.util
 
+import android.util.Log
+import nl.mpcjanssen.simpletask.TodoException
+import java.io.*
+
+@Throws(IOException::class)
+@Suppress("unused")
+fun loadFromFile(file: File): List<String> {
+    return file.readLines()
+}
+
+@Throws(IOException::class)
+@Suppress("unused")
+fun writeToFile(lines: List<String>, eol: String, file: File, append: Boolean) {
+    try {
+        createParentDirectory(file)
+    } catch (e: IOException) {
+        Log.w("TaskIO", "Couldn't create directory of ${file.absolutePath}", e)
+        throw e
+    }
+    val str = FileOutputStream(file, append)
+
+    val fw = BufferedWriter(OutputStreamWriter(
+            str, "UTF-8"))
+    lines.forEach { line ->
+        fw.write(line)
+        fw.write(eol)
+    }
+    fw.close()
+    str.close()
+}
+
+@Throws(TodoException::class)
+fun createParentDirectory(dest: File?) {
+    if (dest == null) {
+        throw TodoException("createParentDirectory: dest is null")
+    }
+    val dir = dest.parentFile
+    if (dir != null && !dir.exists()) {
+        createParentDirectory(dir)
+        if (!dir.exists()) {
+            if (!dir.mkdirs()) {
+                Log.e(TAG, "Could not create dirs: " + dir.absolutePath)
+                throw TodoException("Could not create dirs: " + dir.absolutePath)
+            }
+        }
+    }
+}

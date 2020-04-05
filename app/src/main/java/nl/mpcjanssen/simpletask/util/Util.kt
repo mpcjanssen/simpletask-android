@@ -653,6 +653,11 @@ fun broadcastUpdateStateIndicator(broadcastManager: LocalBroadcastManager) {
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_STATE_INDICATOR))
 }
 
+@Suppress("unused")
+fun broadcastAuthFailed(broadcastManager: LocalBroadcastManager) {
+    broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_AUTH_FAILED))
+}
+
 fun createShortcut(ctxt: Context, id: String, name: String, icon: Int, target: Intent) {
     val iconRes = IconCompat.createWithResource(ctxt, icon)
     val pinShortcutInfo = ShortcutInfoCompat.Builder(ctxt, "$id.$name")

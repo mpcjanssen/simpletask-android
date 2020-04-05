@@ -121,11 +121,11 @@ object FileStore : IFileStore {
     }
 
     @Throws(IOException::class)
-    override fun saveTasksToFile(path: String, lines: List<String>, lastSeen: String?, eol: String) : String {
+    override fun saveTasksToFile(path: String, lines: List<String>, lastRemote: String?, eol: String) : String {
         Log.i(TAG, "Saving ${lines.size} tasks to Dropbox.")
         val contents = join(lines, eol) + eol
 
-        val rev = lastSeen
+        val rev = lastRemote
         Log.i(TAG, "Last seen rev $rev")
 
         val toStore = contents.toByteArray(charset("UTF-8"))
@@ -177,15 +177,15 @@ object FileStore : IFileStore {
         dbxClient.files().uploadBuilder(path).withAutorename(true).withMode(if (rev != null) WriteMode.update(rev) else null).uploadAndFinish(`in`)
     }
 
-    override fun writeFile(path: String, contents: String) {
+    override fun writeFile(file: String, contents: String) {
         if (!isAuthenticated) {
-            Log.e(TAG, "Not authenticated, file ${path} not written.")
+            Log.e(TAG, "Not authenticated, file ${file} not written.")
             return
         }
         val toStore = contents.toByteArray(charset("UTF-8"))
-        Log.d(TAG, "Write to file ${path}")
+        Log.d(TAG, "Write to file ${file}")
         val inStream = ByteArrayInputStream(toStore)
-        dbxClient.files().uploadBuilder(path).withMode(WriteMode.OVERWRITE).uploadAndFinish(inStream)
+        dbxClient.files().uploadBuilder(file).withMode(WriteMode.OVERWRITE).uploadAndFinish(inStream)
     }
 
     @Throws(IOException::class)
@@ -221,7 +221,7 @@ object FileStore : IFileStore {
 
         try {
             val dbxPath = if (path == ROOT_DIR) "" else path
-            val entries = FileStore.dbxClient.files().listFolder(dbxPath).entries
+            val entries = dbxClient.files().listFolder(dbxPath).entries
             entries?.forEach { entry ->
                 if (entry is FolderMetadata)
                     fileList.add(FileEntry(entry.name, isFolder = true))

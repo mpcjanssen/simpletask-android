@@ -191,6 +191,12 @@ class TodoApplication : Application() {
             return FileStore.isAuthenticated
         }
 
+    @Suppress("unused")
+    fun clearTodoFile() {
+        config.clearCache()
+        config.setTodoFile(null)
+    }
+
     fun startLogin(caller: Activity) {
         val loginActivity = FileStore.loginActivity()?.java
         loginActivity?.let {
