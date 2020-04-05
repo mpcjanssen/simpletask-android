@@ -15,7 +15,7 @@
 -->
 
 <set xmlns:android="http://schemas.android.com/apk/res/android">
-    <objectAnimator
+    <android:objectAnimator
         android:duration="166"
         android:propertyName="pathData"
         android:valueFrom="M 7.0,-9.0 c 0.0,0.0 -14.0,0.0 -14.0,0.0 c -1.1044921875,0.0 -2.0,0.8955078125 -2.0,2.0 c 0.0,0.0 0.0,14.0 0.0,14.0 c 0.0,1.1044921875 0.8955078125,2.0 2.0,2.0 c 0.0,0.0 14.0,0.0 14.0,0.0 c 1.1044921875,0.0 2.0,-0.8955078125 2.0,-2.0 c 0.0,0.0 0.0,-14.0 0.0,-14.0 c 0.0,-1.1044921875 -0.8955078125,-2.0 -2.0,-2.0 c 0.0,0.0 0.0,0.0 0.0,0.0 Z M -2.0,5.00001525879 c 0.0,0.0 -5.0,-5.00001525879 -5.0,-5.00001525879 c 0.0,0.0 1.41409301758,-1.41409301758 1.41409301758,-1.41409301758 c 0.0,0.0 3.58590698242,3.58601379395 3.58590698242,3.58601379395 c 0.0,0.0 7.58590698242,-7.58601379395 7.58590698242,-7.58601379395 c 0.0,0.0 1.41409301758,1.41409301758 1.41409301758,1.41409301758 c 0.0,0.0 -9.0,9.00001525879 -9.0,9.00001525879 Z"
@@ -24,14 +24,14 @@
         android:interpolator="@anim/ic_checkbox_animation_interpolator_1"
         />
     <set android:ordering="sequentially" >
-        <objectAnimator
+        <android:objectAnimator
             android:duration="133"
             android:propertyName="fillAlpha"
             android:valueFrom="1.0"
             android:valueTo="1.0"
             android:interpolator="@android:interpolator/linear"
             />
-        <objectAnimator
+        <android:objectAnimator
             android:duration="33"
             android:propertyName="fillAlpha"
             android:valueFrom="1.0"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <ListPreference
         android:defaultValue="light_darkactionbar"
         android:entries="@array/themes"
@@ -79,4 +79,4 @@
             android:title="@string/use_list_and_tags_icons_title"
             android:summary="@string/use_list_and_tags_icons_summary"
     />
-</PreferenceScreen>
+</android.support.v7.preference.PreferenceScreen>

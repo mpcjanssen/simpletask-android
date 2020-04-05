@@ -16,14 +16,14 @@
 
 <set xmlns:android="http://schemas.android.com/apk/res/android">
     <set android:ordering="sequentially">
-        <objectAnimator
+        <android:objectAnimator
             android:duration="166"
             android:propertyName="scaleX"
             android:valueFrom="0.2"
             android:valueTo="0.18"
             android:interpolator="@anim/ic_checkbox_animation_interpolator_1"
             />
-        <objectAnimator
+        <android:objectAnimator
             android:duration="333"
             android:propertyName="scaleX"
             android:valueFrom="0.18"
@@ -33,14 +33,14 @@
     </set>
 
     <set android:ordering="sequentially">
-        <objectAnimator
+        <android:objectAnimator
             android:duration="166"
             android:propertyName="scaleY"
             android:valueFrom="0.2"
             android:valueTo="0.18"
             android:interpolator="@anim/ic_checkbox_animation_interpolator_1"
             />
-        <objectAnimator
+        <android:objectAnimator
             android:duration="333"
             android:propertyName="scaleY"
             android:valueFrom="0.18"

@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <com.robobunny.SeekBarPreference xmlns:robobunny="http://robobunny.com"
-
-                                     android:max="10"
-                                     robobunny:min="1"
-                                     robobunny:unitsLeft="s"
-                                     robobunny:unitsRight=""
+<android.support.v7.preference.PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:asp="http://schemas.android.com/apk/res-auto">
+    <SeekBarPreference          android:max="10"
                                      android:defaultValue="3"
                                      android:key="@string/idle_before_save"
-
                                      android:summary="@string/idle_before_safe_summary"
                                      android:title="@string/idle_before_safe_title"
     />
@@ -58,4 +54,4 @@
             android:key="@string/use_uuids"
             android:title="@string/use_uuid_title"
     />
-</PreferenceScreen>
+</android.support.v7.preference.PreferenceScreen>

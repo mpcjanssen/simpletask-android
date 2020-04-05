@@ -13,9 +13,12 @@ class ByTextFilter(private val moduleName : String, searchText: String?, private
         get() = cased(text).split("\\s".toRegex()).dropLastWhile { it.isEmpty() }
 
     override fun apply(task: Task): Boolean {
-        return scriptResult(task)?. ?: cased(task.text).let { taskText ->
-            !parts.any { it.isNotEmpty() && !taskText.contains(it) }
-        }
+        return scriptResult(task) ?:
+            cased(task.text).let { taskText ->
+                !parts.any {
+                    it.isNotEmpty() && !taskText.contains(it)
+                }
+            }
     }
 
     private fun scriptResult(task: Task): Boolean? {
