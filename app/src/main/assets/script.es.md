@@ -1,5 +1,5 @@
-Scripting with Lua
-==================
+Usando scripts de Lua
+=====================
 
 Simpletask incorpora un motor de scripting de Lua que se puede usar para configuración y devoluciones de llamadas (callbacks).
 La configuración se lee cada vez que se reinicia la aplicación o cuando se edita en la pantalla Configuración Lua.
