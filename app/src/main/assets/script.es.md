@@ -1,8 +1,8 @@
 Scripting with Lua
 ==================
 
-Simpletask incorpora un motor de secuencias de comandos Lua que se puede usar para configuración y devoluciones de llamadas (callbacks).
-La configuración se lee cada vez que se reinicia la aplicación o cuando se edita en la pantalla Lua Config.
+Simpletask incorpora un motor de scripting de Lua que se puede usar para configuración y devoluciones de llamadas (callbacks).
+La configuración se lee cada vez que se reinicia la aplicación o cuando se edita en la pantalla Configuración Lua.
 Las devoluciones de llamada (callbacks) se ejecutan cuando tienen lugar ciertos eventos (como el filtrado de tareas).
 
 Tanto la configuración como las devoluciones de llamada llamarán a funciones específicas de Lua. Consulte a continuación los detalles de las devoluciones de llamada admitidas.
@@ -20,7 +20,7 @@ Agregar `function onFilter(t,f,e)` antes y `end` luego del guión (scritp) exist
     if due~=nil then
         return os.time() >= due;
     end
-    --- las tareas sin fecha de vencimiento no están vencidas.
+    --- las tareas sin fecha de vencimiento no se consideran vencidas.
     return false;
 
 se convierte en
@@ -29,10 +29,9 @@ se convierte en
         if f.due~=nil then
             return os.time() >= f.due;
         end
-        --- las tareas sin fecha de vencimiento no están vencidas.
+        --- las tareas sin fecha de vencimiento no se consideran vencidas.
         return false;
     end
-
 
 Funciones auxiliares
 ====================
@@ -43,36 +42,38 @@ Muestra `string` como una notificación toast. Es útil para la depuración de s
 
 ### `log (string) -> nil`
 
-Registra `string` en el registro de logcat de Android con nivel de información y etiqueta` LuaInterp`.
+Registra `string` en el registro logcat de Android con nivel `info` y etiqueta `LuaInterp`.
 
 ### Nota
-No use notificaciones toasts dentro de las funciones. Es es una buena manera de hacer que Simpletask se cuelgue.
 
-Callbacks (devoluciones de llamada)
+No use notificaciones toasts dentro de las funciones. Es una buena manera de hacer que Simpletask se congele.
+
+Devoluciones de llamada (callbacks)
 ===================================
 
 La mayoría de las funciones utilizan la misma colección de parámetros:
 
-### Parámetros generales ###
+### Parámetros generales
 
 * `task`: La tarea como una cadena.
 * `fields`: Partes de la tarea convertidas a diferentes tipos (por ejemplo, una marca de tiempo para `createdate`)
-    * `completed`: Valor booleano que indica si la tarea se ha completado.
-    * `completiondate`: La fecha de finalización en segundos de la tarea o `nil` si no está establecida.
-    * `createdate`: La fecha de creación en segundos de la tarea o `nil` si no está establecida.
-    * `due`: La fecha de vencimiento en segundos o `nil` si no está establecida.
-    * `lists`: Una tabla con las listas de la tarea como claves. `fields.lists` en sí mismo nunca será` nil`
-    * `priority`: La prioridad de la tarea como una cadena.
-    * `recurrence`: El patrón de recurrencia o repetición de la tarea como cadena o `nil` si no está establecida.
-    * `tags`: Una tabla con las etiquetas de la tarea como claves. `fields.tags` en sí mismo nunca será `nil`.
-    * `task`: La tarea completa como una cadena.
-    * `threshold`: La fecha límite en segundos o `nil` si no está establecida.
-    * `text`: El texto ingresado cuando se creó la tarea.
-* `extensions`: Una tabla con las extensiones de todo.txt (`key: val`) de la tarea como pares de valores clave. Solo hay una entrada para cada clave, esto es para facilitar su uso. Si necesita varios pares `key: val` con la misma clave, puede analizar la tarea en Lua.
+  * `completed`: Valor booleano que indica si la tarea se ha completado.
+  * `completiondate`: La fecha de finalización en segundos de la tarea o `nil` si no está establecida.
+  * `createdate`: La fecha de creación en segundos de la tarea o `nil` si no está establecida.
+  * `due`: La fecha de vencimiento en segundos o `nil` si no está establecida.
+  * `lists`: Una tabla con las listas de la tarea como claves. `fields.lists` en sí misma nunca será` nil`
+  * `priority`: La prioridad de la tarea como una cadena.
+  * `recurrence`: El patrón de recurrencia o repetición de la tarea como cadena o `nil` si no está establecida.
+  * `tags`: Una tabla con las etiquetas de la tarea como claves. `fields.tags` en sí misma nunca será `nil`.
+  * `task`: La tarea completa como una cadena.
+  * `threshold`: La fecha límite en segundos o `nil` si no está establecida.
+  * `text`: El texto ingresado cuando se creó la tarea.
+* `extensions`: Una tabla con las extensiones de todo.txt (`key: val`) de la tarea como pares de valores clave. Sólo hay una entrada para cada clave, esto es para facilitar su uso. Si necesita varios pares `key: val` con la misma clave, puede procesar la tarea en Lua.
 
 ### `onFilter (task, fields, extensions) -> boolean`
 
-Llamada para cada tarea como parte del filtrado de la lista de tareas pendientes.
+Llamada para cada tarea como parte del filtrado de la lista de tareas.
+
 #### Devuelve
 
 * `verdadero` si la tarea debe mostrarse
@@ -80,160 +81,149 @@ Llamada para cada tarea como parte del filtrado de la lista de tareas pendientes
 
 #### Notas
 
-* Si hay un error de Lua en la devolución de llamada, se comporta como si hubiera devuelto `true`
+* Si hay un error de Lua en la devolución de llamada, se comporta como si hubiera devuelto `true`.
 * Teniendo en cuenta que esta función es llamada muchas veces (para cada tarea en la lista) debería ser rápida. Si es demasiada lenta, Simpletask podría terminar en ANR (Android Not Responding).
 * Debe definir la función `onFilter` en el filtro (no en la configuración Lua). Definirlo en la configuración principal no funcionará. Si el script de filtrado está vacío, la función `onFilter`  será indefinida.
 
 ### `onGroup (task, fields, extensions) -> string`
 
-Called for every task as part of filtering the todo list.
+Llamada para cada tarea como parte del filtrado de la lista de tareas.
 
+#### Devuelve
 
-### Returns
+* El grupo al que pertenece la tarea.
 
-* The group this task belongs to.
+#### Notas
 
-### Notes
-
-* If there is a Lua error in the callback, it behaves as if it had returned `""`
-* Considering this function is called a lot (for every task in the list) it should be fast. If it is too slow Simpletask might give ANRs.
-* You should define the `onGroup` function in the filter (not in the configuration). Defining it in the main configuration will not work, if the Filter script is empty, the `onGroup` function will be undefined.
-
+* Si hay un error de Lua en la devolución de llamada, se comporta como si hubiera devuelto `" "`.
+* Teniendo en cuenta que esta función es llamada muchas veces (para cada tarea en la lista), debería ser rápida. Simpletask podría terminar en ANR (Android Not Responding).
+* Se debe definir la función `onGroup` en el filtro (no en la configuración de Lua). Definirla en la configuración principal no funcionará, si el script de filtrado está vacío, la función `onGroup` no estará definida.
 
 ### `onSort (task, fields, extensions) -> string`
 
-Called for every task as part of sorting the todo list. This function should return a string for every task. This string
-is then used to sort the tasks.
+Llamada para cada tarea como parte del ordenamiento de la lista de tareas. Esta función debería devolver una cadena para cada tarea. Esta cadena se usa para ordenar las tareas.
 
+#### Returns
 
-### Returns
+* La cadena que se utilizará para ordenar tareas.
 
-* The string to use for task sorting.
+#### Notas
 
-### Notes
-
-* If there is a Lua error in the callback, it behaves as if it had returned `""`
-* Considering this function is called a lot (for every task in the list) it should be fast. If it is too slow Simpletask might give ANRs.
-* You should define the `onSort` function in the filter (not in the configuration). Defining it in the main configuration will not work, if the Filter script is empty, the `onGroup` function will be undefined.
-
-
+- Si hay un error de Lua en la devolución de llamada, se comporta como si hubiera devuelto `""`.
+- Teniendo en cuenta que esta función es llamada muchas veces (para cada tarea en la lista), debería ser rápida. Simpletask podría terminar en ANR (Android Not Responding).
+- Se debe definir la función `onSort` en el filtro (no en la configuración de Lua). Definirla en la configuración principal no funcionará, si el script de filtrado está vacío, la función `onGroup` no estará definida.
 
 ### `onDisplay (task, fields, extensions) -> string`
 
-Called for every task before it is displayed.
+Llamada para cada tarea antes de ser mostrada.
 
-### Returns
+#### Devuelve
 
-* A string which is displayed.
+* La cadena que se mostrará.
 
-### Notes
+#### Notas
 
-* If there is a Lua error in the callback, it behaves as if it had returned `""`
-* Considering this function is called a lot (for every task in the list) it should be fast. If it is too slow Simpletask might give ANRs.
-* You should define the `onDisplay` function in the filter (not in the configuration). Defining it in the main configuration will not work, if the Filter script is empty, the `onDisplay` function will be undefined.
+- Si hay un error de Lua en la devolución de llamada, se comporta como si hubiera devuelto `""`.
+- Teniendo en cuenta que esta función es llamada muchas veces (para cada tarea en la lista), debería ser rápida. Simpletask podría terminar en ANR (Android Not Responding).
+- Se debe definir la función `onDisplay` en el filtro (no en la configuración de Lua). Definirla en la configuración principal no funcionará, si el script de filtrado está vacío, la función `onDisplay` no estará definida.
 
 ### `onAdd (task, fields, extensions) -> string`
 
-Called for every task before it is added.
+Llamada para cada tarea antes de ser agregada a la lista de tareas.
 
-### Returns
+#### Returns
 
-* A string which will be the actual task that is added.
+* Una cadena que será la tarea a ser agregada.
 
-### Notes
+#### Notes
 
-* If there is a Lua error in the callback, the original task text is saved.
-* You should define the `onAdd` callback in the main Lua configuration as it is not filter specific. Defining it in a filter will not work.
+* Si hay un error de Lua en la devolución de llamada, el texto original de la tarea será guardado.
+* Debe definir la devolución de llamada `onAdd` en la configuración principal de Lua, ya que no debe usarse en un filtro. Definirla en un filtro no funcionará.
 
 ### `onTextSearch (taskText, searchText, caseSensitive) -> boolean`
 
-Called for every task as when searching for text.
+Llamada para cada tarea al buscar una cadena de texto
 
-### Parameters
+#### Parameters
 
-* `taskText`: The task text as it appears in the `todo.txt` file
-* `searchText`: Text being searched for
-* `caseSensitive`: `true` if case sensitive searching is configured in the settings.
+* `taskText`: El texto de la tarea tal como aparece en el archivo `todo.txt`.
+* `searchText`: La cadena de texto a ser buscada.
+* `caseSensitive`: `true`  si está activada en la configuración la busquéda indiferente a mayúsculas y minúsculas.
 
-### Returns
+#### Returns
 
-* `true` if the task should be shown
-* `false` if the task should not be shown
+* `true` si la tarea debe mostrarse
+* `false` si la tarea no debe mostrarse
 
 ### Notes
 
-* If there is a Lua error in the callback, it behaves as if it had returned `true`
-* Considering this function is called a lot (for every task in the list) it should be fast. If it is too slow Simpletask might give ANRs.
+* Si ocurre un error de Lua en la devolución de llamada, se comporta como si hubiera devuelto `true`.
+* Teniendo en cuenta que esta función es llamada muchas veces (para cada tarea en la lista), debería ser rápida. Si es demasiada lenta, Simpletask podría terminar en ANR (Android Not Responding).
 
-Configuration
+Configuración
 =============
 
-Configuration is read on app start and whenever it is changed or ran from the Lua Config screen.
-Configuration from Lua will always override the value from the settings (Lua wins).
+La configuracón es leída en el inicio de la aplicación y siempre que cambie o se ejecute desde la pantalla de Configuración Lua.
+
+La configuración de Lua siempre sobreescribirá el valor definido en la Configuración (Lua gana).
 
 ### `theme () -> string`
 
-### Parameters
+#### Parameters
 
-None
+Ninguno
 
-### Returns
+#### Devuelve
 
-* `"dark"` for the Material dark theme
-* `"black"` for the black theme (works well on Amoled devices).
-* `"light_darkactionbar"` for the Material light theme
+* `"dark"`  para el tema Material Oscuro
+* `"black"` para el tema Negro (funciona bien en dispositivos con pantalla Amoled)
+* `"light"` para el tema Material Claro
 
-### Notes
+#### Notas
 
-* Requires an application restart to take effect (more accurately it needs to recreate the activity)
+* Requiere de un reinicio de la aplicación para que tenga efecto (más precisamente, se necesita recrear la actividad).
 
 ### `tasklistTextSize () -> float`
 
-### Parameters
+#### Parámetros
 
-None
+Ninguno
 
-### Returns
+#### Devuelve
 
-The font size of the main task list in SP as a float.
+El tamaño de la fuente de la lista de tareas en `sp` (Scale-independent Pixels) como un número flotante.
 
-### Notes
+#### Notas
 
-* Requires an application restart to take effect (more accurately it needs to recreate the activity)
-* The default size in Android at the moment is `14sp`
+* Requiere de un reinicio de la aplicación para que tenga efecto (más precisamente, se necesita recrear la actividad).
+* El tamaño por defecto en Android es `14sp`.
 
-Examples
+Ejemplos
 ========
+
+El siguiente código mostrará sólo tareas vencidas donde las tareas sin una fecha de vencimiento establecida se considerarán que nunca vencen.
 
 The following code will show only overdue tasks where tasks without a due date, will never be overdue.
 
-    function onFilter(t,f,e)
-       if f.due~=nil then
-           return os.time() > f.due;
-       end
-       --- tasks with no due date are not overdue.
-       return false;
-    end
-
-Show tasks without tags or lists (the GTD Inbox):
+Mostrar tareas sin etiquetas ni listas (el buzón de entrada de GTD):
 
     function onFilter(t,f,e)
        return next(f.tags)==nil and next(f.lists)==nil
     end
 
-Show all tasks on the `@errands` list:
+Mostrar todas las tareas en la lista `errands`:
 
     function onFilter(t,f,e)
        return f.lists["errands"]
     end
 
-Change the font size of the main task list to `16sp`:
+Cambiar el tamaño de la fuente de la lista de tareas a `16sp`:
 
     function tasklistTextSize()
        return 16.0
     end
 
-The 8.0.0 fuzzy search in Lua:
+La búsqueda difusa 8.0.0 en Lua (fuzzy search):
 
     function onTextSearch(text, search, case)
         pat = string.gsub(search, ".", "%0.*")
@@ -241,8 +231,7 @@ The 8.0.0 fuzzy search in Lua:
         return res~=nil
     end
 
-
-A group callback to group by list with custom empty header:
+Una devolución de llamada de grupo para agrupar por lista con encabezado vacío personalizado si la tarea no pertenece a ninguna lista:
 
     function onGroup(t,f,e)
         if not next(f.lists) then
@@ -251,32 +240,25 @@ A group callback to group by list with custom empty header:
             return next(f.lists)
         end
     end
-    
-Don't group at all and don't show any headers (regardless of sort order)
+
+No agrupar y no mostrar ningún encabezado (independientemente del orden de clasificación):
 
     function onGroup()
         return ""
     end
 
-A callback to modify the display of a task:
+Una devolución de llamada para modificar como se muestra una tarea:
 
     function onDisplay(t,f,e)
        if f.due~=nil and os.time() > f.due then
-         --- Display overdue tasks in uppercase. (Prefixing with '=' replaces entire task.)
+         --- Mostrar tareas vencidas en mayúsculas.
+         --- (Poner un '=' delante reemplaza la tarea entera)
          return "="..string.upper(f.tasktext)
        end
        return f.tasktext
     end
 
-Learning Lua
+Aprender Lua
 ============
 
-Googling should turn up plenty of good resources. [*Programming in Lua*](https://www.lua.org/pil/contents.html) should cover almost everything.
-
-
-
-
-
-resources. [*Programming in Lua*](https://www.lua.org/pil/contents.html) should cover almost everything.
-
-
+Buscar en Google debería devolver muchos y buenos recursos. [*Programando en Lua*](https://www.lua.org/pil/contents.html) debería cubrir casi todo.
