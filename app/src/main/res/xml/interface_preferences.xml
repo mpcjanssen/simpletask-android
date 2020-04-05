@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v7.preference.PreferenceScreen
+<PreferenceScreen
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:asp="http://schemas.android.com/apk/res-auto">
     <SeekBarPreference          android:max="10"
@@ -54,4 +54,4 @@
             android:key="@string/use_uuids"
             android:title="@string/use_uuid_title"
     />
-</android.support.v7.preference.PreferenceScreen>
+</PreferenceScreen>

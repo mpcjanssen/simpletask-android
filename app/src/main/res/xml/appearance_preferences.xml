@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <ListPreference
         android:defaultValue="light_darkactionbar"
         android:entries="@array/themes"
@@ -25,16 +25,12 @@
             android:key="@string/force_english"
             android:title="@string/force_english_title"
     />
-    <com.robobunny.SeekBarPreference
-        xmlns:robobunny="http://robobunny.com"
+    <SeekBarPreference
         android:dependency="@string/custom_font_size"
         android:key="@string/font_size"
         android:defaultValue="14"
         android:max="36"
-        robobunny:min="12"
-        robobunny:interval="2"
-        robobunny:unitsLeft=""
-        robobunny:unitsRight="sp"
+        android:showSeekBarValue="true"
         />
     <CheckBoxPreference
         android:defaultValue="true"
@@ -46,17 +42,14 @@
         android:key="@string/taskview_extended_pref_key"
         android:title="@string/taskview_extended_pref_title"
         />
-    <com.robobunny.SeekBarPreference
+    <SeekBarPreference
         xmlns:robobunny="http://robobunny.com"
         android:dependency="@string/taskview_extended_pref_key"
         android:defaultValue="80"
         android:key="@string/datebar_relative_size"
         android:max="100"
         android:title="@string/datebar_relative_size_summary"
-        robobunny:interval="1"
-        robobunny:min="0"
-        robobunny:unitsLeft=""
-        robobunny:unitsRight="%"
+        android:showSeekBarValue="true"
         />
     <CheckBoxPreference
         android:defaultValue="true"
@@ -79,4 +72,4 @@
             android:title="@string/use_list_and_tags_icons_title"
             android:summary="@string/use_list_and_tags_icons_summary"
     />
-</android.support.v7.preference.PreferenceScreen>
+</PreferenceScreen>
