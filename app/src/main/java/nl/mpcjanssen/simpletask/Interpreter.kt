@@ -3,7 +3,6 @@ package nl.mpcjanssen.simpletask
 
 import android.util.Log
 import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TextToken
 import nl.mpcjanssen.simpletask.util.*
 import org.luaj.vm2.*
 import org.luaj.vm2.lib.OneArgFunction
@@ -30,12 +29,12 @@ object Interpreter :  AbstractInterpreter() {
     }
 
     override fun tasklistTextSize(): Float? {
-        return callZeroArgLuaFunction(globals, CONFIG_TASKLIST_TEXT_SIZE_SP) { it -> it.tofloat() }
+        return callZeroArgLuaFunction(globals, CONFIG_TASKLIST_TEXT_SIZE_SP) { it.tofloat() }
     }
 
     // Callback to determine the theme. Return true for datk.
     override fun configTheme(): String? {
-        return callZeroArgLuaFunction(globals, CONFIG_THEME) { it -> it.toString() }
+        return callZeroArgLuaFunction(globals, CONFIG_THEME) { it.toString() }
     }
 
     override fun onFilterCallback(moduleName: String, t: Task): Pair<Boolean, String> {

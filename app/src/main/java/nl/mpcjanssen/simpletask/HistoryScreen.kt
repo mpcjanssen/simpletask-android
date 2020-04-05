@@ -4,15 +4,13 @@
 package nl.mpcjanssen.simpletask
 
 import android.content.Intent
-import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.widget.Toolbar
 import android.util.Log
 import android.view.Menu
 import android.widget.ScrollView
 import android.widget.TextView
-import nl.mpcjanssen.simpletask.dao.AppDatabase
+import androidx.appcompat.widget.Toolbar
 import nl.mpcjanssen.simpletask.dao.DB_FILE
 import nl.mpcjanssen.simpletask.dao.TodoFile
 import nl.mpcjanssen.simpletask.util.createCachedDatabase
@@ -21,7 +19,6 @@ import nl.mpcjanssen.simpletask.util.showToastShort
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.io.File
-import java.lang.Integer.max
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -32,8 +29,8 @@ class HistoryScreen : ThemedActionBarActivity() {
     private var mScroll = 0
     val db = TodoApplication.db
     lateinit var history: List<TodoFile>
-    lateinit var dbFile : File
-    var cursorIdx = 0
+    private lateinit var dbFile : File
+    private var cursorIdx = 0
     private var m_app: TodoApplication? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,9 +54,9 @@ class HistoryScreen : ThemedActionBarActivity() {
 
 
     private fun shareHistory() {
-        val shareIntent = Intent(android.content.Intent.ACTION_SEND)
+        val shareIntent = Intent(Intent.ACTION_SEND)
         shareIntent.type = "application/x-sqlite3"
-        shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT,
                 "Simpletask History Database")
         try {
             createCachedDatabase(this, dbFile)
@@ -74,7 +71,7 @@ class HistoryScreen : ThemedActionBarActivity() {
     }
 
 
-    fun initToolbar(): Boolean {
+    private fun initToolbar(): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -99,7 +96,7 @@ class HistoryScreen : ThemedActionBarActivity() {
                     return@OnMenuItemClickListener true
                 }
                 R.id.menu_share -> {
-                    if (history.size == 0) {
+                    if (history.isEmpty()) {
                         showToastShort(this@HistoryScreen, "Nothing to share")
                     } else {
                         shareText(this@HistoryScreen, "Old todo version", history.getOrNull(cursorIdx)?.contents
@@ -184,6 +181,6 @@ class HistoryScreen : ThemedActionBarActivity() {
     }
 
     companion object {
-        private val TAG = "HistoryScreen"
+        private const val TAG = "HistoryScreen"
     }
 }

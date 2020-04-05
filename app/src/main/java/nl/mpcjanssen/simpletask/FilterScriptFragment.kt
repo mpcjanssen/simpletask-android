@@ -20,27 +20,27 @@ class FilterScriptFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "onCreate() this:" + this)
+        Log.d(TAG, "onCreate() this:$this")
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d(TAG, "onDestroy() this:" + this)
+        Log.d(TAG, "onDestroy() this:$this")
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        Log.d(TAG, "onSaveInstanceState() this:" + this)
+        Log.d(TAG, "onSaveInstanceState() this:$this")
         outState.putString(Query.INTENT_SCRIPT_FILTER, script)
         outState.putString(Query.INTENT_SCRIPT_TEST_TASK_FILTER, testTask)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        Log.d(TAG, "onCreateView() this:" + this)
+        Log.d(TAG, "onCreateView() this:$this")
 
         val arguments = arguments
-        Log.d(TAG, "Fragment bundle:" + this)
+        Log.d(TAG, "Fragment bundle:$this")
         val layout = inflater.inflate(R.layout.script_filter,
                 container, false) as LinearLayout
 
@@ -49,7 +49,7 @@ class FilterScriptFragment : Fragment() {
         txtTestTask = layout.findViewById(R.id.txt_testtask) as EditText
         spnCallback = layout.findViewById(R.id.spnCallback) as Spinner
 
-        val callbacks = arrayOf<String>(Interpreter.ON_DISPLAY_NAME, Interpreter.ON_FILTER_NAME, Interpreter.ON_GROUP_NAME, Interpreter.ON_SORT_NAME)
+        val callbacks = arrayOf(Interpreter.ON_DISPLAY_NAME, Interpreter.ON_FILTER_NAME, Interpreter.ON_GROUP_NAME, Interpreter.ON_SORT_NAME)
         val spnAdapter = ArrayAdapter(activity, R.layout.spinner_item, callbacks)
         spnCallback?.adapter = spnAdapter
         activity?.let { act ->
@@ -103,7 +103,7 @@ class FilterScriptFragment : Fragment() {
 
     private fun testOnGroupCallback(barView: View, script: String, snackBar: Snackbar, t: Task) {
         activity?.let {act ->
-            if (!script.trim { it <= ' ' }.isEmpty()) {
+            if (script.trim { it <= ' ' }.isNotEmpty()) {
                 snackBar.setText("Group: " + Interpreter.evalScript(environment, script).onGroupCallback(environment, t))
                 barView.setBackgroundColor(ContextCompat.getColor(act, R.color.gray74))
             } else {
@@ -116,7 +116,7 @@ class FilterScriptFragment : Fragment() {
 
     private fun testOnDisplayCallback(barView: View, script: String, snackBar: Snackbar, t: Task) {
         activity?.let { act ->
-            if (!script.trim { it <= ' ' }.isEmpty()) {
+            if (script.trim { it <= ' ' }.isNotEmpty()) {
                 snackBar.setText("Display: " + Interpreter.evalScript(environment, script).onDisplayCallback(environment, t))
                 barView.setBackgroundColor(ContextCompat.getColor(act, R.color.gray74))
             } else {
@@ -129,7 +129,7 @@ class FilterScriptFragment : Fragment() {
 
     private fun testOnSortCallback(barView: View, script: String, snackBar: Snackbar, t: Task) {
         activity?.let { act ->
-            if (!script.trim { it <= ' ' }.isEmpty()) {
+            if (script.trim { it <= ' ' }.isNotEmpty()) {
                 snackBar.setText("Display: " + Interpreter.evalScript(environment, script).onSortCallback(environment, t))
                 barView.setBackgroundColor(ContextCompat.getColor(act, R.color.gray74))
             } else {
@@ -143,14 +143,14 @@ class FilterScriptFragment : Fragment() {
     val useScript: Boolean
         get() {
             val arguments = arguments
-            if (cbUseScript == null) {
-                return arguments?.getBoolean(Query.INTENT_USE_SCRIPT_FILTER, false) ?: false
+            return if (cbUseScript == null) {
+                arguments?.getBoolean(Query.INTENT_USE_SCRIPT_FILTER, false) ?: false
             } else {
-                return cbUseScript?.isChecked ?: false
+                cbUseScript?.isChecked ?: false
             }
         }
 
-    val environment: String
+    private val environment: String
         get() {
             val arguments = arguments
             return arguments?.getString(Query.INTENT_LUA_MODULE, "main") ?: "main"
@@ -159,10 +159,10 @@ class FilterScriptFragment : Fragment() {
     var script: String
         get() {
             val arguments = arguments
-            if (txtScript == null) {
-                return arguments?.getString(Query.INTENT_SCRIPT_FILTER, "") ?: ""
+            return if (txtScript == null) {
+                arguments?.getString(Query.INTENT_SCRIPT_FILTER, "") ?: ""
             } else {
-                return txtScript!!.text.toString()
+                txtScript!!.text.toString()
             }
         }
         set(script) {
@@ -172,14 +172,14 @@ class FilterScriptFragment : Fragment() {
     val testTask: String
         get() {
             val arguments = arguments
-            if (txtTestTask == null) {
-                return arguments?.getString(Query.INTENT_SCRIPT_TEST_TASK_FILTER, "") ?: ""
+            return if (txtTestTask == null) {
+                arguments?.getString(Query.INTENT_SCRIPT_TEST_TASK_FILTER, "") ?: ""
             } else {
-                return txtTestTask!!.text.toString()
+                txtTestTask!!.text.toString()
             }
         }
 
-    val selectedCallback: String
+    private val selectedCallback: String
         get() {
             if (spnCallback == null) {
                 return Interpreter.ON_FILTER_NAME

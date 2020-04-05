@@ -33,8 +33,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TodoList
-import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.showToastShort
 import nl.mpcjanssen.simpletask.util.todayAsString
 import java.io.IOException
@@ -50,7 +48,7 @@ class AddTaskBackground : Activity() {
         val action = intent.action
 
         val append_text = TodoApplication.config.shareAppendText
-        if (intent.type?.startsWith("text/") ?: false) {
+        if (intent.type?.startsWith("text/") == true) {
             if (Intent.ACTION_SEND == action) {
                 Log.d(TAG, "Share")
                 var share_text = ""
@@ -118,7 +116,7 @@ class AddTaskBackground : Activity() {
         }
 
         todoList.add(tasks, TodoApplication.config.hasAppendAtEnd)
-        todoList.notifyTasklistChanged(TodoApplication.config.todoFileName,  true, true)
+        todoList.notifyTasklistChanged(TodoApplication.config.todoFileName, save = true, refreshMainUI = true)
         showToastShort(TodoApplication.app, R.string.task_added)
         if (TodoApplication.config.hasShareTaskShowsEdit) {
             todoList.editTasks(this, tasks, "")

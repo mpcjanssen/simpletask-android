@@ -3,9 +3,8 @@ package nl.mpcjanssen.simpletask
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.util.Log
-import nl.mpcjanssen.simpletask.task.TodoList
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import nl.mpcjanssen.simpletask.util.broadcastFileSync
 
 class AlarmReceiver : BroadcastReceiver() {

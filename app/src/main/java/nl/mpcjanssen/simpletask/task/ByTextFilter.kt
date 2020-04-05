@@ -6,16 +6,14 @@ import java.util.*
 /**
  * A applyFilter that matches Tasks containing the specified text
  */
-class ByTextFilter(val moduleName : String, searchText: String?, internal val isCaseSensitive: Boolean) : TaskFilter {
+class ByTextFilter(private val moduleName : String, searchText: String?, private val isCaseSensitive: Boolean) : TaskFilter {
     val text = searchText ?: ""
 
     private val parts: List<String>
         get() = cased(text).split("\\s".toRegex()).dropLastWhile { it.isEmpty() }
 
     override fun apply(task: Task): Boolean {
-        return scriptResult(task)?.let { luaval ->
-            luaval
-        } ?: cased(task.text).let { taskText ->
+        return scriptResult(task)?. ?: cased(task.text).let { taskText ->
             !parts.any { it.isNotEmpty() && !taskText.contains(it) }
         }
     }

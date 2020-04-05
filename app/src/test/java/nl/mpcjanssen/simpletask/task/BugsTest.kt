@@ -21,13 +21,13 @@ class BugsTest : TestCase() {
 
     fun testActiveSortNullCrash() {
         val q = Query(luaModule = "test")
-        val mc = MultiComparator(q.getSort(null), todayAsString, true, false)
+        val mc = MultiComparator(q.getSort(null), todayAsString, caseSensitve = true, createIsThreshold = false)
         Assert.assertNotNull(mc)
     }
 
     fun testBug50() {
         val t = Task("2012-01-01 @list test")
-        Assert.assertEquals("test", t.showParts({ (it !is ListToken) && (it !is CreateDateToken) }).trim { it <= ' ' })
+        Assert.assertEquals("test", t.showParts { (it !is ListToken) && (it !is CreateDateToken) }.trim { it <= ' ' })
 
     }
 

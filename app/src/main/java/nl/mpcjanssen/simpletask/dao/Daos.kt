@@ -1,6 +1,5 @@
 package nl.mpcjanssen.simpletask.dao
 
-import android.content.Context
 import androidx.room.*
 
 const val SCHEMA_VERSION=1013
@@ -34,7 +33,7 @@ interface TodoFileDao {
 
 }
 
-@Database(entities = arrayOf(TodoFile::class), version = SCHEMA_VERSION, exportSchema = false)
+@Database(entities = [TodoFile::class], version = SCHEMA_VERSION, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun todoFileDao(): TodoFileDao
 }

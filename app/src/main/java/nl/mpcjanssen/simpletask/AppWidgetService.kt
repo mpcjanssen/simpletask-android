@@ -16,15 +16,15 @@ import nl.mpcjanssen.simpletask.util.*
 
 class AppWidgetService : RemoteViewsService() {
 
-    override fun onGetViewFactory(intent: Intent): RemoteViewsService.RemoteViewsFactory {
+    override fun onGetViewFactory(intent: Intent): RemoteViewsFactory {
         return AppWidgetRemoteViewsFactory(intent)
     }
 }
 
 data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.RemoteViewsFactory {
-    val widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
-    var visibleTasks = ArrayList<Task>()
-    var _filter: Query? = null
+    private val widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
+    private var visibleTasks = ArrayList<Task>()
+    private var _filter: Query? = null
     var filter: Query
         get() {
             val currentFilter = _filter ?: updateFilter()
@@ -38,14 +38,14 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         }
 
     init {
-        Log.d(TAG, "Creating view for widget: " + widgetId)
+        Log.d(TAG, "Creating view for widget: $widgetId")
     }
 
-    fun moduleName () : String {
+    private fun moduleName () : String {
         return "widget$widgetId"
     }
 
-    fun updateFilter(): Query {
+    private fun updateFilter(): Query {
 	    Log.d (TAG, "Getting applyFilter from preferences for widget $widgetId")
 	    val preferences = TodoApplication.app.getSharedPreferences("" + widgetId, 0)
         val filter = Query(preferences, luaModule = moduleName())
@@ -62,7 +62,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         return target
     }
 
-    fun setFilteredTasks() {
+    private fun setFilteredTasks() {
         Log.d(TAG, "Widget $widgetId: setFilteredTasks called")
 
         if (!TodoApplication.app.isAuthenticated) {
@@ -95,8 +95,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
     private fun getExtendedView(item: Task, position: Int): RemoteViews {
         val currentFilter = filter
         val rv = RemoteViews(TodoApplication.app.packageName, R.layout.widget_list_item)
-        val extended_widget = TodoApplication.config.prefs.getBoolean("widget_extended", true)
-        val task = item
+        val extendedWidget = TodoApplication.config.prefs.getBoolean("widget_extended", true)
 
         val tokensToShowFilter: (it: TToken) -> Boolean = {
             when (it) {
@@ -111,7 +110,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
                 else -> true
             }
         }
-        val txt = Interpreter.onDisplayCallback(currentFilter.luaModule, task) ?: task.showParts(tokensToShowFilter).trim { it <= ' ' }
+        val txt = Interpreter.onDisplayCallback(currentFilter.luaModule, item) ?: item.showParts(tokensToShowFilter).trim { it <= ' ' }
         val ss = SpannableString(txt)
 
         if (TodoApplication.config.isDarkWidgetTheme) {
@@ -120,35 +119,34 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
             itemForLightTheme(rv)
         }
         val colorizeStrings = ArrayList<String>()
-        task.lists?.forEach {
-            colorizeStrings.add("@" + it)
+        item.lists?.forEach {
+            colorizeStrings.add("@$it")
         }
         setColor(ss, Color.GRAY, colorizeStrings)
         colorizeStrings.clear()
-        task.tags?.forEach {
-            colorizeStrings.add("+" + it)
+        item.tags?.forEach {
+            colorizeStrings.add("+$it")
         }
         setColor(ss, Color.GRAY, colorizeStrings)
 
-        val prioColor: Int
-        when (task.priority) {
-            Priority.A -> prioColor = ContextCompat.getColor(TodoApplication.app, R.color.simple_red_dark)
-            Priority.B -> prioColor = ContextCompat.getColor(TodoApplication.app, R.color.simple_orange_dark)
-            Priority.C -> prioColor = ContextCompat.getColor(TodoApplication.app, R.color.simple_green_dark)
-            Priority.D -> prioColor = ContextCompat.getColor(TodoApplication.app, R.color.simple_blue_dark)
-            else -> prioColor = ContextCompat.getColor(TodoApplication.app, R.color.gray67)
+        val prioColor: Int = when (item.priority) {
+            Priority.A -> ContextCompat.getColor(TodoApplication.app, R.color.simple_red_dark)
+            Priority.B -> ContextCompat.getColor(TodoApplication.app, R.color.simple_orange_dark)
+            Priority.C -> ContextCompat.getColor(TodoApplication.app, R.color.simple_green_dark)
+            Priority.D -> ContextCompat.getColor(TodoApplication.app, R.color.simple_blue_dark)
+            else -> ContextCompat.getColor(TodoApplication.app, R.color.gray67)
         }
         if (prioColor != 0) {
-            setColor(ss, prioColor, task.priority.fileFormat)
+            setColor(ss, prioColor, item.priority.fileFormat)
         }
-        if (task.isCompleted()) {
+        if (item.isCompleted()) {
             ss.setSpan(StrikethroughSpan(), 0, ss.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
         rv.setTextViewText(R.id.tasktext, ss)
 
-        val relAge = getRelativeAge(task, TodoApplication.app)
-        val relDue = getRelativeDueDate(task, TodoApplication.app)
-        val relThres = getRelativeThresholdDate(task, TodoApplication.app)
+        val relAge = getRelativeAge(item, TodoApplication.app)
+        val relDue = getRelativeDueDate(item, TodoApplication.app)
+        val relThres = getRelativeThresholdDate(item, TodoApplication.app)
         var anyDateShown = false
         if (!relAge.isNullOrEmpty() && !filter.hideCreateDate) {
             rv.setTextViewText(R.id.taskage, relAge)
@@ -168,7 +166,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
         } else {
             rv.setTextViewText(R.id.taskthreshold, "")
         }
-        if (!anyDateShown || task.isCompleted() || !extended_widget) {
+        if (!anyDateShown || item.isCompleted() || !extendedWidget) {
             rv.setViewVisibility(R.id.datebar, View.GONE)
             //rv.setViewPadding(R.prefName.tasktext,
             //       4, 4, 4, 4);
@@ -177,7 +175,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
             //rv.setViewPadding(R.prefName.tasktext,
             //        4, 4, 4, 0);
         }
-        rv.setOnClickFillInIntent(R.id.taskline, createSelectedIntent(TodoApplication.todoList.getTaskIndex(task)))
+        rv.setOnClickFillInIntent(R.id.taskline, createSelectedIntent(TodoApplication.todoList.getTaskIndex(item)))
         return rv
     }
 
@@ -229,7 +227,7 @@ data class AppWidgetRemoteViewsFactory(val intent: Intent) : RemoteViewsService.
     }
 
     companion object {
-        val TAG = "WidgetService"
+        const val TAG = "WidgetService"
     }
 }
 

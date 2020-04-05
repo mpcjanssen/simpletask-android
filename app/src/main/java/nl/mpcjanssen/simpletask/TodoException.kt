@@ -24,15 +24,11 @@
  */
 package nl.mpcjanssen.simpletask
 
-class TodoException : RuntimeException {
-
-    constructor(msg: String) : super(msg)
-
-    constructor(msg: String, t: Throwable) : super(msg, t)
+class TodoException(msg: String) : RuntimeException(msg) {
 
     companion object {
 
-        private val serialVersionUID = 2160630991596963352L
+        private const val serialVersionUID = 2160630991596963352L
     }
 
 }

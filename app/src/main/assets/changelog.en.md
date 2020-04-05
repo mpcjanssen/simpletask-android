@@ -1,5 +1,11 @@
 ﻿# Changelog
 
+## 10.5.2
+
+### Fixed
+
+- Regression of #1043.
+
 ## 10.5.1
 
 ### Fixed

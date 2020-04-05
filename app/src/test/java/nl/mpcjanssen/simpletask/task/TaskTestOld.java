@@ -2,6 +2,8 @@ package nl.mpcjanssen.simpletask.task;
 
 import junit.framework.TestCase;
 
+import static org.junit.Assert.assertNotEquals;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Mark Janssen
@@ -15,10 +17,8 @@ public class TaskTestOld extends TestCase {
         Task a = new Task( "Test abcd");
         Task b = new Task( "Test abcd");
         Task c = new Task( "Test abcd ");
-        Task d = new Task("Test abcd");
-        assertFalse(b.equals(c));
-        assertTrue(d.equals(d));
-        assertFalse(a.equals(b));
+        assertNotEquals(b, c);
+        assertNotEquals(a, b);
     }
     
 

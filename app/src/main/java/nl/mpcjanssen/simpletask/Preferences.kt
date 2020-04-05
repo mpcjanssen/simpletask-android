@@ -32,17 +32,16 @@ import android.content.*
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.*
+import android.util.Log
+import android.view.MenuItem
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import android.util.Log
-import android.view.MenuItem
-import nl.mpcjanssen.simpletask.util.Config
 import java.util.*
 
 class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
 
-    lateinit var prefs: SharedPreferences
+    private lateinit var prefs: SharedPreferences
     lateinit var app: TodoApplication
 
     private lateinit var localBroadcastManager: LocalBroadcastManager
@@ -143,19 +142,19 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-        // Respond to the action bar's Up/Home button
+        return when (item.itemId) {
+            // Respond to the action bar's Up/Home button
             android.R.id.home -> {
                 finish()
-                return true
+                true
             }
             else -> {
-                return false
+                false
             }
         }
     }
 
-    abstract class PrefFragment(val xmlId: Int) : PreferenceFragment() {
+    abstract class PrefFragment(private val xmlId: Int) : PreferenceFragment() {
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             addPreferencesFromResource(xmlId)
@@ -202,7 +201,6 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
 
     class WidgetPrefFragment : PrefFragment(R.xml.widget_preferences)
     class CalendarPrefFragment : PrefFragment(R.xml.calendar_preferences)
-    class ConfigurationPrefFragment : PrefFragment(R.xml.configuration_preferences)
 
     class DonatePrefFragment : PrefFragment(R.xml.donate_preferences) {
         override fun onCreate(savedInstanceState: Bundle?) {
@@ -210,10 +208,10 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
 
             val screen = preferenceScreen
             val toHide: Preference
-            if (TodoApplication.config.hasDonated()) {
-                toHide = screen.findPreference("donate")
+            toHide = if (TodoApplication.config.hasDonated()) {
+                screen.findPreference("donate")
             } else {
-                toHide = screen.findPreference("donated")
+                screen.findPreference("donated")
             }
             screen.removePreference(toHide)
         }

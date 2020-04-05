@@ -11,6 +11,7 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
 import nl.mpcjanssen.simpletask.R
+import kotlin.math.roundToInt
 
 class SeekBarPreference : Preference, OnSeekBarChangeListener {
 
@@ -24,23 +25,6 @@ class SeekBarPreference : Preference, OnSeekBarChangeListener {
     private var mSeekBar: SeekBar? = null
 
     private var mStatusText: TextView? = null
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        initPreference(context, attrs)
-    }
-
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {
-        initPreference(context, attrs)
-    }
-
-    private fun initPreference(context: Context, attrs: AttributeSet) {
-        setValuesFromXml(attrs)
-        mSeekBar = SeekBar(context, attrs)
-        mSeekBar!!.max = mMaxValue - mMinValue
-        mSeekBar!!.setOnSeekBarChangeListener(this)
-
-        layoutResource = R.layout.seek_bar_preference
-    }
 
     private fun setValuesFromXml(attrs: AttributeSet) {
         mMaxValue = attrs.getAttributeIntValue(ANDROIDNS, "max", 100)
@@ -82,7 +66,7 @@ class SeekBarPreference : Preference, OnSeekBarChangeListener {
                         ViewGroup.LayoutParams.WRAP_CONTENT)
             }
         } catch (ex: Exception) {
-            Log.e(TAG, "Error binding view: " + ex.toString())
+            Log.e(TAG, "Error binding view: $ex")
         }
 
         //if dependency is false from the beginning, disable the seek bar
@@ -97,7 +81,7 @@ class SeekBarPreference : Preference, OnSeekBarChangeListener {
      * Update a SeekBarPreference view with our current state
      * @param view
      */
-    protected fun updateView(view: View) {
+    private fun updateView(view: View) {
 
         try {
             mStatusText = view.findViewById(R.id.seekBarPrefValue) as TextView
@@ -124,7 +108,7 @@ class SeekBarPreference : Preference, OnSeekBarChangeListener {
         else if (newValue < mMinValue)
             newValue = mMinValue
         else if (mInterval != 1 && newValue % mInterval != 0)
-            newValue = Math.round(newValue.toFloat() / mInterval) * mInterval
+            newValue = (newValue.toFloat() / mInterval).roundToInt() * mInterval
 
         // change rejected, revert to the previous value
         if (!callChangeListener(newValue)) {
@@ -189,8 +173,8 @@ class SeekBarPreference : Preference, OnSeekBarChangeListener {
 
     companion object {
 
-        private val ANDROIDNS = "http://schemas.android.com/apk/res/android"
-        private val APPLICATIONNS = "http://robobunny.com"
-        private val DEFAULT_VALUE = 50
+        private const val ANDROIDNS = "http://schemas.android.com/apk/res/android"
+        private const val APPLICATIONNS = "http://robobunny.com"
+        private const val DEFAULT_VALUE = 50
     }
 }

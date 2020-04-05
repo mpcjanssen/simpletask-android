@@ -17,14 +17,13 @@ class DrawerAdapter(private val m_inflater: LayoutInflater,
                     projectHeader: String,
                     projects: List<String>) : BaseAdapter(), ListAdapter {
 
-    internal var items: ArrayList<String>
+    internal var items: ArrayList<String> = ArrayList()
     var contextHeaderPosition: Int = 0
         internal set
     var projectsHeaderPosition: Int = 0
         internal set
 
     init {
-        this.items = ArrayList()
         this.items.add(contextHeader)
         contextHeaderPosition = 0
         this.items.addAll(alfaSort(contexts))
@@ -79,10 +78,10 @@ class DrawerAdapter(private val m_inflater: LayoutInflater,
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (isHeader(position)) {
-            return 0
+        return if (isHeader(position)) {
+            0
         } else {
-            return 1
+            1
         }
     }
 

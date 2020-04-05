@@ -2,41 +2,35 @@ package nl.mpcjanssen.simpletask.remote
 
 
 
+import android.util.Log
 import nl.mpcjanssen.simpletask.TodoApplication
-import nl.mpcjanssen.simpletask.task.Task
-
 import org.apache.xmlrpc.client.XmlRpcClient
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl
 import java.io.File
 import java.io.IOException
 import java.net.URL
-
 import kotlin.reflect.KClass
-
-internal val RE_TODO = Regex("<todo([^>]*)>([^<]*)</todo>")
-
-private val s1 = System.currentTimeMillis().toString()
 
 /**
  * FileStore implementation backed by a Dokuwiki page
  */
 object FileStore : IFileStore {
-
-    internal val DOKUWIKI_USER = "dwUser"
-    internal val DOKUWIKI_PASS = "dwPass"
-    internal val DOKUWIKI_URL = "dwURL"
+    const val TAG = "DokuwikiStore"
+    internal const val DOKUWIKI_USER = "dwUser"
+    internal const val DOKUWIKI_PASS = "dwPass"
+    internal const val DOKUWIKI_URL = "dwURL"
 
     var username by TodoApplication.config.StringOrNullPreference(DOKUWIKI_USER)
     var password by TodoApplication.config.StringOrNullPreference(DOKUWIKI_PASS)
-    var serverUrl by TodoApplication.config.StringOrNullPreference(DOKUWIKI_URL)
+    private var serverUrl by TodoApplication.config.StringOrNullPreference(DOKUWIKI_URL)
 
-    val client : XmlRpcClient
+    private val client : XmlRpcClient
     get() {
 
         val config = XmlRpcClientConfigImpl()
         config.basicUserName = username
         config.basicPassword = password
-        config.setServerURL(URL(serverUrl + "/lib/exe/xmlrpc.php"))
+        config.serverURL = URL("$serverUrl/lib/exe/xmlrpc.php")
         return XmlRpcClient().also { it.setConfig(config) }
     }
 
@@ -111,7 +105,13 @@ object FileStore : IFileStore {
 
 
     override fun loadFileList(path: String, txtOnly: Boolean): List<FileEntry> {
-        return emptyList()
+
+        val parent = wikiPath(File(path).parent)
+        Log.i(TAG,"Getting pages in namespace $parent")
+        val pages = client.execute("wiki.getAllPages", arrayOf(parent, emptyArray<String>())) as List<String>
+        return pages.map {
+            FileEntry(it, false)
+        }
     }
 
     override fun getDefaultPath(): String {

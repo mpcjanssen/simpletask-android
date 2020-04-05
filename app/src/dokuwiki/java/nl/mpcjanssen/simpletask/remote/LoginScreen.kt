@@ -72,7 +72,7 @@ class LoginScreen : ThemedActionBarActivity() {
                 val config = XmlRpcClientConfigImpl()
                 config.basicUserName = username.text.toString()
                 config.basicPassword = password.text.toString()
-                config.setServerURL(URL(url + "/lib/exe/xmlrpc.php"))
+                config.serverURL = URL("$url/lib/exe/xmlrpc.php")
                 val client = XmlRpcClient()
                 client.setConfig(config)
 

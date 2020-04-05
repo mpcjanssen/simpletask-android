@@ -36,21 +36,17 @@ import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.*
 import android.os.SystemClock
-import androidx.multidex.MultiDexApplication
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.util.Log
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.room.Room
 import nl.mpcjanssen.simpletask.dao.AppDatabase
 import nl.mpcjanssen.simpletask.dao.DB_FILE
 import nl.mpcjanssen.simpletask.dao.TodoFile
-
 import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileDialog
 import nl.mpcjanssen.simpletask.remote.FileStore
-import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.*
-import java.io.File
 import java.util.*
 
 class TodoApplication : Application() {
@@ -86,18 +82,18 @@ class TodoApplication : Application() {
         m_broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 Log.i(TAG, "Received broadcast ${intent.action}")
-                when {
-                    intent.action == Constants.BROADCAST_TASKLIST_CHANGED -> {
+                when (intent.action) {
+                    Constants.BROADCAST_TASKLIST_CHANGED -> {
                         CalendarSync.syncLater()
                         redrawWidgets()
                         updateWidgets()
                     }
-                    intent.action == Constants.BROADCAST_UPDATE_WIDGETS -> {
+                    Constants.BROADCAST_UPDATE_WIDGETS -> {
                         Log.i(TAG, "Refresh widgets from broadcast")
                         redrawWidgets()
                         updateWidgets()
                     }
-                    intent.action == Constants.BROADCAST_FILE_SYNC -> loadTodoList("From BROADCAST_FILE_SYNC")
+                    Constants.BROADCAST_FILE_SYNC -> loadTodoList("From BROADCAST_FILE_SYNC")
                 }
             }
         }
@@ -195,10 +191,6 @@ class TodoApplication : Application() {
             return FileStore.isAuthenticated
         }
 
-    fun clearTodoFile() {
-        config.clearCache()
-        config.setTodoFile(null)
-    }
     fun startLogin(caller: Activity) {
         val loginActivity = FileStore.loginActivity()?.java
         loginActivity?.let {

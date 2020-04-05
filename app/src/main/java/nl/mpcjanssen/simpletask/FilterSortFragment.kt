@@ -2,16 +2,13 @@ package nl.mpcjanssen.simpletask
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.fragment.app.Fragment
 import com.mobeta.android.dslv.DragSortListView
-import nl.mpcjanssen.simpletask.util.Config
-import java.util.*
-import kotlin.collections.ArrayList
 
 class FilterSortFragment : Fragment() {
 
@@ -23,7 +20,7 @@ class FilterSortFragment : Fragment() {
     internal var sortUpId: Int = 0
     internal var sortDownId: Int = 0
 
-    internal lateinit var m_app: TodoApplication
+    private lateinit var m_app: TodoApplication
 
     private val onDrop = DragSortListView.DropListener { from, to ->
         if (from != to) {
@@ -38,24 +35,18 @@ class FilterSortFragment : Fragment() {
 
     private val onRemove = DragSortListView.RemoveListener { which -> adapter.remove(adapter.getItem(which)) }
 
-    private // this DSLV xml declaration does not call for the use
-            // of the default DragSortController; therefore,
-            // DSLVFragment has a buildController() method.
-    val layout: Int
-        get() = R.layout.simple_list_item_single_choice
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
         val arguments = arguments
         if (originalItems == null) {
-            if (savedInstanceState != null) {
-                originalItems = savedInstanceState.getStringArrayList(STATE_SELECTED)
+            originalItems = if (savedInstanceState != null) {
+                savedInstanceState.getStringArrayList(STATE_SELECTED)
             } else {
-                originalItems = arguments?.getStringArrayList(FilterActivity.FILTER_ITEMS)?: ArrayList()
+                arguments?.getStringArrayList(FilterActivity.FILTER_ITEMS)?: ArrayList()
             }
         }
-        Log.d(TAG, "Created view with: " + originalItems)
+        Log.d(TAG, "Created view with: $originalItems")
         m_app = TodoApplication.app
 
         // Set the proper theme
@@ -68,9 +59,8 @@ class FilterSortFragment : Fragment() {
         }
 
         adapterList.clear()
-        val layout: LinearLayout
 
-        layout = inflater.inflate(R.layout.single_filter,
+        val layout: LinearLayout = inflater.inflate(R.layout.single_filter,
                 container, false) as LinearLayout
 
         val keys = resources.getStringArray(R.array.sortKeys)
@@ -89,7 +79,7 @@ class FilterSortFragment : Fragment() {
                 }
             }
 
-            val index = Arrays.asList(*keys).indexOf(sortType)
+            val index = listOf(*keys).indexOf(sortType)
             if (index != -1) {
                 adapterList.add(sortType)
                 directions.add(sortDirection)
@@ -113,10 +103,10 @@ class FilterSortFragment : Fragment() {
         lv!!.adapter = adapter
         lv!!.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             var direction = directions[position]
-            if (direction == Query.REVERSED_SORT) {
-                direction = Query.NORMAL_SORT
+            direction = if (direction == Query.REVERSED_SORT) {
+                Query.NORMAL_SORT
             } else {
-                direction = Query.REVERSED_SORT
+                Query.REVERSED_SORT
             }
             directions.removeAt(position)
             directions.add(position, direction)
@@ -139,7 +129,7 @@ class FilterSortFragment : Fragment() {
         get() {
             val multiSort = ArrayList<String>()
             when {
-                lv != null -> for (i in 0..adapter.count - 1) {
+                lv != null -> for (i in 0 until adapter.count) {
                     multiSort.add(directions[i] + Query.SORT_SEPARATOR + adapter.getSortType(i))
                 }
                 originalItems != null -> multiSort.addAll(originalItems as ArrayList<String>)
@@ -149,12 +139,6 @@ class FilterSortFragment : Fragment() {
         }
 
     inner class SortItemAdapter(context: Context?, resource: Int, textViewResourceId: Int, objects: List<String>) : ArrayAdapter<String>(context, resource, textViewResourceId, objects) {
-
-        private val names: Array<String>
-
-        init {
-            names = resources.getStringArray(R.array.sort)
-        }
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             val row = super.getView(position, convertView, parent)
@@ -177,7 +161,7 @@ class FilterSortFragment : Fragment() {
 
     companion object {
 
-        private val STATE_SELECTED = "selectedItem"
+        private const val STATE_SELECTED = "selectedItem"
         internal val TAG = FilterActivity::class.java.simpleName
     }
 }

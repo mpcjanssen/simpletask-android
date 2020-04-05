@@ -80,9 +80,7 @@ class TaskTest : TestCase() {
     fun testShow() {
         val t = Task("x 2012-11-11 due:2014-10-10 morgen rec:12w mail@example.com ext:5")
 
-        val text = t.tokens.filter {
-            it is TextToken
-        }.joinToString(" ") { it.text }
+        val text = t.tokens.filterIsInstance<TextToken>().joinToString(" ") { it.text }
         assertEquals("morgen", text)
     }
 

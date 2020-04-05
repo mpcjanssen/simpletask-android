@@ -2,7 +2,6 @@ package nl.mpcjanssen.simpletask
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import nl.mpcjanssen.simpletask.util.Config
 import java.util.*
 
 abstract class ThemedNoActionBarActivity : AppCompatActivity() {

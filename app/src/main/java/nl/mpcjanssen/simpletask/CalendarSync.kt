@@ -24,27 +24,25 @@
 
 package nl.mpcjanssen.simpletask
 
-import java.util.*
-import java.util.concurrent.ScheduledThreadPoolExecutor
-import java.util.concurrent.TimeUnit
 import android.Manifest
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
+import android.content.ContentProviderOperation
 import android.content.ContentResolver
 import android.content.ContentValues
-import android.content.ContentProviderOperation
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.Color
 import android.net.Uri
-import android.provider.CalendarContract
 import android.provider.CalendarContract.*
-import androidx.core.content.ContextCompat
 import android.util.Log
+import androidx.core.content.ContextCompat
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.task.*
-import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.toDateTime
+import java.util.*
+import java.util.concurrent.ScheduledThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 
 private enum class EvtStatus {
     KEEP,
@@ -87,11 +85,23 @@ private class Evt(
 
     fun key() = EvtKey(dtStart, title)
 
-    infix fun equals(other: Evt) =
-            dtStart == other.dtStart &&
-                    title == other.title &&
-                    description == other.description &&
-                    remMinutes == other.remMinutes
+    override infix fun equals(other: Any?) =
+            if (other !is Evt) {
+                false
+            } else {
+                dtStart == other.dtStart &&
+                        title == other.title &&
+                        description == other.description &&
+                        remMinutes == other.remMinutes
+            }
+
+    override fun hashCode(): Int {
+        var result = dtStart.hashCode()
+        result = 31 * result + title.hashCode()
+        result = 31 * result + description.hashCode()
+        result = 31 * result + remMinutes.hashCode()
+        return result
+    }
 
     @TargetApi(16)
     fun addOp(list: ArrayList<ContentProviderOperation>, calID: Long) {
@@ -130,6 +140,8 @@ private class Evt(
             }
         }
     }
+
+
 }
 
 private class SyncStats(val inserts: Long, val keeps: Long, val deletes: Long)
@@ -182,12 +194,12 @@ private class EvtMap private constructor() : HashMap<EvtKey, LinkedList<Evt>>() 
 
             // Insert into the hashmap
             val evtkey = evt.key()
-            var list = this.get(evtkey)
+            var list = this[evtkey]
             if (list != null) list.add(evt)
             else {
-                list = LinkedList<Evt>()
+                list = LinkedList()
                 list.add(evt)
-                this.put(evtkey, list)
+                this[evtkey] = list
             }
         }
         evts.close()
@@ -196,12 +208,12 @@ private class EvtMap private constructor() : HashMap<EvtKey, LinkedList<Evt>>() 
 
     fun mergeEvt(evt: Evt) {
         val key = evt.key()
-        val list = this.get(key)
+        val list = this[key]
         evt.status = EvtStatus.INSERT
         if (list == null) {
             val nlist = LinkedList<Evt>()
             nlist.add(evt)
-            this.put(key, nlist)
+            this[key] = nlist
         } else {
             for (oevt in list) {
                 if (oevt.status == EvtStatus.DELETE && oevt equals evt) {
@@ -245,36 +257,35 @@ private class EvtMap private constructor() : HashMap<EvtKey, LinkedList<Evt>>() 
 
         for (list in values) {
             for (evt in list) {
-                when {
-                    evt.status == EvtStatus.INSERT -> ins++
-                    evt.status == EvtStatus.KEEP -> kps++
-                    evt.status == EvtStatus.DELETE -> dels++
+                when (evt.status) {
+                    EvtStatus.INSERT -> ins++
+                    EvtStatus.KEEP -> kps++
+                    EvtStatus.DELETE -> dels++
                 }
 
                 evt.addOp(ops, calID)
             }
         }
 
-        cr.applyBatch(CalendarContract.AUTHORITY, ops)
+        cr.applyBatch(AUTHORITY, ops)
         return SyncStats(ins, kps, dels)
     }
 }
 
 object CalendarSync {
 
-    private val ACCOUNT_NAME = "Simpletask Calendar"
-    private val ACCOUNT_TYPE = CalendarContract.ACCOUNT_TYPE_LOCAL
+    private const val ACCOUNT_NAME = "Simpletask Calendar"
+    private const val ACCOUNT_TYPE = ACCOUNT_TYPE_LOCAL
     private val CAL_URI = Calendars.CONTENT_URI.buildUpon()
-            .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
+            .appendQueryParameter(CALLER_IS_SYNCADAPTER, "true")
             .appendQueryParameter(Calendars.ACCOUNT_NAME, ACCOUNT_NAME)
             .appendQueryParameter(Calendars.ACCOUNT_TYPE, ACCOUNT_TYPE)
             .build()
-    private val CAL_NAME = "simpletask_reminders_v34SsjC7mwK9WSVI"
-    private val CAL_COLOR = Color.BLUE // Chosen arbitrarily...
-    private val EVT_DURATION_DAY = 24 * 60 * 60 * 1000 // ie. 24 hours
+    private const val CAL_NAME = "simpletask_reminders_v34SsjC7mwK9WSVI"
+    private const val CAL_COLOR = Color.BLUE // Chosen arbitrarily...
 
-    private val SYNC_DELAY_MS = 20 * 1000
-    private val TAG = "CalendarSync"
+    private const val SYNC_DELAY_MS = 20 * 1000
+    private const val TAG = "CalendarSync"
 
     val UTC: TimeZone = TimeZone.getTimeZone("UTC")
     val TASK_TOKENS: (TToken) -> Boolean = {
@@ -298,8 +309,6 @@ object CalendarSync {
 
     private val m_sync_runnable: SyncRunnable
     private val m_cr: ContentResolver
-    private var m_rem_margin = 1440
-    private var m_rem_time = DateTime.forTimeOnly(12, 0, 0, 0)
     private val m_stpe: ScheduledThreadPoolExecutor
 
     @SuppressLint("Recycle")
@@ -353,11 +362,10 @@ object CalendarSync {
         val selection = Calendars.NAME + " = ?"
         val args = arrayOf(CAL_NAME)
         try {
-            val ret = m_cr.delete(CAL_URI, selection, args)
-            when (ret) {
+            when (val ret = m_cr.delete(CAL_URI, selection, args)) {
                 0 -> Log.d(TAG, "No calendar to remove")
                 1 -> Log.d(TAG, "Calendar removed")
-                else -> Log.e(TAG, "Unexpected return value while removing calendar: " + ret)
+                else -> Log.e(TAG, "Unexpected return value while removing calendar: $ret")
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error while removing calendar", e)

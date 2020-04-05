@@ -24,7 +24,4 @@ class ListenerList<L> {
         listenerList.remove(listener)
     }
 
-    fun getListenerList(): List<L> {
-        return listenerList
-    }
 }

@@ -22,42 +22,44 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.CalendarContract
 import android.provider.CalendarContract.Events
-import androidx.annotation.StyleableRes
-import androidx.core.content.ContextCompat
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.core.view.GravityCompat
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
-import android.webkit.MimeTypeMap
 import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
-import androidx.core.widget.NestedScrollView
+import androidx.annotation.StyleableRes
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import hirondelle.date4j.DateTime
 import kotlinx.android.synthetic.main.main.*
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
 import nl.mpcjanssen.simpletask.remote.FileStore
-import nl.mpcjanssen.simpletask.task.*
+import nl.mpcjanssen.simpletask.task.Priority
+import nl.mpcjanssen.simpletask.task.Task
+import nl.mpcjanssen.simpletask.task.TaskAdapter
 import nl.mpcjanssen.simpletask.util.*
-import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 import android.R.id as androidId
 
 class Simpletask : ThemedNoActionBarActivity() {
     companion object {
-        private val REQUEST_PREFERENCES = 1
+        private const val REQUEST_PREFERENCES = 1
 
-        val URI_BASE = Uri.fromParts("Simpletask", "", null)!!
+        private val URI_BASE = Uri.fromParts("Simpletask", "", null)!!
         val URI_SEARCH = Uri.withAppendedPath(URI_BASE, "search")!!
-        private val TAG = "Simpletask"
+        private const val TAG = "Simpletask"
         // Drawer side
-        private val SAVED_FILTER_DRAWER = GravityCompat.END
-        private val QUICK_FILTER_DRAWER = GravityCompat.START
+        private const val SAVED_FILTER_DRAWER = GravityCompat.END
+        private const val QUICK_FILTER_DRAWER = GravityCompat.START
     }
     private var options_menu: Menu? = null
 
@@ -93,7 +95,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     completeTasks(it)
                     // Update the tri state checkbox
                     handleMode(mapOf(Mode.SELECTION to { invalidateOptionsMenu() }))
-                    TodoApplication.todoList.notifyTasklistChanged(TodoApplication.config.todoFileName, false,true)
+                    TodoApplication.todoList.notifyTasklistChanged(TodoApplication.config.todoFileName, save = false, refreshMainUI = true)
                 },
                 unCompleteAction = {
                     uncompleteTasks(it)
@@ -478,8 +480,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         val cbItem = toolbar.menu.findItem(R.id.multicomplete_checkbox) ?: return
         val selectedTasks = TodoApplication.todoList.selectedTasks
         val count = selectedTasks.count()
-        val completedCount = selectedTasks.count { it.isCompleted() }
-        when (completedCount) {
+        when (selectedTasks.count { it.isCompleted() }) {
             0 -> {
                 cbItem.setIcon(R.drawable.ic_check_box_outline_blank_white_24dp)
                 cbItem.setOnMenuItemClickListener { completeTasks(selectedTasks) ; true }
@@ -496,8 +497,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     menuInflater.inflate(R.menu.completion_popup, popup.menu)
                     popup.show()
                     popup.setOnMenuItemClickListener popup@{ item ->
-                        val menuId = item.itemId
-                        when (menuId) {
+                        when (item.itemId) {
                             R.id.complete -> completeTasks(selectedTasks)
                             R.id.uncomplete -> uncompleteTasks(selectedTasks)
                         }
@@ -697,12 +697,12 @@ class Simpletask : ThemedNoActionBarActivity() {
 
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.select_priority)
-        builder.setSingleChoiceItems(priorityArr, priorityIdx, { dialog, which ->
+        builder.setSingleChoiceItems(priorityArr, priorityIdx) { dialog, which ->
             dialog.dismiss()
             val priority = Priority.toPriority(priorityArr[which])
             TodoApplication.todoList.prioritize(tasks, priority)
             TodoApplication.todoList.notifyTasklistChanged(TodoApplication.config.todoFileName, true)
-        })
+        }
         builder.show()
 
     }
@@ -884,8 +884,8 @@ class Simpletask : ThemedNoActionBarActivity() {
 
                     } catch (e: Exception) {
                         // Need to catch generic exception because Dropbox errors don't inherit from IOException
-                        Log.e(TAG, "Import filters, cant read file ${importFile}", e)
-                        showToastLong(this, "Error reading file ${importFile}")
+                        Log.e(TAG, "Import filters, cant read file $importFile", e)
+                        showToastLong(this, "Error reading file $importFile")
                     }
                 }
             }
@@ -942,7 +942,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun startPreferencesActivity() {
         val settingsActivity = Intent(baseContext,
-                nl.mpcjanssen.simpletask.Preferences::class.java)
+                Preferences::class.java)
         startActivityForResult(settingsActivity, REQUEST_PREFERENCES)
     }
 
@@ -956,7 +956,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     /**
      * Handle add applyFilter click *
      */
-    fun onAddFilterClick() {
+    private fun onAddFilterClick() {
         val alert = AlertDialog.Builder(this)
 
         alert.setTitle(R.string.save_filter)
@@ -1030,7 +1030,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
 
 
-    fun startFilterActivity() {
+    private fun startFilterActivity() {
         val i = Intent(this, FilterActivity::class.java)
         TodoApplication.config.mainQuery.saveInIntent(i)
         startActivity(i)
@@ -1038,8 +1038,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     val listView: RecyclerView?
         get() {
-            val lv = list
-            return lv
+            return list
         }
 
     fun showListViewProgress(show: Boolean) {
@@ -1078,7 +1077,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
     }
 
-    private inner class UiHandler () {
+    private inner class UiHandler {
         fun forEvent(event: Event) {
             val tag = "Event"
             Log.d(tag, "update UI for event ${event.name}")
@@ -1162,7 +1161,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
         private fun updateSavedFilterDrawer() {
             val idQueryPairs = QueryStore.ids().mapTo(mutableListOf()) { Pair(it, QueryStore.get(it)) }
-            val hasQueries = !idQueryPairs.isEmpty()
+            val hasQueries = idQueryPairs.isNotEmpty()
             val queries = idQueryPairs.sortedBy { it.second.name }
             val names = if (hasQueries) {
                 queries.map { it.second.name }
@@ -1192,8 +1191,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     val query = queries[position]
                     val popupMenu = PopupMenu(this@Simpletask, view)
                     popupMenu.setOnMenuItemClickListener { item ->
-                        val menuId = item.itemId
-                        when (menuId) {
+                        when (item.itemId) {
                             R.id.menu_saved_filter_delete -> deleteSavedQuery(query.first)
                             R.id.menu_saved_filter_shortcut -> createFilterShortcut(query.second)
                             R.id.menu_saved_filter_rename -> renameSavedQuery(query.first)

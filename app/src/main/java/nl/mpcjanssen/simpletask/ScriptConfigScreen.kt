@@ -5,14 +5,13 @@ package nl.mpcjanssen.simpletask
 
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.util.*
-import java.io.File
 import java.io.IOException
 
 class ScriptConfigScreen : ThemedActionBarActivity() {
@@ -27,7 +26,7 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
 
-        scriptEdit = findViewById<EditText>(R.id.lua_config)
+        scriptEdit = findViewById(R.id.lua_config)
         script = TodoApplication.config.luaConfig
 
         val fab = findViewById<FloatingActionButton>(R.id.lua_config_fab)
@@ -110,8 +109,8 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
                 }
 
             } catch (e: IOException) {
-                Log.e(TAG, "Import lua config, cant read file ${importFile}", e)
-                showToastLong(this, "Error reading file ${importFile}")
+                Log.e(TAG, "Import lua config, cant read file $importFile", e)
+                showToastLong(this, "Error reading file $importFile")
             }
         }
     }

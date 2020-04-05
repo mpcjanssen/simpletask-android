@@ -1,14 +1,11 @@
 package nl.mpcjanssen.simpletask.util
 
-import android.content.Context
 import android.util.Log
 import me.smichel.android.KPreferences.Preferences
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.Task
 import org.json.JSONObject
-import java.io.File
-import java.io.IOException
 import java.util.*
 
 class Config(app: TodoApplication) : Preferences(app) {
@@ -16,7 +13,7 @@ class Config(app: TodoApplication) : Preferences(app) {
     val TAG = "Config"
 
     init {
-        registerCallbacks(listOf<String>(
+        registerCallbacks(listOf(
                 getString(R.string.widget_theme_pref_key),
                 getString(R.string.widget_extended_pref_key),
                 getString(R.string.widget_background_transparency),
@@ -24,7 +21,7 @@ class Config(app: TodoApplication) : Preferences(app) {
         )) {
             TodoApplication.app.redrawWidgets()
         }
-        registerCallbacks(listOf<String>(
+        registerCallbacks(listOf(
                 getString(R.string.calendar_sync_dues),
                 getString(R.string.calendar_sync_thresholds),
                 getString(R.string.calendar_reminder_days),
@@ -34,15 +31,15 @@ class Config(app: TodoApplication) : Preferences(app) {
         }
     }
 
-    val useTodoTxtTerms by BooleanPreference(R.string.ui_todotxt_terms, false)
+    private val useTodoTxtTerms by BooleanPreference(R.string.ui_todotxt_terms, false)
 
     val showTxtOnly by BooleanPreference(R.string.show_txt_only, false)
 
-    val _syncDues by BooleanPreference(R.string.calendar_sync_dues, false)
+    private val _syncDues by BooleanPreference(R.string.calendar_sync_dues, false)
     val isSyncDues: Boolean
         get() = TodoApplication.atLeastAPI(16) && _syncDues
 
-    val _syncThresholds by BooleanPreference(R.string.calendar_sync_thresholds, false)
+    private val _syncThresholds by BooleanPreference(R.string.calendar_sync_thresholds, false)
     val isSyncThresholds: Boolean
         get() = TodoApplication.atLeastAPI(16) && _syncThresholds
 
@@ -52,19 +49,19 @@ class Config(app: TodoApplication) : Preferences(app) {
 
     val listTerm: String
         get() {
-            if (useTodoTxtTerms) {
-                return getString(R.string.context_prompt_todotxt)
+            return if (useTodoTxtTerms) {
+                getString(R.string.context_prompt_todotxt)
             } else {
-                return getString(R.string.context_prompt)
+                getString(R.string.context_prompt)
             }
         }
 
     val tagTerm: String
         get() {
-            if (useTodoTxtTerms) {
-                return getString(R.string.project_prompt_todotxt)
+            return if (useTodoTxtTerms) {
+                getString(R.string.project_prompt_todotxt)
             } else {
-                return getString(R.string.project_prompt)
+                getString(R.string.project_prompt)
             }
         }
 
@@ -91,11 +88,11 @@ class Config(app: TodoApplication) : Preferences(app) {
         get() = if (_windowsEOL) "\r\n" else "\n"
 
     fun hasDonated(): Boolean {
-        try {
+        return try {
             TodoApplication.app.packageManager.getInstallerPackageName("nl.mpcjanssen.simpletask.donate")
-            return true
+            true
         } catch (e: IllegalArgumentException) {
-            return false
+            false
         }
     }
 
@@ -117,15 +114,6 @@ class Config(app: TodoApplication) : Preferences(app) {
                 "dark" -> R.style.AppTheme_ActionBar
                 "black" -> R.style.AppTheme_Black_ActionBar
                 else -> R.style.AppTheme_Light_DarkActionBar
-            }
-        }
-
-    val activePopupTheme: Int
-        get() {
-            return if (isDarkTheme || isBlackTheme) {
-                R.style.AppTheme_ActionBar
-            } else {
-                R.style.AppTheme_Black_ActionBar
             }
         }
 
@@ -224,8 +212,6 @@ class Config(app: TodoApplication) : Preferences(app) {
 
     var rightDrawerDemonstrated by BooleanPreference(R.string.right_drawer_demonstrated, false)
 
-    val localFileRoot by StringPreference(R.string.local_file_root, "/sdcard/")
-
     val hasColorDueDates by BooleanPreference(R.string.color_due_date_key, true)
 
     private var cachedContents by StringOrNullPreference(R.string.cached_todo_file)
@@ -250,7 +236,7 @@ class Config(app: TodoApplication) : Preferences(app) {
     var forceEnglish by BooleanPreference(R.string.force_english, false)
     var useUUIDs by BooleanPreference(R.string.use_uuids, false)
 
-    fun legacyQueryStoreJson() : String   {
+    private fun legacyQueryStoreJson() : String   {
         val queries = LegacyQueryStore.ids().map {
             LegacyQueryStore.get(it)
         }
@@ -289,7 +275,7 @@ class Config(app: TodoApplication) : Preferences(app) {
                 return getString(R.string.by_project_todotxt)
             }
         }
-        val keys = Arrays.asList(*TodoApplication.app.resources.getStringArray(R.array.sortKeys))
+        val keys = listOf(*TodoApplication.app.resources.getStringArray(R.array.sortKeys))
         val values = TodoApplication.app.resources.getStringArray(R.array.sort)
         val index = keys.indexOf(key)
         if (index == -1) {

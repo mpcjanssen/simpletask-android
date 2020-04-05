@@ -1,8 +1,5 @@
 package nl.mpcjanssen.simpletask.remote
 
-import nl.mpcjanssen.simpletask.TodoApplication
-import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.util.broadcastFileSync
 import java.io.File
 import java.io.IOException
 import kotlin.reflect.KClass
@@ -45,15 +42,6 @@ interface IFileStore {
     // Return files and subfolders in path. If txtOnly is true only *.txt files will be returned.
     fun loadFileList(path: String, txtOnly: Boolean): List<FileEntry>
 
-    // Allow the FileStore to signal that the remote
-    // todoFile changed. Call this in the filestore code
-    // to force file sync
-    @Suppress
-    fun remoteTodoFileChanged() {
-        broadcastFileSync(TodoApplication.app.localBroadCastManager)
-
-    }
-
     fun doneFile(todoFileName: String): String {
         return sibling(todoFileName, "done.txt")
     }
@@ -67,8 +55,8 @@ interface IFileStore {
 
     // Generic special folder names for use in File dialogs
     companion object {
-        val ROOT_DIR = "/"
-        val PARENT_DIR = ".."
+        const val ROOT_DIR = "/"
+        const val PARENT_DIR = ".."
 
     }
 }

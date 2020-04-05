@@ -14,7 +14,6 @@ import android.view.MenuItem
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import nl.mpcjanssen.simpletask.util.markdownAssetAsHtml
-import nl.mpcjanssen.simpletask.util.Config
 import java.util.*
 
 class HelpScreen : ThemedActionBarActivity() {
@@ -50,7 +49,7 @@ class HelpScreen : ThemedActionBarActivity() {
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
 
-        wvHelp = findViewById<WebView>(R.id.help_view)
+        wvHelp = findViewById(R.id.help_view)
 
         // Prevent brief flash of white when loading WebView.
         if (TodoApplication.config.isDarkTheme || TodoApplication.config.isBlackTheme) {
@@ -66,7 +65,7 @@ class HelpScreen : ThemedActionBarActivity() {
             // Replacement is API >= 21 only
             @Suppress("OverridingDeprecatedMember")
             override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                Log.d(TAG, "Loading url: " + url)
+                Log.d(TAG, "Loading url: $url")
                 if (url.startsWith("https://www.paypal.com")) {
                     // Paypal links don't work in the mobile browser so this hack is needed
                     loadDesktop(view, url)
@@ -76,15 +75,15 @@ class HelpScreen : ThemedActionBarActivity() {
                     }
                     return true
                 }
-                if (url.startsWith("http://") || url.startsWith("https://")) {
+                return if (url.startsWith("http://") || url.startsWith("https://")) {
                     view.settings.userAgentString = null
                     openUrl(url)
-                    return true
+                    true
                 } else if (url.endsWith(".md")) {
                     showMarkdownAsset(view, this@HelpScreen, url.replace(BASE_URL, ""))
-                    return true
+                    true
                 } else {
-                    return false
+                    false
                 }
             }
         }
@@ -154,7 +153,7 @@ class HelpScreen : ThemedActionBarActivity() {
     companion object {
 
         internal val TAG = HelpScreen::class.java.simpleName
-        internal val BASE_URL = "file:///android_asset/"
+        internal const val BASE_URL = "file:///android_asset/"
     }
 
 }

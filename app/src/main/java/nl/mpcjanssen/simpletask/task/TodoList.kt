@@ -7,12 +7,9 @@ import android.os.SystemClock
 import android.util.Log
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.remote.FileStore
-
 import nl.mpcjanssen.simpletask.remote.IFileStore
 import nl.mpcjanssen.simpletask.util.*
-
 import java.util.*
-import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.collections.ArrayList
 
 /**
@@ -279,7 +276,7 @@ class TodoList(val config: Config) {
                 FileStoreActionQueue.add("Backup") {
                     Backupper.backup(filename, items)
                 }
-                notifyTasklistChanged(filename, false, true)
+                notifyTasklistChanged(filename, save = false, refreshMainUI = true)
             } catch (e: Exception) {
                 Log.e(TAG, "TodoList load failed: $filename", e)
                 showToastShort(TodoApplication.app, "Loading of todo file failed")
@@ -339,7 +336,7 @@ class TodoList(val config: Config) {
                 }
 
                 override fun onTick(p0: Long) {
-                    Log.d(TAG, "Scheduled save in ${p0}")
+                    Log.d(TAG, "Scheduled save in $p0")
                 }
             }.start()
         })
@@ -354,7 +351,7 @@ class TodoList(val config: Config) {
             try {
                 FileStore.appendTaskToFile(doneFileName, tasks.map {it.inFileFormat(useUUIDs = TodoApplication.config.useUUIDs)}, eol)
                 removeAll(tasks)
-                notifyTasklistChanged(todoFilename, true, true)
+                notifyTasklistChanged(todoFilename, save = true, refreshMainUI = true)
             } catch (e: Exception) {
                 Log.e(TAG, "Task archiving failed", e)
                 showToastShort(TodoApplication.app, "Task archiving failed")

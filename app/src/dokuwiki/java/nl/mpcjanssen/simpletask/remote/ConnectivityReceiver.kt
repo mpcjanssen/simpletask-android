@@ -11,7 +11,7 @@ import nl.mpcjanssen.simpletask.util.broadcastUpdateStateIndicator
 class ConnectivityReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        Log.d(TAG, "Connectivity changed {}" + intent)
+        Log.d(TAG, "Connectivity changed {}$intent")
         broadcastUpdateStateIndicator(TodoApplication.app.localBroadCastManager)
         if (FileStore.isOnline) {
             Log.i(TAG, "Device went online")
@@ -22,6 +22,6 @@ class ConnectivityReceiver : BroadcastReceiver() {
     }
 
     companion object {
-        private val TAG = "ConnectivityReceiver"
+        private const val TAG = "ConnectivityReceiver"
     }
 }

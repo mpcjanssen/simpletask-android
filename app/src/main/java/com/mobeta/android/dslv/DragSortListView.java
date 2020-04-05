@@ -1771,17 +1771,9 @@ public class DragSortListView extends ListView {
      * 
      */
     public void setDragScrollStarts(float upperFrac, float lowerFrac) {
-        if (lowerFrac > 0.5f) {
-            mDragDownScrollStartFrac = 0.5f;
-        } else {
-            mDragDownScrollStartFrac = lowerFrac;
-        }
+        mDragDownScrollStartFrac = Math.min(lowerFrac, 0.5f);
 
-        if (upperFrac > 0.5f) {
-            mDragUpScrollStartFrac = 0.5f;
-        } else {
-            mDragUpScrollStartFrac = upperFrac;
-        }
+        mDragUpScrollStartFrac = Math.min(upperFrac, 0.5f);
 
         if (getHeight() != 0) {
             updateScrollStarts();

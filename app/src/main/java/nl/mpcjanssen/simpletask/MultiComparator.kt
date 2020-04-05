@@ -10,8 +10,6 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
 
     var fileOrder = true
 
-    val luaCache: MutableMap<Task, String> = HashMap<Task, String>();
-
     init {
         label@ for (sort in sorts) {
             val parts = sort.split(Query.SORT_SEPARATOR.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()

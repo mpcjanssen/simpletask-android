@@ -41,7 +41,7 @@ class DebugInfoScreen : ThemedActionBarActivity() {
         shareText(this@DebugInfoScreen, "${appVersion(this)} log", LogCat.getLog().joinToString("\n"))
     }
 
-    fun initToolbar(): Boolean {
+    private fun initToolbar(): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)

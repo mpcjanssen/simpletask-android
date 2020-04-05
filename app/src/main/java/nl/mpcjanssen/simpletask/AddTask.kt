@@ -8,8 +8,6 @@ package nl.mpcjanssen.simpletask
 import android.app.DatePickerDialog
 import android.content.*
 import android.os.Bundle
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.appcompat.app.AlertDialog
 import android.text.InputType
 import android.text.Selection
 import android.util.Log
@@ -17,13 +15,16 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.Window
 import android.view.WindowManager
+import androidx.appcompat.app.AlertDialog
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import hirondelle.date4j.DateTime
 import kotlinx.android.synthetic.main.add_task.*
 import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.*
 import java.util.*
+import kotlin.math.max
+import kotlin.math.min
 
 class AddTask : ThemedActionBarActivity() {
     private var startText: String = ""
@@ -239,7 +240,7 @@ class AddTask : ThemedActionBarActivity() {
         todoList.update(origTasks, enteredTasks, TodoApplication.config.hasAppendAtEnd)
 
         // Save
-        todoList.notifyTasklistChanged(TodoApplication.config.todoFileName, true, false)
+        todoList.notifyTasklistChanged(TodoApplication.config.todoFileName, save = true, refreshMainUI = false)
 
         finishEdit(confirmation = false)
     }
@@ -294,7 +295,7 @@ class AddTask : ThemedActionBarActivity() {
                     dialog.datePicker.spinnersShown = !showCalendar
                     dialog.show()
                 } else {
-                    if (!input.isEmpty()) {
+                    if (input.isNotEmpty()) {
                         insertDateAtSelection(dateType, addInterval(DateTime.today(TimeZone.getDefault()), input))
                     } else {
                         replaceDate(dateType, input)
@@ -410,7 +411,7 @@ class AddTask : ThemedActionBarActivity() {
         }
 
         val chars = taskText.text.subSequence(0, selectionStart)
-        return (0 until chars.length).count { chars[it] == '\n' }
+        return (chars.indices).count { chars[it] == '\n' }
     }
 
     private fun replaceDueDate(newDueDate: CharSequence) {
@@ -468,8 +469,8 @@ class AddTask : ThemedActionBarActivity() {
         }
 
         // Don't go out of bounds
-        newLocation = Math.min(newLocation, newLength)
-        newLocation = Math.max(0, newLocation)
+        newLocation = min(newLocation, newLength)
+        newLocation = max(0, newLocation)
         taskText.setSelection(newLocation, newLocation)
     }
 
@@ -508,7 +509,7 @@ class AddTask : ThemedActionBarActivity() {
                 text = " $text"
             }
         }
-        taskText.text.replace(Math.min(start, end), Math.max(start, end),
+        taskText.text.replace(min(start, end), max(start, end),
                 text, 0, text.length)
     }
 

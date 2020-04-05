@@ -28,18 +28,13 @@
 package nl.mpcjanssen.simpletask
 
 import android.app.Activity
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.core.app.ShareCompat
 import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TodoList
-import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.showToastLong
 import nl.mpcjanssen.simpletask.util.showToastShort
 import nl.mpcjanssen.simpletask.util.todayAsString
-import java.io.IOException
 
 class AddLinkBackground : Activity() {
     val TAG = "AddLinkBackground"
@@ -74,7 +69,7 @@ class AddLinkBackground : Activity() {
         }
 
         todoList.add(tasks, TodoApplication.config.hasAppendAtEnd)
-        todoList.notifyTasklistChanged(TodoApplication.config.todoFileName,  true, true)
+        todoList.notifyTasklistChanged(TodoApplication.config.todoFileName, save = true, refreshMainUI = true)
         showToastShort(TodoApplication.app, R.string.link_added)
         if (TodoApplication.config.hasShareTaskShowsEdit) {
             todoList.editTasks(this, tasks, "")

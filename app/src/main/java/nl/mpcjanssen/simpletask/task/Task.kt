@@ -60,7 +60,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
     var uuid: String?
     get () = getFirstToken<UUIDToken>()?.valueStr
-    set (uuid: String?) {
+    set (uuid) {
         uuid?.let { upsertToken(UUIDToken(it)) }
     }
 

@@ -56,7 +56,7 @@ class CachedFileProvider : ContentProvider() {
         // Otherwise unrecognised Uri
             else -> {
                 Log.d(TAG, "Unsupported uri: '$uri'.")
-                throw FileNotFoundException("Unsupported uri: " + uri.toString())
+                throw FileNotFoundException("Unsupported uri: $uri")
             }
         }
     }
