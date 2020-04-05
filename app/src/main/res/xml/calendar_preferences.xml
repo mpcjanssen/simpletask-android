@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.preference.PreferenceScreen
+<PreferenceScreen
         android:key="@string/calendar_sync_screen"
         android:summary="@string/calendar_sync_screen_summary"
         android:title="@string/calendar_sync_screen_title"
@@ -15,7 +15,7 @@
                 android:key="@string/calendar_sync_thresholds"
                 android:title="@string/calendar_sync_thresholds_title"
                 />
-        <SeekBarPreference
+        <com.robobunny.SeekBarPreference
                 android:key="@string/calendar_reminder_days"
                 android:title="@string/calendar_reminder_days_title"
                 android:summary="@string/calendar_reminder_days_summary"
@@ -29,4 +29,4 @@
                 android:defaultValue="720"
                 />
     </PreferenceCategory>
-</android.support.v7.preference.PreferenceScreen>
+</PreferenceScreen>
