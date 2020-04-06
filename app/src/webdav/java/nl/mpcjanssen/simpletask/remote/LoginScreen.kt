@@ -2,7 +2,6 @@ package nl.mpcjanssen.simpletask.remote
 
 
 import android.content.*
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 
@@ -11,7 +10,6 @@ import com.thegrizzlylabs.sardineandroid.impl.OkHttpSardine
 import kotlinx.android.synthetic.webdav.login.*
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.util.FileStoreActionQueue
-import nl.mpcjanssen.simpletask.util.showConfirmationDialog
 import nl.mpcjanssen.simpletask.util.showToastLong
 import java.lang.Exception
 
@@ -62,7 +60,7 @@ class LoginScreen : ThemedActionBarActivity() {
         username = webdav_username.text.toString()
         password = webdav_password.text.toString()
         serverUrl = url
-        TodoApplication.config.setTodoFile("$url/${FileStore.getDefaultPath()}")
+        TodoApplication.config.setTodoFile("$url/${FileStore.getDefaultFile()}")
         Log.d(TAG, "Saved credentials for $username")
         switchToTodolist()
     }
