@@ -169,7 +169,7 @@ object FileStore : IFileStore {
             // Loop over the resulting files
             // Drop the first one as it is the current folder
             resList.forEach { res ->
-                val fileItem = File(res.path)
+                val fileItem = File(res.name)
                 result.add(FileEntry(fileItem, res.isDirectory))
             }
             return result
