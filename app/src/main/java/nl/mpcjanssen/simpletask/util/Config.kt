@@ -8,10 +8,7 @@ import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.Task
 import org.json.JSONObject
 import java.io.File
-<<<<<<< Updated upstream
-import java.io.IOException
-=======
->>>>>>> Stashed changes
+
 import java.util.*
 
 class Config(app: TodoApplication) : Preferences(app) {
