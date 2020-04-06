@@ -59,7 +59,7 @@ class FileDialog {
                         return@OnClickListener
                     }
 
-                    val fileEntry = fileList.find { fileNameChosen == it.file.name }
+                    val fileEntry = fileList.find { fileNameChosen == it.file.path }
                     if (fileEntry == null) {
                         Log.w(TAG, "Selected file was $fileEntry")
                         dialog.dismiss()
@@ -67,7 +67,7 @@ class FileDialog {
                     }
                     Log.i(TAG, "Selected entry ${fileEntry.file.path}, folder: ${fileEntry.isFolder}")
 
-                    val newPath = File(startFolder, fileEntry.file.name)
+                    val newPath = File(startFolder, fileEntry.file.path)
                     if (fileEntry.isFolder) {
                         createFileDialog(act, fileStore, newPath, txtOnly)
                     } else {
