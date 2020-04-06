@@ -207,7 +207,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
     private fun openScript(file_read: (String) -> Unit) {
             val dialog = FileDialog()
         dialog.addFileListener(object : FileDialog.FileSelectedListener {
-                override fun fileSelected(file: String) {
+                override fun fileSelected(file: File) {
                     Thread(Runnable {
                         try {
                             FileStore.readFile(file, file_read)
@@ -218,7 +218,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
                     }).start()
                 }
             })
-            dialog.createFileDialog(this@FilterActivity, FileStore, File(TodoApplication.config.todoFileName).parent, txtOnly = false)
+            dialog.createFileDialog(this@FilterActivity, FileStore, TodoApplication.config.todoFile.parentFile, txtOnly = false)
     }
 
     private fun createFilterIntent(): Intent {
