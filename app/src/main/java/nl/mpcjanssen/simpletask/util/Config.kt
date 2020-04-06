@@ -8,7 +8,10 @@ import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.Task
 import org.json.JSONObject
 import java.io.File
+<<<<<<< Updated upstream
 import java.io.IOException
+=======
+>>>>>>> Stashed changes
 import java.util.*
 
 class Config(app: TodoApplication) : Preferences(app) {
@@ -191,18 +194,18 @@ class Config(app: TodoApplication) : Preferences(app) {
         get() = TodoApplication.app.resources.getStringArray(R.array.sortKeys)
 
     private var _todoFileName by StringOrNullPreference(R.string.todo_file_key)
-    val todoFileName: String
-        get()  = _todoFileName ?: FileStore.getDefaultPath()
+    val todoFile: File
+        get()  = _todoFileName?.let { File(it )} ?: FileStore.getDefaultFile()
 
 
 
-    fun setTodoFile(todo: String?) {
-        _todoFileName = todo
+    fun setTodoFile(file: File?) {
+        _todoFileName = file?.path
         prefs.edit().remove(getString(R.string.file_current_version_id)).apply()
     }
 
-    val doneFileName: String
-        get() = FileStore.doneFile(todoFileName)
+    val doneFile: File
+        get() = File(todoFile.parentFile, "done.txt")
 
     fun clearCache() {
         cachedContents = null
