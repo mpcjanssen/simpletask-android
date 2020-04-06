@@ -227,7 +227,7 @@ object FileStore : IFileStore {
         // Drop the first one as it is the current folder
         res.data.drop(1).forEach { remoteFile ->
             if (remoteFile is RemoteFile) {
-                result.add(FileEntry(File(remoteFile.remotePath), isFolder = (remoteFile.mimeType == "DIR")))
+                result.add(FileEntry(File(remoteFile.remotePath).name, isFolder = (remoteFile.mimeType == "DIR")))
             }
 
         }

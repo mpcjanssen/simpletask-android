@@ -65,7 +65,9 @@ interface IFileStore {
 data class RemoteContents(val remoteId: String, val contents: List<String>)
 
 // Generic file entry class for use in File dialogs
-data class FileEntry(val file: File, val isFolder: Boolean)
+data class FileEntry(val file: File, val isFolder: Boolean) {
+    constructor(fileName: String, isFolder: Boolean) : this (File(fileName), isFolder)
+}
 
 
 
