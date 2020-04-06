@@ -10,11 +10,7 @@ import nl.mpcjanssen.simpletask.remote.FileStore
 
 import nl.mpcjanssen.simpletask.remote.IFileStore
 import nl.mpcjanssen.simpletask.util.*
-<<<<<<< Updated upstream
-
-=======
 import java.io.File
->>>>>>> Stashed changes
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.collections.ArrayList
@@ -283,11 +279,7 @@ class TodoList(val config: Config) {
                 FileStoreActionQueue.add("Backup") {
                     Backupper.backup(file, items)
                 }
-<<<<<<< Updated upstream
-                notifyTasklistChanged(filename, false, true)
-=======
                 notifyTasklistChanged(file, save = false, refreshMainUI = true)
->>>>>>> Stashed changes
             } catch (e: Exception) {
                 Log.e(tag, "TodoList load failed: ${file.path}", e)
                 showToastShort(TodoApplication.app, "Loading of todo file failed")
@@ -345,11 +337,7 @@ class TodoList(val config: Config) {
                 }
 
                 override fun onTick(p0: Long) {
-<<<<<<< Updated upstream
-                    Log.d(TAG, "Scheduled save in ${p0}")
-=======
                     Log.d(tag, "Scheduled save in $p0")
->>>>>>> Stashed changes
                 }
             }.start()
         })
@@ -364,11 +352,7 @@ class TodoList(val config: Config) {
             try {
                 FileStore.appendTaskToFile(doneFile, tasks.map {it.inFileFormat(useUUIDs = TodoApplication.config.useUUIDs)}, eol)
                 removeAll(tasks)
-<<<<<<< Updated upstream
-                notifyTasklistChanged(todoFilename, true, true)
-=======
                 notifyTasklistChanged(todoFile, save = true, refreshMainUI = true)
->>>>>>> Stashed changes
             } catch (e: Exception) {
                 Log.e(tag, "Task archiving failed", e)
                 showToastShort(TodoApplication.app, "Task archiving failed")
