@@ -42,7 +42,7 @@ class LoginScreen : ThemedActionBarActivity() {
         setContentView(R.layout.login)
 
         login.setOnClickListener {
-            startLogin(true)
+            startLogin()
         }
 
         logging.setOnClickListener {
@@ -60,13 +60,12 @@ class LoginScreen : ThemedActionBarActivity() {
         username = webdav_username.text.toString()
         password = webdav_password.text.toString()
         serverUrl = url
-        TodoApplication.config.setTodoFile("$url/${FileStore.getDefaultFile()}")
         Log.d(TAG, "Saved credentials for $username")
         switchToTodolist()
     }
 
 
-    private fun startLogin(retrySsl: Boolean) {
+    private fun startLogin() {
         FileStoreActionQueue.add("login") {
             try {
                 val client = OkHttpSardine().also { it.setCredentials(webdav_username.text.toString(), webdav_password.text.toString()) }
