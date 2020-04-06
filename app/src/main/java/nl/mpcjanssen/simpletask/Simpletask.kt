@@ -146,13 +146,30 @@ class Simpletask : ThemedNoActionBarActivity() {
                             val url = links[which]
                             Log.i(TAG, "" + actions[which] + ": " + url)
                             when (actions[which]) {
-                                Action.LINK -> try {
+                                Action.LINK -> when {
+                                    url.startsWith("todo://") -> {
+                                        val todoFolder = TodoApplication.config.todoFile.parentFile
+                                        val newName = File(todoFolder, url.substring(7))
+                                        TodoApplication.app.switchTodoFile(newName)
+                                    }
+                                    url.startsWith("root://") -> {
+                                        val rootFolder = TodoApplication.config.localFileRoot
+                                        val file = File(rootFolder, url.substring(7))
+                                        actionIntent = Intent(Intent.ACTION_VIEW)
+                                        val contentUri = Uri.fromFile(file)
+                                        val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension)
+                                        actionIntent.setDataAndType(contentUri, mime)
+                                        actionIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                        startActivity(actionIntent)
+                                    }
+                                    else -> try {
                                         actionIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                                         startActivity(actionIntent)
                                     } catch (e: ActivityNotFoundException) {
                                         Log.i(TAG, "No handler for task action $url")
                                         showToastLong(TodoApplication.app, "No handler for $url")
                                     }
+                                }
                                 Action.PHONE -> {
                                     actionIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + Uri.encode(url)))
                                     startActivity(actionIntent)
