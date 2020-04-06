@@ -111,15 +111,15 @@ object FileStore : IFileStore {
         }
 
         val filter = FilenameFilter { dir, filename ->
-            val sel = File(dir, filename)
+            val sel = File(dir,filename)
             if (!sel.canRead())
                 false
             else {
                 if (sel.isDirectory) {
-                    result.add(FileEntry(sel, true))
+                    result.add(FileEntry(File(filename), true))
                 } else {
                     !txtOnly || filename.toLowerCase(Locale.getDefault()).endsWith(".txt")
-                    result.add(FileEntry(sel, false))
+                    result.add(FileEntry(File(filename), false))
                 }
             }
         }
