@@ -280,7 +280,6 @@ object CalendarSync {
             .build()
     private val CAL_NAME = "simpletask_reminders_v34SsjC7mwK9WSVI"
     private val CAL_COLOR = Color.BLUE // Chosen arbitrarily...
-    private const val EVT_DURATION_DAY = 24 * 60 * 60 * 1000 // ie. 24 hours
 
     private val SYNC_DELAY_MS = 20 * 1000
     private val TAG = "CalendarSync"
@@ -307,8 +306,6 @@ object CalendarSync {
 
     private val m_sync_runnable: SyncRunnable
     private val m_cr: ContentResolver
-    private var m_rem_margin = 1440
-    private var m_rem_time = DateTime.forTimeOnly(12, 0, 0, 0)
     private val m_stpe: ScheduledThreadPoolExecutor
 
     @SuppressLint("Recycle")
