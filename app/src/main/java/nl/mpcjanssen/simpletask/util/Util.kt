@@ -357,7 +357,7 @@ fun Activity.updateItemsDialog(
     dialog.show()
 }
 
-fun TextView.setOnImeAction(id: Int, callback: (TextView) -> Unit): Unit {
+fun TextView.setOnImeAction(id: Int, callback: (TextView) -> Unit) {
     this.setOnEditorActionListener { v, actionId, keyEvent ->
         val enter = keyEvent != null && keyEvent.keyCode == KeyEvent.KEYCODE_ENTER
 
@@ -677,6 +677,7 @@ fun broadcastTasklistChanged(broadcastManager: LocalBroadcastManager) {
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_TASKLIST_CHANGED))
 }
 
+@Suppress("unused")
 fun broadcastAuthFailed(broadcastManager: LocalBroadcastManager) {
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_AUTH_FAILED))
 }
