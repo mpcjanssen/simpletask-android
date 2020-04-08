@@ -4,7 +4,7 @@ Gestione Su Ahora (Manage Your Now - MYN)
 Creando los contextos para MYN
 ------------------------------
 
-MYN Define 3 zonas de urgencia, que nosotros hacemos corresponder a listas en Simpletask de tal manera que se ordenen correctamente.
+MYN define 3 zonas de urgencia, que nosotros hacemos corresponder a listas en Simpletask de tal manera que se ordenen correctamente.
 
 -   Crítico Ahora -\> `@CriticalNow`
 -   Oportunidad Ahora -\> `@OpportunityNow`
@@ -23,11 +23,11 @@ Así que, para hacer las listas MYN persistentes, añada una tarea escondida par
 Configurando la ordenación para MYN
 -----------------------------------
 
-![](./images/MYN_sort.png)
+![](./images/MYN_sort.es.png)
 
-Para diferir tareas en Simpletask a Diferir-Hacer o Diferir-Revisar  utilizamos la función fecha umbral. Asegurese de que en ajustes el `Diferir por fecha umbral` está marcado. Entonces puede usar la fecha umbral `t:yyyy-mm-dd` como fecha de comienzo en MYN/1MTD
+Para diferir tareas en Simpletask a Diferir-Hacer o Diferir-Revisar  utilizamos la función fecha umbral. Asegurese de que en ajustes el `Diferir por fecha umbral` está marcado. Entonces puede usar la fecha umbral `t:yyyy-mm-dd` como fecha de comienzo en MYN/1MTD.
 
-Puede o bien esconder tareas futuras (desde la solapa `Otro` de filtros) o bien ordenarlas hacia el final (de modo que todavía son visibles pero sin interferir). Para conseguirlo  utilizamos la ordenación `fecha umbral en el futuro`. La otra configuración necesaria es ordenar su lista por fecha umbral invertida de modo que las tareas más antiguas serán ordenadas más atrás en la lista. Además de que realmente no importará cómo ordene después de eso, vea la imagen para un ejemplo.
+Puede o bien esconder tareas futuras (desde la solapa `Otro` de filtros) o bien ordenarlas hacia el final (de modo que todavía son visibles pero sin interferir). Para conseguirlo  utilizamos la ordenación `Fecha umbral en el futuro`. La otra configuración necesaria es ordenar su lista por fecha umbral invertida de modo que las tareas más antiguas serán ordenadas más atrás en la lista. Además de que realmente no importará cómo ordene después de eso, vea la imagen para un ejemplo.
 
 Utilizando la lista
 -------------------
