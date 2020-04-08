@@ -34,7 +34,7 @@ object FileStore : IFileStore {
 
     var username by TodoApplication.config.StringOrNullPreference(NEXTCLOUD_USER)
     var password by TodoApplication.config.StringOrNullPreference(NEXTCLOUD_PASS)
-    var serverUrl by TodoApplication.config.StringOrNullPreference(NEXTCLOUD_URL)
+    private var serverUrl by TodoApplication.config.StringOrNullPreference(NEXTCLOUD_URL)
 
     override val isAuthenticated: Boolean
         get() {
@@ -67,15 +67,15 @@ object FileStore : IFileStore {
     }
 
 
-    override fun getRemoteVersion(filename: String): String {
-        val op = ReadFileRemoteOperation(filename)
+    override fun getRemoteVersion(file: File): String {
+        val op = ReadFileRemoteOperation(file.canonicalPath)
         val res = op.execute(getClient())
         return if (res.isSuccess) {
             val file = res.data[0] as RemoteFile
-            Log.d(TAG, "Remote versions of $filename: id: ${file.remoteId} tag: ${file.etag} modified: ${file.modifiedTimestamp} ")
+            Log.d(TAG, "Remote versions of $file: id: ${file.remoteId} tag: ${file.etag} modified: ${file.modifiedTimestamp} ")
             file.etag
         } else {
-            Log.w(TAG, "Failed to get remote version of $filename: ${res.code}")
+            Log.w(TAG, "Failed to get remote version of $file: ${res.code}")
             throw TodoException("${res.code}: ${res.exception}")
         }
     }
@@ -89,28 +89,28 @@ object FileStore : IFileStore {
             return online
         }
 
-    override fun loadTasksFromFile(path: String): RemoteContents {
+    override fun loadTasksFromFile(file: File): RemoteContents {
 
         // If we load a file and changes are pending, we do not want to overwrite
         // our local changes, instead we try to upload local
 
-        Log.i(TAG, "Loading file from Nextcloud: " + path)
+        Log.i(TAG, "Loading file from Nextcloud: " + file)
         if (!isAuthenticated) {
             throw IOException("Not authenticated")
         }
         val readLines = ArrayList<String>()
 
         val cacheDir = mApp.applicationContext.cacheDir
-        val op = DownloadFileRemoteOperation(path, cacheDir.canonicalPath)
+        val op = DownloadFileRemoteOperation(file.canonicalPath, cacheDir.canonicalPath)
         val client = getClient()
         op.execute(client)
-        val infoOp = ReadFileRemoteOperation(path)
+        val infoOp = ReadFileRemoteOperation(file.canonicalPath)
         val res = infoOp.execute(client)
         if (res.httpCode == 404) {
             throw (IOException("File not found"))
         }
         val fileInfo = res.data[0] as RemoteFile
-        val cachePath = File(cacheDir, path).canonicalPath
+        val cachePath = File(cacheDir, file.path).canonicalPath
         readLines.addAll(File(cachePath).readLines())
         val currentVersionId = fileInfo.etag
         return RemoteContents(currentVersionId, readLines)
@@ -123,24 +123,23 @@ object FileStore : IFileStore {
 
     @Synchronized
     @Throws(IOException::class)
-    override fun saveTasksToFile(path: String, lines: List<String>, lastRemote: String?, eol: String) : String {
+    override fun saveTasksToFile(file: File, lines: List<String>, lastRemote: String?, eol: String) : String {
         val contents = join(lines, eol) + eol
 
         val timestamp = timeStamp()
 
-        Log.i(TAG, "Saving to file " + path)
+        Log.i(TAG, "Saving to file " + file)
         val cacheDir = mApp.applicationContext.cacheDir
         val tmpFile = File(cacheDir, "tmp.txt")
         tmpFile.writeText(contents)
         val client = getClient()
         // if we have previously seen a file from the server, we don't upload unless it's the
         // one we've seen before. If we've never seen a file, we just upload unconditionally
-        val res = UploadFileRemoteOperation(tmpFile.absolutePath, path,
+        val res = UploadFileRemoteOperation(tmpFile.absolutePath, file.canonicalPath,
                 "text/plain", timestamp).execute(client)
 
         val conflict = 412
         if (res.httpCode == conflict) {
-            val file = File(path)
             val parent = file.parent
             val name = file.name
             val nameWithoutTxt = "\\.txt$".toRegex().replace(name, "")
@@ -153,7 +152,7 @@ object FileStore : IFileStore {
                     + ". Review differences manually with a text editor.")
         }
 
-        val infoOp = ReadFileRemoteOperation(path)
+        val infoOp = ReadFileRemoteOperation(file.canonicalPath)
         val infoRes = infoOp.execute(client)
         val fileInfo = infoRes.data[0] as RemoteFile
         Log.i(TAG,"New remote version tag: ${fileInfo.etag}, id: ${fileInfo.remoteId}, modified: ${fileInfo.modifiedTimestamp}")
@@ -162,16 +161,16 @@ object FileStore : IFileStore {
     }
 
     @Throws(IOException::class)
-    override fun appendTaskToFile(path: String, lines: List<String>, eol: String) {
+    override fun appendTaskToFile(file: File, lines: List<String>, eol: String) {
         if (!isOnline) {
             throw IOException("Device is offline")
         }
         val cacheDir = mApp.applicationContext.cacheDir
         val client = getClient()
-        val op = DownloadFileRemoteOperation(path, cacheDir.canonicalPath)
+        val op = DownloadFileRemoteOperation(file.canonicalPath, cacheDir.canonicalPath)
         val result = op.execute(client)
         val doneContents = if (result.isSuccess) {
-            val cachePath = File(cacheDir, path).canonicalPath
+            val cachePath = File(cacheDir, file.canonicalPath).canonicalPath
             File(cachePath).readLines().toMutableList()
         } else {
             ArrayList<String>()
@@ -183,13 +182,13 @@ object FileStore : IFileStore {
         val tmpFile = File(cacheDir, "tmp.txt")
         tmpFile.writeText(contents)
         val timestamp = timeStamp()
-        val writeOp = UploadFileRemoteOperation(tmpFile.absolutePath, path, "text/plain", timestamp)
+        val writeOp = UploadFileRemoteOperation(tmpFile.absolutePath, file.canonicalPath, "text/plain", timestamp)
         writeOp.execute(client)
 
 
     }
 
-    override fun writeFile(file: String, contents: String) {
+    override fun writeFile(file: File, contents: String) {
         if (!isAuthenticated) {
             Log.e(TAG, "Not authenticated, file $file not written.")
             throw IOException("Not authenticated")
@@ -198,7 +197,7 @@ object FileStore : IFileStore {
         val cacheDir = mApp.applicationContext.cacheDir
         val tmpFile = File(cacheDir, "tmp.txt")
         tmpFile.writeText(contents)
-        val op = UploadFileRemoteOperation(tmpFile.absolutePath, file, "text/plain", timeStamp())
+        val op = UploadFileRemoteOperation(tmpFile.absolutePath, file.canonicalPath, "text/plain", timeStamp())
         val result = op.execute(getClient())
         Log.i(TAG, "Wrote file to $file, result ${result.isSuccess}")
 
@@ -207,36 +206,35 @@ object FileStore : IFileStore {
     private fun timeStamp() = (System.currentTimeMillis() / 1000).toString()
 
     @Throws(IOException::class)
-    override fun readFile(file: String, fileRead: (String) -> Unit) {
+    override fun readFile(file: File, fileRead: (String) -> Unit) {
         if (!isAuthenticated) {
             return
         }
         val cacheDir = mApp.applicationContext.cacheDir
-        val op = DownloadFileRemoteOperation(file, cacheDir.canonicalPath)
+        val op = DownloadFileRemoteOperation(file.canonicalPath, cacheDir.canonicalPath)
         op.execute(getClient())
-        val cachePath = File(cacheDir, file).canonicalPath
+        val cachePath = File(cacheDir, file.canonicalPath).canonicalPath
         val contents = File(cachePath).readText()
         fileRead(contents)
     }
 
 
-    override fun loadFileList(path: String, txtOnly: Boolean): List<FileEntry> {
+    override fun loadFileList(file: File, txtOnly: Boolean): List<FileEntry> {
         val result = ArrayList<FileEntry>()
-        val op = ReadFolderRemoteOperation(File(path).canonicalPath)
+        val op = ReadFolderRemoteOperation(file.canonicalPath)
         val res: RemoteOperationResult = op.execute(getClient())
         // Loop over the resulting files
         // Drop the first one as it is the current folder
-        res.data.drop(1).forEach { file ->
-            if (file is RemoteFile) {
-                val filename = File(file.remotePath).name
-                result.add(FileEntry(filename, isFolder = (file.mimeType == "DIR")))
+        res.data.drop(1).forEach { remoteFile ->
+            if (remoteFile is RemoteFile) {
+                result.add(FileEntry(File(remoteFile.remotePath).name, isFolder = (remoteFile.mimeType == "DIR")))
             }
 
         }
         return result
     }
 
-    override fun getDefaultPath(): String {
-        return "/todo.txt"
+    override fun getDefaultFile(): File {
+        return File("/todo.txt")
     }
 }

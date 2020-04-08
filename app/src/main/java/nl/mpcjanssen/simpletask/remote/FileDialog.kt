@@ -19,19 +19,19 @@ class FileDialog {
     private var loadingOverlay: Dialog? = null
     private var showingDialog: AlertDialog? = null
 
-    fun createFileDialog(act: Activity, fileStore: IFileStore, startPath: String, txtOnly: Boolean) {
+    fun createFileDialog(act: Activity, fileStore: IFileStore, startFolder: File, txtOnly: Boolean) {
         // Use an async task because we need to manage the UI
         Thread(Runnable {
             val unsortedFileList: List<FileEntry> = try {
                 runOnMainThread(Runnable {
                     loadingOverlay = showLoadingOverlay(act, null, true)
                 })
-                fileStore.loadFileList(startPath, txtOnly)
+                fileStore.loadFileList(startFolder, txtOnly)
             } catch (e: Throwable) {
-                Log.w(TAG, "Can't load fileList from $startPath")
-                if (startPath != ROOT_DIR) {
+                Log.w(TAG, "Can't load fileList from ${startFolder.path}")
+                if (startFolder.canonicalPath != ROOT_DIR) {
                     Log.w(TAG, "Trying root")
-                    fileStore.loadFileList(ROOT_DIR, txtOnly)
+                    fileStore.loadFileList(File(ROOT_DIR), txtOnly)
                 } else {
                     Log.e(TAG, "Can't load fileList from $ROOT_DIR), browser closed")
                     showToastLong(act, "Can't retrieve file list")
@@ -42,32 +42,32 @@ class FileDialog {
                     loadingOverlay = showLoadingOverlay(act, loadingOverlay, false)
                 })
             } ?: return@Runnable
-            Log.i(TAG, "File list from $startPath loaded")
-            val fileList = unsortedFileList.sortedWith(compareBy({ !it.isFolder }, { it.name })).toMutableList()
+            Log.i(TAG, "File list from ${startFolder.path} loaded")
+            val fileList = unsortedFileList.sortedWith(compareBy({ !it.isFolder }, { it.file.name })).toMutableList()
 
-            if (startPath != ROOT_DIR) {
-                fileList.add(0, FileEntry(PARENT_DIR, isFolder = true))
+            if (startFolder.canonicalPath != ROOT_DIR) {
+                fileList.add(0, FileEntry(File(PARENT_DIR), isFolder = true))
             }
             runOnMainThread(Runnable {
                 val builder = AlertDialog.Builder(act)
-                builder.setTitle(startPath)
-                val namesList = fileList.map { it.name }.toTypedArray()
+                builder.setTitle(startFolder.canonicalPath)
+                val namesList = fileList.map { it.file.path }.toTypedArray()
                 builder.setItems(namesList, DialogInterface.OnClickListener { dialog, which ->
                     val fileNameChosen = namesList[which]
                     if (fileNameChosen == PARENT_DIR) {
-                        createFileDialog(act, fileStore, File(startPath).parentFile.canonicalPath, txtOnly)
+                        createFileDialog(act, fileStore, startFolder.parentFile, txtOnly)
                         return@OnClickListener
                     }
 
-                    val fileEntry = fileList.find { fileNameChosen == it.name }
+                    val fileEntry = fileList.find { fileNameChosen == it.file.path }
                     if (fileEntry == null) {
                         Log.w(TAG, "Selected file was $fileEntry")
                         dialog.dismiss()
                         return@OnClickListener
                     }
-                    Log.i(TAG, "Selected entry ${fileEntry.name}, folder: ${fileEntry.isFolder}")
+                    Log.i(TAG, "Selected entry ${fileEntry.file.path}, folder: ${fileEntry.isFolder}")
 
-                    val newPath = File(startPath, fileEntry.name).path
+                    val newPath = File(startFolder, fileEntry.file.path)
                     if (fileEntry.isFolder) {
                         createFileDialog(act, fileStore, newPath, txtOnly)
                     } else {
@@ -88,7 +88,7 @@ class FileDialog {
         fileListenerList.add(listener)
     }
 
-    private fun fireFileSelectedEvent(file: String) {
+    private fun fireFileSelectedEvent(file: File) {
         fileListenerList.fireEvent(object : ListenerList.FireHandler<FileSelectedListener> {
             override fun fireEvent(listener: FileSelectedListener) {
                 listener.fileSelected(file)
@@ -99,7 +99,7 @@ class FileDialog {
 
     companion object {
         const val TAG = "FileDialog"
-        fun browseForNewFile(act: Activity, fileStore: FileStore, path: String, listener: FileSelectedListener, txtOnly: Boolean) {
+        fun browseForNewFile(act: Activity, fileStore: FileStore, folder: File, listener: FileSelectedListener, txtOnly: Boolean) {
             if (!FileStore.isOnline) {
                 showToastLong(act, "Device is offline")
                 Log.i(TAG, "Device is offline, browser closed")
@@ -108,7 +108,7 @@ class FileDialog {
             val dialog = FileDialog()
             dialog.addFileListener(listener)
             try {
-                dialog.createFileDialog(act, fileStore, path, txtOnly)
+                dialog.createFileDialog(act, fileStore, folder, txtOnly)
             } catch (e: Exception) {
                 Log.e(TAG, "Browsing for new file failed", e)
             }
@@ -116,7 +116,7 @@ class FileDialog {
     }
 
     interface FileSelectedListener {
-        fun fileSelected(file: String)
+        fun fileSelected(file: File)
     }
 }
 

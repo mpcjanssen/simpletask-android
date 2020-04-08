@@ -1,7 +1,7 @@
 package nl.mpcjanssen.simpletask.remote
 
-import nl.mpcjanssen.simpletask.task.Task
+import java.io.File
 
 interface BackupInterface {
-    fun backup(name: String, lines: List<String>)
+    fun backup(file: File, lines: List<String>)
 }

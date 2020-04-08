@@ -357,7 +357,7 @@ fun Activity.updateItemsDialog(
     dialog.show()
 }
 
-fun TextView.setOnImeAction(id: Int, callback: (TextView) -> Unit): Unit {
+fun TextView.setOnImeAction(id: Int, callback: (TextView) -> Unit) {
     this.setOnEditorActionListener { v, actionId, keyEvent ->
         val enter = keyEvent != null && keyEvent.keyCode == KeyEvent.KEYCODE_ENTER
 
@@ -496,7 +496,7 @@ fun showLoadingOverlay(act: Activity, visibleDialog: Dialog?, show: Boolean): Di
         return Dialog(act).apply {
             requestWindowFeature(Window.FEATURE_NO_TITLE)
             setContentView(R.layout.loading)
-            val pr = findViewById(R.id.progress) as ProgressBar?
+            val pr = findViewById<ProgressBar>(R.id.progress)
             pr?.indeterminateDrawable?.setColorFilter(-16737844, android.graphics.PorterDuff.Mode.MULTIPLY)
             window.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
             setCancelable(false)
@@ -677,6 +677,7 @@ fun broadcastTasklistChanged(broadcastManager: LocalBroadcastManager) {
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_TASKLIST_CHANGED))
 }
 
+@Suppress("unused")
 fun broadcastAuthFailed(broadcastManager: LocalBroadcastManager) {
     broadcastManager.sendBroadcast(Intent(Constants.BROADCAST_AUTH_FAILED))
 }

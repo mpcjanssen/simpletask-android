@@ -19,7 +19,6 @@ open class ActionQueue(val qName: String) : Thread() {
 }
 
 object FileStoreActionQueue : ActionQueue("FSQ")
-object BackupQueue : ActionQueue("BQ")
 
 
 

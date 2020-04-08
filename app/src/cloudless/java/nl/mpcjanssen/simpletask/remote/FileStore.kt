@@ -18,18 +18,18 @@ import java.util.*
 import kotlin.reflect.KClass
 
 object FileStore : IFileStore {
-    override fun getRemoteVersion(filename: String): String {
-        return File(filename).lastModified().toString()
+    override fun getRemoteVersion(file: File): String {
+        return file.lastModified().toString()
     }
 
     override val isOnline = true
-    private val TAG = "FileStore"
+    private const val TAG = "FileStore"
     private var observer: TodoObserver? = null
 
 
     init {
         Log.i(TAG, "onCreate")
-        Log.i(TAG, "Default path: ${getDefaultPath()}")
+        Log.i(TAG, "Default path: ${getDefaultFile().path}")
         observer = null
 
     }
@@ -41,24 +41,23 @@ object FileStore : IFileStore {
             return permissionCheck == PackageManager.PERMISSION_GRANTED
         }
 
-    override fun loadTasksFromFile(path: String): RemoteContents {
+    override fun loadTasksFromFile(file: File): RemoteContents {
         Log.i(TAG, "Loading tasks")
-        val file = File(path)
         val lines = file.readLines()
-        Log.i(TAG, "Read ${lines.size} lines from $path")
-        setWatching(path)
+        Log.i(TAG, "Read ${lines.size} lines from $file")
+        setWatching(file)
         return RemoteContents(file.lastModified().toString(), lines)
     }
 
-    override fun writeFile(path: String, contents: String) {
-        Log.i(TAG, "Writing file to  $path")
-        File(path).writeText(contents)
+    override fun writeFile(file: File, contents: String) {
+        Log.i(TAG, "Writing file to  ${file.canonicalPath}")
+        file.writeText(contents)
     }
 
-    override fun readFile(file: String, fileRead: (String) -> Unit) {
-        Log.i(TAG, "Reading file: {}" + file)
+    override fun readFile(file: File, fileRead: (contents: String) -> Unit) {
+        Log.i(TAG, "Reading file: ${file.path}")
         val contents: String
-        val lines = File(file).readLines()
+        val lines = file.readLines()
         contents = join(lines, "\n")
         fileRead(contents)
     }
@@ -67,62 +66,60 @@ object FileStore : IFileStore {
         return LoginScreen::class
     }
 
-    private fun setWatching(path: String) {
-        Log.i(TAG, "Observer: adding folder watcher on ${File(path).parentFile.absolutePath}")
+    private fun setWatching(file: File) {
+        Log.i(TAG, "Observer: adding folder watcher on ${file.parent}")
         val obs = observer
-        if (obs != null && path == obs.path) {
-            Log.w(TAG, "Observer: already watching: $path")
+        if (obs != null && file.canonicalPath == obs.fileName) {
+            Log.w(TAG, "Observer: already watching: ${file.canonicalPath}")
             return
         } else if (obs != null) {
-            Log.w(TAG, "Observer: already watching different path: ${obs.path}")
+            Log.w(TAG, "Observer: already watching different path: ${obs.fileName}")
             obs.ignoreEvents(true)
             obs.stopWatching()
             observer = null
         }
-        observer = TodoObserver(path)
+        observer = TodoObserver(file)
         Log.i(TAG, "Observer: modifying done")
     }
 
-    override fun saveTasksToFile(path: String, lines: List<String>, lastRemote: String?, eol: String) : String {
-        Log.i(TAG, "Saving tasks to file: $path")
+    override fun saveTasksToFile(file: File, lines: List<String>, lastRemote: String?, eol: String) : String {
+        Log.i(TAG, "Saving tasks to file: ${file.path}")
         val obs = observer
         obs?.ignoreEvents(true)
-        val file = File(path)
         writeToFile(lines, eol, file, false)
         obs?.delayedStartListen(1000)
         return file.lastModified().toString()
     }
 
-    override fun appendTaskToFile(path: String, lines: List<String>, eol: String) {
-        Log.i(TAG, "Appending ${lines.size} tasks to $path")
-        writeToFile(lines, eol, File(path), true)
+    override fun appendTaskToFile(file: File, lines: List<String>, eol: String) {
+        Log.i(TAG, "Appending ${lines.size} tasks to ${file.path}")
+        writeToFile(lines, eol, file, true)
     }
 
     override fun logout() {
 
     }
 
-    override fun getDefaultPath(): String {
-        return "${Environment.getExternalStorageDirectory()}/data/nl.mpcjanssen.simpletask/todo.txt"
+    override fun getDefaultFile(): File {
+        return File(Environment.getExternalStorageDirectory(), "/data/nl.mpcjanssen.simpletask/todo.txt")
     }
 
-    override fun loadFileList(path: String, txtOnly: Boolean): List<FileEntry> {
+    override fun loadFileList(file: File, txtOnly: Boolean): List<FileEntry> {
         val result = ArrayList<FileEntry>()
-        val file = File(path)
-        if (path == "/") {
-            result.add(FileEntry(Environment.getExternalStorageDirectory().path, true))
+        if (file.canonicalPath == "/") {
+            result.add(FileEntry(Environment.getExternalStorageDirectory(), true))
         }
 
         val filter = FilenameFilter { dir, filename ->
-            val sel = File(dir, filename)
+            val sel = File(dir,filename)
             if (!sel.canRead())
                 false
             else {
                 if (sel.isDirectory) {
-                    result.add(FileEntry(sel.name, true))
+                    result.add(FileEntry(File(filename), true))
                 } else {
                     !txtOnly || filename.toLowerCase(Locale.getDefault()).endsWith(".txt")
-                    result.add(FileEntry(sel.name, false))
+                    result.add(FileEntry(File(filename), false))
                 }
             }
         }
@@ -131,41 +128,40 @@ object FileStore : IFileStore {
         return result
     }
 
-    class TodoObserver(val path: String) : FileObserver(File(path).parentFile.absolutePath) {
-        private val TAG = "FileWatchService"
-        private val fileName: String
+    class TodoObserver(val file: File) : FileObserver(file.canonicalPath) {
+        private val tag = "FileWatchService"
+        val fileName : String = file.canonicalPath
         private var ignoreEvents: Boolean = false
         private val handler: Handler
 
         private val delayedEnable = Runnable {
-            Log.i(TAG, "Observer: Delayed enabling events for: " + path)
+            Log.i(tag, "Observer: Delayed enabling events for: $fileName ")
             ignoreEvents(false)
         }
 
         init {
             this.startWatching()
-            this.fileName = File(path).name
-            Log.i(TAG, "Observer: creating observer on: {}")
+            Log.i(tag, "Observer: creating observer on: $fileName")
             this.ignoreEvents = false
             this.handler = Handler(Looper.getMainLooper())
 
         }
 
         fun ignoreEvents(ignore: Boolean) {
-            Log.i(TAG, "Observer: observing events on " + this.path + "? ignoreEvents: " + ignore)
+            Log.i(tag, "Observer: observing events on $fileName? ignoreEvents: $ignore")
             this.ignoreEvents = ignore
         }
 
         override fun onEvent(event: Int, eventPath: String?) {
             if (eventPath != null && eventPath == fileName) {
-                Log.d(TAG, "Observer event: $path:$event")
-                if (event == FileObserver.CLOSE_WRITE ||
-                        event == FileObserver.MODIFY ||
-                        event == FileObserver.MOVED_TO) {
+                Log.d(tag, "Observer event: $fileName:$event")
+                if (event == CLOSE_WRITE ||
+                        event == MODIFY ||
+                        event == MOVED_TO) {
                     if (ignoreEvents) {
-                        Log.i(TAG, "Observer: ignored event on: " + path)
+                        Log.i(tag, "Observer: ignored event on: $fileName")
                     } else {
-                        Log.i(TAG, "File changed {}" + path)
+                        Log.i(tag, "File changed {}$fileName")
                         FileStore.remoteTodoFileChanged()
                     }
                 }
@@ -177,7 +173,7 @@ object FileStore : IFileStore {
             // Cancel any running timers
             handler.removeCallbacks(delayedEnable)
             // Reschedule
-            Log.i(TAG, "Observer: Adding delayed enabling to todoQueue")
+            Log.i(tag, "Observer: Adding delayed enabling to todoQueue")
             handler.postDelayed(delayedEnable, ms.toLong())
         }
 

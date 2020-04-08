@@ -21,48 +21,36 @@ interface IFileStore {
     val isAuthenticated: Boolean
 
     @Throws(IOException::class)
-    fun loadTasksFromFile(path: String): RemoteContents
-    fun saveTasksToFile(path: String, lines: List<String>, lastRemote: String?, eol: String) : String
+    fun loadTasksFromFile(file: File): RemoteContents
+    fun saveTasksToFile(file: File, lines: List<String>, lastRemote: String?, eol: String) : String
 
     // Handle login and logout
     fun loginActivity(): KClass<*>?
     fun logout()
 
     @Throws(IOException::class)
-    fun appendTaskToFile(path: String, lines: List<String>, eol: String)
+    fun appendTaskToFile(file: File, lines: List<String>, eol: String)
 
-    fun readFile(file: String, fileRead: (String) -> Unit)
-    fun writeFile(file: String, contents: String)
+    fun readFile(file: File, fileRead: (contents: String) -> Unit)
+    fun writeFile(file: File, contents: String)
 
     val isOnline: Boolean
 
     // Retrieve the remote file version
-    fun getRemoteVersion(filename: String): String?
+    fun getRemoteVersion(file: File): String?
 
     // Return the default todo.txt path
-    fun getDefaultPath(): String
+    fun getDefaultFile(): File
 
     // Return files and subfolders in path. If txtOnly is true only *.txt files will be returned.
-    fun loadFileList(path: String, txtOnly: Boolean): List<FileEntry>
+    fun loadFileList(file: File, txtOnly: Boolean): List<FileEntry>
 
     // Allow the FileStore to signal that the remote
     // todoFile changed. Call this in the filestore code
     // to force file sync
-    @Suppress
+    @Suppress("unused")
     fun remoteTodoFileChanged() {
         broadcastFileSync(TodoApplication.app.localBroadCastManager)
-
-    }
-
-    fun doneFile(todoFileName: String): String {
-        return sibling(todoFileName, "done.txt")
-    }
-
-    fun parent(todoFileName: String): String {
-        return File(todoFileName).parent
-    }
-    fun sibling(todoFileName: String, name: String): String {
-        return File(parent(todoFileName), name).canonicalPath
     }
 
     // Generic special folder names for use in File dialogs
@@ -77,7 +65,9 @@ interface IFileStore {
 data class RemoteContents(val remoteId: String, val contents: List<String>)
 
 // Generic file entry class for use in File dialogs
-data class FileEntry(val name: String, val isFolder: Boolean)
+data class FileEntry(val file: File, val isFolder: Boolean) {
+    constructor(fileName: String, isFolder: Boolean) : this (File(fileName), isFolder)
+}
 
 
 
