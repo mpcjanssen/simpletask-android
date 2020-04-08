@@ -18,7 +18,7 @@ import java.io.IOException
 class ScriptConfigScreen : ThemedActionBarActivity() {
 
     private lateinit var scriptEdit : EditText
-    private var m_menu: Menu? = null
+    private var mMenu: Menu? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +45,7 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
         // Inflate the menu; this adds items to the action bar if it is present.
         val inflater = menuInflater
         inflater.inflate(R.menu.lua_config, menu)
-        m_menu = menu
+        mMenu = menu
         return true
     }
 
@@ -66,11 +66,11 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
                 shareText(this, getString(R.string.lua_config_screen), script)
             }
             R.id.lua_config_import -> {
-                val importFile = FileStore.sibling(TodoApplication.config.todoFileName, "config.lua")
+                val importFile = File(TodoApplication.config.todoFile.parentFile, "config.lua")
                 importLuaConfig(importFile)
             }
             R.id.lua_config_export -> {
-                exportLuaConfig(FileStore.sibling(TodoApplication.config.todoFileName, "config.lue"))
+                exportLuaConfig(File(TodoApplication.config.todoFile.parentFile, "config.lua"))
             }
         }
         return true
@@ -85,7 +85,7 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
         }
     }
 
-    private fun exportLuaConfig (exportFile: String) {
+    private fun exportLuaConfig (exportFile: File) {
         FileStoreActionQueue.add("Export Lua config") {
             TodoApplication.config.luaConfig = script
             try {
@@ -99,7 +99,7 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
 
     }
 
-    private fun importLuaConfig (importFile: String) {
+    private fun importLuaConfig (importFile: File) {
         FileStoreActionQueue.add("Import Lua config") {
             try {
                 FileStore.readFile(importFile) { contents ->

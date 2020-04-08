@@ -1,5 +1,17 @@
 ﻿# Changelog
 
+## 10.5.3
+
+### Fixed
+
+- Restored removed `todo://` and `root://` links which were accidentally removed. Fixes #1050.
+
+## 10.5.2
+
+### Fixed
+
+- Regression of #1043.
+
 ## 10.5.1
 
 ### Fixed

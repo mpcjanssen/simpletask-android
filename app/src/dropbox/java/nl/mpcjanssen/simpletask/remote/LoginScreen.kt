@@ -37,7 +37,6 @@ import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.Simpletask
 import nl.mpcjanssen.simpletask.ThemedNoActionBarActivity
 import nl.mpcjanssen.simpletask.TodoApplication
-import nl.mpcjanssen.simpletask.util.Config
 
 class LoginScreen : ThemedNoActionBarActivity() {
 
@@ -103,7 +102,7 @@ class LoginScreen : ThemedNoActionBarActivity() {
             FileStore.accessToken = accessToken
             resumeAfterAuth = false
             //Proceed to MainActivity
-            TodoApplication.config.setTodoFile(FileStore.getDefaultPath())
+            TodoApplication.config.setTodoFile(FileStore.getDefaultFile())
             FileStore.remoteTodoFileChanged()
             switchToTodolist()
         }

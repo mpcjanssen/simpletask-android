@@ -37,13 +37,11 @@ import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.Color
 import android.net.Uri
-import android.provider.CalendarContract
 import android.provider.CalendarContract.*
 import androidx.core.content.ContextCompat
 import android.util.Log
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.task.*
-import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.toDateTime
 
 private enum class EvtStatus {
@@ -87,11 +85,22 @@ private class Evt(
 
     fun key() = EvtKey(dtStart, title)
 
-    infix fun equals(other: Evt) =
+    override fun hashCode(): Int {
+        var result = dtStart.hashCode()
+        result = 31 * result + title.hashCode()
+        result = 31 * result + description.hashCode()
+        result = 31 * result + remMinutes.hashCode()
+        return result
+    }
+
+    override fun equals(other: Any?) =
+            if (other !is Evt) {
+                false
+            }  else {
             dtStart == other.dtStart &&
                     title == other.title &&
                     description == other.description &&
-                    remMinutes == other.remMinutes
+                    remMinutes == other.remMinutes }
 
     @TargetApi(16)
     fun addOp(list: ArrayList<ContentProviderOperation>, calID: Long) {
@@ -204,7 +213,7 @@ private class EvtMap private constructor() : HashMap<EvtKey, LinkedList<Evt>>() 
             this.put(key, nlist)
         } else {
             for (oevt in list) {
-                if (oevt.status == EvtStatus.DELETE && oevt equals evt) {
+                if (oevt.status == EvtStatus.DELETE && oevt == evt) {
                     oevt.status = EvtStatus.KEEP
                     return
                 }
@@ -255,7 +264,7 @@ private class EvtMap private constructor() : HashMap<EvtKey, LinkedList<Evt>>() 
             }
         }
 
-        cr.applyBatch(CalendarContract.AUTHORITY, ops)
+        cr.applyBatch(AUTHORITY, ops)
         return SyncStats(ins, kps, dels)
     }
 }
@@ -263,15 +272,14 @@ private class EvtMap private constructor() : HashMap<EvtKey, LinkedList<Evt>>() 
 object CalendarSync {
 
     private val ACCOUNT_NAME = "Simpletask Calendar"
-    private val ACCOUNT_TYPE = CalendarContract.ACCOUNT_TYPE_LOCAL
+    private val ACCOUNT_TYPE = ACCOUNT_TYPE_LOCAL
     private val CAL_URI = Calendars.CONTENT_URI.buildUpon()
-            .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
+            .appendQueryParameter(CALLER_IS_SYNCADAPTER, "true")
             .appendQueryParameter(Calendars.ACCOUNT_NAME, ACCOUNT_NAME)
             .appendQueryParameter(Calendars.ACCOUNT_TYPE, ACCOUNT_TYPE)
             .build()
     private val CAL_NAME = "simpletask_reminders_v34SsjC7mwK9WSVI"
     private val CAL_COLOR = Color.BLUE // Chosen arbitrarily...
-    private val EVT_DURATION_DAY = 24 * 60 * 60 * 1000 // ie. 24 hours
 
     private val SYNC_DELAY_MS = 20 * 1000
     private val TAG = "CalendarSync"
@@ -298,8 +306,6 @@ object CalendarSync {
 
     private val m_sync_runnable: SyncRunnable
     private val m_cr: ContentResolver
-    private var m_rem_margin = 1440
-    private var m_rem_time = DateTime.forTimeOnly(12, 0, 0, 0)
     private val m_stpe: ScheduledThreadPoolExecutor
 
     @SuppressLint("Recycle")

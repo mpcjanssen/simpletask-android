@@ -38,8 +38,7 @@ You should have received a copy of the GNU General Public License along with Sim
         />
     <application
         android:name=".TodoApplication"
-        android:allowBackup="true"
-        android:fullBackupContent="true"
+        android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_label"
         android:theme="@style/LaunchScreen"

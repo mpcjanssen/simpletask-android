@@ -163,7 +163,7 @@ class TodoApplication : Application() {
         super.onTerminate()
     }
 
-    fun switchTodoFile(newTodo: String) {
+    fun switchTodoFile(newTodo: File) {
         config.setTodoFile(newTodo)
         loadTodoList("from file switch")
     }
@@ -212,9 +212,9 @@ class TodoApplication : Application() {
         FileDialog.browseForNewFile(
                 act,
                 fileStore,
-                fileStore.parent(config.todoFileName),
+                config.todoFile.parentFile,
                 object : FileDialog.FileSelectedListener {
-                    override fun fileSelected(file: String) {
+                    override fun fileSelected(file: File) {
                         switchTodoFile(file)
                     }
                 },
@@ -234,10 +234,10 @@ class TodoApplication : Application() {
 
 
 object Backupper : BackupInterface {
-    override fun backup(name: String, lines: List<String>) {
+    override fun backup(file: File, lines: List<String>) {
         val start = SystemClock.elapsedRealtime()
         val now = Date().time
-        val fileToBackup = TodoFile(lines.joinToString ("\n"), name, now)
+        val fileToBackup = TodoFile(lines.joinToString ("\n"), file.canonicalPath, now)
         val dao =  TodoApplication.db.todoFileDao()
         if(dao.insert(fileToBackup) == -1L) {
             dao.update(fileToBackup)
