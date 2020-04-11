@@ -1,19 +1,19 @@
 Intents
 =======
 
-Simpletask soporta un par de intents que pueden ser utilizados por otras aplicaciones (p. ej. tasker) para crear tareas o mostrar listas.
+Simpletask soporta un par de intents que pueden ser utilizados por otras aplicaciones (p. ej. Tasker) para crear tareas o mostrar listas.
 
 Crear tarea entre bastidores
 ----------------------------
 
-Para crear una tarea entre bastidores, tan sin mostrar simpletask,  puede utilizar el intent:
+Para crear una tarea en segundo plano, sin mostrar Simpletask,  puede utilizar el intent:
 
 -   Intent action: `nl.mpcjanssen.simpletask.BACKGROUND_TASK`
 -   Intent string extra: `task`
 
-El intent tendrá una cadena extra `task` qué contiene la tarea para ser añadida.
+El intent tendrá una cadena extra `task` que contiene la tarea a ser añadida.
 
-Por ejemplo para crear una tarea desde tasker, use la acción siguiente:
+Por ejemplo para crear una tarea desde Tasker, use la acción siguiente:
 
 -   Action: `nl.mpcjanssen.simpletask.BACKGROUND_TASK`
 -   Cat: Default
@@ -95,7 +95,7 @@ Para abrir Simpletask con un filtro específico puede utilizar el intent:
 
 ### Extra ordenación
 
-SORTS contiene una lista separada por comas o '' de claves para ordenación y su dirección separadas por un `!`. Suministrar `<dirección>!<clave para ordenación>`.
+SORTS contiene una lista separada por comas o comillas de claves para ordenación y su dirección separadas por un `!`. Suministrar `<dirección>!<clave para ordenación>`.
 
 #### Dirección
 
@@ -124,5 +124,5 @@ Debido a limitaciones en Tasker sólo puede añadir 2 extras. Si precisa más pu
 
     am start -a nl.mpcjanssen.simpletask.START_WITH_FILTER -e SORTS +!completed,+!alphabetical -e PROJECTS proyecto1,proyecto2 -e CONTEXTS @compras,@ordenador --ez CONTEXTSnot true -c android.intent.category.DEFAULT -S
 
-La `-S` al final asegurará que la aplicación arranca de nuevo correctamente si ya estaba visible. Aun así con tasker la `-S` parece que no funciona. Así que pruebe si ella.
+La `-S` al final asegurará que la aplicación arranca de nuevo correctamente si ya estaba visible. Aun así con Tasker la `-S` parece no funcionar, así que pruebe sin esta opción.
 
