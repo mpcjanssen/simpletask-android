@@ -239,7 +239,7 @@ class Config(app: TodoApplication) : Preferences(app) {
             }
         }
         set(items) {
-            Log.i(TAG, "Updating todoList cache with ${items?.size} items")
+            Log.i(TAG, "Updating todoList cache with ${items?.size} tasks")
             if (items == null) {
                 prefs.edit().remove(getString(R.string.cached_todo_file)).apply()
             } else {
