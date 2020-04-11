@@ -31,7 +31,7 @@ class TodoList(val config: Config) {
     internal val tag = TodoList::class.java.simpleName
 
     init {
-        config.todoList?.let { todoItems.addAll(it) }
+        config.todoList?.let { todoItems.addAll(it.asSequence()) }
     }
 
 
@@ -271,7 +271,7 @@ class TodoList(val config: Config) {
                     Log.d(tag, "Fill todolist with ${items.size} items")
                     Log.i(tag, "Updating cache with remote version ${remoteContents.remoteId}")
                     todoItems = newTodoItems
-                    config.todoList = todoItems
+                    config.todoList = todoItems.toList()
                     config.lastSeenRemoteId = remoteContents.remoteId
                 }
                 // Update cache
@@ -297,9 +297,11 @@ class TodoList(val config: Config) {
         Log.d(tag, "Save: ${todoFile.path}")
         config.changesPending = true
         broadcastUpdateStateIndicator(TodoApplication.app.localBroadCastManager)
-        config.todoList = todoItems
-        val lines = todoItems.map {
-            it.inFileFormat(config.useUUIDs)
+        val lines = todoItems.toList().let {
+            config.todoList = it
+           it.map {
+                it.inFileFormat(config.useUUIDs)
+            }
         }
         // Update cache
         FileStoreActionQueue.add("Backup") {
