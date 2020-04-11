@@ -261,4 +261,4 @@ Una devolución de llamada para modificar como se muestra una tarea:
 Aprender Lua
 ============
 
-Buscar en Google debería devolver muchos y buenos recursos. [*Programando en Lua*](https://www.lua.org/pil/contents.html) debería cubrir casi todo.
+Una búsqueda en Google debería devolver muchos y buenos recursos. [*Programando en Lua*](https://www.lua.org/pil/contents.html) debería cubrir casi todo.
