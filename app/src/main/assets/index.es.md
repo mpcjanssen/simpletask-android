@@ -4,7 +4,7 @@ See in [English](./index.en.md).
 
 [Simpletask](https://github.com/mpcjanssen/simpletask-android) está basado en el brillante [todo.txt](http://todotxt.com) de [Gina Trapani](http://ginatrapani.org/). El objetivo de la aplicación es proporcionar una herramienta para utilizar GTD ([Getting Things Done](https://es.m.wikipedia.org/wiki/Getting_Things_Done)) sin proporcionar una cantidad agobiante de opciones. Pese a que Simpletask puede ser personalizado con una cantidad considerable de Ajustes, los predeterminados tendrían que ser adecuados y no requerir ningún cambio.
 
-[Simpletask](http://mpcjanssen.nl/doc/simpletask/) puede ser utilizado como un gestor muy sencillo de listas de tareas o como un gestor de acciones más complejas para GTD o [Gestione Su Ahora, Manage Your Now](./Myn.es.md).
+[Simpletask](http://mpcjanssen.nl/doc/simpletask/) puede ser utilizado como un gestor muy sencillo de listas de tareas o como un gestor de acciones más complejas para GTD o [Manage Your Now (Gestione Su Ahora)](./MYN.es.md).
 
 Extensiones
 -----------
@@ -21,9 +21,11 @@ Simpletask soporta las siguientes extensiones de todo.txt:
 Soporte
 -------
 
-Únase al chat en  [![Gitter](images/gitter.png)](https://gitter.im/mpcjanssen/simpletask-android?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+Simpletask es traducido utilizando [Weblate](https://hosted.weblate.org/engage/simpletask/). Siga el enlace para contribuir.
 
-Si  quiere informar de un problema o pedir una característica nueva para [Simpletask](https://github.com/mpcjanssen/simpletask-android/) puede ir a [el tracker](https://github.com/mpcjanssen/simpletask-android/issues). Si encuentra Simpletask útil, puedes comprar la aplicación (vea Ajustes) o donarme vía [Paypal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=mpc%2ejanssen%40gmail%2ecom&lc=NL&item_name=mpcjanssen%2enl&item_number=Simpletask&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted) unas cervezas.
+Únase al chat en  [![Gitter](images/gitter.png)](https://gitter.im/mpcjanssen/simpletask-android?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge), IRC en [#simpletask](https://webchat.freenode.net/?channels=simpletask) en Freenode o Matrix en [#simpletask:matrix.org](https://matrix.to/#/#simpletask:matrix.org).
+
+Si  quiere informar de un problema o pedir una característica nueva para [Simpletask](https://github.com/mpcjanssen/simpletask-android/) puede ir al [tracker](https://github.com/mpcjanssen/simpletask-android/issues). Si encuentra Simpletask útil, puedes comprar la aplicación (vea Ajustes) o donarme unas cervezas vía [Paypal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=mpc%2ejanssen%40gmail%2ecom&lc=NL&item_name=mpcjanssen%2enl&item_number=Simpletask&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted).
 
 Vea el menú para encontrar más secciones de ayuda o haga clic abajo.
 
@@ -33,4 +35,3 @@ Vea el menú para encontrar más secciones de ayuda o haga clic abajo.
 - [Definiendo intents](./intents.es.md) Intents que pueden ser utilizados para automatizar Simpletask
 - [Utilizando Simpletask para 1MTD/MYN - 1 Minute ToDo List/Manage Your Now](./MYN.es.md)
 - [Lua](./script.es.md)
-
