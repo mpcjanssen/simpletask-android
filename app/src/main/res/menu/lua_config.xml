@@ -17,7 +17,7 @@
         />
     <item
         android:id="@+id/lua_config_import_export"
-        android:title="@string/filter_import_export"
+        android:title="@string/lua_config_import_export"
         android:icon="@drawable/ic_import_export_white_24dp"
         app:showAsAction="always"
         >
