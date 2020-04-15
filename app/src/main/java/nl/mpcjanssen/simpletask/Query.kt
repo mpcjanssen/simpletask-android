@@ -363,7 +363,7 @@ data class Query(val luaModule: String) {
         const val INTENT_SCRIPT_FILTER = "LUASCRIPT"
         const val INTENT_SCRIPT_TEST_TASK_FILTER = "LUASCRIPT_TEST_TASK"
 
-        const val INTENT_EXTRA_DELIMITERS = "[\n,]"
+        const val INTENT_EXTRA_DELIMITERS = "\n"
     }
 
     private fun initFromIntent(intent: Intent): Query {
