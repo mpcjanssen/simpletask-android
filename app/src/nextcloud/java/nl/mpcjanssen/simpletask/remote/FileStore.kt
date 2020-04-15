@@ -222,14 +222,16 @@ object FileStore : IFileStore {
     override fun loadFileList(file: File, txtOnly: Boolean): List<FileEntry> {
         val result = ArrayList<FileEntry>()
         val op = ReadFolderRemoteOperation(file.canonicalPath)
-        val res: RemoteOperationResult = op.execute(getClient())
-        // Loop over the resulting files
-        // Drop the first one as it is the current folder
-        res.data.drop(1).forEach { remoteFile ->
-            if (remoteFile is RemoteFile) {
-                result.add(FileEntry(File(remoteFile.remotePath).name, isFolder = (remoteFile.mimeType == "DIR")))
-            }
+        getClient()?.let {
+            val res: RemoteOperationResult = op.execute(it)
+            // Loop over the resulting files
+            // Drop the first one as it is the current folder
+            res.data.drop(1).forEach { remoteFile ->
+                if (remoteFile is RemoteFile) {
+                    result.add(FileEntry(File(remoteFile.remotePath).name, isFolder = (remoteFile.mimeType == "DIR")))
+                }
 
+            }
         }
         return result
     }
