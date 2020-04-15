@@ -48,17 +48,17 @@ To open Simpletask with a specific filter you can use the intent:
 <tr class="odd">
 <td align="left">CONTEXTS</td>
 <td align="left">String</td>
-<td align="left">list of lists in filter separated by 'n' or ','</td>
+<td align="left">list of lists in filter separated by '\n'</td>
 </tr>
 <tr class="even">
 <td align="left">PROJECTS</td>
 <td align="left">String</td>
-<td align="left">list of tags in filter separated by 'n' or ','</td>
+<td align="left">list of tags in filter separated by '\n'</td>
 </tr>
 <tr class="odd">
 <td align="left">PRIORITIES</td>
 <td align="left">String</td>
-<td align="left">list of priorities in filter separated by 'n' or ',</td>
+<td align="left">list of priorities in filter separated by '\n'</td>
 </tr>
 <tr class="even">
 <td align="left">CONTEXTSnot</td>

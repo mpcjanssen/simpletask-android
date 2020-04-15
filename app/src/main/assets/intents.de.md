@@ -48,17 +48,17 @@ Um Simpletask mit einem bestimmten Filter zu öffnen, kann folgender Intent genu
 <tr class="odd">
 <td align="left">CONTEXTS</td>
 <td align="left">String</td>
-<td align="left">filtert nach einer Liste von Listen, Trennzeichen 'n' oder ','</td>
+<td align="left">filtert nach einer Liste von Listen, Trennzeichen '\n'</td>
 </tr>
 <tr class="even">
 <td align="left">PROJECTS</td>
 <td align="left">String</td>
-<td align="left">filtert nach einer Liste von Tags, Trennzeichen 'n' oder ','</td>
+<td align="left">filtert nach einer Liste von Tags, Trennzeichen '\n'</td>
 </tr>
 <tr class="odd">
 <td align="left">PRIORITIES</td>
 <td align="left">String</td>
-<td align="left">filtert nach einer Liste von Prioritäten, Trennzeichen 'n' oder ','</td>
+<td align="left">filtert nach einer Liste von Prioritäten, Trennzeichen '\n'</td>
 </tr>
 <tr class="even">
 <td align="left">CONTEXTSnot</td>
