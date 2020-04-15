@@ -704,6 +704,9 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun prioritizeTasks(tasks: List<Task>) {
+        if (tasks.isEmpty()) {
+            return
+        }
         val priorityArr = Priority.codes.toTypedArray()
 
         val first = tasks[0].priority.code
