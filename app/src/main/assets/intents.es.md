@@ -104,7 +104,7 @@ SORTS contiene una lista separada por comas o comillas de claves para ordenació
 
 #### Claves para ordenación
 
-Vea la lista en [arrays.xml](https://github.com/mpcjanssen/simpletask-android/blob/master/src/main/res/values/donottranslate.xml#L42-51)
+Vea la lista [aquí](https://github.com/mpcjanssen/simpletask-android/app/blob/master/src/main/res/values/donottranslate.xml#L45-59)
 
 #### Ejemplo
 
