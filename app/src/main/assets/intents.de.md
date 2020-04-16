@@ -104,8 +104,7 @@ SORTS enthält eine mit Kommas oder '' getrennte Liste von Sortierschlüsseln un
 
 #### Sortierschlüssel
 
-Siehe Liste in [arrays.xml](https://github.com/mpcjanssen/simpletask-android/blob/master/src/main/res/values/donottranslate.xml#L42-51) `??? Link funktioniert nicht`
-
+Siehe Liste in [hier](https://github.com/mpcjanssen/simpletask-android/blob/master/app/src/main/res/values/donottranslate.xml#L45-59)
 #### Beispiel
 
 - Die Sortierung `+!completed,+!alphabetical` sortiert abgeschlossene Aufgaben ans Ende und dann alphabetisch.
