@@ -36,7 +36,9 @@ import android.view.inputmethod.InputMethodManager
 import android.webkit.MimeTypeMap
 import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
+import androidx.core.content.FileProvider
 import androidx.core.widget.NestedScrollView
+
 import hirondelle.date4j.DateTime
 import kotlinx.android.synthetic.main.main.*
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
@@ -156,7 +158,8 @@ class Simpletask : ThemedNoActionBarActivity() {
                                         val rootFolder = TodoApplication.config.localFileRoot
                                         val file = File(rootFolder, url.substring(7))
                                         actionIntent = Intent(Intent.ACTION_VIEW)
-                                        val contentUri = Uri.fromFile(file)
+
+                                        val contentUri = FileProvider.getUriForFile(Simpletask@this, BuildConfig.APPLICATION_ID + ".provider",file);
                                         val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension)
                                         actionIntent.setDataAndType(contentUri, mime)
                                         actionIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
