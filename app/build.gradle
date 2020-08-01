@@ -13,13 +13,13 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.0-rc01'
+        classpath 'com.android.tools.build:gradle:3.6.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
 plugins {
-     id 'com.github.triplet.play' version '2.6.2'
+     id 'com.github.triplet.play' version '2.8.0'
     id 'com.gladed.androidgitversion' version '0.4.13'
 }
 
@@ -138,8 +138,7 @@ android {
 }
 
 play {
-    serviceAccountEmail = storeServiceAccount
-    serviceAccountCredentials = new File(System.getenv("HOME"), storeP12File)
+         serviceAccountCredentials = new File(System.getenv("HOME"), storeP12File)
     track = 'production' // or 'rollout' or 'beta' or 'alpha'
     userFraction = 1 // only necessary for 'rollout', in this case default is 1 (100% of the target)
     // uploadImages = true // uncomment to upload images using publishListing<Flavour>Release
