@@ -120,11 +120,6 @@ android {
             manifestPlaceholders = [providerBuildType: "release"]
         }
     }
-    dexOptions {
-        preDexLibraries = true
-        javaMaxHeapSize "4g"
-        dexInProcess = true
-    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
