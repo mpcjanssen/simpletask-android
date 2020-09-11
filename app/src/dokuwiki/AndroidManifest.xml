@@ -42,15 +42,6 @@ You should have received a copy of the GNU General Public License along with Sim
             <grant-uri-permission android:pathPattern=".*" />
         </provider>
 
-        <service
-            android:name="nl.mpcjanssen.simpletask.remote.SimpleTaskNextcloudAuthenticatorService">
-            <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator"/>
-            </intent-filter>
-            <meta-data
-                android:name="android.accounts.AccountAuthenticator"
-                android:resource="@xml/authenticator" />
-        </service>
 
 
 

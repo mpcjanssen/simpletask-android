@@ -246,5 +246,5 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
 
 // Helper to replace %s in all setting summaries not only ListPreferences
 fun Preference.valueInSummary(any: Any? = null) {
-    this.summary = this.summary.replaceFirst(Regex("%s"), any?.toString() ?: this.sharedPreferences.getString(this.key, ""))
+    this.summary = this.summary.replaceFirst(Regex("%s"), any?.toString() ?: this.sharedPreferences.getString(this.key, "")?:"")
     }

@@ -65,16 +65,16 @@ class CachedFileProvider : ContentProvider() {
     // Not supported / used / required for this example
     // //////////////////////////////////////////////////////////////
 
-    override fun update(uri: Uri, contentvalues: ContentValues, s: String,
-                        `as`: Array<String>): Int {
+    override fun update(uri: Uri, contentvalues: ContentValues?, s: String?,
+                        `as`: Array<String>?): Int {
         return 0
     }
 
-    override fun delete(uri: Uri, s: String, `as`: Array<String>): Int {
+    override fun delete(uri: Uri, s: String?, `as`: Array<String>?): Int {
         return 0
     }
 
-    override fun insert(uri: Uri, contentvalues: ContentValues): Uri? {
+    override fun insert(uri: Uri, contentvalues: ContentValues?): Uri? {
         return null
     }
 

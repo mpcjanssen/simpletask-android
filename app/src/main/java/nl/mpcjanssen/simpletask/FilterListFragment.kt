@@ -63,8 +63,10 @@ class FilterListFragment : Fragment() {
         lv = layout.findViewById(R.id.listview) as ListView
         lv!!.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
 
-        lv!!.adapter = ArrayAdapter(activity,
+        lv!!.adapter = activity?.let {
+            ArrayAdapter(it,
                 R.layout.simple_list_item_multiple_choice, items)
+        }
 
         for (i in items.indices) {
             if (mSelectedItems != null && mSelectedItems!!.contains(items[i])) {

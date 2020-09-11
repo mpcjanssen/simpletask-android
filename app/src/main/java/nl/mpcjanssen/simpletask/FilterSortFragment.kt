@@ -17,7 +17,7 @@ class FilterSortFragment : Fragment() {
 
     private var originalItems: ArrayList<String>? = null
     private var lv: DragSortListView? = null
-    internal lateinit var adapter: SortItemAdapter
+    internal var adapter: SortItemAdapter? = null
     internal var directions = ArrayList<String>()
     internal var adapterList = ArrayList<String>()
     internal var sortUpId: Int = 0
@@ -26,17 +26,19 @@ class FilterSortFragment : Fragment() {
     internal lateinit var m_app: TodoApplication
 
     private val onDrop = DragSortListView.DropListener { from, to ->
-        if (from != to) {
-            val item = adapter.getItem(from)
-            adapter.remove(item)
-            adapter.insert(item, to)
-            val sortItem = directions[from]
-            directions.removeAt(from)
-            directions.add(to, sortItem)
+        adapter?.let {
+            if (from != to) {
+                val item = it.getItem(from)
+                it.remove(item)
+                it.insert(item, to)
+                val sortItem = directions[from]
+                directions.removeAt(from)
+                directions.add(to, sortItem)
+            }
         }
     }
 
-    private val onRemove = DragSortListView.RemoveListener { which -> adapter.remove(adapter.getItem(which)) }
+    private val onRemove = DragSortListView.RemoveListener { which -> adapter?.remove(adapter?.getItem(which)) }
 
     private // this DSLV xml declaration does not call for the use
             // of the default DragSortController; therefore,
@@ -109,7 +111,7 @@ class FilterSortFragment : Fragment() {
         lv!!.setDropListener(onDrop)
         lv!!.setRemoveListener(onRemove)
 
-        adapter = SortItemAdapter(activity, R.layout.sort_list_item, R.id.text, adapterList)
+        adapter = activity?.let { SortItemAdapter(it, R.layout.sort_list_item, R.id.text, adapterList) }
         lv!!.adapter = adapter
         lv!!.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             var direction = directions[position]
@@ -120,7 +122,7 @@ class FilterSortFragment : Fragment() {
             }
             directions.removeAt(position)
             directions.add(position, direction)
-            adapter.notifyDataSetChanged()
+            adapter?.notifyDataSetChanged()
         }
         return layout
     }
@@ -139,8 +141,8 @@ class FilterSortFragment : Fragment() {
         get() {
             val multiSort = ArrayList<String>()
             when {
-                lv != null -> for (i in 0..adapter.count - 1) {
-                    multiSort.add(directions[i] + Query.SORT_SEPARATOR + adapter.getSortType(i))
+                lv != null -> for (i in 0 until (adapter?.count?:1)) {
+                    multiSort.add(directions[i] + Query.SORT_SEPARATOR + adapter?.getSortType(i))
                 }
                 originalItems != null -> multiSort.addAll(originalItems as ArrayList<String>)
                 else -> multiSort.addAll(arguments?.getStringArrayList(FilterActivity.FILTER_ITEMS) ?: java.util.ArrayList())
@@ -148,7 +150,7 @@ class FilterSortFragment : Fragment() {
             return multiSort
         }
 
-    inner class SortItemAdapter(context: Context?, resource: Int, textViewResourceId: Int, objects: List<String>) : ArrayAdapter<String>(context, resource, textViewResourceId, objects) {
+    inner class SortItemAdapter(context: Context, resource: Int, textViewResourceId: Int, objects: List<String>) : ArrayAdapter<String>(context, resource, textViewResourceId, objects) {
 
         private val names: Array<String>
 
@@ -156,7 +158,7 @@ class FilterSortFragment : Fragment() {
             names = resources.getStringArray(R.array.sort)
         }
 
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val row = super.getView(position, convertView, parent)
             val reverseButton = row.findViewById(R.id.reverse_button) as ImageButton
             val label = row.findViewById(R.id.text) as TextView

@@ -50,7 +50,7 @@ class FilterScriptFragment : Fragment() {
         spnCallback = layout.findViewById(R.id.spnCallback) as Spinner
 
         val callbacks = arrayOf<String>(Interpreter.ON_DISPLAY_NAME, Interpreter.ON_FILTER_NAME, Interpreter.ON_GROUP_NAME, Interpreter.ON_SORT_NAME)
-        val spnAdapter = ArrayAdapter(activity, R.layout.spinner_item, callbacks)
+        val spnAdapter = activity?.let { ArrayAdapter(it, R.layout.spinner_item, callbacks) }
         spnCallback?.adapter = spnAdapter
         activity?.let { act ->
             val btnTest = layout.findViewById(R.id.btnTest) as Button
