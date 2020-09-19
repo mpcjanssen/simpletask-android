@@ -56,8 +56,8 @@ android {
     }
 
     defaultConfig {
-        versionName "10.7.0"
-        versionCode 10007000
+        versionName "10.8.0"
+        versionCode 10008000
         buildConfigField "String", "GIT_VERSION", "\"" + androidGitVersion.name() + "\""
         multiDexEnabled false
         minSdkVersion 21
@@ -75,27 +75,27 @@ android {
     productFlavors {
         dropbox {
             dimension "main"
-            setApplicationId("nl.mpcjanssen.todotxtholo")
+            applicationId = "nl.mpcjanssen.todotxtholo"
             manifestPlaceholders = [providerFlavour: "dropbox"]
         }
         cloudless {
             dimension "main"
-            setApplicationId("nl.mpcjanssen.simpletask")
+            applicationId = "nl.mpcjanssen.simpletask"
             manifestPlaceholders = [providerFlavour: "cloudless"]
         }
         nextcloud {
             dimension "main"
-            setApplicationId("nl.mpcjanssen.simpletask.nextcloud")
+            applicationId = "nl.mpcjanssen.simpletask.nextcloud"
             manifestPlaceholders = [providerFlavour: "nextcloud"]
         }
         dokuwiki {
             dimension "main"
-            setApplicationId("nl.mpcjanssen.simpletask.dokuwiki")
+            applicationId = "nl.mpcjanssen.simpletask.dokuwiki"
             manifestPlaceholders = [providerFlavour: "dokuwiki"]
         }
         webdav {
             dimension "main"
-            setApplicationId("nl.mpcjanssen.simpletask.webdav")
+            applicationId = "nl.mpcjanssen.simpletask.webdav"
             manifestPlaceholders = [providerFlavour: "webdav"]
         }
     }
