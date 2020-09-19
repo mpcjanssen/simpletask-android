@@ -101,13 +101,15 @@ object FileStore : IFileStore {
     }
 
     override fun getDefaultFile(): File {
-        return File(Environment.getExternalStorageDirectory(), "/data/nl.mpcjanssen.simpletask/todo.txt")
+        return File(TodoApplication.app.getExternalFilesDir(null), "todo.txt")
     }
 
     override fun loadFileList(file: File, txtOnly: Boolean): List<FileEntry> {
         val result = ArrayList<FileEntry>()
         if (file.canonicalPath == "/") {
-            result.add(FileEntry(Environment.getExternalStorageDirectory(), true))
+            TodoApplication.app.getExternalFilesDir(null)?.let {
+                result.add(FileEntry(it, true))
+            }
         }
 
         val filter = FilenameFilter { dir, filename ->
