@@ -33,10 +33,8 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.dropbox.core.android.Auth
-import nl.mpcjanssen.simpletask.R
-import nl.mpcjanssen.simpletask.Simpletask
-import nl.mpcjanssen.simpletask.ThemedNoActionBarActivity
-import nl.mpcjanssen.simpletask.TodoApplication
+import kotlinx.android.synthetic.dropbox.login.*
+import nl.mpcjanssen.simpletask.*
 
 class LoginScreen : ThemedNoActionBarActivity() {
 
@@ -64,16 +62,18 @@ class LoginScreen : ThemedNoActionBarActivity() {
         }
         localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter)
 
-        var m_LoginButton = findViewById(R.id.login) as Button
-        m_LoginButton.setOnClickListener {
+        login.setOnClickListener {
             TodoApplication.config.fullDropBoxAccess = true
             startLogin()
         }
 
-        m_LoginButton = findViewById(R.id.login_folder) as Button
-        m_LoginButton.setOnClickListener {
+        login_folder.setOnClickListener {
             TodoApplication.config.fullDropBoxAccess = false
             startLogin()
+        }
+
+        logging.setOnClickListener {
+            startActivity(Intent(this, DebugInfoScreen::class.java))
         }
 
         if (m_app.isAuthenticated) {
