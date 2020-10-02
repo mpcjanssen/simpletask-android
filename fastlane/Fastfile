@@ -1,0 +1,56 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+  desc "Runs all the tests"
+  lane :test do
+    gradle(task: "test")
+  end
+
+
+
+  desc "Deploy a new version to the Google Play"
+  lane :cloudless do
+    flavour = "cloudless"
+    gradle(task: "clean assemble#{flavour.capitalize}Release")
+    upload_to_play_store(
+       apk: "./app/build/outputs/apk/#{flavour}/release/app-#{flavour}-release.apk",
+       metadata_path: "./fastlane/metadata/android/#{flavour}"
+    )
+  end
+
+    desc "Deploy a new version to the Google Play"
+  lane :dropbox do
+    flavour = "dropbox"
+    gradle(task: "clean assemble#{flavour.capitalize}Release")
+    upload_to_play_store(
+       apk: "./app/build/outputs/apk/#{flavour}/release/app-#{flavour}-release.apk",
+       metadata_path: "./fastlane/metadata/android/#{flavour}"
+    )
+  end
+      desc "Deploy a new version to the Google Play"
+  lane :nextcloud do
+    flavour = "nextcloud"
+    gradle(task: "clean assemble#{flavour.capitalize}Release")
+    upload_to_play_store(
+       apk: "./app/build/outputs/apk/#{flavour}/release/app-#{flavour}-release.apk",
+       metadata_path: "./fastlane/metadata/android/#{flavour}"
+    )
+  end
+end
+
+
