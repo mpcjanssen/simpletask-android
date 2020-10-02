@@ -17,8 +17,3 @@ jobs:
       with:
         name: apks
         path: app/build/outputs/apk
-    - name: "Save report artifacts"
-      uses: actions/upload-artifact@v1
-      with:
-        name: reports
-        path: app/build/reports
