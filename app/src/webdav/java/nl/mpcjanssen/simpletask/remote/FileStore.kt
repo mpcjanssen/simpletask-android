@@ -32,7 +32,7 @@ object FileStore : IFileStore {
     var password by TodoApplication.config.StringOrNullPreference(PASS)
     var serverUrl by TodoApplication.config.StringOrNullPreference(URL)
 
-    private fun url(file: File) = serverUrl?.trimEnd('/') + file.canonicalPath ?: ""
+    private fun url(file: File) = (serverUrl?.trimEnd('/') + file.canonicalPath).trimEnd('/')
 
     override val isAuthenticated: Boolean
         get() {
