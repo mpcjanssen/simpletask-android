@@ -164,8 +164,15 @@ class TodoApplication : Application() {
     }
 
     fun switchTodoFile(newTodo: File) {
-        config.setTodoFile(newTodo)
-        loadTodoList("from file switch")
+        if (config.changesPending) {
+            // Don't switch files when there are pending changes. This will lead to
+            // data corruption
+            Log.i(TAG, "Not switching, changes pending")
+            showToastLong(app, "Not switching files when changes are pending")
+        } else {
+            config.setTodoFile(newTodo)
+            loadTodoList("from file switch")
+        }
     }
 
     fun loadTodoList(reason: String) {
