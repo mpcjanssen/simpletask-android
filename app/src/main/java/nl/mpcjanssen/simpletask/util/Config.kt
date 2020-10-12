@@ -198,7 +198,7 @@ class Config(app: TodoApplication) : Preferences(app) {
 
     fun setTodoFile(file: File?) {
         _todoFileName = file?.path
-        prefs.edit().remove(getString(R.string.file_current_version_id)).apply()
+        clearCache()
     }
 
     val doneFile: File
