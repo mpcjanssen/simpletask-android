@@ -1,6 +1,5 @@
 package nl.mpcjanssen.simpletask.util
 
-import android.content.Context
 import android.util.Log
 import me.smichel.android.KPreferences.Preferences
 import nl.mpcjanssen.simpletask.*
@@ -8,7 +7,6 @@ import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.Task
 import org.json.JSONObject
 import java.io.File
-
 import java.util.*
 
 class Config(app: TodoApplication) : Preferences(app) {
