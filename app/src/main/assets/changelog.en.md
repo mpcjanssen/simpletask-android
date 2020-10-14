@@ -1,5 +1,55 @@
 ﻿# Changelog
 
+## 10.9.0
+
+### Fixed
+
+- Use proper storage folder for Android Q+
+- Prevent double slashes for #1097.
+- Don't switch the todo file when changes are pending. It will lead to data loss and is a possible cause of #1098.
+- Clear the cache when switching todo files.
+
+### Added
+
+- Config for Fastlane.
+
+## 10.8.0
+
+Test release for F-Droid
+
+## 10.7.0
+
+Test release for F-Droid
+
+## 10.6.0
+
+Test release for F-Droid
+
+## 10.5.5
+
+### Fixed
+
+- Don't split lists and tags on `,` for #1060.
+
+### Added
+
+- Introduce a file provider for `root://` references. Needed for #833.
+
+
+### Updated
+
+- Spanish translations (ddisanti)
+
+## 10.5.4
+
+### Fixed
+
+- Iterate over a copy of the todoList when saving for #1053.
+
+### Updated
+
+- Spanish translations (ddisanti)
+
 ## 10.5.3
 
 ### Fixed
