@@ -8,11 +8,11 @@ assemble:
 	${GRADLE} clean assembleNextcloud assembleDokuwiki assembleCloudless assembleDropbox assembleWebdav
 
 version:
-    ${GRADLE} androidGitVersion
+	${GRADLE} androidGitVersion
 
 upload: version
-	(cd app/build/outputs && scp -r apk ssh.mpcjanssen.nl:/srv/www/mpcjanssen/public/artifacts/${GITNAME})
+	(cd app/build/outputs && scp -r apk ssh.mpcjanssen.nl:/var/www/html/artifacts/${GITNAME})
 
 
 publish:
-    ${GRADLE} clean publishDropboxRelease publishCloudlessRelease publishDropboxRelease publishNextcloudRelease
+	${GRADLE} clean publishDropboxRelease publishCloudlessRelease publishDropboxRelease publishNextcloudRelease
