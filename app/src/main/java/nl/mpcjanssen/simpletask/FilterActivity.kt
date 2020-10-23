@@ -205,21 +205,7 @@ class FilterActivity : ThemedNoActionBarActivity() {
     }
 
     private fun openScript(file_read: (String) -> Unit) {
-            val dialog = FileDialog()
-        dialog.addFileListener(object : FileDialog.FileSelectedListener {
-                override fun fileSelected(file: File) {
-                    Thread(Runnable {
-                        try {
-                            FileStore.readFile(file, file_read)
-                        } catch (e: IOException) {
-                            showToastShort(this@FilterActivity, "Failed to load script.")
-                            e.printStackTrace()
-                        }
-                    }).start()
-                }
-            })
-            dialog.createFileDialog(this@FilterActivity, FileStore, TodoApplication.config.todoFile.parentFile, txtOnly = false)
-    }
+            }
 
     private fun createFilterIntent(): Intent {
         val target = Intent(this, Simpletask::class.java)

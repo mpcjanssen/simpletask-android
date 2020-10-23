@@ -12,6 +12,7 @@
 package nl.mpcjanssen.simpletask
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.SearchManager
 import android.content.*
@@ -38,6 +39,7 @@ import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
 import androidx.core.content.FileProvider
 import androidx.core.widget.NestedScrollView
+import androidx.multidex.BuildConfig
 
 import hirondelle.date4j.DateTime
 import kotlinx.android.synthetic.main.main.*
@@ -60,6 +62,26 @@ class Simpletask : ThemedNoActionBarActivity() {
         // Drawer side
         private val SAVED_FILTER_DRAWER = GravityCompat.END
         private val QUICK_FILTER_DRAWER = GravityCompat.START
+    }
+    var selectedListener : ((Uri?) -> Unit)? = null
+    val TODO_SELECT = 1
+    fun browseForNewFile (selected : (Uri?) -> Unit) {
+        selectedListener = selected
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        intent.type = "*/*"
+        startActivityForResult(intent, TODO_SELECT)
+
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
+        super.onActivityResult(requestCode, resultCode, resultData)
+        if (requestCode == TODO_SELECT && resultCode == Activity.RESULT_OK) {
+            var uri: Uri? = null
+            if (resultData != null) {
+                uri = resultData.data
+                selectedListener?.let {it(uri)}
+            }
+        }
     }
     private var options_menu: Menu? = null
 
@@ -211,7 +233,6 @@ class Simpletask : ThemedNoActionBarActivity() {
                         } catch (e: Exception) {
                             Log.e(TAG, "Error logging out.", e)
                         }
-                        startLogin()
                     }
                 } else if (receivedIntent.action == Constants.BROADCAST_TASKLIST_CHANGED) {
                     Log.i(TAG, "Tasklist changed, refiltering adapter")
@@ -234,8 +255,6 @@ class Simpletask : ThemedNoActionBarActivity() {
                 } else if (receivedIntent.action == Constants.BROADCAST_THEME_CHANGED ||
                         receivedIntent.action == Constants.BROADCAST_DATEBAR_SIZE_CHANGED) {
                     recreate()
-                } else if (receivedIntent.action == Constants.BROADCAST_AUTH_FAILED) {
-                    startLogin()
                 }
             }
         }
@@ -397,11 +416,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
 
     private fun handleIntent() {
-        if (!TodoApplication.app.isAuthenticated) {
-            Log.i(TAG, "handleIntent: not authenticated")
-            startLogin()
-            return
-        }
+
 
         drawer_layout?.let { drawerLayout ->
             m_drawerToggle = object : ActionBarDrawerToggle(this, /* host Activity */
@@ -485,13 +500,6 @@ class Simpletask : ThemedNoActionBarActivity() {
         listView?.viewTreeObserver?.addOnScrollChangedListener(listener)
 
         fab.setOnClickListener { startAddTaskActivity() }
-    }
-
-
-
-    private fun startLogin() {
-        TodoApplication.app.startLogin(this)
-        finish()
     }
 
     private fun updateCompletionCheckboxState() {
@@ -845,6 +853,9 @@ class Simpletask : ThemedNoActionBarActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         Log.i(TAG, "onMenuItemSelected: " + item.itemId)
         val checkedTasks = TodoApplication.todoList.selectedTasks
+        fun fileSelected (uri: Uri?) {
+
+        }
         when (item.itemId) {
             androidId.home -> {
                 handleMode(mapOf(
@@ -876,7 +887,9 @@ class Simpletask : ThemedNoActionBarActivity() {
                 broadcastFileSync(TodoApplication.app.localBroadCastManager)
             }
             R.id.archive -> archiveTasks(true)
-            R.id.open_file -> TodoApplication.app.browseForNewFile(this)
+            R.id.open_file -> browseForNewFile {
+                it
+            }
             R.id.history -> startActivity(Intent(this, HistoryScreen::class.java))
             R.id.btn_filter_add -> onAddFilterClick()
             R.id.clear_filter -> clearFilter()

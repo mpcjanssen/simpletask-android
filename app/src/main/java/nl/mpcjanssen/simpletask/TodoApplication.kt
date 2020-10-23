@@ -206,26 +206,11 @@ class TodoApplication : Application() {
         config.clearCache()
         config.setTodoFile(null)
     }
-    fun startLogin(caller: Activity) {
-        val loginActivity = FileStore.loginActivity()?.java
-        loginActivity?.let {
-            val intent = Intent(caller, it)
-            caller.startActivity(intent)
-        }
-    }
+
 
     fun browseForNewFile(act: Activity) {
         val fileStore = FileStore
-        FileDialog.browseForNewFile(
-                act,
-                fileStore,
-                config.todoFile.parentFile,
-                object : FileDialog.FileSelectedListener {
-                    override fun fileSelected(file: File) {
-                        switchTodoFile(file)
-                    }
-                },
-                config.showTxtOnly)
+
     }
 
     companion object {

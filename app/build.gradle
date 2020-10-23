@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.4.0'
+    ext.kotlin_version = '1.4.10'
     ext.android_support_version = '1.0.0'
     repositories {
         google()
@@ -13,7 +13,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.1'
+        classpath 'com.android.tools.build:gradle:4.0.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -40,7 +40,6 @@ if (!project.hasProperty("storeServiceAccount")) {
 android {
     compileSdkVersion 29
     flavorDimensions "main"
-
     lintOptions {
         disable 'InvalidPackage', 'MissingTranslation'
     }
@@ -58,6 +57,7 @@ android {
     defaultConfig {
         versionName "10.9.0"
         versionCode 10009000
+        applicationId = "nl.mpcjanssen.simpletask"
         buildConfigField "String", "GIT_VERSION", "\"" + androidGitVersion.name() + "\""
         multiDexEnabled false
         minSdkVersion 21
@@ -69,34 +69,6 @@ android {
                 arg("room.incremental", "true")
                 arg("room.expandProjection", "true")
             }
-        }
-    }
-
-    productFlavors {
-        dropbox {
-            dimension "main"
-            applicationId = "nl.mpcjanssen.todotxtholo"
-            manifestPlaceholders = [providerFlavour: "dropbox"]
-        }
-        cloudless {
-            dimension "main"
-            applicationId = "nl.mpcjanssen.simpletask"
-            manifestPlaceholders = [providerFlavour: "cloudless"]
-        }
-        nextcloud {
-            dimension "main"
-            applicationId = "nl.mpcjanssen.simpletask.nextcloud"
-            manifestPlaceholders = [providerFlavour: "nextcloud"]
-        }
-        dokuwiki {
-            dimension "main"
-            applicationId = "nl.mpcjanssen.simpletask.dokuwiki"
-            manifestPlaceholders = [providerFlavour: "dokuwiki"]
-        }
-        webdav {
-            dimension "main"
-            applicationId = "nl.mpcjanssen.simpletask.webdav"
-            manifestPlaceholders = [providerFlavour: "webdav"]
         }
     }
 
@@ -142,14 +114,11 @@ repositories {
 }
 
 dependencies {
-    dropboxImplementation 'com.dropbox.core:dropbox-core-sdk:3.0.6'
     implementation 'org.jetbrains.anko:anko-commons:0.10.8'
-    nextcloudImplementation 'com.github.nextcloud:android-library:1.6.1'
-    nextcloudImplementation 'com.google.code.gson:gson:2.8.5'
     implementation "org.jetbrains.anko:anko-commons:0.10.8"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "androidx.legacy:legacy-support-v4:$android_support_version"
-    implementation 'androidx.core:core:1.3.1'
+    implementation 'androidx.core:core:1.3.2'
     implementation "com.google.android.material:material:1.2.1"
 //    implementation "androidx.preference:preference:1.0.0"
     implementation 'androidx.appcompat:appcompat:1.2.0'
@@ -171,14 +140,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-3'
-    def withoutJUnit = { exclude group: 'junit', module: 'junit' }
-    dokuwikiImplementation 'org.apache.xmlrpc:xmlrpc-client:3.1.3', withoutJUnit
-    webdavImplementation 'com.squareup.okhttp3:okhttp:4.10.0-RC1'
-    webdavImplementation ('org.simpleframework:simple-xml:2.7.1')  {
-        exclude module: 'stax'
-        exclude module: 'stax-api'
-        exclude module: 'xpp3'
-    }
 }
 
 // Only sign if we have keystore properties in the gradle.properties in ~/.gradle

@@ -95,6 +95,6 @@ class CachedFileProvider : ContentProvider() {
         private val TAG = CachedFileProvider::class.java.simpleName
 
         // The authority is the symbolic name for the provider class
-        const val AUTHORITY = BuildConfig.APPLICATION_ID + ".provider." + BuildConfig.FLAVOR
+        const val AUTHORITY = BuildConfig.APPLICATION_ID + ".provider."
     }
 }

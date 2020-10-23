@@ -24,8 +24,6 @@ interface IFileStore {
     fun loadTasksFromFile(file: File): RemoteContents
     fun saveTasksToFile(file: File, lines: List<String>, lastRemote: String?, eol: String) : String
 
-    // Handle login and logout
-    fun loginActivity(): KClass<*>?
     fun logout()
 
     @Throws(IOException::class)
