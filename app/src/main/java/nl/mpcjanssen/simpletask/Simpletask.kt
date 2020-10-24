@@ -69,7 +69,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-        intent.type = "*/text"
+        intent.type = "*/*"
         startActivityForResult(intent, TODO_SELECT)
 
     }
