@@ -1,7 +1,7 @@
 package nl.mpcjanssen.simpletask.remote
 
-import java.io.File
+import android.net.Uri
 
 interface BackupInterface {
-    fun backup(file: File, lines: List<String>)
+    fun backup(uri: Uri?, lines: List<String>)
 }

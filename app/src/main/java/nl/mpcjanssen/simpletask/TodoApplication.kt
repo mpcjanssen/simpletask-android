@@ -35,23 +35,20 @@ import android.app.Application
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.*
+import android.net.Uri
 import android.os.SystemClock
-import androidx.multidex.MultiDexApplication
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.util.Log
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.room.Room
 import nl.mpcjanssen.simpletask.dao.AppDatabase
 import nl.mpcjanssen.simpletask.dao.DB_FILE
 import nl.mpcjanssen.simpletask.dao.TodoFile
-
 import nl.mpcjanssen.simpletask.remote.BackupInterface
-import nl.mpcjanssen.simpletask.remote.FileDialog
 import nl.mpcjanssen.simpletask.remote.FileStore
-import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.*
-import java.io.File
 import java.util.*
+
 
 class TodoApplication : Application() {
 
@@ -163,14 +160,21 @@ class TodoApplication : Application() {
         super.onTerminate()
     }
 
-    fun switchTodoFile(newTodo: File) {
+    fun switchTodoUri(newTodo: Uri, takeFlags: Int) {
         if (config.changesPending) {
             // Don't switch files when there are pending changes. This will lead to
             // data corruption
             Log.i(TAG, "Not switching, changes pending")
             showToastLong(app, "Not switching files when changes are pending")
         } else {
-            config.setTodoFile(newTodo)
+            val resolver: ContentResolver = applicationContext.getContentResolver()
+            config.todoUri?.let {
+                resolver.releasePersistableUriPermission(it,takeFlags)
+            }
+
+            resolver.takePersistableUriPermission(newTodo, takeFlags)
+            config.todoUri = newTodo
+
             loadTodoList("from file switch")
         }
     }
@@ -197,20 +201,10 @@ class TodoApplication : Application() {
         }
     }
 
-    val isAuthenticated: Boolean
-        get() {
-            return FileStore.isAuthenticated
-        }
 
     fun clearTodoFile() {
         config.clearCache()
-        config.setTodoFile(null)
-    }
-
-
-    fun browseForNewFile(act: Activity) {
-        val fileStore = FileStore
-
+        config.todoUri = null
     }
 
     companion object {
@@ -226,15 +220,15 @@ class TodoApplication : Application() {
 
 
 object Backupper : BackupInterface {
-    override fun backup(file: File, lines: List<String>) {
+    override fun backup(uri: Uri?, lines: List<String>) {
         val start = SystemClock.elapsedRealtime()
         val now = Date().time
-        val fileToBackup = TodoFile(lines.joinToString ("\n"), file.canonicalPath, now)
+        val fileToBackup = TodoFile(lines.joinToString("\n"), uri?.path ?: "unset", now)
         val dao =  TodoApplication.db.todoFileDao()
         if(dao.insert(fileToBackup) == -1L) {
             dao.update(fileToBackup)
         }
-        dao.removeBefore( now - 2 * 24 * 60 * 60 * 1000)
+        dao.removeBefore(now - 2 * 24 * 60 * 60 * 1000)
         val end = SystemClock.elapsedRealtime()
         Log.d(TAG, "Backing up of tasks took ${end - start} ms")
     }

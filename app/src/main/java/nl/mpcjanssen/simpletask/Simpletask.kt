@@ -38,7 +38,6 @@ import android.webkit.MimeTypeMap
 import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
 import androidx.core.content.FileProvider
-import androidx.core.widget.NestedScrollView
 import androidx.multidex.BuildConfig
 
 import hirondelle.date4j.DateTime
@@ -63,12 +62,13 @@ class Simpletask : ThemedNoActionBarActivity() {
         private val SAVED_FILTER_DRAWER = GravityCompat.END
         private val QUICK_FILTER_DRAWER = GravityCompat.START
     }
-    var selectedListener : ((Uri?) -> Unit)? = null
+    var selectedListener : ((Uri?, flags: Int) -> Unit)? = null
     val TODO_SELECT = 1
-    fun browseForNewFile (selected : (Uri?) -> Unit) {
+    fun browseForNewFile (selected : (Uri?, flags: Int) -> Unit) {
         selectedListener = selected
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
+        intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
         intent.type = "*/*"
         startActivityForResult(intent, TODO_SELECT)
 
@@ -79,7 +79,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             var uri: Uri? = null
             if (resultData != null) {
                 uri = resultData.data
-                selectedListener?.let {it(uri)}
+                selectedListener?.let {it(uri,resultData.flags)}
             }
         }
     }
@@ -174,7 +174,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                                     url.startsWith("todo://") -> {
                                         val todoFolder = TodoApplication.config.todoFile.parentFile
                                         val newName = File(todoFolder, url.substring(7))
-                                        TodoApplication.app.switchTodoFile(newName)
+                                        TodoApplication.app.switchTodoUri(newName)
                                     }
                                     url.startsWith("root://") -> {
                                         val rootFolder = TodoApplication.config.localFileRoot
@@ -887,8 +887,8 @@ class Simpletask : ThemedNoActionBarActivity() {
                 broadcastFileSync(TodoApplication.app.localBroadCastManager)
             }
             R.id.archive -> archiveTasks(true)
-            R.id.open_file -> browseForNewFile {
-                it
+            R.id.open_file -> browseForNewFile {uri,flags ->
+                uri?.let { TodoApplication.app.switchTodoUri(it, flags) }
             }
             R.id.history -> startActivity(Intent(this, HistoryScreen::class.java))
             R.id.btn_filter_add -> onAddFilterClick()

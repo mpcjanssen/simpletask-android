@@ -2,6 +2,7 @@ package nl.mpcjanssen.simpletask.task
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.CountDownTimer
 import android.os.SystemClock
 import android.util.Log
@@ -183,7 +184,7 @@ class TodoList(val config: Config) {
 
 
 
-    fun notifyTasklistChanged(todoFile: File, save: Boolean, refreshMainUI: Boolean = true) {
+    fun notifyTasklistChanged(todoUri: Uri, save: Boolean, refreshMainUI: Boolean = true) {
         Log.d(tag, "Notified changed")
         if (save) {
             save(FileStore, todoFile, eol = config.eol)
@@ -293,8 +294,8 @@ class TodoList(val config: Config) {
     }
 
 
-    private fun save(fileStore: IFileStore, todoFile: File, eol: String) {
-        Log.d(tag, "Save: ${todoFile.path}")
+    private fun save(fileStore: IFileStore, todoUri: Uri, eol: String) {
+        Log.d(tag, "Save: ${todoUri.path}")
         config.changesPending = true
         broadcastUpdateStateIndicator(TodoApplication.app.localBroadCastManager)
         val lines = todoItems.toList().let {
@@ -305,7 +306,7 @@ class TodoList(val config: Config) {
         }
         // Update cache
         FileStoreActionQueue.add("Backup") {
-                Backupper.backup(todoFile, lines)
+                Backupper.backup(todoUri.path, lines)
         }
         runOnMainThread(Runnable {
             timer?.apply { cancel() }
