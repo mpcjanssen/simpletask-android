@@ -43,7 +43,6 @@ import androidx.multidex.BuildConfig
 import hirondelle.date4j.DateTime
 import kotlinx.android.synthetic.main.main.*
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
-import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.*
 import java.io.File
@@ -62,24 +61,25 @@ class Simpletask : ThemedNoActionBarActivity() {
         private val SAVED_FILTER_DRAWER = GravityCompat.END
         private val QUICK_FILTER_DRAWER = GravityCompat.START
     }
-    var selectedListener : ((Uri?, flags: Int) -> Unit)? = null
+
     val TODO_SELECT = 1
-    fun browseForNewFile (selected : (Uri?, flags: Int) -> Unit) {
-        selectedListener = selected
+    fun browseForNewTodoFile () {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
         intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
-        intent.type = "*/*"
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+        intent.type = "*/text"
         startActivityForResult(intent, TODO_SELECT)
 
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
         super.onActivityResult(requestCode, resultCode, resultData)
         if (requestCode == TODO_SELECT && resultCode == Activity.RESULT_OK) {
-            var uri: Uri? = null
             if (resultData != null) {
-                uri = resultData.data
-                selectedListener?.let {it(uri,resultData.flags)}
+                resultData.data?.let {
+                    TodoApplication.app.switchTodoUri(it, resultData.flags)
+                }
             }
         }
     }
@@ -185,6 +185,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                                         val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension)
                                         actionIntent.setDataAndType(contentUri, mime)
                                         actionIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                        actionIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                                         startActivity(actionIntent)
                                     }
                                     else -> try {
@@ -833,9 +834,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             R.id.sync -> {
                 broadcastFileSync(TodoApplication.app.localBroadCastManager)
             }
-            R.id.open_file -> browseForNewFile {uri,flags ->
-                uri?.let { TodoApplication.app.switchTodoUri(it, flags) }
-            }
+            R.id.open_file -> browseForNewTodoFile()
             R.id.history -> startActivity(Intent(this, HistoryScreen::class.java))
             R.id.btn_filter_add -> onAddFilterClick()
             R.id.clear_filter -> clearFilter()
@@ -1233,7 +1232,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             // Show connectivity status indicator
             // Red -> changes pending
             // Yellow -> offline
-            if (TodoApplication.config.changesPending) {
+            if (TodoApplication.config.changesPending && TodoApplication.config.todoUri != null) {
                 pendingchanges.visibility = View.VISIBLE
                 offline.visibility = View.GONE
             }  else {

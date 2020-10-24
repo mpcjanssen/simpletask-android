@@ -239,13 +239,7 @@ class TodoList(val config: Config) {
         FileStoreActionQueue.add("Reload") {
             Log.d(tag, "Reload: $reason")
             config.todoUri?.let { uri ->
-                if (config.changesPending) {
-                    Log.i(tag, "Not loading, changes pending")
-                    Log.i(tag, "Saving instead of loading")
-                    save(FileStore, uri, eol = config.eol)
-                } else {
-                    reloadaction(uri)
-                }
+                reloadaction(uri)
             }
 
         }

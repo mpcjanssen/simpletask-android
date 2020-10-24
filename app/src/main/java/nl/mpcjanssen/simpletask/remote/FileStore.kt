@@ -2,6 +2,7 @@ package nl.mpcjanssen.simpletask.remote
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
 import android.os.Environment
@@ -23,52 +24,47 @@ import nl.mpcjanssen.simpletask.Simpletask
 
 
 object FileStore : IFileStore {
-    override fun getRemoteVersion(uri: Uri?): String? =   uri?.metaData(TodoApplication.app)?.lastModified
+    override fun getRemoteVersion(uri: Uri?): String? = uri?.metaData(TodoApplication.app)?.lastModified
     private val TAG = "FileStore"
 
     override fun loadTasksFromFile(uri: Uri): RemoteContents {
         val lines = ArrayList<String>()
-        TodoApplication.app.contentResolver.openInputStream(uri)?.use { inputStream ->
-            inputStream.bufferedReader(Charsets.UTF_8).use { reader ->
-                var line: String? = reader.readLine()
-                while (line != null) {
-                    lines.add(line)
-                    line = reader.readLine()
-                }
+        TodoApplication.app.applicationContext.contentResolver.let {
+            val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+// Check for the freshest data.
+            it.takePersistableUriPermission(uri, takeFlags)
+            it.refresh(uri, null, null)
+            it.openInputStream(uri)?.use { inputStream ->
+                inputStream.bufferedReader(Charsets.UTF_8).use { lines.addAll(it.readLines()) }
             }
         }
         return RemoteContents(uri.metaData(TodoApplication.app).lastModified, lines)
     }
 
-    override fun saveTasksToFile(uri: Uri, lines: List<String>, eol: String) : String? {
-        TodoApplication.app.contentResolver.openOutputStream(uri)?.use { stream ->
-            stream.bufferedWriter(Charsets.UTF_8).write(lines.joinToString(eol))
+    override fun saveTasksToFile(uri: Uri, lines: List<String>, eol: String): String? {
+        val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+// Check for the freshest data.
+        TodoApplication.app.applicationContext.contentResolver.let {
+            it.takePersistableUriPermission(uri, takeFlags)
+            it.openOutputStream(uri)?.use { stream ->
+                stream.bufferedWriter(Charsets.UTF_8).use {
+                    it.write(lines.joinToString(eol))
+                }
+            }
         }
         return uri.metaData(TodoApplication.app).lastModified
 
-    }
-
-    override fun appendTaskToFile(uri: Uri, lines: List<String>, eol: String) {
-        TodoApplication.app.contentResolver.openOutputStream(uri, "wa")?.use { stream ->
-            stream.bufferedWriter(Charsets.UTF_8).write(lines.joinToString(eol))
-        }
-    }
-
-    override fun readFile(uri: Uri, fileRead: (contents: String) -> Unit) {
-        TODO("Not yet implemented")
-    }
-
-    override fun writeFile(uri: Uri, contents: String) {
-        TODO("Not yet implemented")
     }
 }
 
 
 data class MetaData(val lastModified: String?, val displayName: String?)
 
-fun Uri.metaData(ctxt: Context) : MetaData {
-    ctxt.contentResolver.refresh(this,null,null)
-    val cursor: Cursor? = ctxt.contentResolver.query( this, null, null, null, null, null)
+fun Uri.metaData(ctxt: Context): MetaData {
+    ctxt.contentResolver.refresh(this, null, null)
+    val cursor: Cursor? = ctxt.contentResolver.query(this, null, null, null, null, null)
 
     cursor?.use {
         // moveToFirst() returns false if the cursor has 0 rows.  Very handy for
@@ -81,5 +77,5 @@ fun Uri.metaData(ctxt: Context) : MetaData {
             return MetaData(lastModified.toString(), displayName)
         }
     }
-    return MetaData(null,null)
+    return MetaData(null, null)
 }

@@ -22,10 +22,6 @@ interface IFileStore {
 
     fun loadTasksFromFile(uri: Uri): RemoteContents
     fun saveTasksToFile(uri: Uri, lines: List<String>, eol: String) : String?
-    fun appendTaskToFile(uri: Uri, lines: List<String>, eol: String)
-
-    fun readFile(uri: Uri, fileRead: (contents: String) -> Unit)
-    fun writeFile(uri: Uri, contents: String)
 
     // Retrieve the remote file version
     fun getRemoteVersion(uri: Uri?): String?

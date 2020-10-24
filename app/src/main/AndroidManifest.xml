@@ -28,6 +28,8 @@ You should have received a copy of the GNU General Public License along with Sim
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -36,7 +38,6 @@ You should have received a copy of the GNU General Public License along with Sim
         android:smallScreens="true"
         android:xlargeScreens="true"
         />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <application
         android:name=".TodoApplication"
         android:allowBackup="false"

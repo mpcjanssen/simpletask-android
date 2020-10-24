@@ -161,22 +161,23 @@ class TodoApplication : Application() {
     }
 
     fun switchTodoUri(newTodo: Uri, takeFlags: Int) {
-        if (config.changesPending) {
-            // Don't switch files when there are pending changes. This will lead to
-            // data corruption
-            Log.i(TAG, "Not switching, changes pending")
-            showToastLong(app, "Not switching files when changes are pending")
-        } else {
-            val resolver: ContentResolver = applicationContext.getContentResolver()
+//        if (config.changesPending) {
+//            // Don't switch files when there are pending changes. This will lead to
+//            // data corruption
+//            Log.i(TAG, "Not switching, changes pending")
+//            showToastLong(app, "Not switching files when changes are pending")
+//        } else {
+            val resolver: ContentResolver = applicationContext.contentResolver
             config.todoUri?.let {
-                resolver.releasePersistableUriPermission(it,takeFlags)
+                resolver.releasePersistableUriPermission(it,Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
             }
 
-            resolver.takePersistableUriPermission(newTodo, takeFlags)
+            resolver.takePersistableUriPermission(newTodo, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            resolver.persistedUriPermissions
             config.todoUri = newTodo
 
             loadTodoList("from file switch")
-        }
+//        }
     }
 
     fun loadTodoList(reason: String) {

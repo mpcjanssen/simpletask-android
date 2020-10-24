@@ -93,7 +93,7 @@ class AddTask : ThemedActionBarActivity() {
                 intent.hasExtra(Query.INTENT_JSON) -> Query(intent, luaModule = "from_intent").prefill
                 else -> ""
             }
-            startText = preFillString
+            startText = preFillString?:""
             // Avoid discarding changes on rotate
             if (taskText.text.isEmpty()) {
                 taskText.setText(preFillString)
