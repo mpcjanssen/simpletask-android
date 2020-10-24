@@ -30,10 +30,7 @@ object FileStore : IFileStore {
     override fun loadTasksFromFile(uri: Uri): RemoteContents {
         val lines = ArrayList<String>()
         TodoApplication.app.applicationContext.contentResolver.let {
-            val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION or
-                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-// Check for the freshest data.
-            it.takePersistableUriPermission(uri, takeFlags)
+            it.persistedUriPermissions
             it.refresh(uri, null, null)
             it.openInputStream(uri)?.use { inputStream ->
                 inputStream.bufferedReader(Charsets.UTF_8).use { lines.addAll(it.readLines()) }
@@ -43,11 +40,9 @@ object FileStore : IFileStore {
     }
 
     override fun saveTasksToFile(uri: Uri, lines: List<String>, eol: String): String? {
-        val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION or
-                Intent.FLAG_GRANT_WRITE_URI_PERMISSION
 // Check for the freshest data.
         TodoApplication.app.applicationContext.contentResolver.let {
-            it.takePersistableUriPermission(uri, takeFlags)
+            it.persistedUriPermissions
             it.openOutputStream(uri)?.use { stream ->
                 stream.bufferedWriter(Charsets.UTF_8).use {
                     it.write(lines.joinToString(eol))
@@ -63,19 +58,27 @@ object FileStore : IFileStore {
 data class MetaData(val lastModified: String?, val displayName: String?)
 
 fun Uri.metaData(ctxt: Context): MetaData {
-    ctxt.contentResolver.refresh(this, null, null)
-    val cursor: Cursor? = ctxt.contentResolver.query(this, null, null, null, null, null)
-
-    cursor?.use {
-        // moveToFirst() returns false if the cursor has 0 rows.  Very handy for
-        // "if there's anything to look at, look at it" conditionals.
-        if (it.moveToFirst()) {
-            // Note it's called "Display Name".  This is
-            // provider-specific, and might not necessarily be the file name.
-            val displayName: String = it.getString(it.getColumnIndex(DocumentsContract.Document.COLUMN_DISPLAY_NAME))
-            val lastModified = it.getLong(it.getColumnIndex(DocumentsContract.Document.COLUMN_LAST_MODIFIED))
-            return MetaData(lastModified.toString(), displayName)
+// Check for the freshest data.
+    TodoApplication.app.applicationContext.contentResolver.let {resolver ->
+        resolver.persistedUriPermissions
+        resolver.openInputStream(this)?.use {
+            stream -> stream.bufferedReader().readText()
         }
+        Thread.sleep(2000)
+        resolver.refresh(this, null, null)
+        val cursor: Cursor? = resolver.query(this, null, null, null, null, null)
+
+        cursor?.use {
+            // moveToFirst() returns false if the cursor has 0 rows.  Very handy for
+            // "if there's anything to look at, look at it" conditionals.
+            if (it.moveToFirst()) {
+                // Note it's called "Display Name".  This is
+                // provider-specific, and might not necessarily be the file name.
+                val displayName: String = it.getString(it.getColumnIndex(DocumentsContract.Document.COLUMN_DISPLAY_NAME))
+                val lastModified = it.getLong(it.getColumnIndex(DocumentsContract.Document.COLUMN_LAST_MODIFIED))
+                return MetaData(lastModified.toString(), displayName)
+            }
+        }
+        return MetaData(null, null)
     }
-    return MetaData(null, null)
 }

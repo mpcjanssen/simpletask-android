@@ -167,13 +167,13 @@ class TodoApplication : Application() {
 //            Log.i(TAG, "Not switching, changes pending")
 //            showToastLong(app, "Not switching files when changes are pending")
 //        } else {
-            val resolver: ContentResolver = applicationContext.contentResolver
-            config.todoUri?.let {
-                resolver.releasePersistableUriPermission(it,Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            }
+//            val resolver: ContentResolver = applicationContext.contentResolver
+//            config.todoUri?.let {
+//                resolver.releasePersistableUriPermission(it,Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+//            }
+            val perms = applicationContext.contentResolver.persistedUriPermissions
 
-            resolver.takePersistableUriPermission(newTodo, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            resolver.persistedUriPermissions
+            applicationContext.contentResolver.takePersistableUriPermission(newTodo, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
             config.todoUri = newTodo
 
             loadTodoList("from file switch")
