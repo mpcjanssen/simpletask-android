@@ -64,6 +64,7 @@ fun Uri.metaData(ctxt: Context): MetaData {
         resolver.openInputStream(this)?.use {
             stream -> stream.bufferedReader().readText()
         }
+        // TODO: remove this sleep, It sucks
         Thread.sleep(2000)
         resolver.refresh(this, null, null)
         val cursor: Cursor? = resolver.query(this, null, null, null, null, null)

@@ -171,12 +171,18 @@ class TodoApplication : Application() {
 //            config.todoUri?.let {
 //                resolver.releasePersistableUriPermission(it,Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
 //            }
-            val perms = applicationContext.contentResolver.persistedUriPermissions
+        applicationContext.contentResolver.let { resolver ->
+            resolver.takePersistableUriPermission(newTodo, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            resolver.persistedUriPermissions.forEach {
+                if (it.uri != newTodo) {
+                    resolver.releasePersistableUriPermission(it.uri, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                }
+            }
 
-            applicationContext.contentResolver.takePersistableUriPermission(newTodo, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
             config.todoUri = newTodo
+        }
 
-            loadTodoList("from file switch")
+        loadTodoList("from file switch")
 //        }
     }
 
