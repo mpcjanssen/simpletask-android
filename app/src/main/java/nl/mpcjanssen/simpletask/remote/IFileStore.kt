@@ -1,5 +1,6 @@
 package nl.mpcjanssen.simpletask.remote
 
+import android.net.Uri
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.util.broadcastFileSync
@@ -18,54 +19,20 @@ import kotlin.reflect.KClass
 
  */
 interface IFileStore {
-    val isAuthenticated: Boolean
 
-    @Throws(IOException::class)
-    fun loadTasksFromFile(file: File): RemoteContents
-    fun saveTasksToFile(file: File, lines: List<String>, lastRemote: String?, eol: String) : String
+    fun loadTasksFromFile(uri: Uri): RemoteContents
+    fun saveTasksToFile(uri: Uri, lines: List<String>, eol: String)
+    fun appendTaskToFile(uri: Uri, lines: List<String>, eol: String)
 
-    fun logout()
-
-    @Throws(IOException::class)
-    fun appendTaskToFile(file: File, lines: List<String>, eol: String)
-
-    fun readFile(file: File, fileRead: (contents: String) -> Unit)
-    fun writeFile(file: File, contents: String)
-
-    val isOnline: Boolean
+    fun readFile(uri: Uri, fileRead: (contents: String) -> Unit)
+    fun writeFile(uri: Uri, contents: String)
 
     // Retrieve the remote file version
-    fun getRemoteVersion(file: File): String?
-
-    // Return the default todo.txt path
-    fun getDefaultFile(): File
-
-    // Return files and subfolders in path. If txtOnly is true only *.txt files will be returned.
-    fun loadFileList(file: File, txtOnly: Boolean): List<FileEntry>
-
-    // Allow the FileStore to signal that the remote
-    // todoFile changed. Call this in the filestore code
-    // to force file sync
-    @Suppress("unused")
-    fun remoteTodoFileChanged() {
-        broadcastFileSync(TodoApplication.app.localBroadCastManager)
-    }
-
-    // Generic special folder names for use in File dialogs
-    companion object {
-        val ROOT_DIR = "/"
-        val PARENT_DIR = ".."
-
-    }
+    fun getRemoteVersion(uri: Uri): String?
 }
 
 // Data class to return the lines and verion of a remote file.
-data class RemoteContents(val remoteId: String, val contents: List<String>)
-
-// Generic file entry class for use in File dialogs
-data class FileEntry(val file: File, val isFolder: Boolean) {
-    constructor(fileName: String, isFolder: Boolean) : this (File(fileName), isFolder)
-}
+data class RemoteContents(val remoteId: String?, val contents: List<String>)
 
 
 
