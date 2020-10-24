@@ -184,7 +184,11 @@ class TodoList(val config: Config) {
 
 
 
-    fun notifyTasklistChanged(todoUri: Uri, save: Boolean, refreshMainUI: Boolean = true) {
+    fun notifyTasklistChanged(todoUri: Uri?, save: Boolean, refreshMainUI: Boolean = true) {
+        if (todoUri == null) {
+            Log.e(tag, "No todo uri this should be refactored to be impossible")
+            return
+        }
         Log.d(tag, "Notified changed")
         if (save) {
             save(FileStore, todoUri, eol = config.eol)

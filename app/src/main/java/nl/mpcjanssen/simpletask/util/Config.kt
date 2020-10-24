@@ -204,8 +204,6 @@ class Config(app: TodoApplication) : Preferences(app) {
         lastSeenRemoteId = null
     }
 
-    val isAutoArchive by BooleanPreference(R.string.auto_archive_pref_key, false)
-
     val hasPrependDate by BooleanPreference(R.string.prepend_date_pref_key, true)
 
     val hasKeepSelection by BooleanPreference(R.string.keep_selection, false)
