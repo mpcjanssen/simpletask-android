@@ -23,7 +23,7 @@ import nl.mpcjanssen.simpletask.Simpletask
 
 
 object FileStore : IFileStore {
-    override fun getRemoteVersion(uri: Uri): String? =   uri.metaData(TodoApplication.app).lastModified
+    override fun getRemoteVersion(uri: Uri?): String? =   uri?.metaData(TodoApplication.app)?.lastModified
     private val TAG = "FileStore"
 
     override fun loadTasksFromFile(uri: Uri): RemoteContents {
@@ -40,10 +40,11 @@ object FileStore : IFileStore {
         return RemoteContents(uri.metaData(TodoApplication.app).lastModified, lines)
     }
 
-    override fun saveTasksToFile(uri: Uri, lines: List<String>, eol: String) {
+    override fun saveTasksToFile(uri: Uri, lines: List<String>, eol: String) : String? {
         TodoApplication.app.contentResolver.openOutputStream(uri)?.use { stream ->
             stream.bufferedWriter(Charsets.UTF_8).write(lines.joinToString(eol))
         }
+        return uri.metaData(TodoApplication.app).lastModified
 
     }
 

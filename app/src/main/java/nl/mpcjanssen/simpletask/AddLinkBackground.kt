@@ -74,10 +74,12 @@ class AddLinkBackground : Activity() {
         }
 
         todoList.add(tasks, TodoApplication.config.hasAppendAtEnd)
-        todoList.notifyTasklistChanged(TodoApplication.config.todoFile, save = true, refreshMainUI = true)
-        showToastShort(TodoApplication.app, R.string.link_added)
-        if (TodoApplication.config.hasShareTaskShowsEdit) {
-            todoList.editTasks(this, tasks, "")
+        TodoApplication.config.todoUri?.let { todoUri ->
+            todoList.notifyTasklistChanged(todoUri, save = true, refreshMainUI = true)
+            showToastShort(TodoApplication.app, R.string.link_added)
+            if (TodoApplication.config.hasShareTaskShowsEdit) {
+                todoList.editTasks(this, tasks, "")
+            }
         }
         finish()
     }

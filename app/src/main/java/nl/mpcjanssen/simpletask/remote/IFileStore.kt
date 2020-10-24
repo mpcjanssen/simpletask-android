@@ -21,14 +21,14 @@ import kotlin.reflect.KClass
 interface IFileStore {
 
     fun loadTasksFromFile(uri: Uri): RemoteContents
-    fun saveTasksToFile(uri: Uri, lines: List<String>, eol: String)
+    fun saveTasksToFile(uri: Uri, lines: List<String>, eol: String) : String?
     fun appendTaskToFile(uri: Uri, lines: List<String>, eol: String)
 
     fun readFile(uri: Uri, fileRead: (contents: String) -> Unit)
     fun writeFile(uri: Uri, contents: String)
 
     // Retrieve the remote file version
-    fun getRemoteVersion(uri: Uri): String?
+    fun getRemoteVersion(uri: Uri?): String?
 }
 
 // Data class to return the lines and verion of a remote file.

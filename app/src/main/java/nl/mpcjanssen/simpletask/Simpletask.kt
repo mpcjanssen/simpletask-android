@@ -117,7 +117,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     completeTasks(it)
                     // Update the tri state checkbox
                     handleMode(mapOf(Mode.SELECTION to { invalidateOptionsMenu() }))
-                    TodoApplication.todoList.notifyTasklistChanged(TodoApplication.config.todoFile, save = false, refreshMainUI = true)
+                    TodoApplication.todoList.notifyTasklistChanged(TodoApplication.config.todoUri, save = false, refreshMainUI = true)
                 },
                 unCompleteAction = {
                     uncompleteTasks(it)
