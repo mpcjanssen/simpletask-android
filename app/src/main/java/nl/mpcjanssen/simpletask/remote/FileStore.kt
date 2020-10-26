@@ -61,12 +61,13 @@ fun Uri.metaData(ctxt: Context): MetaData {
 // Check for the freshest data.
     TodoApplication.app.applicationContext.contentResolver.let {resolver ->
         resolver.persistedUriPermissions
+        resolver.refresh(this, null, null)
         resolver.openInputStream(this)?.use {
             stream -> stream.bufferedReader().readText()
         }
         // TODO: remove this sleep, It sucks
         Thread.sleep(2000)
-        resolver.refresh(this, null, null)
+
         val cursor: Cursor? = resolver.query(this, null, null, null, null, null)
 
         cursor?.use {
