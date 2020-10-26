@@ -5,19 +5,11 @@ jobs:
   build:
     working_directory: ~/code
     docker:
-      - image: circleci/android:api-28
+      - image: circleci/android:api-30
     environment:
-      JVM_OPTS: -Xmx8200m
+      JVM_OPTS: -Xmx4200m
     steps:
       - checkout
-      - common-tasks/decrypt-env:
-          decoded-file: app/src/dropbox/res/values/dropbox.xml 
-          encoded-file: secrets/dropbox.xml.enc
-          encryption-key: $DSSECRET
-      - common-tasks/decrypt-env:
-          decoded-file: app/src/dropbox/res/values/dropbox-folder.xml 
-          encoded-file: secrets/dropbox-folder.xml.enc
-          encryption-key: $DSSECRET
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
 #      - run:
@@ -30,12 +22,6 @@ jobs:
           paths:
             - ~/.gradle
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-      - run:
-          name: Build nextcloud version
-          command: ./gradlew assembleNextcloudDebug
-      - run:
-          name: Build dropbox version
-          command: ./gradlew assembleDropboxDebug
       - run:
           name: Build cloudless version
           command: ./gradlew assembleCloudlessDebug

@@ -27,6 +27,7 @@ package nl.mpcjanssen.simpletask.remote
 import android.Manifest
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION
 import androidx.core.app.ActivityCompat
 import kotlinx.android.synthetic.cloudless.login.*
 import nl.mpcjanssen.simpletask.R
@@ -38,7 +39,7 @@ import nl.mpcjanssen.simpletask.util.showToastLong
 
 class LoginScreen : ThemedNoActionBarActivity() {
 
-
+    val MANAGE_STORAGE = 1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (FileStore.isAuthenticated) {
@@ -69,15 +70,13 @@ class LoginScreen : ThemedNoActionBarActivity() {
     }
 
     internal fun startLogin() {
-        ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_PERMISSION)
+        val intent = Intent(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
+        startActivityForResult(intent, MANAGE_STORAGE)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            REQUEST_PERMISSION -> finishLogin()
-        }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        finishLogin()
     }
 
     companion object {

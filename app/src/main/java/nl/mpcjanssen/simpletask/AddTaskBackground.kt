@@ -81,7 +81,7 @@ class AddTaskBackground : Activity() {
             } else if (Constants.INTENT_BACKGROUND_TASK == action) {
                 Log.d(TAG, "Adding background task")
                 if (intent.hasExtra(Constants.EXTRA_BACKGROUND_TASK)) {
-                    addBackgroundTask(intent.getStringExtra(Constants.EXTRA_BACKGROUND_TASK), append_text)
+                    addBackgroundTask(intent.getStringExtra(Constants.EXTRA_BACKGROUND_TASK)?:"", append_text)
                 } else {
                     Log.w(TAG, "Task was not in extras")
                 }
@@ -97,7 +97,7 @@ class AddTaskBackground : Activity() {
     }
 
     private fun noteToSelf(intent: Intent, append_text: String) {
-        val task = intent.getStringExtra(Intent.EXTRA_TEXT)
+        val task = intent.getStringExtra(Intent.EXTRA_TEXT)?:""
         if (intent.hasExtra(Intent.EXTRA_STREAM)) {
             Log.d(TAG, "Voice note added.")
         }

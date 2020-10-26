@@ -36,9 +36,7 @@ object FileStore : IFileStore {
 
     override val isAuthenticated: Boolean
         get() {
-            val permissionCheck = ContextCompat.checkSelfPermission(TodoApplication.app,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            return permissionCheck == PackageManager.PERMISSION_GRANTED
+            return Environment.isExternalStorageManager()
         }
 
     override fun loadTasksFromFile(file: File): RemoteContents {
