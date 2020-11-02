@@ -876,6 +876,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                 broadcastFileSync(TodoApplication.app.localBroadCastManager)
             }
             R.id.archive -> archiveTasks(true)
+            R.id.show_filter_drawer -> openSavedFilterDrawer()
             R.id.open_file -> TodoApplication.app.browseForNewFile(this)
             R.id.history -> startActivity(Intent(this, HistoryScreen::class.java))
             R.id.btn_filter_add -> onAddFilterClick()

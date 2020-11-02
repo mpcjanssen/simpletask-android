@@ -38,6 +38,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="preferences">Settings</string>
     <string name="archive">Archive</string>
     <string name="help">Help</string>
+    <string name="show_filter_drawer">Saved filters</string>
     <string name="history">History</string>
     <string name="debug_info">Debugging info</string>
     <string name="log">Log</string>

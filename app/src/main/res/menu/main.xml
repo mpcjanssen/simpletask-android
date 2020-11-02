@@ -79,4 +79,9 @@ You should have received a copy of the GNU General Public License along with Tod
         android:title="@string/help"
         app:showAsAction="never"
         />
+    <item
+            android:id="@+id/show_filter_drawer"
+            android:title="@string/show_filter_drawer"
+            app:showAsAction="never"
+    />
 </menu>
