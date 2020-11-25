@@ -22,12 +22,16 @@ class ItemDialogAdapter(
 
     init {
         val checkedTaskItems = tasks.map { retrieveFromTask(it) ?: emptySet() }
+        val (onAll,  onSome, onNone) = if (checkedTaskItems != emptySet<String>()) {
+            val onAny  = checkedTaskItems.reduce { a, b -> a union b }
+            val onAll  = checkedTaskItems.reduce { a, b -> a intersect b }
+            val onSome = onAny - onAll
+            val onNone = allItems - onAny
+            Triple(onAll,onSome,onNone)
 
-        val onAny = checkedTaskItems.reduce { a, b -> a union b }
-        val onAll = checkedTaskItems.reduce { a, b -> a intersect b }
-        val onSome = onAny - onAll
-        val onNone = allItems - onAny
-
+        } else {
+            Triple(emptySet<String>(), emptySet<String>(),allItems)
+        }
         val sortedItems = alfaSort(onAll) + alfaSort(onSome) + alfaSort(onNone)
 
         /* val itemAdapter = ItemDialogAdapter(sortedAllItems, onAll, onSome) */
