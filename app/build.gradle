@@ -57,7 +57,7 @@ android {
     defaultConfig {
         versionName "10.9.0"
         versionCode 10009000
-        applicationId = "nl.mpcjanssen.simpletask"
+        applicationId = "nl.mpcjanssen.simpletask.saf"
         buildConfigField "String", "GIT_VERSION", "\"" + androidGitVersion.name() + "\""
         multiDexEnabled false
         minSdkVersion 26
