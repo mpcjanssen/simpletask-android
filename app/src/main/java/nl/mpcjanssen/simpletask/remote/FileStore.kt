@@ -10,10 +10,6 @@ import android.util.Log
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.util.join
 import nl.mpcjanssen.simpletask.util.writeToFile
-import java.io.BufferedReader
-import java.io.File
-import java.io.FilenameFilter
-import java.io.InputStreamReader
 import java.util.*
 import kotlin.reflect.KClass
 import android.provider.DocumentsContract
@@ -21,66 +17,33 @@ import android.provider.OpenableColumns
 import androidx.room.util.CursorUtil.getColumnIndexOrThrow
 import androidx.documentfile.provider.DocumentFile
 import nl.mpcjanssen.simpletask.Simpletask
+import java.io.*
 
 
 object FileStore : IFileStore {
-    override fun getRemoteVersion(uri: Uri?): String? = uri?.metaData(TodoApplication.app)?.lastModified
     private val TAG = "FileStore"
 
-    override fun loadTasksFromFile(uri: Uri): RemoteContents {
-        val lines = ArrayList<String>()
+    override fun loadFile(uri: Uri): String {
         TodoApplication.app.applicationContext.contentResolver.let {
             it.persistedUriPermissions
             it.refresh(uri, null, null)
             it.openInputStream(uri)?.use { inputStream ->
-                inputStream.bufferedReader(Charsets.UTF_8).use { lines.addAll(it.readLines()) }
+                inputStream.bufferedReader(Charsets.UTF_8).use {return it.readText() }
             }
         }
-        return RemoteContents(uri.metaData(TodoApplication.app).lastModified, lines)
+        throw IOException("File error $uri")
     }
 
-    override fun saveTasksToFile(uri: Uri, lines: List<String>, eol: String): String? {
-// Check for the freshest data.
+    override fun saveFile (uri: Uri, contents: String) {
+
         TodoApplication.app.applicationContext.contentResolver.let {
             it.persistedUriPermissions
             it.openOutputStream(uri)?.use { stream ->
                 stream.bufferedWriter(Charsets.UTF_8).use {
-                    it.write(lines.joinToString(eol))
+                    it.write(contents)
                 }
             }
         }
-        return uri.metaData(TodoApplication.app).lastModified
-
     }
 }
 
-
-data class MetaData(val lastModified: String?, val displayName: String?)
-
-fun Uri.metaData(ctxt: Context): MetaData {
-// Check for the freshest data.
-    TodoApplication.app.applicationContext.contentResolver.let {resolver ->
-        resolver.persistedUriPermissions
-        resolver.refresh(this, null, null)
-        resolver.openInputStream(this)?.use {
-            stream -> stream.bufferedReader().readText()
-        }
-        // TODO: remove this sleep, It sucks
-        Thread.sleep(2000)
-
-        val cursor: Cursor? = resolver.query(this, null, null, null, null, null)
-
-        cursor?.use {
-            // moveToFirst() returns false if the cursor has 0 rows.  Very handy for
-            // "if there's anything to look at, look at it" conditionals.
-            if (it.moveToFirst()) {
-                // Note it's called "Display Name".  This is
-                // provider-specific, and might not necessarily be the file name.
-                val displayName: String = it.getString(it.getColumnIndex(DocumentsContract.Document.COLUMN_DISPLAY_NAME))
-                val lastModified = it.getLong(it.getColumnIndex(DocumentsContract.Document.COLUMN_LAST_MODIFIED))
-                return MetaData(lastModified.toString(), displayName)
-            }
-        }
-        return MetaData(null, null)
-    }
-}

@@ -67,7 +67,7 @@ class Config(app: TodoApplication) : Preferences(app) {
             }
         }
 
-    var lastSeenRemoteId by StringOrNullPreference(R.string.file_last_modified)
+    var lastSeenRemoteContent by StringOrNullPreference(R.string.last_remote_file)
 
     var lastScrollPosition by IntPreference(R.string.ui_last_scroll_position, -1)
 
@@ -201,7 +201,7 @@ class Config(app: TodoApplication) : Preferences(app) {
     fun clearCache() {
         cachedContents = null
         todoList = null
-        lastSeenRemoteId = null
+        lastSeenRemoteContent = null
     }
 
     val hasPrependDate by BooleanPreference(R.string.prepend_date_pref_key, true)

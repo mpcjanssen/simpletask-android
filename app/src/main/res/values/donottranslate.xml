@@ -165,7 +165,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="dropbox_full_access"            translatable="false">dropbox_full_access</string>
     <string name="share_task_show_edit"           translatable="false">share_task_show_edit</string>
     <string name="append_tasks_at_end"            translatable="false">append_tasks_at_end</string>
-    <string name="file_last_modified"             translatable="false">last_modified</string>
+    <string name="last_remote_file"             translatable="false">last_remote_file</string>
     <string name="dropbox_latest_cursor"          translatable="false">dropbox_latest_cursor</string>
     <string name="font_size"                      translatable="false">font_size</string>
     <string name="font_key"                       translatable="false">font_key</string>
