@@ -307,42 +307,48 @@ class TodoList(val config: Config) {
         FileStoreActionQueue.add("Backup") {
                 Backupper.backup(todoFile, lines)
         }
-        runOnMainThread(Runnable {
+        runOnMainThread {
             timer?.apply { cancel() }
+            val saveAction = {
+                FileStoreActionQueue.add("Save") {
+                    broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
+                    try {
+                        Log.i(tag, "Saving todo list, size ${lines.size}")
+                        config.lastSeenRemoteId = fileStore.saveTasksToFile(todoFile, lines, eol = eol, lastRemote = config.lastSeenRemoteId)
+                        Log.i(tag, "Remote version is ${config.lastSeenRemoteId}")
 
-            timer = object: CountDownTimer(TodoApplication.config.idleBeforeSaveSeconds*1000L, 1000) {
-                override fun onFinish() {
-                    Log.d(tag, "Executing pending Save")
-                    FileStoreActionQueue.add("Save") {
-                        broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
-                        try {
-                            Log.i(tag, "Saving todo list, size ${lines.size}")
-                            config.lastSeenRemoteId  = fileStore.saveTasksToFile(todoFile, lines, eol = eol, lastRemote = config.lastSeenRemoteId)
-                            Log.i(tag, "Remote version is ${config.lastSeenRemoteId}")
-
-                            if (config.changesPending) {
-                                // Remove the red bar
-                                config.changesPending = false
-                                broadcastUpdateStateIndicator(TodoApplication.app.localBroadCastManager)
-                            }
-
-                        } catch (e: Exception) {
-                            Log.e(tag, "TodoList save to ${todoFile.path} failed", e)
-                            config.changesPending = true
-                            if (fileStore.isOnline) {
-                                showToastShort(TodoApplication.app, "Saving of todo file failed")
-                            }
+                        if (config.changesPending) {
+                            // Remove the red bar
+                            config.changesPending = false
+                            broadcastUpdateStateIndicator(TodoApplication.app.localBroadCastManager)
                         }
-                        broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
+
+                    } catch (e: Exception) {
+                        Log.e(tag, "TodoList save to ${todoFile.path} failed", e)
+                        config.changesPending = true
+                        if (fileStore.isOnline) {
+                            showToastShort(TodoApplication.app, "Saving of todo file failed")
+                        }
                     }
-
+                    broadcastFileSyncDone(TodoApplication.app.localBroadCastManager)
                 }
+            }
+            val idleSeconds = TodoApplication.config.idleBeforeSaveSeconds
+            if (idleSeconds == 0) {
+                saveAction()
+            } else {
+                timer = object : CountDownTimer(idleSeconds * 1000L, 1000) {
+                    override fun onFinish() {
+                        Log.d(tag, "Executing pending Save")
+                        saveAction()
+                    }
+                    override fun onTick(p0: Long) {
+                        Log.d(tag, "Scheduled save in $p0")
+                    }
+                }.start()
 
-                override fun onTick(p0: Long) {
-                    Log.d(tag, "Scheduled save in $p0")
-                }
-            }.start()
-        })
+            }
+        }
     }
 
 
