@@ -23,7 +23,9 @@ You should have received a copy of the GNU General Public License along with Sim
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools" package="nl.mpcjanssen.simpletask" >
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <application>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <application
+            android:requestLegacyExternalStorage="true">
         <activity
                 android:name="nl.mpcjanssen.simpletask.remote.LoginScreen"
                 android:label="@string/app_label">
