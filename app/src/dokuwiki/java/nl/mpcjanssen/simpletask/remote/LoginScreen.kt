@@ -4,9 +4,9 @@ package nl.mpcjanssen.simpletask.remote
 import android.content.*
 import android.os.Bundle
 import android.util.Log
-import kotlinx.android.synthetic.dokuwiki.login.*
 
 import nl.mpcjanssen.simpletask.*
+import nl.mpcjanssen.simpletask.databinding.LoginBinding
 import nl.mpcjanssen.simpletask.util.FileStoreActionQueue
 import nl.mpcjanssen.simpletask.util.showToastLong
 import org.apache.xmlrpc.client.XmlRpcClient
@@ -18,7 +18,7 @@ import java.net.URL
 class LoginScreen : ThemedActionBarActivity() {
     private val url: String
         get () {
-            val enteredUrl = server_url.text.toString().trimEnd('/')
+            val enteredUrl = binding.serverUrl.text.toString().trimEnd('/')
             return if (enteredUrl.startsWith("http://", ignoreCase = true) ||
                     enteredUrl.startsWith("https://", ignoreCase = true)) {
                 return enteredUrl
@@ -30,7 +30,7 @@ class LoginScreen : ThemedActionBarActivity() {
     private var usernamePref by TodoApplication.config.StringOrNullPreference(FileStore.DOKUWIKI_USER)
     private var passwordPref by TodoApplication.config.StringOrNullPreference(FileStore.DOKUWIKI_PASS)
     private var serverUrlPref by TodoApplication.config.StringOrNullPreference(FileStore.DOKUWIKI_URL)
-
+    private lateinit var binding: LoginBinding
 
 
 
@@ -40,13 +40,13 @@ class LoginScreen : ThemedActionBarActivity() {
             switchToTodolist()
         }
         setTheme(TodoApplication.config.activeTheme)
-        setContentView(R.layout.login)
-
-        login.setOnClickListener {
+        binding = LoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.login.setOnClickListener {
             startLogin()
         }
 
-        logging.setOnClickListener {
+        binding.logging.setOnClickListener {
             startActivity(Intent(this, DebugInfoScreen::class.java))
         }
     }
@@ -58,10 +58,10 @@ class LoginScreen : ThemedActionBarActivity() {
     }
 
     private fun finishLogin() {
-        usernamePref = username.text.toString()
-        passwordPref = password.text.toString()
+        usernamePref = binding.username.text.toString()
+        passwordPref = binding.password.text.toString()
         serverUrlPref = url
-        Log.d(TAG, "Saved credentials for $username")
+        Log.d(TAG, "Saved credentials for ${binding.username}")
         switchToTodolist()
     }
 
@@ -70,8 +70,8 @@ class LoginScreen : ThemedActionBarActivity() {
         FileStoreActionQueue.add("login") {
             try {
                 val config = XmlRpcClientConfigImpl()
-                config.basicUserName = username.text.toString()
-                config.basicPassword = password.text.toString()
+                config.basicUserName = binding.username.text.toString()
+                config.basicPassword = binding.password.text.toString()
                 config.setServerURL(URL(url + "/lib/exe/xmlrpc.php"))
                 val client = XmlRpcClient()
                 client.setConfig(config)
