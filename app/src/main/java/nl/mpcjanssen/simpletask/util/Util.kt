@@ -33,9 +33,10 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import hirondelle.date4j.DateTime
-import kotlinx.android.synthetic.main.update_items_dialog.view.*
+
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.adapters.ItemDialogAdapter
+import nl.mpcjanssen.simpletask.databinding.UpdateItemsDialogBinding
 import nl.mpcjanssen.simpletask.task.Task
 import org.commonmark.parser.Parser
 import org.commonmark.renderer.html.HtmlRenderer
@@ -307,14 +308,14 @@ fun Activity.updateItemsDialog(
 ) {
     val view = layoutInflater.inflate(R.layout.update_items_dialog, null, false)
     val itemAdapter = ItemDialogAdapter(tasks, allItems, retrieveFromTask)
-
+    val binding = UpdateItemsDialogBinding.bind(view)
     // Initialize RecyclerView
-    view.current_items_list.let {
+    binding.currentItemsList.let {
         it.layoutManager = LinearLayoutManager(this)
         it.adapter = itemAdapter
     }
 
-    val editText = view.new_item_text
+    val editText = binding.newItemText
     // Listen to enter events, use IME_ACTION_DONE for soft keyboards
     // like Swype where ENTER keyCode is not generated.
     editText.setRawInputType(InputType.TYPE_CLASS_TEXT)
