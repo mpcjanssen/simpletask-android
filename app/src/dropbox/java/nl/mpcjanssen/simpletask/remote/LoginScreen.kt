@@ -33,8 +33,8 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.dropbox.core.android.Auth
-import kotlinx.android.synthetic.dropbox.login.*
 import nl.mpcjanssen.simpletask.*
+import nl.mpcjanssen.simpletask.databinding.LoginBinding
 
 class LoginScreen : ThemedNoActionBarActivity() {
 
@@ -42,13 +42,15 @@ class LoginScreen : ThemedNoActionBarActivity() {
     var resumeAfterAuth = false
     private lateinit var m_broadcastReceiver: BroadcastReceiver
     private lateinit var localBroadcastManager: LocalBroadcastManager
+    private lateinit var binding: LoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         m_app = application as TodoApplication
         setTheme(TodoApplication.config.activeTheme)
-        setContentView(R.layout.login)
+        binding = LoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         localBroadcastManager = LocalBroadcastManager.getInstance(this)
 
         val intentFilter = IntentFilter()
@@ -62,17 +64,17 @@ class LoginScreen : ThemedNoActionBarActivity() {
         }
         localBroadcastManager.registerReceiver(m_broadcastReceiver, intentFilter)
 
-        login.setOnClickListener {
+        binding.login.setOnClickListener {
             TodoApplication.config.fullDropBoxAccess = true
             startLogin()
         }
 
-        login_folder.setOnClickListener {
+        binding.loginFolder.setOnClickListener {
             TodoApplication.config.fullDropBoxAccess = false
             startLogin()
         }
 
-        logging.setOnClickListener {
+        binding.logging.setOnClickListener {
             startActivity(Intent(this, DebugInfoScreen::class.java))
         }
 

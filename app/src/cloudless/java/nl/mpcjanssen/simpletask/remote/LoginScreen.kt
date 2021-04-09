@@ -28,26 +28,27 @@ import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
-import kotlinx.android.synthetic.cloudless.login.*
 import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.Simpletask
 import nl.mpcjanssen.simpletask.ThemedNoActionBarActivity
 import nl.mpcjanssen.simpletask.TodoApplication
+import nl.mpcjanssen.simpletask.databinding.LoginBinding
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.showToastLong
 
 class LoginScreen : ThemedNoActionBarActivity() {
 
-
+    private lateinit var binding: LoginBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (FileStore.isAuthenticated) {
             switchToTodolist()
         }
         setTheme(TodoApplication.config.activeTheme)
-        setContentView(R.layout.login)
+        binding = LoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val loginButton = login
+        val loginButton = binding.login
         loginButton.setOnClickListener {
             startLogin()
         }

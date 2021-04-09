@@ -7,8 +7,8 @@ import android.util.Log
 
 import com.thegrizzlylabs.sardineandroid.impl.OkHttpSardine
 
-import kotlinx.android.synthetic.webdav.login.*
 import nl.mpcjanssen.simpletask.*
+import nl.mpcjanssen.simpletask.databinding.LoginBinding
 import nl.mpcjanssen.simpletask.util.FileStoreActionQueue
 import nl.mpcjanssen.simpletask.util.showToastLong
 import java.lang.Exception
@@ -16,8 +16,9 @@ import java.lang.Exception
 
 class LoginScreen : ThemedActionBarActivity() {
     private val url: String
+
         get () {
-            val enteredUrl = webdav_server_url.text.toString().trimEnd('/')
+            val enteredUrl = binding.webdavServerUrl.text.toString().trimEnd('/')
             return if (enteredUrl.startsWith("http://", ignoreCase = true) ||
                     enteredUrl.startsWith("https://", ignoreCase = true)) {
                  enteredUrl
@@ -29,7 +30,7 @@ class LoginScreen : ThemedActionBarActivity() {
     private var username by TodoApplication.config.StringOrNullPreference(FileStore.USER)
     private var password by TodoApplication.config.StringOrNullPreference(FileStore.PASS)
     private var serverUrl by TodoApplication.config.StringOrNullPreference(FileStore.URL)
-
+    private lateinit var binding: LoginBinding
 
 
 
@@ -39,13 +40,14 @@ class LoginScreen : ThemedActionBarActivity() {
             switchToTodolist()
         }
         setTheme(TodoApplication.config.activeTheme)
-        setContentView(R.layout.login)
+        binding = LoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        login.setOnClickListener {
+        binding.login.setOnClickListener {
             startLogin()
         }
 
-        logging.setOnClickListener {
+        binding.logging.setOnClickListener {
             startActivity(Intent(this, DebugInfoScreen::class.java))
         }
     }
@@ -57,8 +59,8 @@ class LoginScreen : ThemedActionBarActivity() {
     }
 
     private fun finishLogin() {
-        username = webdav_username.text.toString()
-        password = webdav_password.text.toString()
+        username = binding.webdavUsername.text.toString()
+        password = binding.webdavPassword.text.toString()
         serverUrl = url
         Log.d(TAG, "Saved credentials for $username")
         switchToTodolist()
@@ -68,8 +70,8 @@ class LoginScreen : ThemedActionBarActivity() {
     private fun startLogin() {
         FileStoreActionQueue.add("login") {
             try {
-                val client = OkHttpSardine().also { it.setCredentials(webdav_username.text.toString(), webdav_password.text.toString()) }
-                client.exists(webdav_server_url.text.toString() + "/")
+                val client = OkHttpSardine().also { it.setCredentials(binding.webdavUsername.text.toString(), binding.webdavPassword.text.toString()) }
+                client.exists(binding.webdavServerUrl.text.toString() + "/")
                 finishLogin()
             } catch (e: Exception) {
                 Log.i(TAG, "Login failed", e)

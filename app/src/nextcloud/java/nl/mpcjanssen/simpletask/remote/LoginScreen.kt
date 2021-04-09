@@ -16,8 +16,8 @@ import com.owncloud.android.lib.resources.files.ReadFolderRemoteOperation
 import com.owncloud.android.lib.resources.files.FileUtils
 import com.owncloud.android.lib.resources.users.GetUserInfoRemoteOperation
 
-import kotlinx.android.synthetic.nextcloud.login.*
 import nl.mpcjanssen.simpletask.*
+import nl.mpcjanssen.simpletask.databinding.LoginBinding
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.FileStoreActionQueue
 import nl.mpcjanssen.simpletask.util.showConfirmationDialog
@@ -28,7 +28,7 @@ import java.io.File
 class LoginScreen : ThemedActionBarActivity() {
     private val url: String
         get () {
-            val enteredUrl = nextcloud_server_url.text.toString().trimEnd('/')
+            val enteredUrl = binding.nextcloudServerUrl.text.toString().trimEnd('/')
             return if (enteredUrl.startsWith("http://", ignoreCase = true) ||
                     enteredUrl.startsWith("https://", ignoreCase = true)) {
                 return enteredUrl
@@ -40,7 +40,7 @@ class LoginScreen : ThemedActionBarActivity() {
     private var username by TodoApplication.config.StringOrNullPreference(FileStore.NEXTCLOUD_USER)
     private var password by TodoApplication.config.StringOrNullPreference(FileStore.NEXTCLOUD_PASS)
     private var serverUrl by TodoApplication.config.StringOrNullPreference(FileStore.NEXTCLOUD_URL)
-
+    private lateinit var binding: LoginBinding
 
 
 
@@ -50,13 +50,13 @@ class LoginScreen : ThemedActionBarActivity() {
             switchToTodolist()
         }
         setTheme(TodoApplication.config.activeTheme)
-        setContentView(R.layout.login)
-
-        login.setOnClickListener {
+        binding = LoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.login.setOnClickListener {
             startLogin(true)
         }
 
-        logging.setOnClickListener {
+        binding.logging.setOnClickListener {
             startActivity(Intent(this, DebugInfoScreen::class.java))
         }
     }
@@ -68,8 +68,8 @@ class LoginScreen : ThemedActionBarActivity() {
     }
 
     private fun finishLogin() {
-        username = nextcloud_username.text.toString()
-        password = nextcloud_password.text.toString()
+        username = binding.nextcloudUsername.text.toString()
+        password = binding.nextcloudPassword.text.toString()
         serverUrl = url
         Log.d(TAG, "Saved credentials for $username")
         switchToTodolist()
@@ -81,8 +81,8 @@ class LoginScreen : ThemedActionBarActivity() {
             OwnCloudClientManagerFactory.setUserAgent("Mozilla/5.0 (Android) ownCloud-android/3.8.1")
             val client = OwnCloudClientFactory.createOwnCloudClient(Uri.parse(url), this, true)
             client.credentials = OwnCloudCredentialsFactory.newBasicCredentials(
-                    nextcloud_username.text.toString(),
-                    nextcloud_password.text.toString()
+                    binding.nextcloudUsername.text.toString(),
+                    binding.nextcloudPassword.text.toString()
             )
             val op = GetUserInfoRemoteOperation()
             val res: RemoteOperationResult = op.execute(client)
