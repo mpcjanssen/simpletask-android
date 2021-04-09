@@ -7,6 +7,7 @@ import android.util.Log
 import com.thegrizzlylabs.sardineandroid.DavResource
 import com.thegrizzlylabs.sardineandroid.Sardine
 import com.thegrizzlylabs.sardineandroid.impl.OkHttpSardine
+import nl.mpcjanssen.simpletask.R
 
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.TodoException
@@ -27,6 +28,7 @@ object FileStore : IFileStore {
     internal val USER = "remoteUser"
     internal val PASS = "remotePass"
     internal val URL = "remoteURL"
+    private var lastSeenRemoteId by TodoApplication.config.StringOrNullPreference(R.string.file_current_version_id)
 
     var username by TodoApplication.config.StringOrNullPreference(USER)
     var password by TodoApplication.config.StringOrNullPreference(PASS)
@@ -61,16 +63,9 @@ object FileStore : IFileStore {
         return "${this.etag}:${this.modified}"
     }
 
-    private fun getRemoteVersion(url: String): String {
-        getClient()?.let {
-            val res = it.list(url)[0]
-            Log.e(TAG, "Getting metadata for ${url}, etag: ${res.etag}, modified: ${res.modified}")
-            return res.remoteVersion()
 
-        } ?: throw TodoException("WebDav exception client is null")
-    }
 
-    override fun getRemoteVersion(file: File): String {
+    private fun getRemoteVersion(file: File): String {
         getClient()?.let {
             val res = it.list(url(file))[0]
             Log.e(TAG, "Getting metadata for ${url(file)}, etag: ${res.etag}, modified: ${res.modified}")
@@ -88,7 +83,7 @@ object FileStore : IFileStore {
             return online
         }
 
-    override fun loadTasksFromFile(file: File): RemoteContents {
+    override fun loadTasksFromFile(file: File): List<String> {
 
         // If we load a file and changes are pending, we do not want to overwrite
         // our local changes, instead we try to upload local
@@ -97,10 +92,17 @@ object FileStore : IFileStore {
             throw IOException("Not authenticated")
         }
         getClient()?.let {
-            val version = getRemoteVersion(file)
             val readLines = it.get(url(file)).bufferedReader(Charsets.UTF_8).readLines()
-            return RemoteContents(version, readLines)
+            return readLines
         }?:  throw TodoException("WebDav exception client is null")
+    }
+
+    override fun needSync(file: File): Boolean {
+        return getRemoteVersion(file)!= lastSeenRemoteId
+    }
+
+    override fun todoNameChanged() {
+        lastSeenRemoteId = ""
     }
 
 
@@ -110,23 +112,24 @@ object FileStore : IFileStore {
 
     @Synchronized
     @Throws(IOException::class)
-    override fun saveTasksToFile(file: File, lines: List<String>, lastRemote: String?, eol: String) : String {
+    override fun saveTasksToFile(file: File, lines: List<String>, eol: String) : File {
         getClient()?.let { client ->
             Log.i(TAG, "Uploading file to ${url(file)}")
             val contents = join(lines, eol) + eol
             val remoteVersion = getRemoteVersion(file)
             val fileUrl = url(file)
-            val savedUrl = if (lastRemote == null || remoteVersion == lastRemote) {
+            val savedFile = File(if (lastSeenRemoteId == null || remoteVersion == lastSeenRemoteId) {
                 client.put(fileUrl, contents.toByteArray(Charsets.UTF_8))
                 fileUrl
             } else {
-                Log.i(TAG,"File conflict remote: $remoteVersion, last seen: $lastRemote ")
+                Log.i(TAG,"File conflict remote: $remoteVersion, last seen: $lastSeenRemoteId ")
                 val urlWithoutTxt = "\\.txt$".toRegex().replace(fileUrl, "")
                 val newUrl = urlWithoutTxt + "_conflict_" + UUID.randomUUID() + ".txt"
                 client.put(newUrl, contents.toByteArray(Charsets.UTF_8))
                 newUrl
-            }
-            return getRemoteVersion(savedUrl)
+            })
+            lastSeenRemoteId = getRemoteVersion(savedFile)
+            return savedFile
         } ?:  throw TodoException("WebDav exception client is null")
     }
 

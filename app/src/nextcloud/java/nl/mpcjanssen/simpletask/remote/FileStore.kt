@@ -14,6 +14,7 @@ import com.owncloud.android.lib.resources.files.ReadFileRemoteOperation
 import com.owncloud.android.lib.resources.files.ReadFolderRemoteOperation
 import com.owncloud.android.lib.resources.files.UploadFileRemoteOperation
 import com.owncloud.android.lib.resources.files.model.RemoteFile
+import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.TodoException
 import nl.mpcjanssen.simpletask.util.join
@@ -31,6 +32,7 @@ object FileStore : IFileStore {
     internal val NEXTCLOUD_USER = "ncUser"
     internal val NEXTCLOUD_PASS = "ncPass"
     internal val NEXTCLOUD_URL = "ncURL"
+    private var lastSeenRemoteId by TodoApplication.config.StringOrNullPreference(R.string.file_current_version_id)
 
     var username by TodoApplication.config.StringOrNullPreference(NEXTCLOUD_USER)
     var password by TodoApplication.config.StringOrNullPreference(NEXTCLOUD_PASS)
@@ -67,7 +69,7 @@ object FileStore : IFileStore {
     }
 
 
-    override fun getRemoteVersion(file: File): String {
+    private fun getRemoteVersion(file: File): String {
         val op = ReadFileRemoteOperation(file.canonicalPath)
         val res = op.execute(getClient())
         return if (res.isSuccess) {
@@ -89,7 +91,7 @@ object FileStore : IFileStore {
             return online
         }
 
-    override fun loadTasksFromFile(file: File): RemoteContents {
+    override fun loadTasksFromFile(file: File): List<String> {
 
         // If we load a file and changes are pending, we do not want to overwrite
         // our local changes, instead we try to upload local
@@ -113,7 +115,15 @@ object FileStore : IFileStore {
         val cachePath = File(cacheDir, file.path).canonicalPath
         readLines.addAll(File(cachePath).readLines())
         val currentVersionId = fileInfo.etag
-        return RemoteContents(currentVersionId, readLines)
+        return readLines
+    }
+
+    override fun needSync(file: File): Boolean {
+        return getRemoteVersion(file) != lastSeenRemoteId
+    }
+
+    override fun todoNameChanged() {
+        lastSeenRemoteId = ""
     }
 
 
@@ -123,7 +133,7 @@ object FileStore : IFileStore {
 
     @Synchronized
     @Throws(IOException::class)
-    override fun saveTasksToFile(file: File, lines: List<String>, lastRemote: String?, eol: String) : String {
+    override fun saveTasksToFile(file: File, lines: List<String>, eol: String) : File {
         val contents = join(lines, eol) + eol
 
         val timestamp = timeStamp()
@@ -139,7 +149,7 @@ object FileStore : IFileStore {
                 "text/plain", timestamp).execute(client)
 
         val conflict = 412
-        if (res.httpCode == conflict) {
+        val currentName = if (res.httpCode == conflict) {
             val parent = file.parent
             val name = file.name
             val nameWithoutTxt = "\\.txt$".toRegex().replace(name, "")
@@ -150,13 +160,17 @@ object FileStore : IFileStore {
 
             showToastLong(TodoApplication.app, "CONFLICT! Uploaded as " + newName
                     + ". Review differences manually with a text editor.")
+            newPath
+        } else {
+            file.canonicalPath
         }
 
         val infoOp = ReadFileRemoteOperation(file.canonicalPath)
         val infoRes = infoOp.execute(client)
         val fileInfo = infoRes.data[0] as RemoteFile
         Log.i(TAG,"New remote version tag: ${fileInfo.etag}, id: ${fileInfo.remoteId}, modified: ${fileInfo.modifiedTimestamp}")
-        return fileInfo.etag
+        lastSeenRemoteId =  fileInfo.etag
+        return File(currentName)
 
     }
 
