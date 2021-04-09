@@ -14,9 +14,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import kotlinx.android.synthetic.main.list_header.view.*
-import kotlinx.android.synthetic.main.list_item.view.*
 import nl.mpcjanssen.simpletask.*
+import nl.mpcjanssen.simpletask.databinding.ListHeaderBinding
+import nl.mpcjanssen.simpletask.databinding.ListItemBinding
 import nl.mpcjanssen.simpletask.util.*
 import java.util.ArrayList
 
@@ -61,29 +61,31 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
     }
 
     private fun bindHeader(holder : TaskViewHolder, position: Int) {
-        val t = holder.itemView.list_header_title
+        val binding = ListHeaderBinding.bind(holder.itemView)
+        val t = binding.listHeaderTitle
         val line = visibleLines[position]
         t.text = line.title
         t.textSize = textSize
     }
 
     private fun bindTask (holder : TaskViewHolder, position: Int) {
+        val binding = ListItemBinding.bind(holder.itemView)
         val line = visibleLines[position]
         val task = line.task ?: return
         val view = holder.itemView
-        val taskText = view.tasktext
-        val taskAge = view.taskage
-        val taskDue = view.taskdue
-        val taskThreshold = view.taskthreshold
+        val taskText = binding.tasktext
+        val taskAge = binding.taskage
+        val taskDue = binding.taskdue
+        val taskThreshold = binding.taskthreshold
 
         if (TodoApplication.config.showCompleteCheckbox) {
-            view.checkBox.visibility = View.VISIBLE
+            binding.checkBox.visibility = View.VISIBLE
         } else {
-            view.checkBox.visibility = View.GONE
+            binding.checkBox.visibility = View.GONE
         }
 
         if (!TodoApplication.config.hasExtendedTaskView) {
-            view.datebar.visibility = View.GONE
+            binding.datebar.visibility = View.GONE
         }
         val tokensToShowFilter: (it: TToken) -> Boolean = {
             when (it) {
@@ -120,7 +122,7 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         taskDue.textSize = textSize * TodoApplication.config.dateBarRelativeSize
         taskThreshold.textSize = textSize * TodoApplication.config.dateBarRelativeSize
 
-        val cb = view.checkBox
+        val cb = binding.checkBox
 
 
         if (completed) {
