@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.core.content.ContextCompat
 import android.util.Log
+import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.join
@@ -18,9 +19,8 @@ import java.util.*
 import kotlin.reflect.KClass
 
 object FileStore : IFileStore {
-    override fun getRemoteVersion(file: File): String {
-        return file.lastModified().toString()
-    }
+    private var lastSeenRemoteId by TodoApplication.config.StringOrNullPreference(R.string.file_current_version_id)
+
 
     override val isOnline = true
     private const val TAG = "FileStore"
@@ -41,12 +41,20 @@ object FileStore : IFileStore {
             return permissionCheck == PackageManager.PERMISSION_GRANTED
         }
 
-    override fun loadTasksFromFile(file: File): RemoteContents {
+    override fun loadTasksFromFile(file: File): List<String> {
         Log.i(TAG, "Loading tasks")
         val lines = file.readLines()
         Log.i(TAG, "Read ${lines.size} lines from $file")
         setWatching(file)
-        return RemoteContents(file.lastModified().toString(), lines)
+        return lines
+    }
+
+    override fun needSync(file: File): Boolean {
+        return lastSeenRemoteId != file.lastModified().toString()
+    }
+
+    override fun todoNameChanged() {
+        lastSeenRemoteId = ""
     }
 
     override fun writeFile(file: File, contents: String) {
@@ -82,13 +90,14 @@ object FileStore : IFileStore {
         Log.i(TAG, "Observer: modifying done")
     }
 
-    override fun saveTasksToFile(file: File, lines: List<String>, lastRemote: String?, eol: String) : String {
+    override fun saveTasksToFile(file: File, lines: List<String>, eol: String) : File {
         Log.i(TAG, "Saving tasks to file: ${file.path}")
         val obs = observer
         obs?.ignoreEvents(true)
         writeToFile(lines, eol, file, false)
         obs?.delayedStartListen(1000)
-        return file.lastModified().toString()
+        lastSeenRemoteId = file.lastModified().toString()
+        return file
     }
 
     override fun appendTaskToFile(file: File, lines: List<String>, eol: String) {

@@ -2,6 +2,7 @@ package nl.mpcjanssen.simpletask.remote
 
 
 
+import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.TodoApplication
 
 import org.apache.xmlrpc.client.XmlRpcClient
@@ -28,6 +29,7 @@ object FileStore : IFileStore {
     var username by TodoApplication.config.StringOrNullPreference(DOKUWIKI_USER)
     var password by TodoApplication.config.StringOrNullPreference(DOKUWIKI_PASS)
     private var serverUrl by TodoApplication.config.StringOrNullPreference(DOKUWIKI_URL)
+    private var lastSeenRemoteId by TodoApplication.config.StringOrNullPreference(R.string.file_current_version_id)
 
     private val client : XmlRpcClient
     get() {
@@ -56,20 +58,30 @@ object FileStore : IFileStore {
 
 
 
-    override fun getRemoteVersion(file: File): String {
+    private fun getRemoteVersion(file: File): String {
         val result = client.execute("wiki.getPageInfo", arrayOf(file.wikiPath()))
         @Suppress("UNCHECKED_CAST")
         return (result as HashMap<String,Any>).getOrElse("version", {""}).toString()
     }
+
+
 
     override val isOnline: Boolean
         get() {
             return true
         }
 
-    override fun loadTasksFromFile(file: File): RemoteContents {
+    override fun loadTasksFromFile(file: File): List<String> {
         val content = client.execute("wiki.getPage", arrayOf(file.wikiPath())) as String
-        return RemoteContents(getRemoteVersion(file), content.lines())
+        return content.lines()
+    }
+
+    override fun needSync(file: File): Boolean {
+        return lastSeenRemoteId != getRemoteVersion(file)
+    }
+
+    override fun todoNameChanged() {
+        lastSeenRemoteId = ""
     }
 
     override fun loginActivity(): KClass<*>? {
@@ -78,12 +90,13 @@ object FileStore : IFileStore {
 
     @Synchronized
     @Throws(IOException::class)
-    override fun saveTasksToFile(file: File, lines: List<String>, lastRemote: String?, eol: String) : String {
+    override fun saveTasksToFile(file: File, lines: List<String>,  eol: String) : File {
         client.execute("wiki.putPage", arrayOf(
                 file.wikiPath(),
                 lines.joinToString(separator = "\n"),
                 emptyArray<String>()))
-        return getRemoteVersion(file)
+        lastSeenRemoteId = getRemoteVersion(file)
+        return file
     }
 
     @Throws(IOException::class)
