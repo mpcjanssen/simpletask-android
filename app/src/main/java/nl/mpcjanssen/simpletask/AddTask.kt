@@ -18,7 +18,8 @@ import android.view.MenuItem
 import android.view.Window
 import android.view.WindowManager
 import hirondelle.date4j.DateTime
-import kotlinx.android.synthetic.main.add_task.*
+import nl.mpcjanssen.simpletask.databinding.AddTaskBinding
+import nl.mpcjanssen.simpletask.databinding.LoginBinding
 import nl.mpcjanssen.simpletask.task.Priority
 import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
@@ -34,7 +35,7 @@ class AddTask : ThemedActionBarActivity() {
 
     private var mBroadcastReceiver: BroadcastReceiver? = null
     private var localBroadcastManager: LocalBroadcastManager? = null
-
+    private lateinit var binding: AddTaskBinding
     /*
         Deprecated functions still work fine.
         For now keep using the old version, will updated if it breaks.
@@ -65,18 +66,19 @@ class AddTask : ThemedActionBarActivity() {
         localBroadcastManager!!.registerReceiver(broadcastReceiver, intentFilter)
         mBroadcastReceiver = broadcastReceiver
         window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
-        setContentView(R.layout.add_task)
+        binding = AddTaskBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
         if (!TodoApplication.config.useListAndTagIcons) {
-            btnContext.setImageResource(R.drawable.ic_action_todotxt_lists)
-            btnProject.setImageResource(R.drawable.ic_action_todotxt_tags)
+            binding.btnContext.setImageResource(R.drawable.ic_action_todotxt_lists)
+            binding.btnProject.setImageResource(R.drawable.ic_action_todotxt_tags)
 
         }
 
 
         if (shareText != null) {
-            taskText.setText(shareText)
+            binding.taskText.setText(shareText)
         }
 
         setTitle(R.string.addtask)
@@ -95,8 +97,8 @@ class AddTask : ThemedActionBarActivity() {
             }
             startText = preFillString
             // Avoid discarding changes on rotate
-            if (taskText.text.isEmpty()) {
-                taskText.setText(preFillString)
+            if (binding.taskText.text.isEmpty()) {
+                binding.taskText.setText(preFillString)
             }
 
             setInputType()
@@ -105,32 +107,32 @@ class AddTask : ThemedActionBarActivity() {
 
 
             // Set button callbacks
-            btnContext.setOnClickListener { showListMenu() }
-            btnProject.setOnClickListener { showTagMenu() }
-            btnPrio.setOnClickListener { showPriorityMenu() }
-            btnDue.setOnClickListener { insertDate(DateType.DUE) }
-            btnThreshold.setOnClickListener { insertDate(DateType.THRESHOLD) }
-            btnNext.setOnClickListener { addPrefilledTask() }
-            btnSave.setOnClickListener { saveTasksAndClose() }
-            taskText.requestFocus()
-            Selection.setSelection(taskText.text,0)
+            binding.btnContext.setOnClickListener { showListMenu() }
+            binding.btnProject.setOnClickListener { showTagMenu() }
+            binding.btnPrio.setOnClickListener { showPriorityMenu() }
+            binding.btnDue.setOnClickListener { insertDate(DateType.DUE) }
+            binding.btnThreshold.setOnClickListener { insertDate(DateType.THRESHOLD) }
+            binding.btnNext.setOnClickListener { addPrefilledTask() }
+            binding.btnSave.setOnClickListener { saveTasksAndClose() }
+            binding.taskText.requestFocus()
+            Selection.setSelection(binding.taskText.text,0)
 
     }
 
     private fun addPrefilledTask() {
-        val position = taskText.selectionStart
-        val remainingText = taskText.text.toString().substring(position)
+        val position = binding.taskText.selectionStart
+        val remainingText = binding.taskText.text.toString().substring(position)
         val endOfLineDistance = remainingText.indexOf('\n')
         var endOfLine: Int
         endOfLine = if (endOfLineDistance == -1) {
-            taskText.length()
+            binding.taskText.length()
         } else {
             position + endOfLineDistance
         }
-        taskText.setSelection(endOfLine)
+        binding.taskText.setSelection(endOfLine)
         replaceTextAtSelection("\n", false)
 
-        val precedingText = taskText.text.toString().substring(0, endOfLine)
+        val precedingText = binding.taskText.text.toString().substring(0, endOfLine)
         val lineStart = precedingText.lastIndexOf('\n')
         val line: String
         line = if (lineStart != -1) {
@@ -150,11 +152,11 @@ class AddTask : ThemedActionBarActivity() {
         replaceTextAtSelection(join(prefillItems, " "), true)
 
         endOfLine++
-        taskText.setSelection(endOfLine)
+        binding.taskText.setSelection(endOfLine)
     }
 
     private fun setWordWrap(bool: Boolean) {
-        taskText.setHorizontallyScrolling(!bool)
+        binding.taskText.setHorizontallyScrolling(!bool)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -175,9 +177,9 @@ class AddTask : ThemedActionBarActivity() {
     private fun setInputType() {
         val basicType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
         if (TodoApplication.config.isCapitalizeTasks) {
-            taskText.inputType = basicType or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+            binding.taskText.inputType = basicType or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
         } else {
-            taskText.inputType = basicType
+            binding.taskText.inputType = basicType
         }
         setWordWrap(TodoApplication.config.isWordWrap)
 
@@ -217,7 +219,7 @@ class AddTask : ThemedActionBarActivity() {
     private fun saveTasksAndClose() {
         val todoList = TodoApplication.todoList
         // strip line breaks
-        val input: String = taskText.text.toString()
+        val input: String = binding.taskText.text.toString()
 
         // Don't add empty tasks
         if (input.trim { it <= ' ' }.isEmpty()) {
@@ -248,7 +250,7 @@ class AddTask : ThemedActionBarActivity() {
             TodoApplication.todoList.clearPendingEdits()
             finish()
         }
-        if (confirmation && (taskText.text.toString() != startText)) {
+        if (confirmation && (binding.taskText.text.toString() != startText)) {
             showConfirmationDialog(this, R.string.cancel_changes, close, null)
         } else {
             close.onClick(null, 0)
@@ -346,7 +348,7 @@ class AddTask : ThemedActionBarActivity() {
             } else {
                 tasks.add(task)
             }
-            taskText.setText(tasks.joinToString("\n") { it.text })
+            binding.taskText.setText(tasks.joinToString("\n") { it.text })
         }
     }
 
@@ -365,7 +367,7 @@ class AddTask : ThemedActionBarActivity() {
     }
 
     private fun getTasks(): MutableList<Task> {
-        val input = taskText.text.toString()
+        val input = binding.taskText.text.toString()
         return input.split("\r\n|\r|\n".toRegex()).asSequence().map(::Task).toMutableList()
     }
 
@@ -398,26 +400,26 @@ class AddTask : ThemedActionBarActivity() {
             } else {
                 tasks.add(task)
             }
-            taskText.setText(tasks.joinToString("\n") { it.text })
+            binding.taskText.setText(tasks.joinToString("\n") { it.text })
         }
     }
 
     private fun getCurrentCursorLine(): Int {
-        val selectionStart = taskText.selectionStart
+        val selectionStart = binding.taskText.selectionStart
         if (selectionStart == -1) {
             return -1
         }
 
-        val chars = taskText.text.subSequence(0, selectionStart)
+        val chars = binding.taskText.text.subSequence(0, selectionStart)
         return (0 until chars.length).count { chars[it] == '\n' }
     }
 
     private fun replaceDueDate(newDueDate: CharSequence) {
         // save current selection and length
-        val start = taskText.selectionStart
-        val length = taskText.text.length
+        val start = binding.taskText.selectionStart
+        val length = binding.taskText.text.length
         val lines = ArrayList<String>()
-        Collections.addAll(lines, *taskText.text.toString().split("\\n".toRegex()).toTypedArray())
+        Collections.addAll(lines, *binding.taskText.text.toString().split("\\n".toRegex()).toTypedArray())
 
         // For some reason the currentLine can be larger than the amount of lines in the EditText
         // Check for this case to prevent any array index out of bounds errors
@@ -429,17 +431,17 @@ class AddTask : ThemedActionBarActivity() {
             val t = Task(lines[currentLine])
             t.dueDate = newDueDate.toString()
             lines[currentLine] = t.inFileFormat(TodoApplication.config.useUUIDs)
-            taskText.setText(join(lines, "\n"))
+            binding.taskText.setText(join(lines, "\n"))
         }
         restoreSelection(start, length, false)
     }
 
     private fun replaceThresholdDate(newThresholdDate: CharSequence) {
         // save current selection and length
-        val start = taskText.selectionStart
-        val length = taskText.text.length
+        val start = binding.taskText.selectionStart
+        val length = binding.taskText.text.length
         val lines = ArrayList<String>()
-        Collections.addAll(lines, *taskText.text.toString().split("\\n".toRegex()).toTypedArray())
+        Collections.addAll(lines, *binding.taskText.text.toString().split("\\n".toRegex()).toTypedArray())
 
         // For some reason the currentLine can be larger than the amount of lines in the EditText
         // Check for this case to prevent any array index out of bounds errors
@@ -451,14 +453,14 @@ class AddTask : ThemedActionBarActivity() {
             val t = Task(lines[currentLine])
             t.thresholdDate = newThresholdDate.toString()
             lines[currentLine] = t.inFileFormat(TodoApplication.config.useUUIDs)
-            taskText.setText(join(lines, "\n"))
+            binding.taskText.setText(join(lines, "\n"))
         }
         restoreSelection(start, length, false)
     }
 
     private fun restoreSelection(location: Int, oldLength: Int, moveCursor: Boolean) {
         var newLocation = location
-        val newLength = taskText.text.length
+        val newLength = binding.taskText.text.length
         val deltaLength = newLength - oldLength
         // Check if we want the cursor to move by delta (for priority changes)
         // or not (for due and threshold changes
@@ -469,17 +471,17 @@ class AddTask : ThemedActionBarActivity() {
         // Don't go out of bounds
         newLocation = Math.min(newLocation, newLength)
         newLocation = Math.max(0, newLocation)
-        taskText.setSelection(newLocation, newLocation)
+        binding.taskText.setSelection(newLocation, newLocation)
     }
 
     private fun replacePriority(newPriority: CharSequence) {
         // save current selection and length
-        val start = taskText.selectionStart
-        val end = taskText.selectionEnd
+        val start = binding.taskText.selectionStart
+        val end = binding.taskText.selectionEnd
         Log.d(TAG, "Current selection: $start-$end")
-        val length = taskText.text.length
+        val length = binding.taskText.text.length
         val lines = ArrayList<String>()
-        Collections.addAll(lines, *taskText.text.toString().split("\\n".toRegex()).toTypedArray())
+        Collections.addAll(lines, *binding.taskText.text.toString().split("\\n".toRegex()).toTypedArray())
 
         // For some reason the currentLine can be larger than the amount of lines in the EditText
         // Check for this case to prevent any array index out of bounds errors
@@ -492,22 +494,22 @@ class AddTask : ThemedActionBarActivity() {
             Log.d(TAG, "Changing priority from " + t.priority.toString() + " to " + newPriority.toString())
             t.priority = Priority.toPriority(newPriority.toString())
             lines[currentLine] = t.inFileFormat(TodoApplication.config.useUUIDs)
-            taskText.setText(join(lines, "\n"))
+            binding.taskText.setText(join(lines, "\n"))
         }
         restoreSelection(start, length, true)
     }
 
     private fun replaceTextAtSelection(newText: CharSequence, spaces: Boolean) {
         var text = newText
-        val start = taskText.selectionStart
-        val end = taskText.selectionEnd
+        val start = binding.taskText.selectionStart
+        val end = binding.taskText.selectionEnd
         if (start == end && start != 0 && spaces) {
             // no selection prefix with space if needed
-            if (taskText.text[start - 1] != ' ') {
+            if (binding.taskText.text[start - 1] != ' ') {
                 text = " $text"
             }
         }
-        taskText.text.replace(Math.min(start, end), Math.max(start, end),
+        binding.taskText.text.replace(Math.min(start, end), Math.max(start, end),
                 text, 0, text.length)
     }
 
