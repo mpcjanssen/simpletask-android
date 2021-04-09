@@ -40,8 +40,9 @@ import androidx.core.content.FileProvider
 import androidx.core.widget.NestedScrollView
 
 import hirondelle.date4j.DateTime
-import kotlinx.android.synthetic.main.main.*
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
+import nl.mpcjanssen.simpletask.databinding.AddTaskBinding
+import nl.mpcjanssen.simpletask.databinding.MainBinding
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.*
 import nl.mpcjanssen.simpletask.util.*
@@ -71,6 +72,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private var m_drawerToggle: ActionBarDrawerToggle? = null
     private var m_savedInstanceState: Bundle? = null
+    private lateinit var binding: MainBinding
 
     private val uiHandler = UiHandler()
 
@@ -196,7 +198,8 @@ class Simpletask : ThemedNoActionBarActivity() {
                 })
 
 
-        setContentView(R.layout.main)
+        binding = MainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         localBroadcastManager = TodoApplication.app.localBroadCastManager
 
@@ -241,11 +244,11 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
         localBroadcastManager!!.registerReceiver(broadcastReceiver, intentFilter)
         m_broadcastReceiver = broadcastReceiver
-        setSupportActionBar(main_actionbar)
+        setSupportActionBar(binding.mainActionbar)
 
         // Replace drawables if the theme is dark
         if (TodoApplication.config.isDarkTheme || TodoApplication.config.isBlackTheme) {
-            actionbar_clear?.setImageResource(R.drawable.ic_close_white_24dp)
+            binding.actionbarClear.setImageResource(R.drawable.ic_close_white_24dp)
         }
         val versionCode = BuildConfig.VERSION_CODE
         if (TodoApplication.app.isAuthenticated) {
@@ -403,7 +406,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             return
         }
 
-        drawer_layout?.let { drawerLayout ->
+        binding.drawerLayout.let { drawerLayout ->
             m_drawerToggle = object : ActionBarDrawerToggle(this, /* host Activity */
                     drawerLayout, /* DrawerLayout object */
                     R.string.changelist, /* "open drawer" description */
@@ -484,7 +487,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
         listView?.viewTreeObserver?.addOnScrollChangedListener(listener)
 
-        fab.setOnClickListener { startAddTaskActivity() }
+        binding.fab.setOnClickListener { startAddTaskActivity() }
     }
 
 
@@ -495,7 +498,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun updateCompletionCheckboxState() {
-        val cbItem = toolbar.menu.findItem(R.id.multicomplete_checkbox) ?: return
+        val cbItem = binding.toolbar.menu.findItem(R.id.multicomplete_checkbox) ?: return
         val selectedTasks = TodoApplication.todoList.selectedTasks
         val count = selectedTasks.count()
         val completedCount = selectedTasks.count { it.isCompleted() }
@@ -511,7 +514,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             else -> {
                 cbItem.setIcon(R.drawable.ic_indeterminate_check_box_white_24dp)
                 cbItem.setOnMenuItemClickListener {
-                    val popup = PopupMenu(this, toolbar)
+                    val popup = PopupMenu(this, binding.toolbar)
                     val menuInflater = popup.menuInflater
                     menuInflater.inflate(R.menu.completion_popup, popup.menu)
                     popup.show()
@@ -557,15 +560,15 @@ class Simpletask : ThemedNoActionBarActivity() {
                     inflater.inflate(R.menu.task_context_actionbar, menu)
                     title = "${TodoApplication.todoList.numSelected()}"
                     toggle.isDrawerIndicatorEnabled = false
-                    fab.visibility = View.GONE
-                    toolbar.setOnMenuItemClickListener { item ->
+                    binding.fab.visibility = View.GONE
+                    binding.toolbar.setOnMenuItemClickListener { item ->
                         onOptionsItemSelected(item)
                     }
-                    toolbar.visibility = View.VISIBLE
-                    toolbar.menu.clear()
-                    inflater.inflate(R.menu.task_context, toolbar.menu)
+                    binding.toolbar.visibility = View.VISIBLE
+                    binding.toolbar.menu.clear()
+                    inflater.inflate(R.menu.task_context, binding.toolbar.menu)
                     if (!TodoApplication.config.useListAndTagIcons) {
-                        toolbar.menu?.apply {
+                        binding.toolbar.menu?.apply {
                             findItem(R.id.update_lists)?.setIcon(R.drawable.ic_action_todotxt_lists)
                             findItem(R.id.update_tags)?.setIcon(R.drawable.ic_action_todotxt_tags)
                         }
@@ -573,8 +576,8 @@ class Simpletask : ThemedNoActionBarActivity() {
 
 
                     updateCompletionCheckboxState()
-                    selection_fab.visibility = View.VISIBLE
-                    selection_fab.setOnClickListener {
+                    binding.selectionFab.visibility = View.VISIBLE
+                    binding.selectionFab.setOnClickListener {
                         createCalendarAppointment(TodoApplication.todoList.selectedTasks)
                     }
                 },
@@ -606,9 +609,9 @@ class Simpletask : ThemedNoActionBarActivity() {
                         setTitle(R.string.app_label)
                     }
                     toggle.isDrawerIndicatorEnabled = true
-                    fab.visibility = View.VISIBLE
-                    selection_fab.visibility = View.GONE
-                    toolbar.visibility = View.GONE
+                    binding.fab.visibility = View.VISIBLE
+                    binding.selectionFab.visibility = View.GONE
+                    binding.toolbar.visibility = View.GONE
                     true
                 }))
         return true
@@ -631,21 +634,21 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun isDrawerOpen(drawer: Int): Boolean {
-        if (drawer_layout == null) {
+        if (binding.drawerLayout == null) {
             Log.w(TAG, "Layout was null")
             return false
         }
-        return drawer_layout.isDrawerOpen(drawer)
+        return binding.drawerLayout.isDrawerOpen(drawer)
     }
 
     private fun closeDrawer(drawer: Int) {
-        drawer_layout?.closeDrawer(drawer)
+        binding.drawerLayout?.closeDrawer(drawer)
     }
 
     private fun openSavedFilterDrawer() {
         closeDrawer(QUICK_FILTER_DRAWER)
         if (!isDrawerOpen(SAVED_FILTER_DRAWER)) {
-            drawer_layout.openDrawer(SAVED_FILTER_DRAWER)
+            binding.drawerLayout.openDrawer(SAVED_FILTER_DRAWER)
         }
     }
 
@@ -1062,16 +1065,16 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     val listView: RecyclerView?
         get() {
-            val lv = list
+            val lv = binding.list
             return lv
         }
 
     fun showListViewProgress(show: Boolean) {
         runOnUiThread {
             if (show) {
-                sync_progress.visibility = View.VISIBLE
+                binding.syncProgress.visibility = View.VISIBLE
             } else {
-                sync_progress.visibility = View.GONE
+                binding.syncProgress.visibility = View.GONE
             }
         }
     }
@@ -1165,14 +1168,14 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
 
         private fun updateFilterBar() {
-            actionbar.visibility = when {
+            binding.actionbar.visibility = when {
                 TodoApplication.config.mainQuery.hasFilter() -> View.VISIBLE
                 else -> View.GONE
             }
             Log.d(TAG, "Update applyFilter bar")
             val count = taskAdapter.countVisibleTasks
             val total = taskAdapter.countTotalTasks
-            filter_text.text = TodoApplication.config.mainQuery.getTitle(
+            binding.filterText.text = TodoApplication.config.mainQuery.getTitle(
                     count,
                     total,
                     getText(R.string.priority_prompt),
@@ -1195,11 +1198,11 @@ class Simpletask : ThemedNoActionBarActivity() {
                 result.add(getString(R.string.nav_drawer_hint))
                 result
             }
-            nav_drawer.adapter = ArrayAdapter(this@Simpletask, R.layout.drawer_list_item, names)
+            binding.navDrawer.adapter = ArrayAdapter(this@Simpletask, R.layout.drawer_list_item, names)
             if (hasQueries) {
-                nav_drawer.choiceMode = AbsListView.CHOICE_MODE_NONE
-                nav_drawer.isLongClickable = true
-                nav_drawer.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                binding.navDrawer.choiceMode = AbsListView.CHOICE_MODE_NONE
+                binding.navDrawer.isLongClickable = true
+                binding.navDrawer.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                     queries[position].let {
                         val query = it.second.query
                         intent = query.saveInIntent(intent)
@@ -1212,7 +1215,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                     }
 
                 }
-                nav_drawer.onItemLongClickListener = OnItemLongClickListener { _, view, position, _ ->
+                binding.navDrawer.onItemLongClickListener = OnItemLongClickListener { _, view, position, _ ->
                     val query = queries[position]
                     val popupMenu = PopupMenu(this@Simpletask, view)
                     popupMenu.setOnMenuItemClickListener { item ->
@@ -1252,23 +1255,23 @@ class Simpletask : ThemedNoActionBarActivity() {
                     TodoApplication.config.tagTerm,
                     decoratedProjects)
 
-            filter_drawer.adapter = drawerAdapter
-            filter_drawer.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
-            filter_drawer.onItemClickListener = DrawerItemClickListener()
+            binding.filterDrawer.adapter = drawerAdapter
+            binding.filterDrawer.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
+            binding.filterDrawer.onItemClickListener = DrawerItemClickListener()
 
 
             TodoApplication.config.mainQuery.contexts.asSequence()
                     .map { drawerAdapter.getIndexOf("@$it") }
                     .filter { it != -1 }
-                    .forEach { filter_drawer.setItemChecked(it, true) }
+                    .forEach { binding.filterDrawer.setItemChecked(it, true) }
 
             TodoApplication.config.mainQuery.projects.asSequence()
                     .map { drawerAdapter.getIndexOf("+$it") }
                     .filter { it != -1 }
-                    .forEach { filter_drawer.setItemChecked(it, true) }
-            filter_drawer.setItemChecked(drawerAdapter.contextHeaderPosition, TodoApplication.config.mainQuery.contextsNot)
-            filter_drawer.setItemChecked(drawerAdapter.projectsHeaderPosition, TodoApplication.config.mainQuery.projectsNot)
-            filter_drawer.deferNotifyDataSetChanged()
+                    .forEach { binding.filterDrawer.setItemChecked(it, true) }
+            binding.filterDrawer.setItemChecked(drawerAdapter.contextHeaderPosition, TodoApplication.config.mainQuery.contextsNot)
+            binding.filterDrawer.setItemChecked(drawerAdapter.projectsHeaderPosition, TodoApplication.config.mainQuery.projectsNot)
+            binding.filterDrawer.deferNotifyDataSetChanged()
         }
 
         private fun updateConnectivityIndicator() {
@@ -1276,14 +1279,14 @@ class Simpletask : ThemedNoActionBarActivity() {
             // Red -> changes pending
             // Yellow -> offline
             if (TodoApplication.config.changesPending) {
-                pendingchanges.visibility = View.VISIBLE
-                offline.visibility = View.GONE
+                binding.pendingchanges.visibility = View.VISIBLE
+                binding.offline.visibility = View.GONE
             } else if (!FileStore.isOnline) {
-                pendingchanges.visibility = View.GONE
-                offline.visibility = View.VISIBLE
+                binding.pendingchanges.visibility = View.GONE
+                binding.offline.visibility = View.VISIBLE
             } else {
-                pendingchanges.visibility = View.GONE
-                offline.visibility = View.GONE
+                binding.pendingchanges.visibility = View.GONE
+                binding.offline.visibility = View.GONE
             }
         }
     }
