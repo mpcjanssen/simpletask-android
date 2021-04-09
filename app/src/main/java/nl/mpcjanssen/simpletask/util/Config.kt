@@ -66,8 +66,6 @@ class Config(app: TodoApplication) : Preferences(app) {
             }
         }
 
-    var lastSeenRemoteId by StringOrNullPreference(R.string.file_current_version_id)
-
     var lastScrollPosition by IntPreference(R.string.ui_last_scroll_position, -1)
 
     var lastScrollOffset by IntPreference(R.string.ui_last_scroll_offset, -1)
@@ -205,7 +203,7 @@ class Config(app: TodoApplication) : Preferences(app) {
     fun clearCache() {
         cachedContents = null
         todoList = null
-        lastSeenRemoteId = null
+        FileStore.todoNameChanged()
     }
 
     val isAutoArchive by BooleanPreference(R.string.auto_archive_pref_key, false)

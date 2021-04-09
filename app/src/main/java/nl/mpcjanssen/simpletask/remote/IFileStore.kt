@@ -21,8 +21,14 @@ interface IFileStore {
     val isAuthenticated: Boolean
 
     @Throws(IOException::class)
-    fun loadTasksFromFile(file: File): RemoteContents
-    fun saveTasksToFile(file: File, lines: List<String>, lastRemote: String?, eol: String) : String
+    fun loadTasksFromFile(file: File): List<String>
+
+    fun needSync(file: File) : Boolean
+
+    fun todoNameChanged();
+
+    // Save the tasks and return the new remote Filename
+    fun saveTasksToFile(file: File, lines: List<String>, eol: String) : File
 
     // Handle login and logout
     fun loginActivity(): KClass<*>?
@@ -35,9 +41,6 @@ interface IFileStore {
     fun writeFile(file: File, contents: String)
 
     val isOnline: Boolean
-
-    // Retrieve the remote file version
-    fun getRemoteVersion(file: File): String?
 
     // Return the default todo.txt path
     fun getDefaultFile(): File
@@ -62,7 +65,6 @@ interface IFileStore {
 }
 
 // Data class to return the lines and verion of a remote file.
-data class RemoteContents(val remoteId: String, val contents: List<String>)
 
 // Generic file entry class for use in File dialogs
 data class FileEntry(val file: File, val isFolder: Boolean) {

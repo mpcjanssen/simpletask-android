@@ -252,27 +252,17 @@ class TodoList(val config: Config) {
     private fun reloadaction(file: File) {
         Log.d(tag, "Executing reloadaction")
         broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
-        val needSync = try {
-            val newerVersion = FileStore.getRemoteVersion(config.todoFile)
-            Log.i(tag, "Remote version: $newerVersion (current local ${config.lastSeenRemoteId})")
-            newerVersion != config.lastSeenRemoteId
-        } catch (e: Throwable) {
-            Log.e(tag, "Can't determine remote file version", e)
-            false
-        }
+        val needSync = FileStore.needSync(file)
         if (needSync) {
             Log.i(tag, "Remote version is different, sync")
             try {
-                val remoteContents = FileStore.loadTasksFromFile(file)
-                val items = remoteContents.contents
+                val items = FileStore.loadTasksFromFile(file)
 
                 val newTodoItems = items.map { Task(it) }.toMutableList()
                 synchronized(todoItems) {
                     Log.d(tag, "Fill todolist with ${items.size} items")
-                    Log.i(tag, "Updating cache with remote version ${remoteContents.remoteId}")
                     todoItems = newTodoItems
                     config.todoList = todoItems.toList()
-                    config.lastSeenRemoteId = remoteContents.remoteId
                 }
                 // Update cache
                 // Backup
@@ -314,13 +304,19 @@ class TodoList(val config: Config) {
                     broadcastFileSyncStart(TodoApplication.app.localBroadCastManager)
                     try {
                         Log.i(tag, "Saving todo list, size ${lines.size}")
-                        config.lastSeenRemoteId = fileStore.saveTasksToFile(todoFile, lines, eol = eol, lastRemote = config.lastSeenRemoteId)
-                        Log.i(tag, "Remote version is ${config.lastSeenRemoteId}")
+                        val newFile = fileStore.saveTasksToFile(todoFile, lines, eol = eol).canonicalPath
 
                         if (config.changesPending) {
                             // Remove the red bar
                             config.changesPending = false
                             broadcastUpdateStateIndicator(TodoApplication.app.localBroadCastManager)
+                        }
+                        if (newFile != todoFile.canonicalPath) {
+                            // The file was written under another name
+                            // Usually this means the was a conflict.
+                            Log.i(tag, "Filename was changed remotely. New name is: $newFile")
+                            showToastLong(TodoApplication.app, "Filename was changed remotely. New name is: $newFile")
+                            TodoApplication.app.switchTodoFile(File(newFile))
                         }
 
                     } catch (e: Exception) {
@@ -334,20 +330,17 @@ class TodoList(val config: Config) {
                 }
             }
             val idleSeconds = TodoApplication.config.idleBeforeSaveSeconds
-            if (idleSeconds == 0) {
-                saveAction()
-            } else {
-                timer = object : CountDownTimer(idleSeconds * 1000L, 1000) {
-                    override fun onFinish() {
-                        Log.d(tag, "Executing pending Save")
-                        saveAction()
-                    }
-                    override fun onTick(p0: Long) {
-                        Log.d(tag, "Scheduled save in $p0")
-                    }
-                }.start()
 
-            }
+            timer = object : CountDownTimer(idleSeconds * 1000L, 1000) {
+                override fun onFinish() {
+                    Log.d(tag, "Executing pending Save")
+                    saveAction()
+                }
+                override fun onTick(p0: Long) {
+                    Log.d(tag, "Scheduled save in $p0")
+                }
+            }.start()
+
         }
     }
 

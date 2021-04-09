@@ -11,6 +11,7 @@ import com.dropbox.core.v2.files.DownloadErrorException
 import com.dropbox.core.v2.files.FileMetadata
 import com.dropbox.core.v2.files.FolderMetadata
 import com.dropbox.core.v2.files.WriteMode
+import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.remote.IFileStore.Companion.ROOT_DIR
 import nl.mpcjanssen.simpletask.util.*
@@ -28,11 +29,11 @@ object FileStore : IFileStore {
 
     private val mApp = TodoApplication.app
 
-    var accessToken by TodoApplication.config.StringOrNullPreference(OAUTH2_TOKEN)
+    internal var accessToken by TodoApplication.config.StringOrNullPreference(OAUTH2_TOKEN)
+    private var lastSeenRemoteId by TodoApplication.config.StringOrNullPreference(R.string.file_current_version_id)
+    private var _dbxClient: DbxClientV2? = null
 
-    var _dbxClient: DbxClientV2? = null
-
-    val dbxClient: DbxClientV2
+    private val dbxClient: DbxClientV2
         get() {
             val newclient = _dbxClient ?: initDbxClient()
             _dbxClient = newclient
@@ -72,16 +73,6 @@ object FileStore : IFileStore {
         accessToken = null
     }
 
-    override fun getRemoteVersion(file: File): String {
-        try {
-            val data = dbxClient.files().getMetadata(file.canonicalPath) as FileMetadata
-            return data.rev
-        } catch (e: InvalidAccessTokenException) {
-            broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
-            accessToken = null
-            return ""
-        }
-    }
 
     override val isOnline: Boolean
         get() {
@@ -90,7 +81,7 @@ object FileStore : IFileStore {
             return netInfo != null && netInfo.isConnected
         }
 
-    override fun loadTasksFromFile(file: File): RemoteContents {
+    override fun loadTasksFromFile(file: File): List<String> {
 
         // If we load a file and changes are pending, we do not want to overwrite
         // our local changes, instead we upload local and handle any conflicts
@@ -113,42 +104,51 @@ object FileStore : IFileStore {
             readLines.add(line)
         }
         openFileStream.close()
-        return RemoteContents(remoteId = fileInfo.rev, contents = readLines)
+        return readLines
     }
+
+    override fun needSync(file: File): Boolean {
+        try {
+            val data = dbxClient.files().getMetadata(file.canonicalPath) as FileMetadata
+            return data.rev != lastSeenRemoteId
+        } catch (e: InvalidAccessTokenException) {
+            broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+            accessToken = null
+            return true
+        }
+    }
+
+    override fun todoNameChanged() {
+        lastSeenRemoteId = ""
+    }
+
 
     override fun loginActivity(): KClass<*>? {
         return LoginScreen::class
     }
 
     @Throws(IOException::class)
-    override fun saveTasksToFile(file: File, lines: List<String>, lastSeen: String?, eol: String) : String {
+    override fun saveTasksToFile(file: File, lines: List<String>, eol: String) : File {
         Log.i(TAG, "Saving ${lines.size} tasks to Dropbox.")
         val contents = join(lines, eol) + eol
 
-        val rev = lastSeen
-        Log.i(TAG, "Last seen rev $rev")
+        Log.i(TAG, "Last seen rev $lastSeenRemoteId")
 
         val toStore = contents.toByteArray(charset("UTF-8"))
         val `in` = ByteArrayInputStream(toStore)
         Log.i(TAG, "Saving to file $file")
         val uploadBuilder = dbxClient.files().uploadBuilder(file.canonicalPath)
-        uploadBuilder.withAutorename(true).withMode(if (rev != null) WriteMode.update(rev) else null)
+        uploadBuilder.withAutorename(true).withMode(if (lastSeenRemoteId != null) WriteMode.update(lastSeenRemoteId) else null)
         val uploaded = try {
              uploadBuilder.uploadAndFinish(`in`)
         }  finally {
             `in`.close()
         }
         Log.i(TAG, "New rev " + uploaded.rev)
+        lastSeenRemoteId = uploaded.rev
         val newName = uploaded.pathDisplay
 
-        if (newName != file.canonicalPath) {
-            // The file was written under another name
-            // Usually this means the was a conflict.
-            Log.i(TAG, "Filename was changed remotely. New name is: $newName")
-            showToastLong(mApp, "Filename was changed remotely. New name is: $newName")
-            mApp.switchTodoFile(File(newName))
-        }
-        return uploaded.rev
+        return File(newName)
     }
 
     override fun appendTaskToFile(file: File, lines: List<String>, eol: String) {
