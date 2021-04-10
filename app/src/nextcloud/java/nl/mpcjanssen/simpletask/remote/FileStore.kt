@@ -114,7 +114,7 @@ object FileStore : IFileStore {
         val fileInfo = res.data[0] as RemoteFile
         val cachePath = File(cacheDir, file.path).canonicalPath
         readLines.addAll(File(cachePath).readLines())
-        val currentVersionId = fileInfo.etag
+        lastSeenRemoteId = fileInfo.etag
         return readLines
     }
 

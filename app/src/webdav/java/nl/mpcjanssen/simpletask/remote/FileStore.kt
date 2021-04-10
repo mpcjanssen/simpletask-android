@@ -93,6 +93,7 @@ object FileStore : IFileStore {
         }
         getClient()?.let {
             val readLines = it.get(url(file)).bufferedReader(Charsets.UTF_8).readLines()
+            lastSeenRemoteId = getRemoteVersion(file)
             return readLines
         }?:  throw TodoException("WebDav exception client is null")
     }

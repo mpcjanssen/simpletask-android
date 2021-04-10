@@ -46,6 +46,7 @@ object FileStore : IFileStore {
         val lines = file.readLines()
         Log.i(TAG, "Read ${lines.size} lines from $file")
         setWatching(file)
+        lastSeenRemoteId = file.lastModified().toString()
         return lines
     }
 

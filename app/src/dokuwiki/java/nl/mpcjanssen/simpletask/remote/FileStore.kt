@@ -73,6 +73,7 @@ object FileStore : IFileStore {
 
     override fun loadTasksFromFile(file: File): List<String> {
         val content = client.execute("wiki.getPage", arrayOf(file.wikiPath())) as String
+        lastSeenRemoteId = getRemoteVersion(file)
         return content.lines()
     }
 

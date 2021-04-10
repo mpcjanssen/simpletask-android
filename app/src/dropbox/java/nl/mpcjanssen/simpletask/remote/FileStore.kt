@@ -97,6 +97,7 @@ object FileStore : IFileStore {
         val openFileStream = download.inputStream
         val fileInfo = download.result
         Log.i(TAG, "The file's rev is: " + fileInfo.rev)
+        lastSeenRemoteId = fileInfo.rev
 
         val reader = BufferedReader(InputStreamReader(openFileStream, "UTF-8"))
 
