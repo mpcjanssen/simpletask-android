@@ -138,7 +138,7 @@ object FileStore : IFileStore {
         val `in` = ByteArrayInputStream(toStore)
         Log.i(TAG, "Saving to file $file")
         val uploadBuilder = dbxClient.files().uploadBuilder(file.canonicalPath)
-        uploadBuilder.withAutorename(true).withMode(if (lastSeenRemoteId != null) WriteMode.update(lastSeenRemoteId) else null)
+        uploadBuilder.withAutorename(true).withMode(if (!lastSeenRemoteId.isNullOrBlank()) WriteMode.update(lastSeenRemoteId) else null)
         val uploaded = try {
              uploadBuilder.uploadAndFinish(`in`)
         }  finally {
