@@ -4,13 +4,12 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import nl.mpcjanssen.simpletask.remote.FileStore
-import nl.mpcjanssen.simpletask.util.Config
 import org.json.JSONObject
 
 import java.io.File
 
 object QueryStore {
-    val TAG = "QueryStore"
+    const val TAG = "QueryStore"
 
     fun importFilters(importFile: File) {
         FileStore.readFile(importFile) { contents ->
@@ -18,7 +17,7 @@ object QueryStore {
             jsonFilters.keys().forEach { name ->
                 val json = jsonFilters.getJSONObject(name)
                 val newQuery = Query(json, luaModule = "mainui")
-                QueryStore.save(newQuery, name)
+                save(newQuery, name)
             }
         }
     }
@@ -62,21 +61,21 @@ object QueryStore {
 
 object LegacyQueryStore {
     private const val ID_PREFIX: String = "filter_"
-    val TAG = "QueryStore"
+    const val TAG = "QueryStore"
 
 
     fun ids() : List<String> {
         val prefsPath = "../shared_prefs"
         val prefsXml = File(TodoApplication.app.filesDir, "$prefsPath/")
-        if (prefsXml.exists() && prefsXml.isDirectory) {
+        return if (prefsXml.exists() && prefsXml.isDirectory) {
             val ids = prefsXml.listFiles { _, name -> name.startsWith(ID_PREFIX) }
-                    .map { it.relativeTo(prefsXml).name }
-                    .map { it -> it.substringBeforeLast(".xml") }
+                    ?.map { it.relativeTo(prefsXml).name }
+                    ?.map { it -> it.substringBeforeLast(".xml") } ?: emptyList()
             Log.d(TAG, "Saved applyFilter ids: $ids")
-            return ids
+            ids
         } else {
             Log.w(TAG, "No pref_xml folder ${prefsXml.path}")
-            return emptyList()
+            emptyList()
         }
     }
 
