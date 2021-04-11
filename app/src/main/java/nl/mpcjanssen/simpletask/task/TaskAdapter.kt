@@ -199,7 +199,7 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
             visibleLines = newVisibleLines
             caller.showListViewProgress(false)
             if (TodoApplication.config.lastScrollPosition != -1) {
-                val manager = caller.listView?.layoutManager as LinearLayoutManager?
+                val manager = caller.listView.layoutManager as LinearLayoutManager?
                 val position = TodoApplication.config.lastScrollPosition
                 val offset = TodoApplication.config.lastScrollOffset
                 Log.i(tag, "Restoring scroll offset $position, $offset")

@@ -23,9 +23,9 @@ class FileDialog {
         // Use an async task because we need to manage the UI
         Thread(Runnable {
             val unsortedFileList: List<FileEntry> = try {
-                runOnMainThread(Runnable {
+                runOnMainThread {
                     loadingOverlay = showLoadingOverlay(act, null, true)
-                })
+                }
                 fileStore.loadFileList(startFolder, txtOnly)
             } catch (e: Throwable) {
                 Log.w(TAG, "Can't load fileList from ${startFolder.path}")
@@ -38,9 +38,9 @@ class FileDialog {
                     null
                 }
             } finally {
-                runOnMainThread(Runnable {
+                runOnMainThread {
                     loadingOverlay = showLoadingOverlay(act, loadingOverlay, false)
-                })
+                }
             } ?: return@Runnable
             Log.i(TAG, "File list from ${startFolder.path} loaded")
             val fileList = unsortedFileList.sortedWith(compareBy({ !it.isFolder }, { it.file.name })).toMutableList()
@@ -48,14 +48,14 @@ class FileDialog {
             if (startFolder.canonicalPath != ROOT_DIR) {
                 fileList.add(0, FileEntry(File(PARENT_DIR), isFolder = true))
             }
-            runOnMainThread(Runnable {
+            runOnMainThread {
                 val builder = AlertDialog.Builder(act)
                 builder.setTitle(startFolder.canonicalPath)
                 val namesList = fileList.map { it.file.path }.toTypedArray()
                 builder.setItems(namesList, DialogInterface.OnClickListener { dialog, which ->
                     val fileNameChosen = namesList[which]
                     if (fileNameChosen == PARENT_DIR) {
-                        createFileDialog(act, fileStore, startFolder.parentFile, txtOnly)
+                        createFileDialog(act, fileStore, startFolder.parentFile ?: File("/"), txtOnly)
                         return@OnClickListener
                     }
 
@@ -80,7 +80,7 @@ class FileDialog {
                     dialog.dismiss()
                 }
                 builder.create().show()
-            })
+            }
         }).start()
     }
 

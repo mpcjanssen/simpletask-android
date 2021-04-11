@@ -60,7 +60,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
     var uuid: String?
     get () = getFirstToken<UUIDToken>()?.valueStr
-    set (uuid: String?) {
+    set (uuid) {
         uuid?.let { upsertToken(UUIDToken(it)) }
     }
 
@@ -378,7 +378,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                 }
 
                 nextToken = lexemes.getOrElse(0) { "" }
-                MATCH_SINGLE_DATE.reset(nextToken)?.apply {
+                MATCH_SINGLE_DATE.reset(nextToken).apply {
                     if (matches()) {
                         tokens.add(CreateDateToken(lexemes.first()))
                         lexemes = lexemes.drop(1)
@@ -398,7 +398,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                             return@forEach
                         }
                     }
-                    MATCH_HIDDEN.reset(lexeme)?.apply {
+                    MATCH_HIDDEN.reset(lexeme).apply {
                         if (matches()) {
                             tokens.add(HiddenToken(group(1)))
                             return@forEach
