@@ -37,11 +37,9 @@ import android.webkit.MimeTypeMap
 import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
 import androidx.core.content.FileProvider
-import androidx.core.widget.NestedScrollView
 
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
-import nl.mpcjanssen.simpletask.databinding.AddTaskBinding
 import nl.mpcjanssen.simpletask.databinding.MainBinding
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.*
@@ -161,7 +159,7 @@ class Simpletask : ThemedNoActionBarActivity() {
                                         val file = File(rootFolder, url.substring(7))
                                         actionIntent = Intent(Intent.ACTION_VIEW)
 
-                                        val contentUri = FileProvider.getUriForFile(Simpletask@this, BuildConfig.APPLICATION_ID + ".provider",file);
+                                        val contentUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider",file)
                                         val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension)
                                         actionIntent.setDataAndType(contentUri, mime)
                                         actionIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -323,7 +321,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
 
     override fun onPause() {
-        listView?.let{updateScrollPosition(it)}
+        listView.let{updateScrollPosition(it)}
         super.onPause()
     }
 
@@ -478,14 +476,14 @@ class Simpletask : ThemedNoActionBarActivity() {
             }
         }
 
-        listView?.layoutManager = LinearLayoutManager(this)
-        listView?.adapter = this.taskAdapter
+        listView.layoutManager = LinearLayoutManager(this)
+        listView.adapter = this.taskAdapter
 
         taskAdapter.setFilteredTasks(this, query)
         val listener = ViewTreeObserver.OnScrollChangedListener {
-            listView?.let { updateScrollPosition(it) }
+            listView.let { updateScrollPosition(it) }
         }
-        listView?.viewTreeObserver?.addOnScrollChangedListener(listener)
+        listView.viewTreeObserver?.addOnScrollChangedListener(listener)
 
         binding.fab.setOnClickListener { startAddTaskActivity() }
     }
@@ -634,15 +632,11 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun isDrawerOpen(drawer: Int): Boolean {
-        if (binding.drawerLayout == null) {
-            Log.w(TAG, "Layout was null")
-            return false
-        }
         return binding.drawerLayout.isDrawerOpen(drawer)
     }
 
     private fun closeDrawer(drawer: Int) {
-        binding.drawerLayout?.closeDrawer(drawer)
+        binding.drawerLayout.closeDrawer(drawer)
     }
 
     private fun openSavedFilterDrawer() {
@@ -770,7 +764,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             override fun onClick(input: String) {
                 if (input == "pick") {
                     val today = DateTime.today(TimeZone.getDefault())
-                    val dialog = DatePickerDialog(this@Simpletask, DatePickerDialog.OnDateSetListener { _, year, month, day ->
+                    val dialog = DatePickerDialog(this@Simpletask, { _, year, month, day ->
                         var startMonth = month
                         startMonth++
                         val date = DateTime.forDateOnly(year, startMonth, day)
@@ -969,7 +963,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun startPreferencesActivity() {
         val settingsActivity = Intent(baseContext,
-                nl.mpcjanssen.simpletask.Preferences::class.java)
+                Preferences::class.java)
         startActivityForResult(settingsActivity, REQUEST_PREFERENCES)
     }
 
@@ -1063,7 +1057,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         startActivity(i)
     }
 
-    val listView: RecyclerView?
+    val listView: RecyclerView
         get() {
             val lv = binding.list
             return lv
@@ -1239,10 +1233,10 @@ class Simpletask : ThemedNoActionBarActivity() {
         }
 
         private fun updateTaskList(query: Query, afterOnUi: ()->Unit) {
-            runOnMainThread (Runnable {
+            runOnMainThread {
                 taskAdapter.setFilteredTasks(this@Simpletask, query)
                 runOnUiThread(afterOnUi)
-            })
+            }
         }
 
         private fun updateQuickFilterDrawer() {
