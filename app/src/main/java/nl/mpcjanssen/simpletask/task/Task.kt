@@ -298,7 +298,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         }
     }
 
-    /* Adds the task to list Listname
+    /* Adds the task to list listName
 ** If the task is already on that list, it does nothing
  */
     fun addList(listName: String) {
@@ -400,7 +400,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                     }
                     MATCH_HIDDEN.reset(lexeme).apply {
                         if (matches()) {
-                            tokens.add(HiddenToken(group(1)))
+                            group(1)?.let { tokens.add(HiddenToken(it)) }
                             return@forEach
                         }
                     }
@@ -415,25 +415,25 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
                     MATCH_DUE.reset(lexeme).apply {
                         if (matches()) {
-                            tokens.add(DueDateToken(group(1)))
+                            group(1)?.let { tokens.add(DueDateToken(it)) }
                             return@forEach
                         }
                     }
                     MATCH_THRESHOLD.reset(lexeme).apply {
                         if (matches()) {
-                            tokens.add(ThresholdDateToken(group(1)))
+                            group(1)?.let { tokens.add(ThresholdDateToken(it)) }
                             return@forEach
                         }
                     }
                     MATCH_RECURRENCE.reset(lexeme).apply {
                         if (matches()) {
-                            tokens.add(RecurrenceToken(group(1)))
+                            group(1)?.let { tokens.add(RecurrenceToken(it)) }
                             return@forEach
                         }
                     }
                     MATCH_UUID.reset(lexeme).apply {
                         if (matches()) {
-                            tokens.add(UUIDToken(group(1)))
+                            group(1)?.let { tokens.add(UUIDToken(it)) }
                             return@forEach
                         }
                     }
@@ -451,7 +451,11 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                     }
                     MATCH_EXT.reset(lexeme).apply {
                         if (matches()) {
-                            tokens.add(ExtToken(group(1), group(2)))
+                            val extName = group(1)
+                            val extValue = group(2)
+                            if (extName!=null && extValue != null) {
+                                tokens.add(ExtToken(extName, extValue))
+                            }
                             return@forEach
                         }
                     }
