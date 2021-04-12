@@ -24,7 +24,7 @@ data class NamedQuery(val name: String, val query: Query) {
         fun initFromPrefs(prefs: SharedPreferences, module: String, fallbackTitle: String ) : NamedQuery {
             val query = Query(prefs, luaModule = module)
             val name = prefs.getString(INTENT_TITLE, null)
-                    ?: JSONObject(prefs.getString(Query.INTENT_JSON, "{}")).optString(INTENT_TITLE, fallbackTitle)
+                    ?: JSONObject(prefs.getString(Query.INTENT_JSON, "{}")!!).optString(INTENT_TITLE, fallbackTitle)
 
             return NamedQuery(name, query)
         }
@@ -368,7 +368,7 @@ data class Query(val luaModule: String) {
 
     private fun initFromIntent(intent: Intent): Query {
         if (intent.hasExtra(INTENT_JSON)) {
-            val jsonFromIntent = intent.getStringExtra(INTENT_JSON)
+            val jsonFromIntent = intent.getStringExtra(INTENT_JSON)!!
             initFromJSON(JSONObject(jsonFromIntent))
         } else {
             // Older non JSON version of applyFilter. Use legacy loading
