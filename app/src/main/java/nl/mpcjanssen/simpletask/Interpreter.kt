@@ -32,7 +32,7 @@ object Interpreter :  AbstractInterpreter() {
         return callZeroArgLuaFunction(CONFIG_TASKLIST_TEXT_SIZE_SP) { it.tofloat() }
     }
 
-    // Callback to determine the theme. Return true for datk.
+    // Callback to determine the theme. Return true for dark.
     override fun configTheme(): String? {
         return callZeroArgLuaFunction(CONFIG_THEME) { it.toString() }
     }
@@ -100,17 +100,21 @@ object Interpreter :  AbstractInterpreter() {
     }
 
     override fun onGroupCallback(moduleName: String, t: Task): String? {
-        val module = try {
-            globals.get(moduleName).checktable()
-        } catch (e: LuaError) {
-            Log.e(TAG, "Lua error: ${e.message} )")
-            LuaValue.NIL
-        }
+        val module = getModule(moduleName)
         if (module == LuaValue.NIL) {
             return null
         }
         val callback = module.get(ON_GROUP_NAME)
         return executeCallback(callback, t)
+    }
+
+    private fun getModule(moduleName: String): LuaValue {
+        return try {
+            globals.get(moduleName).checktable()
+        } catch (e: LuaError) {
+            Log.e(TAG, "Lua error: ${e.message} )")
+            LuaValue.NIL
+        }
     }
 
     private fun executeCallback(callback: LuaValue, t: Task): String? {
@@ -128,12 +132,7 @@ object Interpreter :  AbstractInterpreter() {
     }
 
     override fun onDisplayCallback(moduleName: String, t: Task): String? {
-        val module = try {
-            globals.get(moduleName).checktable()
-        } catch (e: LuaError) {
-            Log.e(TAG, "Lua error: ${e.message} )")
-            LuaValue.NIL
-        }
+        val module = getModule(moduleName)
         if (module == LuaValue.NIL) {
             return null
         }
@@ -144,16 +143,11 @@ object Interpreter :  AbstractInterpreter() {
     override fun onAddCallback(t: Task): Task? {
         val callback = globals.get(ON_ADD_NAME)
         val result = executeCallback(callback, t)
-        if (result!=null) return Task(result) else return null
+        return if (result!=null) Task(result) else null
     }
 
     override fun onTextSearchCallback(moduleName: String, input: String, search: String, caseSensitive: Boolean): Boolean? {
-        val module = try {
-            globals.get(moduleName).checktable()
-        } catch (e: LuaError) {
-            Log.e(TAG, "Lua error: ${e.message} )")
-            LuaValue.NIL
-        }
+        val module = getModule(moduleName)
         if (module == LuaValue.NIL) {
             return null
         }
