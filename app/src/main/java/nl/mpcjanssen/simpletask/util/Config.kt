@@ -1,5 +1,6 @@
 package nl.mpcjanssen.simpletask.util
 
+import android.os.Environment
 import android.util.Log
 import me.smichel.android.KPreferences.Preferences
 import nl.mpcjanssen.simpletask.*
@@ -159,7 +160,7 @@ class Config(app: TodoApplication) : Preferences(app) {
 
     val showCalendar by BooleanPreference(R.string.ui_show_calendarview, false)
 
-    val tasklistTextSize: Float?
+    val tasklistTextSize: Float
         get() {
             val luaValue = Interpreter.tasklistTextSize()
             if (luaValue != null) {
@@ -220,7 +221,7 @@ class Config(app: TodoApplication) : Preferences(app) {
 
     var rightDrawerDemonstrated by BooleanPreference(R.string.right_drawer_demonstrated, false)
 
-    val localFileRoot by StringPreference(R.string.local_file_root, "/sdcard/")
+    val localFileRoot by StringPreference(R.string.local_file_root, Environment.getExternalStorageDirectory().getPath())
 
     val hasColorDueDates by BooleanPreference(R.string.color_due_date_key, true)
 

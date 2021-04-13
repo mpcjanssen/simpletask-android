@@ -3,7 +3,6 @@ package nl.mpcjanssen.simpletask
 
 import android.util.Log
 import nl.mpcjanssen.simpletask.task.Task
-import nl.mpcjanssen.simpletask.task.TextToken
 import nl.mpcjanssen.simpletask.util.*
 import org.luaj.vm2.*
 import org.luaj.vm2.lib.OneArgFunction
@@ -30,12 +29,12 @@ object Interpreter :  AbstractInterpreter() {
     }
 
     override fun tasklistTextSize(): Float? {
-        return callZeroArgLuaFunction(globals, CONFIG_TASKLIST_TEXT_SIZE_SP) { it -> it.tofloat() }
+        return callZeroArgLuaFunction(CONFIG_TASKLIST_TEXT_SIZE_SP) { it.tofloat() }
     }
 
     // Callback to determine the theme. Return true for datk.
     override fun configTheme(): String? {
-        return callZeroArgLuaFunction(globals, CONFIG_THEME) { it -> it.toString() }
+        return callZeroArgLuaFunction(CONFIG_THEME) { it.toString() }
     }
 
     override fun onFilterCallback(moduleName: String, t: Task): Pair<Boolean, String> {
@@ -97,16 +96,7 @@ object Interpreter :  AbstractInterpreter() {
             return ""
         }
         val callback = module.get(ON_SORT_NAME)
-        if (!callback.isnil()) {
-            val args = fillOnFilterVarargs(t)
-            try {
-                val result = callback.call(args.arg1(), args.arg(2), args.arg(3))
-                return result.tojstring()
-            } catch (e: LuaError) {
-                Log.d(TAG, "Lua execution failed " + e.message)
-            }
-        }
-        return ""
+        return executeCallback(callback, t) ?: ""
     }
 
     override fun onGroupCallback(moduleName: String, t: Task): String? {
@@ -120,6 +110,10 @@ object Interpreter :  AbstractInterpreter() {
             return null
         }
         val callback = module.get(ON_GROUP_NAME)
+        return executeCallback(callback, t)
+    }
+
+    private fun executeCallback(callback: LuaValue, t: Task): String? {
         if (!callback.isnil()) {
             val args = fillOnFilterVarargs(t)
             try {
@@ -127,6 +121,7 @@ object Interpreter :  AbstractInterpreter() {
                 return result.tojstring()
             } catch (e: LuaError) {
                 Log.d(TAG, "Lua execution failed " + e.message)
+
             }
         }
         return null
@@ -143,30 +138,13 @@ object Interpreter :  AbstractInterpreter() {
             return null
         }
         val callback = module.get(ON_DISPLAY_NAME)
-        if (!callback.isnil()) {
-            val args = fillOnFilterVarargs(t)
-            try {
-                val result = callback.call(args.arg1(), args.arg(2), args.arg(3))
-                return result.tojstring()
-            } catch (e: LuaError) {
-                Log.d(TAG, "Lua execution failed " + e.message)
-            }
-        }
-        return null
+        return executeCallback(callback, t)
     }
 
     override fun onAddCallback(t: Task): Task? {
         val callback = globals.get(ON_ADD_NAME)
-        if (!callback.isnil()) {
-            val args = fillOnFilterVarargs(t)
-            try {
-                val result = callback.call(args.arg1(), args.arg(2), args.arg(3))
-                return Task(result.tojstring())
-            } catch (e: LuaError) {
-                Log.d(TAG, "Lua execution failed " + e.message)
-            }
-        }
-        return null
+        val result = executeCallback(callback, t)
+        if (result!=null) return Task(result) else return null
     }
 
     override fun onTextSearchCallback(moduleName: String, input: String, search: String, caseSensitive: Boolean): Boolean? {
@@ -259,7 +237,7 @@ object Interpreter :  AbstractInterpreter() {
     // Call a Lua function `name`
     // Use unpackResult to transform the resulting LuaValue to the expected return type `T`
     // Returns null if the function is not found or if a `LuaError` occurred
-    private fun <T> callZeroArgLuaFunction(globals: LuaValue, name: String, unpackResult: (LuaValue) -> T?): T? {
+    private fun <T> callZeroArgLuaFunction(name: String, unpackResult: (LuaValue) -> T?): T? {
         val function = globals.get(name)
         if (!function.isnil()) {
             try {
