@@ -1,7 +1,6 @@
 package nl.mpcjanssen.simpletask.remote
 
 import nl.mpcjanssen.simpletask.TodoApplication
-import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.util.broadcastFileSync
 import java.io.File
 import java.io.IOException
@@ -10,11 +9,12 @@ import kotlin.reflect.KClass
 /**
  * Interface definition of the storage backend used.
  * All functions are run in a background thread and are properly queued to prevent
- * concurrent Todo list modification.
+ * concurrent file store actions.
  * The implementers of this interface should throw exceptions if anything goes wrong. The logic for handling the
  * errors should be implemented in the users of the FileStore
  * Because some FileStores might be accessing the network to do their job,
  * all file related actions should never be performed on the main thread.
+ * TODO: Make archiving atomic
 
  */
 interface IFileStore {
@@ -25,7 +25,7 @@ interface IFileStore {
 
     fun needSync(file: File) : Boolean
 
-    fun todoNameChanged();
+    fun todoNameChanged()
 
     // Save the tasks and return the new remote Filename
     fun saveTasksToFile(file: File, lines: List<String>, eol: String) : File
