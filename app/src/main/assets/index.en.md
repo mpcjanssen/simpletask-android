@@ -24,9 +24,14 @@ Support
 
 Simpletask is translated using [weblate](https://hosted.weblate.org/engage/simpletask/). Follow the link to contribute.
 
--Join the chat on IRC at [#simpletask on Libera Chat](https://web.libera.chat), or Matrix at [#simpletask:matrix.org](https://matrix.to/#/#simpletask:matrix.org).
-
 If you want to log an issue or feature request for [Simpletask](https://github.com/mpcjanssen/simpletask-android/) you can go to [the tracker](https://github.com/mpcjanssen/simpletask-android/issues). If you find Simpletask useful, you can buy the donate app (see Settings) or donate via [Paypal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=mpc%2ejanssen%40gmail%2ecom&lc=NL&item_name=mpcjanssen%2enl&item_number=Simpletask&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted) me some beers.
+
+
+Community
+---------
+
+Join the chat on IRC at [#simpletask on Libera Chat](https://web.libera.chat), or Matrix at [#simpletask:matrix.org](https://matrix.to/#/#simpletask:matrix.org).
+
 
 Check the menu for more help sections or click below.
 
