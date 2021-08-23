@@ -1,5 +1,11 @@
 ﻿# Changelog
 
+## 10.9.2
+
+### Fixed
+
+- Prevent race condition when saving files leading to possible conflicts.
+
 ## 10.9.0
 
 ### Fixed
