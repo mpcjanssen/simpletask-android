@@ -60,15 +60,16 @@ object FileStore : IFileStore {
     }
 
     fun DavResource.remoteVersion() : String {
-        return "${this.etag}:${this.modified}"
+        return "${this.modified}"
     }
 
 
 
     private fun getRemoteVersion(file: File): String {
         getClient()?.let {
-            val res = it.list(url(file))[0]
-            Log.e(TAG, "Getting metadata for ${url(file)}, etag: ${res.etag}, modified: ${res.modified}")
+            val url = url(file)
+            val res = it.list(url)[0]
+            Log.i(TAG, "Getting metadata for ${url}, etag: ${res.etag}, modified: ${res.modified}")
             return res.remoteVersion()
 
         } ?: throw TodoException("WebDav exception client is null")
@@ -118,17 +119,16 @@ object FileStore : IFileStore {
             Log.i(TAG, "Uploading file to ${url(file)}")
             val contents = join(lines, eol) + eol
             val remoteVersion = getRemoteVersion(file)
-            val fileUrl = url(file)
-            val savedFile = File(if (lastSeenRemoteId == null || remoteVersion == lastSeenRemoteId) {
-                client.put(fileUrl, contents.toByteArray(Charsets.UTF_8))
-                fileUrl
+            val savedFile = if (lastSeenRemoteId == null || remoteVersion == lastSeenRemoteId) {
+                client.put(url(file), contents.toByteArray(Charsets.UTF_8))
+                file
             } else {
                 Log.i(TAG,"File conflict remote: $remoteVersion, last seen: $lastSeenRemoteId ")
-                val urlWithoutTxt = "\\.txt$".toRegex().replace(fileUrl, "")
-                val newUrl = urlWithoutTxt + "_conflict_" + UUID.randomUUID() + ".txt"
-                client.put(newUrl, contents.toByteArray(Charsets.UTF_8))
-                newUrl
-            })
+                val fileWithoutTxt = file.nameWithoutExtension
+                val newFile = File(fileWithoutTxt + "_conflict_" + UUID.randomUUID() + ".txt")
+                client.put(url(newFile), contents.toByteArray(Charsets.UTF_8))
+                newFile
+            }
             lastSeenRemoteId = getRemoteVersion(savedFile)
             return savedFile
         } ?:  throw TodoException("WebDav exception client is null")
