@@ -1,5 +1,12 @@
 ﻿# Changelog
 
+## 10.9.3
+
+### Fixed
+
+- Saving of the file using WebDAV. Fixes #1126.
+- Saving of the file using WebDAV. Fixes #1126.
+
 ## 10.9.2
 
 ### Fixed

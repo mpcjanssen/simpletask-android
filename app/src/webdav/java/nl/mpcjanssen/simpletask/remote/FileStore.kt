@@ -59,8 +59,8 @@ object FileStore : IFileStore {
         return null
     }
 
-    fun DavResource.remoteVersion() : String {
-        return "${this.modified}"
+    private fun DavResource.remoteVersion() : String {
+        return "${this.modified}:${this.etag}"
     }
 
 
