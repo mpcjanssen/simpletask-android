@@ -39,4 +39,15 @@ class BugsTest : TestCase() {
         Assert.assertEquals(null, t.dueDate)
         Assert.assertEquals(null, t.thresholdDate)
     }
+
+    fun testBug1103donttrim() {
+        val t = Task("Test with trailing space ")
+        Assert.assertEquals("Test with trailing space ", t.text)
+    }
+
+    fun testBug1103() {
+        val t = Task("Test with trailing space ")
+        t.addTag("tag")
+        Assert.assertEquals("Test with trailing space +tag", t.text)
+    }
 }
