@@ -304,6 +304,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     fun addList(listName: String) {
         listName.split(Regex("\\s+")).forEach {
             if (lists?.contains(it)!=true) {
+                trimTaskEnd()
                 tokens.add(ListToken("@$it"))
             }
         }
@@ -315,8 +316,15 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     fun addTag(tagName: String) {
         tagName.split(Regex("\\s+")).forEach {
             if (tags?.contains(it)!=true) {
+                trimTaskEnd()
                 tokens.add(TagToken("+$it"))
             }
+        }
+    }
+
+    private fun trimTaskEnd() {
+        while (tokens.last() is WhiteSpaceToken) {
+            tokens.removeLast()
         }
     }
 
