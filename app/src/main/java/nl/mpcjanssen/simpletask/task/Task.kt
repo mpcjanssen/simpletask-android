@@ -473,8 +473,24 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                         tokens.add(TextToken(lexeme))
                     }
                 }
-                return tokens
+
+                return removeTrailingWhiteSpaceToken(tokens);
             }
+        }
+
+        private fun removeTrailingWhiteSpaceToken(tokens: ArrayList<TToken>): ArrayList<TToken> {
+            var endIndex = tokens.lastIndex;
+            for (i in tokens.lastIndex downTo 0) {
+                if(tokens[i] is WhiteSpaceToken) {
+                    endIndex = i-1;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return tokens.slice(0..endIndex) as ArrayList<TToken>;
         }
     }
 }
