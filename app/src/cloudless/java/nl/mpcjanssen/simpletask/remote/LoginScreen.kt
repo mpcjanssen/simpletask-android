@@ -28,12 +28,10 @@ import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
-import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.Simpletask
 import nl.mpcjanssen.simpletask.ThemedNoActionBarActivity
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.databinding.LoginBinding
-import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.showToastLong
 
 class LoginScreen : ThemedNoActionBarActivity() {
@@ -52,6 +50,10 @@ class LoginScreen : ThemedNoActionBarActivity() {
         loginButton.setOnClickListener {
             startLogin()
         }
+        val newUserButton = binding.newUser
+        newUserButton.setOnClickListener {
+            startSignUp()
+        }
     }
 
     private fun switchToTodolist() {
@@ -69,9 +71,16 @@ class LoginScreen : ThemedNoActionBarActivity() {
         }
     }
 
-    internal fun startLogin() {
+    private fun startLogin() {
         ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_PERMISSION)
+            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_PERMISSION)
+        FileDialog.requestFolder(this)
+    }
+
+    private fun startSignUp() {
+        ActivityCompat.requestPermissions(this,
+            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_PERMISSION)
+        FileDialog.createFile(this)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {

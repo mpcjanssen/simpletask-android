@@ -27,7 +27,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/ok"
+            android:text="@string/select_existing"
+            android:textSize="8pt" />
+
+
+        <Button
+            android:id="@+id/new_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/create_new"
             android:textSize="8pt" />
 
 </LinearLayout>

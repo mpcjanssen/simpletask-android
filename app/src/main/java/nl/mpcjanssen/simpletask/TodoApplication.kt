@@ -36,7 +36,6 @@ import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.*
 import android.os.SystemClock
-import androidx.multidex.MultiDexApplication
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.util.Log
 import androidx.room.Room
@@ -47,7 +46,6 @@ import nl.mpcjanssen.simpletask.dao.TodoFile
 import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileDialog
 import nl.mpcjanssen.simpletask.remote.FileStore
-import nl.mpcjanssen.simpletask.task.Task
 import nl.mpcjanssen.simpletask.task.TodoList
 import nl.mpcjanssen.simpletask.util.*
 import java.io.File
@@ -238,7 +236,6 @@ class TodoApplication : Application() {
     }
     var today: String = todayAsString
 }
-
 
 object Backupper : BackupInterface {
     override fun backup(file: File, lines: List<String>) {

@@ -12,6 +12,7 @@
 package nl.mpcjanssen.simpletask
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.SearchManager
 import android.content.*
@@ -51,7 +52,9 @@ import android.R.id as androidId
 
 class Simpletask : ThemedNoActionBarActivity() {
     companion object {
-        private val REQUEST_PREFERENCES = 1
+        private const val REQUEST_PREFERENCES = 1
+        const val OPEN_DIRECTORY_REQUEST_CODE = 0xf11e
+        const val CREATE_FILE_REQUEST_CODE = 0xc34e
 
         val URI_BASE = Uri.fromParts("Simpletask", "", null)!!
         val URI_SEARCH = Uri.withAppendedPath(URI_BASE, "search")!!
@@ -204,7 +207,7 @@ class Simpletask : ThemedNoActionBarActivity() {
         val broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, receivedIntent: Intent) {
                 if (receivedIntent.action == Constants.BROADCAST_ACTION_LOGOUT) {
-                    Log.i(TAG, "Logging out from Dropbox")
+                    Log.i(TAG, "Logging out...")
                     finish()
                     FileStoreActionQueue.add("Logout") {
                         try {
@@ -837,6 +840,21 @@ class Simpletask : ThemedNoActionBarActivity() {
             archiveAction()
         }
 
+    }
+
+    override fun onActivityResult( // Receive Permissions
+        requestCode: Int, resultCode: Int, resultData: Intent?) {
+        super.onActivityResult(requestCode, resultCode, resultData)
+        if ((requestCode == OPEN_DIRECTORY_REQUEST_CODE || requestCode == CREATE_FILE_REQUEST_CODE)
+            && resultCode == Activity.RESULT_OK) {
+            resultData?.data?.also { uri ->
+                val contentResolver = applicationContext.contentResolver
+                val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                contentResolver.takePersistableUriPermission(uri, takeFlags)
+                // TODO set Configs to point to dir / file??
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

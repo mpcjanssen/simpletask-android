@@ -142,11 +142,11 @@ class Config(app: TodoApplication) : Preferences(app) {
             }
         }
 
-    private val _widgetTheme by StringPreference(R.string.widget_theme_pref_key, "light_darkactionbar")
+    private val _widgetTheme by StringPreference(R.string.widget_theme_pref_key, "dark")
     val isDarkWidgetTheme: Boolean
         get() = _widgetTheme == "dark"
 
-    private val _activeTheme by StringPreference(R.string.theme_pref_key, "light_darkactionbar")
+    private val _activeTheme by StringPreference(R.string.theme_pref_key, "dark`")
     private val activeThemeString: String
         get() = Interpreter.configTheme() ?: _activeTheme
 
@@ -221,7 +221,7 @@ class Config(app: TodoApplication) : Preferences(app) {
 
     var rightDrawerDemonstrated by BooleanPreference(R.string.right_drawer_demonstrated, false)
 
-    val localFileRoot by StringPreference(R.string.local_file_root, this.context.getExternalFilesDir(null)!!.canonicalPath)
+    val localFileRoot by StringPreference(R.string.local_file_root, this.context.getExternalFilesDir(null)?.canonicalPath ?: "")
 
     val hasColorDueDates by BooleanPreference(R.string.color_due_date_key, true)
 

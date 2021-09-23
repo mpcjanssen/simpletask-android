@@ -3,8 +3,12 @@ package nl.mpcjanssen.simpletask.remote
 import android.app.Activity
 import android.app.Dialog
 import android.content.DialogInterface
+import android.content.Intent
+import android.provider.DocumentsContract
 import androidx.appcompat.app.AlertDialog
 import android.util.Log
+import nl.mpcjanssen.simpletask.Simpletask
+import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.remote.IFileStore.Companion.PARENT_DIR
 import nl.mpcjanssen.simpletask.remote.IFileStore.Companion.ROOT_DIR
 import nl.mpcjanssen.simpletask.util.ListenerList
@@ -18,6 +22,7 @@ class FileDialog {
     private val fileListenerList = ListenerList<FileSelectedListener>()
     private var loadingOverlay: Dialog? = null
     private var showingDialog: AlertDialog? = null
+
 
     fun createFileDialog(act: Activity, fileStore: IFileStore, startFolder: File, txtOnly: Boolean) {
         // Use an async task because we need to manage the UI
@@ -96,7 +101,6 @@ class FileDialog {
         })
     }
 
-
     companion object {
         const val TAG = "FileDialog"
         fun browseForNewFile(act: Activity, fileStore: FileStore, folder: File, listener: FileSelectedListener, txtOnly: Boolean) {
@@ -112,6 +116,23 @@ class FileDialog {
             } catch (e: Exception) {
                 Log.e(TAG, "Browsing for new file failed", e)
             }
+        }
+
+        fun requestFolder(act: Activity, folder: File? = TodoApplication.config.todoFile.parentFile) {
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+            if (folder != null) intent.apply { putExtra(DocumentsContract.EXTRA_INITIAL_URI, folder.toURI()) }
+            act.startActivityForResult(intent, Simpletask.OPEN_DIRECTORY_REQUEST_CODE)
+        }
+
+        fun createFile(act: Activity, file: File = TodoApplication.config.todoFile) {
+            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                addCategory(Intent.CATEGORY_OPENABLE)
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TITLE, file.name )
+                if (file.parentFile != null) putExtra(DocumentsContract.EXTRA_INITIAL_URI, file.parentFile.toURI())
+            }
+            act.startActivityForResult(intent, Simpletask.CREATE_FILE_REQUEST_CODE)
+
         }
     }
 
