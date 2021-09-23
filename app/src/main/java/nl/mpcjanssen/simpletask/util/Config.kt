@@ -221,7 +221,7 @@ class Config(app: TodoApplication) : Preferences(app) {
 
     var rightDrawerDemonstrated by BooleanPreference(R.string.right_drawer_demonstrated, false)
 
-    val localFileRoot by StringPreference(R.string.local_file_root, Environment.getExternalStorageDirectory().getPath())
+    val localFileRoot by StringPreference(R.string.local_file_root, this.context.getExternalFilesDir(null)!!.canonicalPath)
 
     val hasColorDueDates by BooleanPreference(R.string.color_due_date_key, true)
 
