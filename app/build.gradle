@@ -84,6 +84,11 @@ android {
             applicationId = "nl.mpcjanssen.simpletask"
             manifestPlaceholders = [providerFlavour: "cloudless"]
         }
+        encrypted {
+            dimension "main"
+            applicationId = "nl.mpcjanssen.simpletask.encrypted"
+            manifestPlaceholders = [providerFlavour: "encrypted"]
+        }
         nextcloud {
             dimension "main"
             applicationId = "nl.mpcjanssen.simpletask.nextcloud"

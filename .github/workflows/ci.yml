@@ -11,7 +11,8 @@ jobs:
     - name: "Checkout"
       uses: actions/checkout@v1
     - name: "Run build"  
-      run: ./gradlew assembleCloudlessDebug
+      run: ./gradlew assembleEncryptedDebug
+#      run: ./gradlew assembleCloudlessDebug
     - name: "Save output artifacts"
       uses: actions/upload-artifact@v1
       with:

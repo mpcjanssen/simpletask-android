@@ -10,7 +10,7 @@
         {
             "taskName": "clean",
             "args": [
-                "clean", "assembleCloudlessDebug"
+                "clean", "assembleEncryptedDebug"
             ],
             "isBuildCommand": true,
             "isWatching": false,
