@@ -4,7 +4,8 @@
 
     <string name="app_label">Simpletask</string>
     <string name="flavour_settings_label">Cloudless</string>
-    <string name="login_text">Simpletask Cloudless needs access to your storage to be able to manage your todo.txt files.
+    <string name="login_text">Simpletask Cloudless needs access to your storage to be able to save the todo file.
+        Press OK to give access.
     </string>
     <string name="sync">Reload</string>
 
