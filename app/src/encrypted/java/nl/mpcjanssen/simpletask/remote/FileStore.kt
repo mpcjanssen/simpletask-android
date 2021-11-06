@@ -2,19 +2,19 @@ package nl.mpcjanssen.simpletask.remote
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.os.Environment
-import android.os.FileObserver
-import android.os.Handler
-import android.os.Looper
+import android.os.*
 import androidx.core.content.ContextCompat
 import android.util.Log
+import androidx.annotation.RequiresApi
 import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.TodoApplication
-import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.join
 import nl.mpcjanssen.simpletask.util.writeToFile
+import other.de.stanetz.jpencconverter.JavaPasswordbasedCryption
+import other.de.stanetz.jpencconverter.JavaPasswordbasedCryption.EncryptionFailedException
 import java.io.File
 import java.io.FilenameFilter
+import java.security.SecureRandom
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -26,12 +26,10 @@ object FileStore : IFileStore {
     private const val TAG = "FileStore"
     private var observer: TodoObserver? = null
 
-
     init {
         Log.i(TAG, "onCreate")
         Log.i(TAG, "Default path: ${getDefaultFile().path}")
         observer = null
-
     }
 
     override val isAuthenticated: Boolean
@@ -58,15 +56,15 @@ object FileStore : IFileStore {
         lastSeenRemoteId = ""
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun writeFile(file: File, contents: String) {
-        Log.i(TAG, "Writing file to  ${file.canonicalPath}")
-        file.writeText(contents)
+        writeEncryptedToFile(file, contents)
     }
 
     override fun readFile(file: File, fileRead: (contents: String) -> Unit) {
         Log.i(TAG, "Reading file: ${file.path}")
         val contents: String
-        val lines = file.readLines()
+        val lines = file.readLines() // TODO decrypt if needed
         contents = join(lines, "\n")
         fileRead(contents)
     }
@@ -91,14 +89,58 @@ object FileStore : IFileStore {
         Log.i(TAG, "Observer: modifying done")
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun saveTasksToFile(file: File, lines: List<String>, eol: String) : File {
         Log.i(TAG, "Saving tasks to file: ${file.path}")
         val obs = observer
         obs?.ignoreEvents(true)
-        writeToFile(lines, eol, file, false)
+        writeEncryptedToFile(file, lines, eol)
         obs?.delayedStartListen(1000)
         lastSeenRemoteId = file.lastModified().toString()
         return file
+    }
+
+    private fun isEncrypted(file: File): Boolean {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && file.name.endsWith(
+            JavaPasswordbasedCryption.DEFAULT_ENCRYPTION_EXTENSION
+        )
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private fun getPasswordWithWarning(): CharArray? {
+//        val pw: CharArray = AppSettings(context).getDefaultPassword()
+        val pw: CharArray = "TODO".toCharArray()
+        if (pw.isEmpty()) {
+            val warningText = "No password!"
+//            Toast.makeText(context, warningText, Toast.LENGTH_LONG).show() // TODO
+            Log.w(TAG, warningText)
+            return null
+        }
+        return pw
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun writeEncryptedToFile(file: File, lines: List<String>, eol: String) {
+        val content = lines.joinToString(eol)
+        writeEncryptedToFile(file, content)
+    }
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun writeEncryptedToFile(file: File, content: String) {
+        Log.i(TAG, "Writing file to  ${file.canonicalPath}")
+        try {
+            val pw = getPasswordWithWarning()
+            val contentAsBytes: ByteArray = if (isEncrypted(file) && pw != null) {
+                JavaPasswordbasedCryption(
+                    Build.VERSION.SDK_INT,
+                    SecureRandom()
+                ).encrypt(content, pw)
+            } else {
+                content.toByteArray()
+            }
+            writeToFile(contentAsBytes, file)
+        } catch (e: EncryptionFailedException) {
+            Log.w(TAG, "Failed to encrypt! $e")
+        }
     }
 
     override fun appendTaskToFile(file: File, lines: List<String>, eol: String) {
