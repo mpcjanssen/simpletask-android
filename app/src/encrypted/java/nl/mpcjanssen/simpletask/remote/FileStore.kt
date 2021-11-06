@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.os.*
 import androidx.core.content.ContextCompat
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.TodoApplication
@@ -12,8 +13,13 @@ import nl.mpcjanssen.simpletask.util.join
 import nl.mpcjanssen.simpletask.util.writeToFile
 import other.de.stanetz.jpencconverter.JavaPasswordbasedCryption
 import other.de.stanetz.jpencconverter.JavaPasswordbasedCryption.EncryptionFailedException
+import other.net.gsantner.opoc.util.MFileUtils
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileNotFoundException
 import java.io.FilenameFilter
+import java.lang.IllegalArgumentException
+import java.nio.charset.StandardCharsets
 import java.security.SecureRandom
 import java.util.*
 import kotlin.reflect.KClass
@@ -61,12 +67,43 @@ object FileStore : IFileStore {
         writeEncryptedToFile(file, contents)
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun readFile(file: File, fileRead: (contents: String) -> Unit) {
         Log.i(TAG, "Reading file: ${file.path}")
-        val contents: String
-        val lines = file.readLines() // TODO decrypt if needed
-        contents = join(lines, "\n")
+        val contents: String = readEncrypted(file)
         fileRead(contents)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun readEncrypted(file: File): String {
+        val content: String
+        val pw = getPasswordWithWarning()
+        if (isEncrypted(file) && pw != null) {
+            content = try {
+                val encryptedContext: ByteArray = MFileUtils.readCloseStreamWithSize(
+                    FileInputStream(file),
+                    file.length().toInt()
+                )
+                if (encryptedContext.size > JavaPasswordbasedCryption.Version.NAME_LENGTH) {
+                    JavaPasswordbasedCryption.getDecryptedText(encryptedContext, pw)
+                } else {
+                    String(encryptedContext, StandardCharsets.UTF_8)
+                }
+            } catch (e: FileNotFoundException) {
+                // TODO error log
+                ""
+            } catch (e: EncryptionFailedException) {
+                // TODO error log
+                ""
+            } catch (e: IllegalArgumentException) {
+                // TODO error log
+                ""
+            }
+        } else {
+            //TODO log its not encrypted
+            content = join(file.readLines(), "\n") // old behavior
+        }
+        return content
     }
 
     override fun loginActivity(): KClass<*>? {
@@ -135,6 +172,7 @@ object FileStore : IFileStore {
                     SecureRandom()
                 ).encrypt(content, pw)
             } else {
+                // TODO log not encrypting
                 content.toByteArray()
             }
             writeToFile(contentAsBytes, file)
