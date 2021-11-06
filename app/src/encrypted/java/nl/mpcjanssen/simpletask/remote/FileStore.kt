@@ -45,9 +45,10 @@ object FileStore : IFileStore {
             return permissionCheck == PackageManager.PERMISSION_GRANTED
         }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun loadTasksFromFile(file: File): List<String> {
         Log.i(TAG, "Loading tasks")
-        val lines = file.readLines()
+        val lines = readEncrypted(file).split("\n")
         Log.i(TAG, "Read ${lines.size} lines from $file")
         setWatching(file)
         lastSeenRemoteId = file.lastModified().toString()
@@ -101,7 +102,7 @@ object FileStore : IFileStore {
             }
         } else {
             //TODO log its not encrypted
-            content = join(file.readLines(), "\n") // old behavior
+            content = join(file.readLines(), "\n") // same as cloudless for plain txt files
         }
         return content
     }
@@ -191,7 +192,7 @@ object FileStore : IFileStore {
     }
 
     override fun getDefaultFile(): File {
-        return File(TodoApplication.app.getExternalFilesDir(null), "todo.txt")
+        return File(TodoApplication.app.getExternalFilesDir(null), "todo.txt" + JavaPasswordbasedCryption.DEFAULT_ENCRYPTION_EXTENSION)
     }
 
     override fun loadFileList(file: File, txtOnly: Boolean): List<FileEntry> {
