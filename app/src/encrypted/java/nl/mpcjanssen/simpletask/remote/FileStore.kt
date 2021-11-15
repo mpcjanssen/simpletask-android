@@ -182,9 +182,12 @@ object FileStore : IFileStore {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun appendTaskToFile(file: File, lines: List<String>, eol: String) {
         Log.i(TAG, "Appending ${lines.size} tasks to ${file.path}")
-        writeToFile(lines, eol, file, true)
+        val oldLines = readEncrypted(file).split(eol)
+        val appended = oldLines + lines
+        writeEncryptedToFile(file, appended, eol)
     }
 
     override fun logout() {

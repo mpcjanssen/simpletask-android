@@ -199,7 +199,7 @@ class Config(app: TodoApplication) : Preferences(app) {
     }
 
     val doneFile: File
-        get() = File(todoFile.parentFile, "done.txt")
+        get() = File(todoFile.parentFile, "done.txt.jenc")
 
     fun clearCache() {
         cachedContents = null
