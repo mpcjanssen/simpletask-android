@@ -338,7 +338,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
                 .matcher("")
         private val MATCH_DUE = Pattern.compile("[Dd][Uu][Ee]:(\\d{4}-\\d{2}-\\d{2})").matcher("")
         private val MATCH_THRESHOLD = Pattern.compile("[Tt]:(\\d{4}-\\d{2}-\\d{2})").matcher("")
-        private val MATCH_RECURRENCE = Pattern.compile("[Rr][Ee][Cc]:((\\+?)\\d+[dDwWmMyYbB])").matcher("")
+        private val MATCH_RECURRENCE = Pattern.compile("[Rr][Ee][Cc]:((\\+?)\\d*[dDwWmMyYbB])").matcher("")
         private val MATCH_EXT = Pattern.compile("(.+):(.+)").matcher("")
         private val MATCH_PRIORITY = Regex("\\(([A-Z])\\)")
         private val MATCH_SINGLE_DATE = Pattern.compile("\\d{4}-\\d{2}-\\d{2}").matcher("")

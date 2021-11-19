@@ -245,7 +245,7 @@ fun addBusinessDays(originalDate: DateTime, days: Int): DateTime {
 
 fun addInterval(date: DateTime?, interval: String): DateTime? {
     var newDate = date
-    val p = Pattern.compile("(\\d+)([dDwWmMyYbB])")
+    val p = Pattern.compile("(\\d*)([dDwWmMyYbB])")
     val m = p.matcher(interval.toLowerCase(Locale.getDefault()))
     val amount: Int
     val type: String
@@ -257,7 +257,8 @@ fun addInterval(date: DateTime?, interval: String): DateTime? {
         return newDate
     }
     if (m.groupCount() == 2) {
-        amount = Integer.parseInt(m.group(1))
+        val amountStr = m.group(1)
+        amount = if (amountStr == "")  1 else  Integer.parseInt(m.group(1))
         type = m.group(2).toLowerCase(Locale.getDefault())
     } else {
         return newDate
