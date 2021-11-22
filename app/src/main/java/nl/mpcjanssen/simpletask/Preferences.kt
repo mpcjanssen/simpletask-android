@@ -239,12 +239,10 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
             else pwPref.valueInSummary()
             pwPref.setOnPreferenceChangeListener { preference, any ->
                 val password = any.toString()
-                if (!TextUtils.isEmpty(password)) {
-                    TodoApplication.config.setDefaultPassword(any as String?)
-                    if (TodoApplication.config.isDefaultPasswordSet()) preference.valueInSummary(getString(R.string.password_already_set_summary))
-                    else preference.valueInSummary()
-                    true
-                } else false
+                TodoApplication.config.setDefaultPassword(password)
+                if (TodoApplication.config.isDefaultPasswordSet()) preference.valueInSummary(getString(R.string.password_already_set_summary))
+                else preference.valueInSummary()
+                true
             }
 
             val debugPref = findPreference("debug_info")
