@@ -414,4 +414,9 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="no_tasks_to_archive">No tasks to archive.</string>
     <string name="force_english_title">Force English</string>
     <string name="share_link">Share link</string>
+    <string name="pref_key__default_encryption_password">pref_key__default_encryption_password</string>
+    <string name="pref_key__set_encryption_password">pref_key__set_encryption_password</string>
+    <string name="file_encryption_password">File encryption password</string>
+    <string name="password_summary">%s</string>
+    <string name="password_already_set_summary">Password already set. Setting a new password will overwrite the existing password and you may not be able to access files anymore in case you forget the password.</string>
 </resources>

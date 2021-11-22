@@ -146,9 +146,8 @@ object FileStore : IFileStore {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private fun getPasswordWithWarning(): CharArray? {
-//        val pw: CharArray = AppSettings(context).getDefaultPassword()
-        val pw: CharArray = "TODO".toCharArray()
-        if (pw.isEmpty()) {
+        val pw: CharArray? = TodoApplication.config.getDefaultPassword()
+        if (pw == null || pw.isEmpty()) {
             val warningText = "No password!"
 //            Toast.makeText(context, warningText, Toast.LENGTH_LONG).show() // TODO
             Log.w(TAG, warningText)

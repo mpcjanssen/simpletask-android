@@ -30,14 +30,16 @@ package nl.mpcjanssen.simpletask
 import android.Manifest
 import android.content.*
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.preference.*
+import android.text.TextUtils
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.util.Log
 import android.view.MenuItem
-import nl.mpcjanssen.simpletask.util.Config
+import androidx.annotation.RequiresApi
 import java.util.*
 
 class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -220,6 +222,7 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
     }
 
     class OtherPrefFragment : PrefFragment(R.xml.other_preferences) {
+        @RequiresApi(Build.VERSION_CODES.M)
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
 
@@ -229,6 +232,19 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
                 preference.summary = getString(R.string.local_file_root_summary)
                 preference.valueInSummary(any)
                 true
+            }
+
+            val pwPref = findPreference(getString(R.string.pref_key__set_encryption_password)) as EditTextPreference
+            if (TodoApplication.config.isDefaultPasswordSet()) pwPref.valueInSummary(getString(R.string.password_already_set_summary))
+            else pwPref.valueInSummary()
+            pwPref.setOnPreferenceChangeListener { preference, any ->
+                val password = any.toString()
+                if (!TextUtils.isEmpty(password)) {
+                    TodoApplication.config.setDefaultPassword(any as String?)
+                    if (TodoApplication.config.isDefaultPasswordSet()) preference.valueInSummary(getString(R.string.password_already_set_summary))
+                    else preference.valueInSummary()
+                    true
+                } else false
             }
 
             val debugPref = findPreference("debug_info")
