@@ -202,7 +202,12 @@ class Config(app: TodoApplication) : Preferences(app) {
     }
 
     val doneFile: File
-        get() = File(todoFile.parentFile, "done.txt.jenc")
+        @RequiresApi(Build.VERSION_CODES.M)
+        get() {
+            val filename = if (TodoApplication.config.isDefaultPasswordSet()) "done.txt.jenc"
+            else "done.txt"
+            return File(todoFile.parentFile, filename)
+        }
 
     fun clearCache() {
         cachedContents = null
