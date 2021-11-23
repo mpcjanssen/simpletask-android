@@ -887,7 +887,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             R.id.menu_export_filter_export -> {
                 FileStoreActionQueue.add("Exporting filters") {
                     try {
-                        QueryStore.exportFilters(File(TodoApplication.config.todoFile.parentFile, "saved_filters.txt"))
+                        QueryStore.exportFilters(File(TodoApplication.config.todoFile.parentFile, "saved_filters.txt.jenc"))
                         showToastShort(this, R.string.saved_filters_exported)
                     } catch (e: Exception) {
                         Log.e(TAG, "Export filters failed", e)
@@ -897,7 +897,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             }
             R.id.menu_export_filter_import -> {
                 FileStoreActionQueue.add("Importing filters") {
-                    val importFile = File(TodoApplication.config.todoFile.parentFile, "saved_filters.txt")
+                    val importFile = File(TodoApplication.config.todoFile.parentFile, "saved_filters.txt.jenc")
                     try {
                         QueryStore.importFilters(importFile)
                         showToastShort(this, R.string.saved_filters_imported)

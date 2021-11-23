@@ -66,11 +66,11 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
                 shareText(this, getString(R.string.lua_config_screen), script)
             }
             R.id.lua_config_import -> {
-                val importFile = File(TodoApplication.config.todoFile.parentFile, "config.lua")
+                val importFile = File(TodoApplication.config.todoFile.parentFile, "config.lua.jenc")
                 importLuaConfig(importFile)
             }
             R.id.lua_config_export -> {
-                exportLuaConfig(File(TodoApplication.config.todoFile.parentFile, "config.lua"))
+                exportLuaConfig(File(TodoApplication.config.todoFile.parentFile, "config.lua.jenc"))
             }
         }
         return true
