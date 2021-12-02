@@ -70,7 +70,7 @@
         android:title="@string/show_txt_only_pref_title"
         />
     <CheckBoxPreference
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:key="@string/line_breaks_pref_key"
         android:title="@string/line_breaks_pref_title"
         />

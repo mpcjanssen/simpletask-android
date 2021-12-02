@@ -86,7 +86,7 @@ class Config(app: TodoApplication) : Preferences(app) {
 
     val sortCaseSensitive by BooleanPreference(R.string.ui_sort_case_sensitive, true)
 
-    private val _windowsEOL by BooleanPreference(R.string.line_breaks_pref_key, true)
+    private val _windowsEOL by BooleanPreference(R.string.line_breaks_pref_key, false)
     val eol: String
         get() = if (_windowsEOL) "\r\n" else "\n"
 
