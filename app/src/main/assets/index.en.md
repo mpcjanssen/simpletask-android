@@ -2,7 +2,7 @@ Simpletask
 ==========
 Ver en [Español](./index.es.md), auf [Deutsch](./index.de.md) 
 
-[Simpletask](https://github.com/mpcjanssen/simpletask-android) is based on the brilliant [todo.txt](http://todotxt.com) by [Gina Trapani](http://ginatrapani.org/). The goal of the application is to provide a tool to do GTD without providing an overwhelming amount of options. Even though Simpletask can be customised by a fairly large amount of settings, the defaults should be sane and require no change.
+[Simpletask](https://github.com/mpcjanssen/simpletask-android) is based on the brilliant [todo.txt](http://todotxt.com) by [Gina Trapani](http://ginatrapani.org/). The goal of the application is to provide a tool to ['Getting Things Done'](https://gettingthingsdone.com/) (GTD) without providing an overwhelming amount of options. Even though Simpletask can be customised by a fairly large amount of settings, the defaults should be sane and require no change.
 
 [Simpletask](https://github.com/mpcjanssen/simpletask-android) can be used as a very simple todo list manager or as a more complex action manager for GTD or [Manage Your Now](./MYN.en.md).
 
@@ -39,5 +39,5 @@ Check the menu for more help sections or click below.
 - [Changelog](./changelog.en.md)
 - [Lists and Tags](./listsandtags.en.md) Why does Simpletask use lists and Tags instead of the Contexts and Projects from todo.txt?
 - [Defined intents](./intents.en.md) Intents that can be used for automating Simpletask
-- [Using Simpletask for 1MTD/MYN](./MYN.en.md)
+- Using Simpletask for 'The One Minute To-Do List' or 'Master Your Now' [1MTD/MYN](./MYN.en.md)
 - [Using Lua](./script.en.md)
