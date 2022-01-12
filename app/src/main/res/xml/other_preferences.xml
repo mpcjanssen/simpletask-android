@@ -70,7 +70,7 @@
         android:title="@string/show_txt_only_pref_title"
         />
     <CheckBoxPreference
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:key="@string/line_breaks_pref_key"
         android:title="@string/line_breaks_pref_title"
         />
@@ -85,6 +85,11 @@
         android:summary="@string/local_file_root_summary"
         android:title="@string/local_file_root_title"
         />
+    <EditTextPreference
+        android:key="@string/pref_key__set_encryption_password"
+        android:title="@string/file_encryption_password"
+        android:summary="@string/password_summary"
+        android:inputType="textPassword" />
     <Preference
         android:key="debug_info"
         android:title="@string/preference_title_debug_info"

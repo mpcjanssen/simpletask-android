@@ -12,7 +12,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.0'
+        classpath 'com.android.tools.build:gradle:7.0.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -83,6 +83,11 @@ android {
             dimension "main"
             applicationId = "nl.mpcjanssen.simpletask"
             manifestPlaceholders = [providerFlavour: "cloudless"]
+        }
+        encrypted {
+            dimension "main"
+            applicationId = "nl.mpcjanssen.simpletask.encrypted"
+            manifestPlaceholders = [providerFlavour: "encrypted"]
         }
         nextcloud {
             dimension "main"

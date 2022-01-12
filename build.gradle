@@ -1,1 +1,37 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+plugins {
+    id "io.gitlab.arturbosch.detekt" version "1.18.1"
+}
+repositories {
+    mavenCentral()
+}
+def projectSource = file(projectDir)
+def configFile = files("$rootDir/config/detekt/detekt.yml")
+def baselineFile = file("$rootDir/config/detekt/baseline.xml")
+def kotlinFiles = "**/*.kt"
+def resourceFiles = "**/resources/**"
+def buildFiles = "**/build/**"
+
+apply plugin: 'io.gitlab.arturbosch.detekt'
+
+tasks.register("detektAll", io.gitlab.arturbosch.detekt.Detekt) {
+    def autoFix = project.hasProperty('detektAutoFix')
+
+    description = "Custom DETEKT build for all modules"
+    parallel = true
+    ignoreFailures = false
+    autoCorrect = autoFix
+    buildUponDefaultConfig = true
+    setSource(projectSource)
+//    baseline.set(baselineFile)
+//    config.setFrom(configFile)
+    include(kotlinFiles)
+    exclude(resourceFiles, buildFiles)
+    reports {
+        html.enabled = true
+        xml.enabled = false
+        txt.enabled = false
+    }
+}
+dependencies {
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.18.1"
+}

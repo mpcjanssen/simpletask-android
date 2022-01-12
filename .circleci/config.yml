@@ -40,6 +40,9 @@ jobs:
           name: Build cloudless version
           command: ./gradlew assembleCloudlessDebug
       - run:
+          name: Build encrypted version
+          command: ./gradlew assembleEncryptedDebug
+      - run:
           name: Run tests
           command: ./gradlew testCloudlessDebug
       - store_artifacts: # for display in Artifacts: https://circleci.com/docs/2.0/artifacts/ 

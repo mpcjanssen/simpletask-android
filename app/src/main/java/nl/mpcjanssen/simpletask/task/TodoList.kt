@@ -243,7 +243,7 @@ class TodoList(val config: Config) {
                     reloadaction(todoFile)
                 }
             } else {
-                Log.d(tag, "Not authenticatd")
+                Log.d(tag, "Not authenticated")
             }
         }
     }

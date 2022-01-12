@@ -5,7 +5,7 @@ GITNAME=$(shell ${GRADLE} app:androidGitVersionName --quiet)
 artifacts: assemble upload
 
 assemble:
-	${GRADLE} clean assembleNextcloud assembleDokuwiki assembleCloudless assembleDropbox assembleWebdav
+	${GRADLE} clean assembleNextcloud assembleDokuwiki assembleCloudless assembleEncrypted assembleDropbox assembleWebdav
 
 version:
 	${GRADLE} androidGitVersion
@@ -15,4 +15,4 @@ upload: version
 
 
 publish:
-	${GRADLE} clean publishDropboxRelease publishCloudlessRelease publishDropboxRelease publishNextcloudRelease
+	${GRADLE} clean publishDropboxRelease publishCloudlessRelease publishEncryptedRelease publishDropboxRelease publishNextcloudRelease

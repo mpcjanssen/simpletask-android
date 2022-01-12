@@ -86,12 +86,12 @@ class AddTask : ThemedActionBarActivity() {
         Log.d(TAG, "Fill addtask")
 
         val pendingTasks = TodoApplication.todoList.pendingEdits.map { it.inFileFormat(TodoApplication.config.useUUIDs) }
-            val preFillString = when {
+            val preFillString: String = when {
                 pendingTasks.isNotEmpty() -> {
                     setTitle(R.string.updatetask)
                     join(pendingTasks, "\n")
                 }
-                intent.hasExtra(Constants.EXTRA_PREFILL_TEXT) -> intent.getStringExtra(Constants.EXTRA_PREFILL_TEXT)
+                intent.hasExtra(Constants.EXTRA_PREFILL_TEXT) -> intent.getStringExtra(Constants.EXTRA_PREFILL_TEXT) ?: ""
                 intent.hasExtra(Query.INTENT_JSON) -> Query(intent, luaModule = "from_intent").prefill
                 else -> ""
             }

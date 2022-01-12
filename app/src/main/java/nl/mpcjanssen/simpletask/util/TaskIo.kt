@@ -32,29 +32,19 @@ package nl.mpcjanssen.simpletask.util
 
 import android.util.Log
 import java.io.*
+import java.lang.Exception
 
 @Throws(IOException::class)
-fun loadFromFile(file: File): List<String> {
-    return file.readLines()
-}
-
-@Throws(IOException::class)
-fun writeToFile(lines: List<String>, eol: String, file: File, append: Boolean) {
+fun writeToFile(bytes: ByteArray, file: File) {
     try {
-        createParentDirectory(file)
-    } catch (e: IOException) {
-        Log.w("TaskIO", "Couldn't create directory of ${file.absolutePath}", e)
-        throw e
+        if (!file.exists()) {
+            file.createNewFile()
+        }
+        val fos = FileOutputStream(file)
+        fos.write(bytes)
+        fos.close()
+    } catch (e: Exception) {
+        Log.e(TAG, e.message!!)
     }
-    val str = FileOutputStream(file, append)
-
-    val fw = BufferedWriter(OutputStreamWriter(
-            str, "UTF-8"))
-    lines.forEach { line ->
-        fw.write(line)
-        fw.write(eol)
-    }
-    fw.close()
-    str.close()
 }
 

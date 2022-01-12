@@ -36,6 +36,7 @@ import android.view.inputmethod.InputMethodManager
 import android.webkit.MimeTypeMap
 import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
+import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 
 import hirondelle.date4j.DateTime
@@ -530,6 +531,7 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.M)
     @SuppressLint("Recycle")
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         Log.i(TAG, "Recreating options menu")
@@ -839,6 +841,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         Log.i(TAG, "onMenuItemSelected: " + item.itemId)
         val checkedTasks = TodoApplication.todoList.selectedTasks
@@ -887,7 +890,9 @@ class Simpletask : ThemedNoActionBarActivity() {
             R.id.menu_export_filter_export -> {
                 FileStoreActionQueue.add("Exporting filters") {
                     try {
-                        QueryStore.exportFilters(File(TodoApplication.config.todoFile.parentFile, "saved_filters.txt"))
+                        val filename = if (TodoApplication.config.isDefaultPasswordSet()) "saved_filters.txt.jenc"
+                        else "saved_filters.txt"
+                        QueryStore.exportFilters(File(TodoApplication.config.todoFile.parentFile, filename))
                         showToastShort(this, R.string.saved_filters_exported)
                     } catch (e: Exception) {
                         Log.e(TAG, "Export filters failed", e)
@@ -897,7 +902,9 @@ class Simpletask : ThemedNoActionBarActivity() {
             }
             R.id.menu_export_filter_import -> {
                 FileStoreActionQueue.add("Importing filters") {
-                    val importFile = File(TodoApplication.config.todoFile.parentFile, "saved_filters.txt")
+                    val filename = if (TodoApplication.config.isDefaultPasswordSet()) "saved_filters.txt.jenc"
+                    else "saved_filters.txt"
+                    val importFile = File(TodoApplication.config.todoFile.parentFile, filename)
                     try {
                         QueryStore.importFilters(importFile)
                         showToastShort(this, R.string.saved_filters_imported)

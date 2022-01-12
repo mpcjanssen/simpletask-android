@@ -4,12 +4,14 @@
 package nl.mpcjanssen.simpletask
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
+import androidx.annotation.RequiresApi
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.util.*
 import java.io.File
@@ -49,6 +51,7 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
         return true
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
@@ -66,11 +69,15 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
                 shareText(this, getString(R.string.lua_config_screen), script)
             }
             R.id.lua_config_import -> {
-                val importFile = File(TodoApplication.config.todoFile.parentFile, "config.lua")
+                val filename = if (TodoApplication.config.isDefaultPasswordSet()) "config.lua.jenc"
+                                else "config.lua"
+                val importFile = File(TodoApplication.config.todoFile.parentFile, filename)
                 importLuaConfig(importFile)
             }
             R.id.lua_config_export -> {
-                exportLuaConfig(File(TodoApplication.config.todoFile.parentFile, "config.lua"))
+                val filename = if (TodoApplication.config.isDefaultPasswordSet()) "config.lua.jenc"
+                                else "config.lua"
+                exportLuaConfig(File(TodoApplication.config.todoFile.parentFile, filename))
             }
         }
         return true

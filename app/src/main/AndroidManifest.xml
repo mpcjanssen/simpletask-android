@@ -130,7 +130,7 @@ You should have received a copy of the GNU General Public License along with Sim
         <activity
             android:name=".AddTaskShortcut"
             android:label="@string/shortcut_addtask_name"
-            >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -179,7 +179,8 @@ You should have received a copy of the GNU General Public License along with Sim
             </intent-filter>
         </activity>
 
-        <receiver android:name=".MyAppWidgetProvider" >
+        <receiver android:name=".MyAppWidgetProvider"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

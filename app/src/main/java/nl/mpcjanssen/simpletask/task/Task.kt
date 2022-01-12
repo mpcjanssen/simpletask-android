@@ -321,7 +321,7 @@ class Task(text: String, defaultPrependedDate: String? = null) {
     }
 
     private fun appendToken(token: TToken, trimWhiteSpace: Boolean = true) {
-        while (trimWhiteSpace && tokens.last() is WhiteSpaceToken) {
+        while (trimWhiteSpace && tokens.isNotEmpty() && tokens.last() is WhiteSpaceToken) {
             tokens.removeLast()
         }
         tokens.add(token)
