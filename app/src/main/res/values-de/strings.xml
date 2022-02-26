@@ -100,7 +100,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="sort_complete_last_pref_title">Zeige erledigte zuletzt</string>
     <string name="sort_complete_last_pref_summary">Zeige erledigte Aufgaben immer am Ende der Liste</string>
     <string name="keep_prio_header">Priorität in abgeschlossenen Aufgaben behalten</string>
-    <string name="keep_prio_summary">Todo.txt entfernt die Prioritäten in abgeschlossenen Aufgaben</string>
+    <string name="keep_prio_summary">Simpletask erhält die Prioritäten in abgeschlossenen Aufgaben</string>
     <string name="prepend_date_pref_title">Zeitstempel für neue Aufgaben</string>
     <string name="prepend_date_pref_summary">Erstellungsdatum automatisch hinzufügen</string>
     <string name="line_breaks_pref_title">Windows Zeilenumbrüche</string>

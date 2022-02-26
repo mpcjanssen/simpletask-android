@@ -126,7 +126,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="sort_complete_last_pref_title">Show completed last</string>
     <string name="sort_complete_last_pref_summary">Always display the completed tasks at the bottom of the list</string>
     <string name="keep_prio_header">Keep priority in completed tasks</string>
-    <string name="keep_prio_summary">Todo.txt removes priority on completion</string>
+    <string name="keep_prio_summary">Simpletask keeps priority on completion</string>
     <string name="prepend_date_pref_title">Datestamp new tasks</string>
     <string name="prepend_date_pref_summary">Automatically add creation date</string>
     <string name="line_breaks_pref_title">Windows-friendly line breaks</string>
