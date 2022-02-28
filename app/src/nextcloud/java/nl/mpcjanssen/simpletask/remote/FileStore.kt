@@ -37,6 +37,8 @@ object FileStore : IFileStore {
     var username by TodoApplication.config.StringOrNullPreference(NEXTCLOUD_USER)
     var password by TodoApplication.config.StringOrNullPreference(NEXTCLOUD_PASS)
     private var serverUrl by TodoApplication.config.StringOrNullPreference(NEXTCLOUD_URL)
+    override val isEncrypted: Boolean
+        get() = false
 
     override val isAuthenticated: Boolean
         get() {

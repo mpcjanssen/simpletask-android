@@ -35,6 +35,8 @@ object FileStore : IFileStore {
     var serverUrl by TodoApplication.config.StringOrNullPreference(URL)
 
     private fun url(file: File) = (serverUrl?.trimEnd('/') + file.canonicalPath).trimEnd('/')
+    override val isEncrypted: Boolean
+        get() = false
 
     override val isAuthenticated: Boolean
         get() {
