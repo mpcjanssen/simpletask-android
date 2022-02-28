@@ -45,6 +45,9 @@ object FileStore : IFileStore {
         return DbxClientV2(requestConfig, accessToken)
     }
 
+    override val isEncrypted: Boolean
+        get() = false
+
     override val isAuthenticated: Boolean
         get() {
             val token = accessToken
