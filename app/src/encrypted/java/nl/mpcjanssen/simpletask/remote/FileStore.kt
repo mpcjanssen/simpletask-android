@@ -8,11 +8,13 @@ import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import nl.mpcjanssen.simpletask.R
+import nl.mpcjanssen.simpletask.Simpletask
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.util.join
 import nl.mpcjanssen.simpletask.util.writeToFile
 import other.de.stanetz.jpencconverter.JavaPasswordbasedCryption
 import other.de.stanetz.jpencconverter.JavaPasswordbasedCryption.EncryptionFailedException
+import other.de.stanetz.jpencconverter.PasswordStore
 import other.net.gsantner.opoc.util.MFileUtils
 import java.io.File
 import java.io.FileInputStream
@@ -29,7 +31,7 @@ object FileStore : IFileStore {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     fun getDefaultPassword(): CharArray? {
-        return PasswordStore(this.context).loadKey(R.string.pref_key__default_encryption_password)
+        return PasswordStore(TodoApplication.app).loadKey(R.string.pref_key__default_encryption_password)
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -40,7 +42,7 @@ object FileStore : IFileStore {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     fun setDefaultPassword(password: String?) {
-        PasswordStore(this.context).storeKey(
+        PasswordStore(TodoApplication.app).storeKey(
             password,
             R.string.pref_key__default_encryption_password
         )
@@ -55,6 +57,9 @@ object FileStore : IFileStore {
         Log.i(TAG, "Default path: ${getDefaultFile().path}")
         observer = null
     }
+
+    override val isEncrypted: Boolean
+        get() = true
 
     override val isAuthenticated: Boolean
         get() {
@@ -164,7 +169,7 @@ object FileStore : IFileStore {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private fun getPasswordWithWarning(): CharArray? {
-        val pw: CharArray? = TodoApplication.config.getDefaultPassword()
+        val pw: CharArray? = getDefaultPassword()
         if (pw == null || pw.isEmpty()) {
             val warningText = "No password!"
 //            Toast.makeText(context, warningText, Toast.LENGTH_LONG).show() // TODO
