@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+        <EditTextPreference
+                android:key="@string/pref_key__set_encryption_password"
+                android:title="@string/file_encryption_password"
+                android:summary="@string/password_summary"
+                android:inputType="textPassword" />
+</PreferenceScreen>

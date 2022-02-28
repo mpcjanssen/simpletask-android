@@ -69,13 +69,13 @@ class ScriptConfigScreen : ThemedActionBarActivity() {
                 shareText(this, getString(R.string.lua_config_screen), script)
             }
             R.id.lua_config_import -> {
-                val filename = if (TodoApplication.config.isDefaultPasswordSet()) "config.lua.jenc"
+                val filename = if (FileStore.isEncrypted) "config.lua.jenc"
                                 else "config.lua"
                 val importFile = File(TodoApplication.config.todoFile.parentFile, filename)
                 importLuaConfig(importFile)
             }
             R.id.lua_config_export -> {
-                val filename = if (TodoApplication.config.isDefaultPasswordSet()) "config.lua.jenc"
+                val filename = if (FileStore.isEncrypted) "config.lua.jenc"
                                 else "config.lua"
                 exportLuaConfig(File(TodoApplication.config.todoFile.parentFile, filename))
             }

@@ -234,17 +234,6 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
                 true
             }
 
-            val pwPref = findPreference(getString(R.string.pref_key__set_encryption_password)) as EditTextPreference
-            if (TodoApplication.config.isDefaultPasswordSet()) pwPref.valueInSummary(getString(R.string.password_already_set_summary))
-            else pwPref.valueInSummary()
-            pwPref.setOnPreferenceChangeListener { preference, any ->
-                val password = any.toString()
-                TodoApplication.config.setDefaultPassword(password)
-                if (TodoApplication.config.isDefaultPasswordSet()) preference.valueInSummary(getString(R.string.password_already_set_summary))
-                else preference.valueInSummary()
-                true
-            }
-
             val debugPref = findPreference("debug_info")
             debugPref.setOnPreferenceClickListener {
                 startActivity(Intent(activity, DebugInfoScreen::class.java))

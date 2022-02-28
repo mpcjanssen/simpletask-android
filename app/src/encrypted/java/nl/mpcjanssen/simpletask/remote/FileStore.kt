@@ -27,6 +27,24 @@ import kotlin.reflect.KClass
 object FileStore : IFileStore {
     private var lastSeenRemoteId by TodoApplication.config.StringOrNullPreference(R.string.file_current_version_id)
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    fun getDefaultPassword(): CharArray? {
+        return PasswordStore(this.context).loadKey(R.string.pref_key__default_encryption_password)
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    fun isDefaultPasswordSet(): Boolean {
+        val key = getDefaultPassword()
+        return key != null && key.isNotEmpty()
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    fun setDefaultPassword(password: String?) {
+        PasswordStore(this.context).storeKey(
+            password,
+            R.string.pref_key__default_encryption_password
+        )
+    }
 
     override val isOnline = true
     private const val TAG = "FileStore"

@@ -9,7 +9,6 @@ import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.Task
 import org.json.JSONObject
-import other.de.stanetz.jpencconverter.PasswordStore
 import java.io.File
 import java.util.*
 
@@ -204,8 +203,7 @@ class Config(app: TodoApplication) : Preferences(app) {
     val doneFile: File
         @RequiresApi(Build.VERSION_CODES.M)
         get() {
-            val filename = if (TodoApplication.config.isDefaultPasswordSet()) "done.txt.jenc"
-            else "done.txt"
+            val filename = if (FileStore.isEncrypted) "done.txt.jenc"  else "done.txt"
             return File(todoFile.parentFile, filename)
         }
 
@@ -314,23 +312,6 @@ class Config(app: TodoApplication) : Preferences(app) {
 
     val idleBeforeSaveSeconds by IntPreference(R.string.idle_before_save, 5)
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    fun getDefaultPassword(): CharArray? {
-        return PasswordStore(this.context).loadKey(R.string.pref_key__default_encryption_password)
-    }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    fun isDefaultPasswordSet(): Boolean {
-        val key = getDefaultPassword()
-        return key != null && key.isNotEmpty()
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    fun setDefaultPassword(password: String?) {
-        PasswordStore(this.context).storeKey(
-            password,
-            R.string.pref_key__default_encryption_password
-        )
-    }
 
 }

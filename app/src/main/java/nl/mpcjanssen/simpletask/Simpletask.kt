@@ -890,7 +890,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             R.id.menu_export_filter_export -> {
                 FileStoreActionQueue.add("Exporting filters") {
                     try {
-                        val filename = if (TodoApplication.config.isDefaultPasswordSet()) "saved_filters.txt.jenc"
+                        val filename = if (FileStore.isEncrypted) "saved_filters.txt.jenc"
                         else "saved_filters.txt"
                         QueryStore.exportFilters(File(TodoApplication.config.todoFile.parentFile, filename))
                         showToastShort(this, R.string.saved_filters_exported)
@@ -902,7 +902,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             }
             R.id.menu_export_filter_import -> {
                 FileStoreActionQueue.add("Importing filters") {
-                    val filename = if (TodoApplication.config.isDefaultPasswordSet()) "saved_filters.txt.jenc"
+                    val filename = if (FileStore.isEncrypted) "saved_filters.txt.jenc"
                     else "saved_filters.txt"
                     val importFile = File(TodoApplication.config.todoFile.parentFile, filename)
                     try {

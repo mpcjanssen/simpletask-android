@@ -18,6 +18,7 @@ import kotlin.reflect.KClass
 
  */
 interface IFileStore {
+    val isEncrypted: Boolean
     val isAuthenticated: Boolean
 
     @Throws(IOException::class)

@@ -34,6 +34,9 @@ object FileStore : IFileStore {
 
     }
 
+    override val isEncrypted: Boolean
+        get() = false
+
     override val isAuthenticated: Boolean
         get() {
             val permissionCheck = ContextCompat.checkSelfPermission(TodoApplication.app,
