@@ -30,7 +30,7 @@ If you want to log an issue or feature request for [Simpletask](https://github.c
 Community
 ---------
 
-Join the chat on IRC at [#simpletask on Libera Chat](https://web.libera.chat), or Matrix at [#simpletask:matrix.org](https://matrix.to/#/#simpletask:matrix.org).
+Join the chat on IRC at [#simpletask on Libera Chat](https://web.libera.chat), or Matrix at [#simpletask:matrix.org](https://matrix.to/#/#simpletask:matrix.org). There is also an experimental Zulip community at https://simpletask.zulipchat.com/ .
 
 
 Check the menu for more help sections or click below.
