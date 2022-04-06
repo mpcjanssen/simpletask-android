@@ -306,7 +306,7 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         return comparison == 0
     }
 
-    // Updates the UI, but avoids the red line and unselection
+    // Updates the UI, but avoids the red line
     fun visuallyMoveLine(fromVisibleLineIndex: Int, toVisibleLineIndex: Int) {
         val lineToMove = visibleLines.removeAt(fromVisibleLineIndex)
         visibleLines.add(toVisibleLineIndex, lineToMove)
@@ -329,7 +329,8 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         TodoApplication.todoList.notifyTasklistChanged(
                 TodoApplication.config.todoFile,
                 save = true,
-                refreshMainUI = true);
+                refreshMainUI = true,
+                forceKeepSelection = true);
     }
 }
 

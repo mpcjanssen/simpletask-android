@@ -183,12 +183,15 @@ class TodoList(val config: Config) {
 
 
 
-    fun notifyTasklistChanged(todoFile: File, save: Boolean, refreshMainUI: Boolean = true) {
+    fun notifyTasklistChanged(todoFile: File,
+            save: Boolean,
+            refreshMainUI: Boolean = true,
+            forceKeepSelection: Boolean = false) {
         Log.d(tag, "Notified changed")
         if (save) {
             save(FileStore, todoFile, eol = config.eol)
         }
-        if (!config.hasKeepSelection) {
+        if (!config.hasKeepSelection && !forceKeepSelection) {
             clearSelection()
         }
         mLists = null
