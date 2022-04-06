@@ -275,8 +275,23 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
     }
 
     fun moveVisibleLine(fromVisibleLineIndex: Int, toVisibleLineIndex: Int) {
-        // FIXME: Actually change the order of the tasks
+        val lineToMove = visibleLines.removeAt(fromVisibleLineIndex)
+        visibleLines.add(toVisibleLineIndex, lineToMove)
+
+        val fromTask = visibleLines[fromVisibleLineIndex].task
+            ?: throw IllegalStateException("Tried to move header line")
+        val toTask = visibleLines[toVisibleLineIndex].task
+            ?: throw IllegalStateException("Tried to move to position of  header line")
+        TodoApplication.todoList.moveToPositionOf(toTask, fromTask)
+
         notifyItemMoved(fromVisibleLineIndex, toVisibleLineIndex)
+    }
+
+    fun persistVisibleLineMove() {
+        TodoApplication.todoList.notifyTasklistChanged(
+                TodoApplication.config.todoFile,
+                save = true,
+                refreshMainUI = true);
     }
 }
 

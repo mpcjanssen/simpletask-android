@@ -35,6 +35,10 @@ class DragTasksCallback(val taskAdapter: TaskAdapter) : ItemTouchHelper.Callback
         }
     }
 
+    override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+        taskAdapter.persistVisibleLineMove()
+    }
+
     override fun onSwiped(recyclerView: RecyclerView.ViewHolder, p1: Int): Unit {
         throw IllegalStateException("Swiping is not enabled for the ItemTouchHelper, so it shouldn't ever call onSwiped");
     }

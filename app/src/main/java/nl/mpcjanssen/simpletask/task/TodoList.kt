@@ -365,6 +365,19 @@ class TodoList(val config: Config) {
         }
     }
 
+    fun moveToPositionOf(other: Task, itemToMove: Task) {
+        val oldIndex = todoItems.indexOf(itemToMove)
+        val newIndex = todoItems.indexOf(other)
+
+        if (oldIndex < 0)
+            throw IllegalStateException("Tried to move a task that's not on the list of todoItems")
+        if (newIndex < 0)
+            throw IllegalStateException("Tried to move to the position of a task that's not on the list of todoItems")
+
+        todoItems.removeAt(oldIndex)
+        todoItems.add(newIndex, itemToMove)
+    }
+
     fun isSelected(item: Task): Boolean = item.selected
 
 
