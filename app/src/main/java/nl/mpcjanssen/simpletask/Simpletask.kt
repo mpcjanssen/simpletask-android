@@ -92,6 +92,8 @@ class Simpletask : ThemedNoActionBarActivity() {
         intentFilter.addAction(Constants.BROADCAST_STATE_INDICATOR)
         intentFilter.addAction(Constants.BROADCAST_HIGHLIGHT_SELECTION)
 
+        var itemTouchHelper: ItemTouchHelper? = null
+
         taskAdapter = TaskAdapter(
                 completeAction = {
                     completeTasks(it)
@@ -195,11 +197,21 @@ class Simpletask : ThemedNoActionBarActivity() {
                         build.create().show()
                     }
                     true
-                })
+                },
+                startDrag = { viewHolder ->
+                    // The itemTouchHelper is created very soon, it just
+                    // needs a reference to the taskAdapter and listView
+                    var theItemTouchHelper = itemTouchHelper ?: throw IllegalStateException()
 
+                    theItemTouchHelper.startDrag(viewHolder)
+                })
 
         binding = MainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val itemTouchHelperCallback = DragTasksCallback(this.taskAdapter)
+        itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(listView)
 
         localBroadcastManager = TodoApplication.app.localBroadCastManager
 
@@ -480,12 +492,6 @@ class Simpletask : ThemedNoActionBarActivity() {
 
         listView.layoutManager = LinearLayoutManager(this)
         listView.adapter = this.taskAdapter
-
-        // FIXME: By default, drag happens on long press.  We want it to happen
-        // on touch of a child view.
-        val itemTouchHelperCallback = DragTasksCallback(this.taskAdapter)
-        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
-        itemTouchHelper.attachToRecyclerView(listView)
 
         taskAdapter.setFilteredTasks(this, query)
         val listener = ViewTreeObserver.OnScrollChangedListener {

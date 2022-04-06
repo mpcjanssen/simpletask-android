@@ -9,14 +9,13 @@ class DragTasksCallback(val taskAdapter: TaskAdapter) : ItemTouchHelper.Callback
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
         if (viewHolder.itemViewType == 1) { // Task
             val fromIndex = viewHolder.bindingAdapterPosition
-            val canMoveUp = taskAdapter.canMoveVisibleLine(fromIndex, fromIndex - 1)
-            val canMoveDown = taskAdapter.canMoveVisibleLine(fromIndex, fromIndex + 1)
+            val canMove = taskAdapter.canMoveLineUpOrDown(fromIndex)
 
-            // If e.g. the item can only be moved down, we also allow dragging
-            // in the UP direction.  This allows the item to be moved back to
-            // its original position, because to do so, you need to drag it
-            // slightly further up than it was previously.
-            if (canMoveUp || canMoveDown) {
+            // If e.g. the item could really only be moved down, we also allow
+            // dragging in the UP direction.  This allows the item to be moved
+            // back to its original position, because to do so, you need to drag
+            // it slightly further up than it was previously.
+            if (canMove) {
                 return makeMovementFlags(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0)
             }
         }
@@ -41,5 +40,9 @@ class DragTasksCallback(val taskAdapter: TaskAdapter) : ItemTouchHelper.Callback
 
     override fun onSwiped(recyclerView: RecyclerView.ViewHolder, p1: Int): Unit {
         throw IllegalStateException("Swiping is not enabled for the ItemTouchHelper, so it shouldn't ever call onSwiped");
+    }
+
+    override fun isLongPressDragEnabled(): Boolean {
+        return false
     }
 }
