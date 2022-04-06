@@ -306,20 +306,26 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         return comparison == 0
     }
 
-    fun moveVisibleLine(fromVisibleLineIndex: Int, toVisibleLineIndex: Int) {
+    // Updates the UI, but avoids the red line and unselection
+    fun visuallyMoveLine(fromVisibleLineIndex: Int, toVisibleLineIndex: Int) {
         val lineToMove = visibleLines.removeAt(fromVisibleLineIndex)
         visibleLines.add(toVisibleLineIndex, lineToMove)
-
-        val fromTask = visibleLines[fromVisibleLineIndex].task
-            ?: throw IllegalStateException("Tried to move header line")
-        val toTask = visibleLines[toVisibleLineIndex].task
-            ?: throw IllegalStateException("Tried to move to position of  header line")
-        TodoApplication.todoList.moveToPositionOf(toTask, fromTask)
 
         notifyItemMoved(fromVisibleLineIndex, toVisibleLineIndex)
     }
 
-    fun persistVisibleLineMove() {
+    fun getMovableTaskAt(visibleLineIndex: Int): Task {
+        return visibleLines[visibleLineIndex].task
+            ?: throw IllegalStateException("Should only be called after canMoveVisibleLine")
+    }
+
+    fun persistLineMove(fromTask: Task, toTask: Task, isMoveBelow: Boolean) {
+        if (isMoveBelow) {
+            TodoApplication.todoList.moveBelow(toTask, fromTask)
+        } else {
+            TodoApplication.todoList.moveAbove(toTask, fromTask)
+        }
+
         TodoApplication.todoList.notifyTasklistChanged(
                 TodoApplication.config.todoFile,
                 save = true,
