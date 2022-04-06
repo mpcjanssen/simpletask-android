@@ -257,5 +257,26 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
             taskText.setHorizontallyScrolling(true)
         }
     }
+
+    fun canMoveVisibleLine(fromIndex: Int, toIndex: Int): Boolean {
+        if (fromIndex < 0 || toIndex >= visibleLines.size) return false
+
+        val from = visibleLines[fromIndex]
+        val to = visibleLines[toIndex]
+
+        if (from.header) return false
+        if (to.header) return false
+
+        val comp = TodoApplication.todoList.getMultiComparator(query,
+                TodoApplication.config.sortCaseSensitive)
+        val comparison = comp.comparator.compare(from.task, to.task)
+
+        return comparison == 0
+    }
+
+    fun moveVisibleLine(fromVisibleLineIndex: Int, toVisibleLineIndex: Int) {
+        // FIXME: Actually change the order of the tasks
+        notifyItemMoved(fromVisibleLineIndex, toVisibleLineIndex)
+    }
 }
 

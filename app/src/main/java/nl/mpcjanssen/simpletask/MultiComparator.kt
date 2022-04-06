@@ -6,7 +6,7 @@ import nl.mpcjanssen.simpletask.util.alfaSort
 import java.util.*
 
 class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boolean, createIsThreshold: Boolean, moduleName: String? = null) {
-    var comparator : Comparator<Task>? = null
+    var comparator : Comparator<Task> = compareBy({ null })
 
     var fileOrder = true
 
@@ -82,9 +82,9 @@ class MultiComparator(sorts: ArrayList<String>, today: String, caseSensitve: Boo
                 }
             }
             comparator = if (reverse) {
-                comparator?.thenByDescending(comp) ?: compareByDescending(comp)
+                comparator.thenByDescending(comp)
             } else {
-                comparator?.thenBy(comp) ?: compareBy(comp)
+                comparator.thenBy(comp)
             }
         }
     }

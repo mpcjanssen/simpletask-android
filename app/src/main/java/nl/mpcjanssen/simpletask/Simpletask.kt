@@ -28,6 +28,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.core.view.GravityCompat
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
@@ -479,6 +480,12 @@ class Simpletask : ThemedNoActionBarActivity() {
 
         listView.layoutManager = LinearLayoutManager(this)
         listView.adapter = this.taskAdapter
+
+        // FIXME: By default, drag happens on long press.  We want it to happen
+        // on touch of a child view.
+        val itemTouchHelperCallback = DragTasksCallback(this.taskAdapter)
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(listView)
 
         taskAdapter.setFilteredTasks(this, query)
         val listener = ViewTreeObserver.OnScrollChangedListener {
