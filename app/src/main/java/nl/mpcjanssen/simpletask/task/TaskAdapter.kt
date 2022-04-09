@@ -11,6 +11,7 @@ import android.text.TextUtils
 import android.text.style.StrikethroughSpan
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -25,7 +26,8 @@ class TaskViewHolder(itemView: View, val viewType : Int) : RecyclerView.ViewHold
 class TaskAdapter(val completeAction: (Task) -> Unit,
                   val unCompleteAction: (Task) -> Unit,
                   val onClickAction: (Task) -> Unit,
-                  val onLongClickAction: (Task) -> Boolean) : RecyclerView.Adapter <TaskViewHolder>() {
+                  val onLongClickAction: (Task) -> Boolean,
+                  val startDrag: (RecyclerView.ViewHolder) -> Unit) : RecyclerView.Adapter <TaskViewHolder>() {
     lateinit var query: Query
     val tag = "TaskAdapter"
     var textSize: Float = 14.0F
@@ -77,6 +79,7 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         val taskAge = binding.taskage
         val taskDue = binding.taskdue
         val taskThreshold = binding.taskthreshold
+        val taskDragArea = binding.taskdragarea
 
         if (TodoApplication.config.showCompleteCheckbox) {
             binding.checkBox.visibility = View.VISIBLE
@@ -169,12 +172,25 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         // Set selected state
         // Log.d(tag, "Setting selected state ${TodoList.isSelected(item)}")
         view.isActivated = TodoApplication.todoList.isSelected(task)
+        taskDragArea.visibility = dragIndicatorVisibility(position)
 
         // Set click listeners
-        view.setOnClickListener { onClickAction (task) ; it.isActivated = !it.isActivated }
+        view.setOnClickListener {
+            onClickAction (task)
+            it.isActivated = !it.isActivated
+            taskDragArea.visibility = dragIndicatorVisibility(position)
+        }
 
         view.setOnLongClickListener { onLongClickAction (task) }
+
+        taskDragArea.setOnTouchListener { view, motionEvent ->
+            if (motionEvent.actionMasked == MotionEvent.ACTION_DOWN) {
+                startDrag(holder)
+            }
+            false
+        }
     }
+
     internal var visibleLines = ArrayList<VisibleLine>()
 
     internal fun setFilteredTasks(caller: Simpletask, newQuery: Query) {
@@ -256,6 +272,65 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
             taskText.maxLines = 1
             taskText.setHorizontallyScrolling(true)
         }
+    }
+
+    fun dragIndicatorVisibility(visibleLineIndex: Int): Int {
+        val line = visibleLines[visibleLineIndex]
+        if (line.header) return View.GONE
+        val task = line.task ?: throw IllegalStateException("If it's not a header, it must be a task")
+
+        val shouldShow = TodoApplication.todoList.isSelected(task)
+            && canMoveLineUpOrDown(visibleLineIndex)
+
+        return if (shouldShow) View.VISIBLE else View.GONE
+    }
+
+    fun canMoveLineUpOrDown(fromIndex: Int): Boolean {
+        return canMoveVisibleLine(fromIndex, fromIndex - 1)
+            || canMoveVisibleLine(fromIndex, fromIndex + 1)
+    }
+
+    fun canMoveVisibleLine(fromIndex: Int, toIndex: Int): Boolean {
+        if (fromIndex < 0 || toIndex >= visibleLines.size) return false
+
+        val from = visibleLines[fromIndex]
+        val to = visibleLines[toIndex]
+
+        if (from.header) return false
+        if (to.header) return false
+
+        val comp = TodoApplication.todoList.getMultiComparator(query,
+                TodoApplication.config.sortCaseSensitive)
+        val comparison = comp.comparator.compare(from.task, to.task)
+
+        return comparison == 0
+    }
+
+    // Updates the UI, but avoids the red line
+    fun visuallyMoveLine(fromVisibleLineIndex: Int, toVisibleLineIndex: Int) {
+        val lineToMove = visibleLines.removeAt(fromVisibleLineIndex)
+        visibleLines.add(toVisibleLineIndex, lineToMove)
+
+        notifyItemMoved(fromVisibleLineIndex, toVisibleLineIndex)
+    }
+
+    fun getMovableTaskAt(visibleLineIndex: Int): Task {
+        return visibleLines[visibleLineIndex].task
+            ?: throw IllegalStateException("Should only be called after canMoveVisibleLine")
+    }
+
+    fun persistLineMove(fromTask: Task, toTask: Task, isMoveBelow: Boolean) {
+        if (isMoveBelow) {
+            TodoApplication.todoList.moveBelow(toTask, fromTask)
+        } else {
+            TodoApplication.todoList.moveAbove(toTask, fromTask)
+        }
+
+        TodoApplication.todoList.notifyTasklistChanged(
+                TodoApplication.config.todoFile,
+                save = true,
+                refreshMainUI = true,
+                forceKeepSelection = true);
     }
 }
 
