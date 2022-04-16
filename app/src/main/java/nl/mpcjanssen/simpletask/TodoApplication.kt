@@ -39,10 +39,7 @@ import android.os.SystemClock
 import androidx.multidex.MultiDexApplication
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.util.Log
-import androidx.room.Room
-import nl.mpcjanssen.simpletask.dao.AppDatabase
-import nl.mpcjanssen.simpletask.dao.DB_FILE
-import nl.mpcjanssen.simpletask.dao.TodoFile
+
 
 import nl.mpcjanssen.simpletask.remote.BackupInterface
 import nl.mpcjanssen.simpletask.remote.FileDialog
@@ -65,9 +62,7 @@ class TodoApplication : Application() {
         app = this
         config = Config(app)
         todoList = TodoList(config)
-        db = Room.databaseBuilder(this,
-                AppDatabase::class.java, DB_FILE).fallbackToDestructiveMigration()
-                .build()
+
         if (config.forceEnglish) {
             val conf = resources.configuration
             conf.locale = Locale.ENGLISH
@@ -138,7 +133,8 @@ class TodoApplication : Application() {
         Log.i(TAG, "Scheduling daily UI updateCache alarm, first at ${calendar.time}")
         val intent = Intent(this, AlarmReceiver::class.java)
         intent.putExtra(Constants.ALARM_REASON_EXTRA, Constants.ALARM_NEW_DAY)
-        val pi = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pi = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT
+                or PendingIntent.FLAG_IMMUTABLE)
         val am = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis,
                 AlarmManager.INTERVAL_DAY, pi)
@@ -150,7 +146,8 @@ class TodoApplication : Application() {
         Log.i(TAG, "Scheduling task list reload")
         val intent = Intent(this, AlarmReceiver::class.java)
         intent.putExtra(Constants.ALARM_REASON_EXTRA, Constants.ALARM_RELOAD)
-        val pi = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pi = PendingIntent.getBroadcast(this, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
         val am = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 15 * 60 * 1000,
@@ -234,7 +231,7 @@ class TodoApplication : Application() {
         lateinit var app : TodoApplication
         lateinit var config : Config
         lateinit var todoList: TodoList
-        lateinit var db : AppDatabase
+
     }
     var today: String = todayAsString
 }
@@ -243,13 +240,8 @@ class TodoApplication : Application() {
 object Backupper : BackupInterface {
     override fun backup(file: File, lines: List<String>) {
         val start = SystemClock.elapsedRealtime()
-        val now = Date().time
-        val fileToBackup = TodoFile(lines.joinToString ("\n"), file.canonicalPath, now)
-        val dao =  TodoApplication.db.todoFileDao()
-        if(dao.insert(fileToBackup) == -1L) {
-            dao.update(fileToBackup)
-        }
-        dao.removeBefore( now - 2 * 24 * 60 * 60 * 1000)
+
+
         val end = SystemClock.elapsedRealtime()
         Log.d(TAG, "Backing up of tasks took ${end - start} ms")
     }

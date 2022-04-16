@@ -12,9 +12,7 @@ import android.util.Log
 import android.view.Menu
 import android.widget.ScrollView
 import android.widget.TextView
-import nl.mpcjanssen.simpletask.dao.AppDatabase
-import nl.mpcjanssen.simpletask.dao.DB_FILE
-import nl.mpcjanssen.simpletask.dao.TodoFile
+
 import nl.mpcjanssen.simpletask.util.createCachedDatabase
 import nl.mpcjanssen.simpletask.util.shareText
 import nl.mpcjanssen.simpletask.util.showToastShort
@@ -30,8 +28,7 @@ class HistoryScreen : ThemedActionBarActivity() {
 
     private var toolbar_menu: Menu? = null
     private var mScroll = 0
-    val db = TodoApplication.db
-    lateinit var history: List<TodoFile>
+
     lateinit var dbFile : File
     var cursorIdx = 0
     private var m_app: TodoApplication? = null
@@ -39,20 +36,9 @@ class HistoryScreen : ThemedActionBarActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         m_app = application as TodoApplication
-        dbFile = getDatabasePath(DB_FILE)
-        if (dbFile.exists()) {
-            var title = title.toString()
-            title = title + " (" + dbFile.length() / 1024 + "KB)"
-            setTitle(title)
-        }
+
         setContentView(R.layout.history)
-        doAsync {
-            history = db.todoFileDao().getAll()
-            uiThread {
-                initToolbar()
-                displayCurrent()
-            }
-        }
+
     }
 
 
@@ -99,12 +85,7 @@ class HistoryScreen : ThemedActionBarActivity() {
                     return@OnMenuItemClickListener true
                 }
                 R.id.menu_share -> {
-                    if (history.size == 0) {
-                        showToastShort(this@HistoryScreen, "Nothing to share")
-                    } else {
-                        shareText(this@HistoryScreen, "Old todo version", history.getOrNull(cursorIdx)?.contents
-                                ?: "Nothing to share")
-                    }
+
                     return@OnMenuItemClickListener true
                 }
                 R.id.menu_share_database -> {
@@ -119,20 +100,11 @@ class HistoryScreen : ThemedActionBarActivity() {
 
     private fun clearDatabase() {
         Log.i(TAG, "Clearing history database")
-        doAsync {
-            db.todoFileDao().deleteAll()
-            history = db.todoFileDao().getAll()
-            uiThread {
-                updateMenu()
-                displayCurrent()
-            }
-        }
+
     }
 
     private fun showNext() {
-        saveScroll()
-        cursorIdx = maxOf(cursorIdx + 1, history.size - 1)
-        displayCurrent()
+
     }
 
     private fun saveScroll() {
@@ -148,37 +120,14 @@ class HistoryScreen : ThemedActionBarActivity() {
 
     private fun displayCurrent() {
 
-        val current = history.getOrNull(cursorIdx)
 
-
-        val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
-        val fileView = findViewById<TextView>(R.id.history_view)
-
-        val nameView = findViewById<TextView>(R.id.name)
-        val dateView = findViewById<TextView>(R.id.date)
-        val sv = findViewById<ScrollView>(R.id.scrollbar)
-        fileView.text = current?.contents ?: "No history"
-        nameView.text = current?.name ?: ""
-        dateView.text = format.format(current?.date ?: Date())
-        sv.scrollY = mScroll
-        updateMenu()
 
 
     }
 
 
     private fun updateMenu() {
-        if (toolbar_menu == null) {
-            return
-        }
-        val prev = toolbar_menu!!.findItem(R.id.menu_prev)
-        val next = toolbar_menu!!.findItem(R.id.menu_next)
 
-        val enablePrev = cursorIdx > 0
-        val enableNext = cursorIdx < history.size - 1
-
-        prev.isEnabled = enablePrev
-        next.isEnabled = enableNext
 
 
     }

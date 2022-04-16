@@ -291,8 +291,10 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
     }
 
     fun canMoveVisibleLine(fromIndex: Int, toIndex: Int): Boolean {
-        if (fromIndex < 0 || toIndex >= visibleLines.size) return false
+        if (fromIndex < 0 || fromIndex >= visibleLines.size) return false
+        if (toIndex < 0 || toIndex >= visibleLines.size) return false
 
+        Log.i(tag,"From ${fromIndex} to: ${toIndex}")
         val from = visibleLines[fromIndex]
         val to = visibleLines[toIndex]
 
