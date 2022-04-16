@@ -183,7 +183,7 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
 
         view.setOnLongClickListener { onLongClickAction (task) }
 
-        taskDragArea.setOnTouchListener { view, motionEvent ->
+        taskDragArea.setOnTouchListener { _, motionEvent ->
             if (motionEvent.actionMasked == MotionEvent.ACTION_DOWN) {
                 startDrag(holder)
             }
@@ -194,7 +194,7 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
     internal var visibleLines = ArrayList<VisibleLine>()
 
     internal fun setFilteredTasks(caller: Simpletask, newQuery: Query) {
-        textSize = TodoApplication.config.tasklistTextSize ?: textSize
+        textSize = TodoApplication.config.tasklistTextSize
         Log.i(tag, "Text size = $textSize")
         query = newQuery
 
