@@ -146,7 +146,7 @@ object FileStore : IFileStore {
     }
 
 
-    override fun loginActivity(): KClass<*>? {
+    override fun loginActivity(): KClass<*> {
         return LoginScreen::class
     }
 
