@@ -33,11 +33,9 @@ object FileStore : IFileStore {
         }
     }
     private val TAG = "FileStore"
-    private val OAUTH2_TOKEN = "dropboxV2Token"
 
     private val mApp = TodoApplication.app
 
-    internal var accessToken by TodoApplication.config.StringOrNullPreference(OAUTH2_TOKEN)
     private var lastSeenRemoteId by TodoApplication.config.StringOrNullPreference(R.string.file_current_version_id)
     private var _dbxClient: DbxClientV2? = null
 
@@ -78,7 +76,6 @@ object FileStore : IFileStore {
                         return true
                     } catch (e: InvalidAccessTokenException) {
                         Log.w(TAG, "Invalid access token")
-                        accessToken = null
                         broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
                     } catch (e: DbxException) {
                         Log.w(TAG, "Dropbox API error", e)
@@ -140,7 +137,6 @@ object FileStore : IFileStore {
             return data.rev != lastSeenRemoteId
         } catch (e: InvalidAccessTokenException) {
             broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
-            accessToken = null
             return true
         }
     }
