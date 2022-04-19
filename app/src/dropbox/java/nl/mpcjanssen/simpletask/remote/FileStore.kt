@@ -244,7 +244,7 @@ object FileStore : IFileStore {
 
         try {
             val dbxPath = if (file.canonicalPath == ROOT_DIR) "" else file.canonicalPath
-            val entries = FileStore.dbxClient.files().listFolder(dbxPath).entries
+            val entries = dbxClient.files().listFolder(dbxPath).entries
             entries?.forEach { entry ->
                 if (entry is FolderMetadata)
                     fileList.add(FileEntry(File(entry.name), isFolder = true))
