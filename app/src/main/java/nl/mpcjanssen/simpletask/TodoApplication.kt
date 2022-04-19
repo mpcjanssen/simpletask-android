@@ -138,7 +138,8 @@ class TodoApplication : Application() {
         Log.i(TAG, "Scheduling daily UI updateCache alarm, first at ${calendar.time}")
         val intent = Intent(this, AlarmReceiver::class.java)
         intent.putExtra(Constants.ALARM_REASON_EXTRA, Constants.ALARM_NEW_DAY)
-        val pi = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pi = PendingIntent.getBroadcast(this, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT  or PendingIntent.FLAG_IMMUTABLE)
         val am = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis,
                 AlarmManager.INTERVAL_DAY, pi)
@@ -150,7 +151,8 @@ class TodoApplication : Application() {
         Log.i(TAG, "Scheduling task list reload")
         val intent = Intent(this, AlarmReceiver::class.java)
         intent.putExtra(Constants.ALARM_REASON_EXTRA, Constants.ALARM_RELOAD)
-        val pi = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pi = PendingIntent.getBroadcast(this, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
         val am = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 15 * 60 * 1000,

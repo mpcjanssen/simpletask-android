@@ -30,6 +30,7 @@ You should have received a copy of the GNU General Public License along with Sim
         <activity
                 android:name="com.dropbox.core.android.AuthActivity"
                 android:configChanges="orientation|keyboard"
+                android:exported="true"
                 android:launchMode="singleTask">
             <intent-filter>
 
@@ -48,7 +49,8 @@ You should have received a copy of the GNU General Public License along with Sim
             android:name="nl.mpcjanssen.simpletask.remote.LoginScreen"
             android:label="@string/app_label" >
         </activity>
-        <receiver android:name="nl.mpcjanssen.simpletask.remote.ConnectivityReceiver">
+        <receiver android:name="nl.mpcjanssen.simpletask.remote.ConnectivityReceiver"
+                  android:exported="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
