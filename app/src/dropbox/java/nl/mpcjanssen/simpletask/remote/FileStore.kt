@@ -54,10 +54,10 @@ object FileStore : IFileStore {
             if (token == null) {
                 return false
             } else {
-                FileStoreActionQueue.add ("Verify token") {
                     try {
                         val accountMail = dbxClient.users().currentAccount.email
                         Log.d(TAG, "Authenticated for $accountMail")
+                        return true
                     } catch (e: InvalidAccessTokenException) {
                         Log.w(TAG, "Invalid access token")
                         accessToken = null
@@ -65,8 +65,8 @@ object FileStore : IFileStore {
                     } catch (e: DbxException) {
                         Log.w(TAG, "Dropbox API error", e)
                     }
-                }
-                return true // for now
+
+                return false // for now
             }
         }
 

@@ -250,15 +250,15 @@ class Simpletask : ThemedNoActionBarActivity() {
             binding.actionbarClear.setImageResource(R.drawable.ic_close_white_24dp)
         }
         val versionCode = BuildConfig.VERSION_CODE
-        if (TodoApplication.app.isAuthenticated) {
-            if (TodoApplication.config.latestChangelogShown < versionCode) {
-                showChangelogOverlay(this)
-                TodoApplication.config.latestChangelogShown = versionCode
-            } else if (!TodoApplication.config.rightDrawerDemonstrated) {
-                TodoApplication.config.rightDrawerDemonstrated = true
-                openSavedFilterDrawer()
-            }
+
+        if (TodoApplication.config.latestChangelogShown < versionCode) {
+            showChangelogOverlay(this)
+            TodoApplication.config.latestChangelogShown = versionCode
+        } else if (!TodoApplication.config.rightDrawerDemonstrated) {
+            TodoApplication.config.rightDrawerDemonstrated = true
+            openSavedFilterDrawer()
         }
+
 
     }
 
@@ -399,11 +399,7 @@ class Simpletask : ThemedNoActionBarActivity() {
 
 
     private fun handleIntent() {
-        if (!TodoApplication.app.isAuthenticated) {
-            Log.i(TAG, "handleIntent: not authenticated")
-            startLogin()
-            return
-        }
+
 
         binding.drawerLayout.let { drawerLayout ->
             m_drawerToggle = object : ActionBarDrawerToggle(this, /* host Activity */
