@@ -28,6 +28,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.core.view.GravityCompat
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
@@ -90,6 +91,8 @@ class Simpletask : ThemedNoActionBarActivity() {
         intentFilter.addAction(Constants.BROADCAST_SYNC_DONE)
         intentFilter.addAction(Constants.BROADCAST_STATE_INDICATOR)
         intentFilter.addAction(Constants.BROADCAST_HIGHLIGHT_SELECTION)
+
+        var itemTouchHelper: ItemTouchHelper? = null
 
         taskAdapter = TaskAdapter(
                 completeAction = {
@@ -194,11 +197,21 @@ class Simpletask : ThemedNoActionBarActivity() {
                         build.create().show()
                     }
                     true
-                })
+                },
+                startDrag = { viewHolder ->
+                    // The itemTouchHelper is created very soon, it just
+                    // needs a reference to the taskAdapter and listView
+                    var theItemTouchHelper = itemTouchHelper ?: throw IllegalStateException()
 
+                    theItemTouchHelper.startDrag(viewHolder)
+                })
 
         binding = MainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val itemTouchHelperCallback = DragTasksCallback(this.taskAdapter)
+        itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(listView)
 
         localBroadcastManager = TodoApplication.app.localBroadCastManager
 
