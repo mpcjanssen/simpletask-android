@@ -135,7 +135,7 @@ class LoginScreen : ThemedNoActionBarActivity() {
                 }
         resumeAfterAuth = true
         // The client identifier is usually of the form "SoftwareName/SoftwareVersion".
-        val requestConfig = DbxRequestConfig(FileStore.clientIdentifier)
+        val requestConfig = DbxRequestConfig(FileStore.clientIdentifier())
 
         // The scope's your app will need from Dropbox
         // Read more about Scopes here: https://developers.dropbox.com/oauth-guide#dropbox-api-permissions

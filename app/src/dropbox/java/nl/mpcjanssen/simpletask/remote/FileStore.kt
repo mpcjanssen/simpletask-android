@@ -25,7 +25,13 @@ import kotlin.reflect.KClass
  * Dropbox V2 API docs suck, most of the V2 code was inspired by https://www.sitepoint.com/adding-the-dropbox-api-to-an-android-app/
  */
 object FileStore : IFileStore {
-    val clientIdentifier = "SimpletaskAndroidFull/1.0.0"
+    fun clientIdentifier(): String {
+        return if (TodoApplication.config.fullDropBoxAccess) {
+            "SimpletaskAndroidFull/1.0.0"
+        }   else {
+            "SimpletaskAndroidFolder/1.0.0"
+        }
+    }
     private val TAG = "FileStore"
     private val OAUTH2_TOKEN = "dropboxV2Token"
 
@@ -84,14 +90,13 @@ object FileStore : IFileStore {
 
     override fun logout() {
 
-            val requestConfig = DbxRequestConfig(clientIdentifier)
+            val requestConfig = DbxRequestConfig(clientIdentifier())
             val credential = getLocalCredential()
             val dropboxClient = DbxClientV2(requestConfig, credential)
             dropboxClient.auth().tokenRevoke()
             val sharedPreferences = mApp.getSharedPreferences("dropbox", MODE_PRIVATE)
             sharedPreferences.edit().remove("credential").apply()
             mApp.clearTodoFile()
-
     }
 
 
