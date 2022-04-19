@@ -32,7 +32,9 @@ import android.os.Bundle
 
 import android.widget.Button
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.dropbox.core.DbxRequestConfig
 import com.dropbox.core.android.Auth
+import com.dropbox.core.oauth.DbxCredential
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.databinding.LoginBinding
 
@@ -98,16 +100,24 @@ class LoginScreen : ThemedNoActionBarActivity() {
     }
 
     private fun finishLogin() {
-        val accessToken = Auth.getOAuth2Token()
-        if (accessToken != null) {
-            //Store accessToken in SharedPreferences
-            FileStore.accessToken = accessToken
+        val credential = Auth.getDbxCredential() //fetch the result from the AuthActivity
+        credential?.let {
+            //the user successfully connected their Dropbox account!
+            storeCredentialLocally(it)
+
             resumeAfterAuth = false
             //Proceed to MainActivity
             TodoApplication.config.setTodoFile(FileStore.getDefaultFile())
             FileStore.remoteTodoFileChanged()
             switchToTodolist()
         }
+
+    }
+
+    //serialize the credential and store in SharedPreferences
+    private fun storeCredentialLocally(dbxCredential: DbxCredential) {
+        val sharedPreferences = getSharedPreferences("dropbox", MODE_PRIVATE)
+        sharedPreferences.edit().putString("credential", dbxCredential.toString()).apply()
     }
 
     override fun onDestroy() {
@@ -124,7 +134,13 @@ class LoginScreen : ThemedNoActionBarActivity() {
                     m_app.getString(R.string.dropbox_folder_consumer_key)
                 }
         resumeAfterAuth = true
-        Auth.startOAuth2Authentication(this, appKey.substring(3))
+        // The client identifier is usually of the form "SoftwareName/SoftwareVersion".
+        val requestConfig = DbxRequestConfig(FileStore.clientIdentifier)
+
+        // The scope's your app will need from Dropbox
+        // Read more about Scopes here: https://developers.dropbox.com/oauth-guide#dropbox-api-permissions
+        val scopes = listOf("account_info.read", "files.content.write", "files.content.read")
+        Auth.startOAuth2PKCE(this, appKey.substring(3), requestConfig, scopes)
 
     }
 

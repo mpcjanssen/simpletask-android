@@ -1,11 +1,13 @@
 package nl.mpcjanssen.simpletask.remote
 
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.net.ConnectivityManager
 import android.util.Log
 import com.dropbox.core.DbxException
 import com.dropbox.core.DbxRequestConfig
 import com.dropbox.core.InvalidAccessTokenException
+import com.dropbox.core.oauth.DbxCredential
 import com.dropbox.core.v2.DbxClientV2
 import com.dropbox.core.v2.files.DownloadErrorException
 import com.dropbox.core.v2.files.FileMetadata
@@ -23,7 +25,7 @@ import kotlin.reflect.KClass
  * Dropbox V2 API docs suck, most of the V2 code was inspired by https://www.sitepoint.com/adding-the-dropbox-api-to-an-android-app/
  */
 object FileStore : IFileStore {
-
+    val clientIdentifier = "SimpletaskAndroidFull/1.0.0"
     private val TAG = "FileStore"
     private val OAUTH2_TOKEN = "dropboxV2Token"
 
@@ -40,9 +42,19 @@ object FileStore : IFileStore {
             return newclient
         }
 
+    private fun getLocalCredential(): DbxCredential? {
+        val sharedPreferences = mApp.getSharedPreferences("dropbox", MODE_PRIVATE)
+        val serializedCredential = sharedPreferences.getString("credential", null) ?: return null
+        return DbxCredential.Reader.readFully(serializedCredential)
+    }
+
     private fun initDbxClient(): DbxClientV2 {
-        val requestConfig = DbxRequestConfig.newBuilder("simpletask").build()
-        return DbxClientV2(requestConfig, accessToken)
+        //deserialize the credential from SharedPreferences if it exists
+        val clientIdentifier = "DropboxSampleAndroid/1.0.0"
+        val requestConfig = DbxRequestConfig(clientIdentifier)
+        val credential = getLocalCredential()
+
+        return DbxClientV2(requestConfig, credential)
     }
 
     override val isEncrypted: Boolean
@@ -50,7 +62,7 @@ object FileStore : IFileStore {
 
     override val isAuthenticated: Boolean
         get() {
-            val token = accessToken
+            val token = getLocalCredential()
             if (token == null) {
                 return false
             } else {
@@ -71,9 +83,15 @@ object FileStore : IFileStore {
         }
 
     override fun logout() {
-        _dbxClient?.auth()?.tokenRevoke()
-        _dbxClient = null
-        accessToken = null
+
+            val requestConfig = DbxRequestConfig(clientIdentifier)
+            val credential = getLocalCredential()
+            val dropboxClient = DbxClientV2(requestConfig, credential)
+            dropboxClient.auth().tokenRevoke()
+            val sharedPreferences = mApp.getSharedPreferences("dropbox", MODE_PRIVATE)
+            sharedPreferences.edit().remove("credential").apply()
+            mApp.clearTodoFile()
+
     }
 
 
