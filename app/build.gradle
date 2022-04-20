@@ -40,7 +40,7 @@ android {
     flavorDimensions "main"
 
     lintOptions {
-        disable 'InvalidPackage', 'MissingTranslation'
+        disable 'InvalidPackage', 'MissingTranslation', 'ResourceType'
     }
     buildFeatures {
         viewBinding true

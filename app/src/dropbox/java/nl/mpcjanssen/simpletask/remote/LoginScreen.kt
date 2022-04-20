@@ -24,19 +24,21 @@
  */
 package nl.mpcjanssen.simpletask.remote
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-
-import android.widget.Button
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.dropbox.core.DbxRequestConfig
 import com.dropbox.core.android.Auth
 import com.dropbox.core.oauth.DbxCredential
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.databinding.LoginBinding
+import nl.mpcjanssen.simpletask.util.broadcastTasklistChanged
+
 
 class LoginScreen : ThemedNoActionBarActivity() {
 
@@ -80,9 +82,6 @@ class LoginScreen : ThemedNoActionBarActivity() {
             startActivity(Intent(this, DebugInfoScreen::class.java))
         }
 
-        if (m_app.isAuthenticated) {
-            switchToTodolist()
-        }
 
     }
 
@@ -108,11 +107,14 @@ class LoginScreen : ThemedNoActionBarActivity() {
             resumeAfterAuth = false
             //Proceed to MainActivity
             TodoApplication.config.setTodoFile(FileStore.getDefaultFile())
-            FileStore.remoteTodoFileChanged()
+            broadcastTasklistChanged(localBroadcastManager)
             switchToTodolist()
+
         }
 
     }
+
+
 
     //serialize the credential and store in SharedPreferences
     private fun storeCredentialLocally(dbxCredential: DbxCredential) {

@@ -54,8 +54,7 @@ object FileStore : IFileStore {
 
     private fun initDbxClient(): DbxClientV2 {
         //deserialize the credential from SharedPreferences if it exists
-        val clientIdentifier = "DropboxSampleAndroid/1.0.0"
-        val requestConfig = DbxRequestConfig(clientIdentifier)
+        val requestConfig = DbxRequestConfig(clientIdentifier())
         val credential = getLocalCredential()
 
         return DbxClientV2(requestConfig, credential)

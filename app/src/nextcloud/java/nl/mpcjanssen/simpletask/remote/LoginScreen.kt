@@ -46,7 +46,7 @@ class LoginScreen : ThemedActionBarActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (TodoApplication.app.isAuthenticated) {
+        if (FileStore.isAuthenticated) {
             switchToTodolist()
         }
         setTheme(TodoApplication.config.activeTheme)

@@ -145,6 +145,15 @@ class TodoApplication : Application() {
                 AlarmManager.INTERVAL_DAY, pi)
     }
 
+    fun restart() {
+        val mStartActivity = Intent(this, Simpletask::class.java)
+        val mPendingIntentId = 123456
+        val mPendingIntent = PendingIntent.getActivity(this, mPendingIntentId, mStartActivity,
+                PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        val am = this.getSystemService(ALARM_SERVICE) as AlarmManager
+        am.set(AlarmManager.RTC, System.currentTimeMillis() + 100,mPendingIntent)
+    }
+
     private fun scheduleRepeating() {
         // Schedules background reload
 
@@ -198,11 +207,6 @@ class TodoApplication : Application() {
             MyAppWidgetProvider().onUpdate(this, appWidgetManager, appWidgetIds)
         }
     }
-
-    val isAuthenticated: Boolean
-        get() {
-            return FileStore.isAuthenticated
-        }
 
     fun clearTodoFile() {
         config.clearCache()

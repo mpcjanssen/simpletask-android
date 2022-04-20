@@ -28,6 +28,7 @@ You should have received a copy of the GNU General Public License along with Sim
     <application
             android:requestLegacyExternalStorage="true">
         <activity
+                android:exported="true"
                 android:name="nl.mpcjanssen.simpletask.remote.LoginScreen"
                 android:label="@string/app_label">
         </activity>

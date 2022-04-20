@@ -502,7 +502,6 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private fun startLogin() {
         TodoApplication.app.startLogin(this)
-        finish()
     }
 
     private fun updateCompletionCheckboxState() {
