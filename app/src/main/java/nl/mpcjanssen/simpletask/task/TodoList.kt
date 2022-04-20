@@ -239,18 +239,16 @@ class TodoList(val config: Config) {
     fun reload(reason: String = "") {
         FileStoreActionQueue.add("Reload") {
             Log.d(tag, "Reload: $reason")
-            if (FileStore.isAuthenticated) {
-                val todoFile = config.todoFile
-                if (config.changesPending && FileStore.isOnline) {
-                    Log.i(tag, "Not loading, changes pending")
-                    Log.i(tag, "Saving instead of loading")
-                    save(FileStore, todoFile, eol = config.eol)
-                } else {
-                    reloadaction(todoFile)
-                }
+
+            val todoFile = config.todoFile
+            if (config.changesPending && FileStore.isOnline) {
+                Log.i(tag, "Not loading, changes pending")
+                Log.i(tag, "Saving instead of loading")
+                save(FileStore, todoFile, eol = config.eol)
             } else {
-                Log.d(tag, "Not authenticated")
+                reloadaction(todoFile)
             }
+
         }
     }
 

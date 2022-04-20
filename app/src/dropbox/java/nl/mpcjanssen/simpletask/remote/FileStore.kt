@@ -39,7 +39,7 @@ object FileStore : IFileStore {
     private var lastSeenRemoteId by TodoApplication.config.StringOrNullPreference(R.string.file_current_version_id)
     private var _dbxClient: DbxClientV2? = null
 
-    private val dbxClient: DbxClientV2
+    private val dbxClient: DbxClientV2?
         get() {
             val newclient = _dbxClient ?: initDbxClient()
             _dbxClient = newclient
@@ -52,10 +52,10 @@ object FileStore : IFileStore {
         return DbxCredential.Reader.readFully(serializedCredential)
     }
 
-    private fun initDbxClient(): DbxClientV2 {
+    private fun initDbxClient(): DbxClientV2? {
         //deserialize the credential from SharedPreferences if it exists
         val requestConfig = DbxRequestConfig(clientIdentifier())
-        val credential = getLocalCredential()
+        val credential = getLocalCredential() ?: return null
 
         return DbxClientV2(requestConfig, credential)
     }
@@ -63,26 +63,7 @@ object FileStore : IFileStore {
     override val isEncrypted: Boolean
         get() = false
 
-    override val isAuthenticated: Boolean
-        get() {
-            val token = getLocalCredential()
-            if (token == null) {
-                return false
-            } else {
-                    try {
-                        val accountMail = dbxClient.users().currentAccount.email
-                        Log.d(TAG, "Authenticated for $accountMail")
-                        return true
-                    } catch (e: InvalidAccessTokenException) {
-                        Log.w(TAG, "Invalid access token")
-                        broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
-                    } catch (e: DbxException) {
-                        Log.w(TAG, "Dropbox API error", e)
-                    }
 
-                return false // for now
-            }
-        }
 
     override fun logout() {
 
@@ -110,34 +91,41 @@ object FileStore : IFileStore {
         // on the dropbox side.
 
         Log.i(TAG, "Loading file from Dropbox: " + file)
-        if (!isAuthenticated) {
-            throw IOException("Not authenticated")
-        }
+
         val readLines = ArrayList<String>()
+        dbxClient?.let {
 
-        val download = dbxClient.files().download(file.canonicalPath)
-        val openFileStream = download.inputStream
-        val fileInfo = download.result
-        Log.i(TAG, "The file's rev is: " + fileInfo.rev)
-        lastSeenRemoteId = fileInfo.rev
+            val download = it.files().download(file.canonicalPath)
+            val openFileStream = download.inputStream
+            val fileInfo = download.result
+            Log.i(TAG, "The file's rev is: " + fileInfo.rev)
+            lastSeenRemoteId = fileInfo.rev
 
-        val reader = BufferedReader(InputStreamReader(openFileStream, "UTF-8"))
+            val reader = BufferedReader(InputStreamReader(openFileStream, "UTF-8"))
 
-        reader.forEachLine { line ->
-            readLines.add(line)
+            reader.forEachLine { line ->
+                readLines.add(line)
+            }
+            openFileStream.close()
+            return readLines
         }
-        openFileStream.close()
+        broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
         return readLines
     }
 
     override fun needSync(file: File): Boolean {
-        try {
-            val data = dbxClient.files().getMetadata(file.canonicalPath) as FileMetadata
-            return data.rev != lastSeenRemoteId
-        } catch (e: InvalidAccessTokenException) {
-            broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
-            return true
+
+        dbxClient?.let {
+            try {
+                val data = it.files().getMetadata(file.canonicalPath) as FileMetadata
+                return data.rev != lastSeenRemoteId
+            } catch (e: InvalidAccessTokenException) {
+                Log.w(TAG, "$e")
+            }
         }
+
+        broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+        return true
     }
 
     override fun todoNameChanged() {
@@ -159,74 +147,81 @@ object FileStore : IFileStore {
         val toStore = contents.toByteArray(charset("UTF-8"))
         val `in` = ByteArrayInputStream(toStore)
         Log.i(TAG, "Saving to file $file")
-        val uploadBuilder = dbxClient.files().uploadBuilder(file.canonicalPath)
-        uploadBuilder.withAutorename(true).withMode(if (!lastSeenRemoteId.isNullOrBlank()) WriteMode.update(lastSeenRemoteId) else null)
-        val uploaded = try {
-             uploadBuilder.uploadAndFinish(`in`)
-        }  finally {
-            `in`.close()
-        }
-        Log.i(TAG, "New rev " + uploaded.rev)
-        lastSeenRemoteId = uploaded.rev
-        val newName = uploaded.pathDisplay
+        dbxClient?.let {
+            val uploadBuilder = it.files().uploadBuilder(file.canonicalPath)
 
-        return File(newName)
+            uploadBuilder.withAutorename(true).withMode(if (!lastSeenRemoteId.isNullOrBlank()) WriteMode.update(lastSeenRemoteId) else null)
+            val uploaded = try {
+                uploadBuilder.uploadAndFinish(`in`)
+            } finally {
+                `in`.close()
+            }
+            Log.i(TAG, "New rev " + uploaded.rev)
+            lastSeenRemoteId = uploaded.rev
+            val newName = uploaded.pathDisplay
+
+            return File(newName)
+        }
+        broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+        throw IOException("Not authenticated")
     }
 
     override fun appendTaskToFile(file: File, lines: List<String>, eol: String) {
-        if (!isOnline) {
-            throw IOException("Device is offline")
-        }
 
         val doneContents = ArrayList<String>()
-        val rev = try {
-            val download = dbxClient.files().download(file.canonicalPath)
-            download.inputStream.bufferedReader().forEachLine {
-                doneContents.add(it)
+        dbxClient?.let {
+            val rev = try {
+                val download = it.files().download(file.canonicalPath)
+                download.inputStream.bufferedReader().forEachLine {
+                    doneContents.add(it)
+                }
+                download.close()
+                val currentRev = download.result.rev
+                Log.i(TAG, "The file's rev is: $currentRev")
+                currentRev
+            } catch (e: DownloadErrorException) {
+                Log.i(TAG, "$file doesn't exist. Creating instead of appending")
+                null
             }
-            download.close()
-            val currentRev = download.result.rev
-            Log.i(TAG, "The file's rev is: $currentRev")
-            currentRev
-        } catch (e: DownloadErrorException) {
-            Log.i(TAG, "$file doesn't exist. Creating instead of appending")
-            null
+            // Then append
+            doneContents += lines
+            val toStore = (join(doneContents, eol) + eol).toByteArray(charset("UTF-8"))
+            val `in` = ByteArrayInputStream(toStore)
+            it.files().uploadBuilder(file.canonicalPath).withAutorename(true).withMode(if (rev != null) WriteMode.update(rev) else null).uploadAndFinish(`in`)
+            return
         }
-        // Then append
-        doneContents += lines
-        val toStore = (join(doneContents, eol) + eol).toByteArray(charset("UTF-8"))
-        val `in` = ByteArrayInputStream(toStore)
-        dbxClient.files().uploadBuilder(file.canonicalPath).withAutorename(true).withMode(if (rev != null) WriteMode.update(rev) else null).uploadAndFinish(`in`)
+        broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
     }
 
     override fun writeFile(file: File, contents: String) {
-        if (!isAuthenticated) {
-            Log.e(TAG, "Not authenticated, file ${file} not written.")
-            return
-        }
+
         val toStore = contents.toByteArray(charset("UTF-8"))
         Log.d(TAG, "Write to file ${file}")
         val inStream = ByteArrayInputStream(toStore)
-        dbxClient.files().uploadBuilder(file.canonicalPath).withMode(WriteMode.OVERWRITE).uploadAndFinish(inStream)
+        dbxClient?.let {
+            it.files().uploadBuilder(file.canonicalPath).withMode(WriteMode.OVERWRITE).uploadAndFinish(inStream)
+            return
+        }
+        broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
     }
 
     @Throws(IOException::class)
     override fun readFile(file: File, fileRead: (String) -> Unit) {
-        if (!isAuthenticated) {
-            return
-        }
 
-        val download = dbxClient.files().download(file.canonicalPath)
-        Log.i(TAG, "The file's rev is: " + download.result.rev)
+        dbxClient?.let {
+            val download = it.files().download(file.canonicalPath)
+            Log.i(TAG, "The file's rev is: " + download.result.rev)
 
-        val reader = BufferedReader(InputStreamReader(download.inputStream, "UTF-8"))
-        val readFile = ArrayList<String>()
-        reader.forEachLine { line ->
-            readFile.add(line)
+            val reader = BufferedReader(InputStreamReader(download.inputStream, "UTF-8"))
+            val readFile = ArrayList<String>()
+            reader.forEachLine { line ->
+                readFile.add(line)
+            }
+            download.inputStream.close()
+            val contents = join(readFile, "\n")
+            fileRead(contents)
         }
-        download.inputStream.close()
-        val contents = join(readFile, "\n")
-        fileRead(contents)
+    broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
     }
 
     override fun getDefaultFile(): File {
@@ -240,20 +235,24 @@ object FileStore : IFileStore {
     override fun loadFileList(file: File, txtOnly: Boolean): List<FileEntry> {
 
         val fileList = ArrayList<FileEntry>()
+        dbxClient?.let {
+            try {
+                val dbxPath = if (file.canonicalPath == ROOT_DIR) "" else file.canonicalPath
 
-        try {
-            val dbxPath = if (file.canonicalPath == ROOT_DIR) "" else file.canonicalPath
-            val entries = dbxClient.files().listFolder(dbxPath).entries
-            entries?.forEach { entry ->
-                if (entry is FolderMetadata)
-                    fileList.add(FileEntry(File(entry.name), isFolder = true))
-                else if (!txtOnly || File(entry.name).extension == "txt") {
-                    fileList.add(FileEntry(File(entry.name), isFolder = false))
+                val entries = it.files().listFolder(dbxPath).entries
+                entries?.forEach { entry ->
+                    if (entry is FolderMetadata)
+                        fileList.add(FileEntry(File(entry.name), isFolder = true))
+                    else if (!txtOnly || File(entry.name).extension == "txt") {
+                        fileList.add(FileEntry(File(entry.name), isFolder = false))
+                    }
                 }
+            } catch (e: Throwable) {
+                Log.e(TAG, "Couldn't load file list, ", e)
             }
-        } catch (e: Throwable) {
-            Log.e(TAG, "Couldn't load file list, ", e)
+            return fileList
         }
+        broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
         return fileList
     }
 }
