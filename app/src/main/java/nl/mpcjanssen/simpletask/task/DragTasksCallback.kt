@@ -84,13 +84,9 @@ class DragTasksCallback(val taskAdapter: TaskAdapter) : ItemTouchHelper.Callback
         val oldCurrentMove = currentMove
         if (oldCurrentMove == null) {
             // If `currentMove` wasn't set before, the "from" task is the task
-            // we're currently dragging.
-            // (Easy refactoring idea: Actually, we don't need to save the
-            // "from" task because it's always the task that is currently being
-            // dragged.  I.e. we can drop both "from" attributes from the
-            // LineMove class and just compute them in `clearView` the way
-            // they're computed here / in `onMove`.  I think this would also
-            // allow us to get rid of the if statement here.)
+            // we're currently dragging.  We need to save the fromLineIndex to
+            // check if anything was moved at all in the end.  We may actually
+            // not need to save `fromTask`.
             val fromLineIndex = nowFrom
             val fromTask = taskAdapter.getMovableTaskAt(nowFrom)
 
