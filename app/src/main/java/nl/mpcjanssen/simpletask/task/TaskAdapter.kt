@@ -357,7 +357,7 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         val comp = TodoApplication.todoList.getMultiComparator(query,
                 TodoApplication.config.sortCaseSensitive)
 
-        // If we're sorting by *reverse* file order, the meaning of above/below
+        // If we're sorting by reverse file order, the meaning of above/below
         // is swapped in the todo.txt file vs in the displayed lines
         if (isMoveBelow xor !comp.fileOrder) {
             TodoApplication.todoList.moveBelow(toTask, fromTask)
