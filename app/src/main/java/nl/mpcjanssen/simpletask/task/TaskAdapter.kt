@@ -320,7 +320,44 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
     }
 
     fun persistLineMove(fromTask: Task, toTask: Task, isMoveBelow: Boolean) {
-        if (isMoveBelow) {
+        // -- What is the meaning of isMoveBelow, moveBelow, moveAbove etc? --
+        //
+        // Example todo.txt file:
+        //
+        //   First (index 0)
+        //   Above-Middle (index 1)
+        //   Middle (index 2)
+        //   Last (index 3)
+        //
+        // The interpretation of which position we mean with `toTask` depends on
+        // whether we're moving the item upwards or downwards:
+        //
+        // * If you move "Middle" below "Last" (fromTask=2, toTask=3), moving it
+        //   to the position of task 3 means it should be placed directly
+        //   *below* that task in the todo.txt file.  In this case, we're given
+        //   moveBelow=true and we call `moveBelow`.
+        //
+        // * If instead you move "Middle" above "First" (fromTask=2, toTask=0),
+        //   it is also moved to the position of that task, but now that means
+        //   it should be placed *above* that task.  We're given moveBelow=false
+        //   and we call `moveAbove`.
+        //
+        // * If instead you drag "First" to the very bottom, then move it up to
+        //   between "Above-Middle" and "Middle", the last task it will move
+        //   past is "Middle".  This means the `DragTasksCallback` will call
+        //   persistLineMove with fromTask=0, toTask=2.  However, it doesn't
+        //   want us to move "First" just below "Middle"!  It wants us to move
+        //   "First" just *above* "Middle".  To communicate this difference, it
+        //   passes isMoveBelow=false.  We call `moveAbove`.
+        //
+        // -------------------------------------------------------------------
+
+        val comp = TodoApplication.todoList.getMultiComparator(query,
+                TodoApplication.config.sortCaseSensitive)
+
+        // If we're sorting by *reverse* file order, the meaning of above/below
+        // is swapped in the todo.txt file vs in the displayed lines
+        if (isMoveBelow xor !comp.fileOrder) {
             TodoApplication.todoList.moveBelow(toTask, fromTask)
         } else {
             TodoApplication.todoList.moveAbove(toTask, fromTask)
