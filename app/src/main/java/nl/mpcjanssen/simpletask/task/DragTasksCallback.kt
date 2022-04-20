@@ -72,6 +72,12 @@ class DragTasksCallback(val taskAdapter: TaskAdapter) : ItemTouchHelper.Callback
     }
 
     private fun updateCurrentMove(nowFrom: Int, nowTo: Int) {
+        // Lower indices are higher up in the list.  We look at the current
+        // swapping of two items:  If we come from higher up in the list, we
+        // want the dragging item to be placed below the other item.  If we
+        // come from lower down, then above.
+        val isMoveBelow = nowFrom < nowTo
+
         val toTask = taskAdapter.getMovableTaskAt(nowTo)
         val toLineIndex = nowTo
 
@@ -88,16 +94,11 @@ class DragTasksCallback(val taskAdapter: TaskAdapter) : ItemTouchHelper.Callback
             val fromLineIndex = nowFrom
             val fromTask = taskAdapter.getMovableTaskAt(nowFrom)
 
-            // Lower indices are higher up in the list.  We look at the current
-            // swapping of two items:  If we come from higher up in the list, we
-            // want the dragging item to be placed below the other item.  If we
-            // come from lower down, then above.
-            val isMoveBelow = nowFrom < nowTo
             currentMove = LineMove(fromLineIndex, toLineIndex, fromTask, toTask, isMoveBelow)
         } else {
             val fromLineIndex = oldCurrentMove.fromLineIndex
             val fromTask = oldCurrentMove.fromTask
-            val isMoveBelow = nowFrom < nowTo
+
             currentMove = LineMove(fromLineIndex, toLineIndex, fromTask, toTask, isMoveBelow)
         }
     }
