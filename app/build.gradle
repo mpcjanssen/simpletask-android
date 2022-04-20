@@ -57,8 +57,8 @@ android {
     }
 
     defaultConfig {
-        versionName "10.9.3"
-        versionCode 10009003
+        versionName "11.0.0"
+        versionCode 11000000
         buildConfigField "String", "GIT_VERSION", "\"" + androidGitVersion.name() + "\""
         multiDexEnabled false
         minSdkVersion 23
