@@ -61,7 +61,7 @@ android {
         versionCode 10009003
         buildConfigField "String", "GIT_VERSION", "\"" + androidGitVersion.name() + "\""
         multiDexEnabled false
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 31
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         kapt {
