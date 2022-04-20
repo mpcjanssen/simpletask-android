@@ -80,18 +80,21 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 
         appIntent = new Intent(ctx,Simpletask.class);
         appIntent.setAction(Constants.INTENT_START_FILTER);
-        PendingIntent pendingIntent = PendingIntent.getActivity(ctx, FROM_LIST_VIEW, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(ctx, FROM_LIST_VIEW, appIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         view.setPendingIntentTemplate(R.id.widgetlv, pendingIntent);
 
         appIntent = new Intent(ctx,Simpletask.class);
         appIntent.setAction(Constants.INTENT_START_FILTER);
         putFilterExtras(appIntent, preferences, widgetId);
-        pendingIntent = PendingIntent.getActivity(ctx, FROM_WIDGETS_START+widgetId, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntent = PendingIntent.getActivity(ctx, FROM_WIDGETS_START+widgetId, appIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         view.setOnClickPendingIntent(R.id.title,pendingIntent);
 
         appIntent = new Intent(ctx,AddTask.class);
         putFilterExtras(appIntent, preferences, widgetId);
-        pendingIntent = PendingIntent.getActivity(ctx, FROM_WIDGETS_START+widgetId , appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntent = PendingIntent.getActivity(ctx, FROM_WIDGETS_START+widgetId , appIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         view.setOnClickPendingIntent(R.id.widgetadd,pendingIntent);
 
         appIntent = new Intent(ctx,FilterActivity.class);
@@ -99,7 +102,8 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         appIntent.putExtra(Constants.EXTRA_WIDGET_RECONFIGURE, true);
         appIntent.putExtra(Constants.EXTRA_WIDGET_ID, widgetId);
         filter.getQuery().saveInIntent(appIntent);
-        pendingIntent = PendingIntent.getActivity(ctx, FROM_WIDGETS_START+widgetId , appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntent = PendingIntent.getActivity(ctx, FROM_WIDGETS_START+widgetId , appIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT |  PendingIntent.FLAG_IMMUTABLE);
         view.setOnClickPendingIntent(R.id.widgetconfig,pendingIntent);
         return view;
 	}
