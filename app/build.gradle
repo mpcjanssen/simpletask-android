@@ -1,25 +1,9 @@
-buildscript {
-    ext.kotlin_version = '1.4.32'
-    repositories {
-        google()
-        mavenCentral()
-        jcenter()
-        maven {
-            url "https://oss.sonatype.org/content/repositories/snapshots"
-        }
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.4'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
+
 
 plugins {
     id 'com.gladed.androidgitversion' version '0.4.13'
 //    id 'com.github.triplet.play' version '3.0.0'
+    
 }
 
 apply plugin: 'com.android.application'
@@ -39,22 +23,17 @@ android {
     compileSdkVersion 31
     flavorDimensions "main"
 
-    lintOptions {
-        disable 'InvalidPackage', 'MissingTranslation', 'ResourceType'
-    }
     buildFeatures {
         viewBinding true
+    }
+    packagingOptions {
+        resources {
+            excludes += ['META-INF/LICENSE.txt', 'META-INF/DEPENDENCIES', 'META-INF/LICENSE', 'META-INF/NOTICE.txt', 'LICENSE.txt']
+        }
     }
 
 
     //noinspection GroovyMissingReturnStatement
-    packagingOptions {
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/DEPENDENCIES'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/NOTICE.txt'
-        exclude 'LICENSE.txt'
-    }
 
     defaultConfig {
         versionName "11.0.0"
@@ -125,6 +104,9 @@ android {
             proguardFile "proguard.txt"
             manifestPlaceholders = [providerBuildType: "release"]
         }
+    }
+    lint {
+        disable 'InvalidPackage', 'MissingTranslation', 'ResourceType'
     }
 
 

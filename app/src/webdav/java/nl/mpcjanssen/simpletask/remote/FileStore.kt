@@ -11,6 +11,7 @@ import nl.mpcjanssen.simpletask.R
 
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.TodoException
+import nl.mpcjanssen.simpletask.util.broadcastAuthFailed
 import nl.mpcjanssen.simpletask.util.join
 import java.io.File
 import java.io.IOException
@@ -38,7 +39,7 @@ object FileStore : IFileStore {
     override val isEncrypted: Boolean
         get() = false
 
-    override val isAuthenticated: Boolean
+    val isAuthenticated: Boolean
         get() {
             Log.d("FileStore", "FileStore is authenticated ${username != null}")
             return username != null
@@ -68,6 +69,10 @@ object FileStore : IFileStore {
 
 
     private fun getRemoteVersion(file: File): String {
+        if (!isAuthenticated) {
+            broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+            return ""
+        }
         getClient()?.let {
             val url = url(file)
             val res = it.list(url)[0]
@@ -88,11 +93,13 @@ object FileStore : IFileStore {
 
     override fun loadTasksFromFile(file: File): List<String> {
 
+
         // If we load a file and changes are pending, we do not want to overwrite
         // our local changes, instead we try to upload local
         Log.i(TAG, "Loading file from: ${url(file)}")
         if (!isAuthenticated) {
-            throw IOException("Not authenticated")
+            broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+            return emptyList()
         }
         getClient()?.let {
             val readLines = it.get(url(file)).bufferedReader(Charsets.UTF_8).readLines()
@@ -102,6 +109,10 @@ object FileStore : IFileStore {
     }
 
     override fun needSync(file: File): Boolean {
+        if (!isAuthenticated) {
+            broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+            return true
+        }
         return getRemoteVersion(file)!= lastSeenRemoteId
     }
 
@@ -117,6 +128,10 @@ object FileStore : IFileStore {
     @Synchronized
     @Throws(IOException::class)
     override fun saveTasksToFile(file: File, lines: List<String>, eol: String) : File {
+        if (!isAuthenticated) {
+            broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+            return file
+        }
         getClient()?.let { client ->
             Log.i(TAG, "Uploading file to ${url(file)}")
             val contents = join(lines, eol) + eol
@@ -138,6 +153,10 @@ object FileStore : IFileStore {
 
     @Throws(IOException::class)
     override fun appendTaskToFile(file: File, lines: List<String>, eol: String) {
+        if (!isAuthenticated) {
+            broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+            return
+        }
         getClient()?.let { client ->
             Log.i(TAG, "Appending to file ${url(file)}")
             val newLines = client.get(url(file)).bufferedReader(Charsets.UTF_8).readLines().toMutableList()
@@ -150,6 +169,10 @@ object FileStore : IFileStore {
     }
 
     override fun writeFile(file: File, contents: String) {
+        if (!isAuthenticated) {
+            broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+            return
+        }
         getClient()?.let { client ->
             Log.i(TAG, "Writing file to ${url(file)}")
             client.put(url(file), contents.toByteArray(Charsets.UTF_8))
@@ -160,6 +183,10 @@ object FileStore : IFileStore {
 
     @Throws(IOException::class)
     override fun readFile(file: File, fileRead: (String) -> Unit) {
+        if (!isAuthenticated) {
+            broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+            return
+        }
         getClient()?.let { client ->
             Log.i(TAG, "Writing file to ${url(file)}")
             fileRead.invoke(client.get(url(file)).bufferedReader(Charsets.UTF_8).readText())
@@ -168,6 +195,10 @@ object FileStore : IFileStore {
 
 
     override fun loadFileList(file: File, txtOnly: Boolean): List<FileEntry> {
+        if (!isAuthenticated) {
+            broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+            return emptyList()
+        }
         getClient()?.let { client ->
             val url = url(file) + "/"
             val result = ArrayList<FileEntry>()

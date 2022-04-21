@@ -1,37 +1,19 @@
-plugins {
-    id "io.gitlab.arturbosch.detekt" version "1.18.1"
-}
-repositories {
-    mavenCentral()
-}
-def projectSource = file(projectDir)
-def configFile = files("$rootDir/config/detekt/detekt.yml")
-def baselineFile = file("$rootDir/config/detekt/baseline.xml")
-def kotlinFiles = "**/*.kt"
-def resourceFiles = "**/resources/**"
-def buildFiles = "**/build/**"
-
-apply plugin: 'io.gitlab.arturbosch.detekt'
-
-tasks.register("detektAll", io.gitlab.arturbosch.detekt.Detekt) {
-    def autoFix = project.hasProperty('detektAutoFix')
-
-    description = "Custom DETEKT build for all modules"
-    parallel = true
-    ignoreFailures = false
-    autoCorrect = autoFix
-    buildUponDefaultConfig = true
-    setSource(projectSource)
-//    baseline.set(baselineFile)
-//    config.setFrom(configFile)
-    include(kotlinFiles)
-    exclude(resourceFiles, buildFiles)
-    reports {
-        html.enabled = true
-        xml.enabled = false
-        txt.enabled = false
+buildscript {
+    ext.kotlin_version = '1.4.32'
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots"
+        }
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.1.3'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
-dependencies {
-    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.18.1"
-}
+

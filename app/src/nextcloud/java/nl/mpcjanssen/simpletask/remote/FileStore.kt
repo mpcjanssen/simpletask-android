@@ -17,6 +17,7 @@ import com.owncloud.android.lib.resources.files.model.RemoteFile
 import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.TodoException
+import nl.mpcjanssen.simpletask.util.broadcastAuthFailed
 import nl.mpcjanssen.simpletask.util.join
 import nl.mpcjanssen.simpletask.util.showToastLong
 import java.io.File
@@ -40,7 +41,7 @@ object FileStore : IFileStore {
     override val isEncrypted: Boolean
         get() = false
 
-    override val isAuthenticated: Boolean
+    val isAuthenticated: Boolean
         get() {
             Log.d("FileStore", "FileStore is authenticated ${username != null}")
             return username != null
@@ -72,6 +73,10 @@ object FileStore : IFileStore {
 
 
     private fun getRemoteVersion(file: File): String {
+        if (!isAuthenticated) {
+            broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+            return ""
+        }
         val op = ReadFileRemoteOperation(file.canonicalPath)
         val res = op.execute(getClient())
         return if (res.isSuccess) {
@@ -94,6 +99,10 @@ object FileStore : IFileStore {
         }
 
     override fun loadTasksFromFile(file: File): List<String> {
+        if (!isAuthenticated) {
+            broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+            return emptyList()
+        }
 
         // If we load a file and changes are pending, we do not want to overwrite
         // our local changes, instead we try to upload local
@@ -121,6 +130,10 @@ object FileStore : IFileStore {
     }
 
     override fun needSync(file: File): Boolean {
+        if (!isAuthenticated) {
+            broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+            return true
+        }
         return getRemoteVersion(file) != lastSeenRemoteId
     }
 
@@ -136,6 +149,10 @@ object FileStore : IFileStore {
     @Synchronized
     @Throws(IOException::class)
     override fun saveTasksToFile(file: File, lines: List<String>, eol: String) : File {
+        if (!isAuthenticated) {
+            broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+            return file
+        }
         val contents = join(lines, eol) + eol
 
         val timestamp = timeStamp()
@@ -178,6 +195,10 @@ object FileStore : IFileStore {
 
     @Throws(IOException::class)
     override fun appendTaskToFile(file: File, lines: List<String>, eol: String) {
+        if (!isAuthenticated) {
+            broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+            return
+        }
         if (!isOnline) {
             throw IOException("Device is offline")
         }
@@ -206,8 +227,8 @@ object FileStore : IFileStore {
 
     override fun writeFile(file: File, contents: String) {
         if (!isAuthenticated) {
-            Log.e(TAG, "Not authenticated, file $file not written.")
-            throw IOException("Not authenticated")
+            broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+            return
         }
 
         val cacheDir = mApp.applicationContext.cacheDir
@@ -236,6 +257,10 @@ object FileStore : IFileStore {
 
 
     override fun loadFileList(file: File, txtOnly: Boolean): List<FileEntry> {
+        if (!isAuthenticated) {
+            broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+            return emptyList()
+        }
         val result = ArrayList<FileEntry>()
         val op = ReadFolderRemoteOperation(file.canonicalPath)
         getClient()?.let {

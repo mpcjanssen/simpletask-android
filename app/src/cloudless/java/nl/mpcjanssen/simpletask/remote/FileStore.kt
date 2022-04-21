@@ -11,6 +11,7 @@ import android.util.Log
 import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.util.Config
+import nl.mpcjanssen.simpletask.util.broadcastAuthFailed
 import nl.mpcjanssen.simpletask.util.join
 import nl.mpcjanssen.simpletask.util.writeToFile
 import java.io.File
@@ -37,7 +38,7 @@ object FileStore : IFileStore {
     override val isEncrypted: Boolean
         get() = false
 
-    override val isAuthenticated: Boolean
+    val isAuthenticated: Boolean
         get() {
             val permissionCheck = ContextCompat.checkSelfPermission(TodoApplication.app,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -45,6 +46,10 @@ object FileStore : IFileStore {
         }
 
     override fun loadTasksFromFile(file: File): List<String> {
+        if (!isAuthenticated) {
+            broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+            return emptyList()
+        }
         Log.i(TAG, "Loading tasks")
         val lines = file.readLines()
         Log.i(TAG, "Read ${lines.size} lines from $file")
@@ -54,6 +59,10 @@ object FileStore : IFileStore {
     }
 
     override fun needSync(file: File): Boolean {
+        if (!isAuthenticated) {
+            broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+            return true
+        }
         return lastSeenRemoteId != file.lastModified().toString()
     }
 
@@ -62,11 +71,19 @@ object FileStore : IFileStore {
     }
 
     override fun writeFile(file: File, contents: String) {
+        if (!isAuthenticated) {
+            broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+            return
+        }
         Log.i(TAG, "Writing file to  ${file.canonicalPath}")
         file.writeText(contents)
     }
 
     override fun readFile(file: File, fileRead: (contents: String) -> Unit) {
+        if (!isAuthenticated) {
+            broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+            return
+        }
         Log.i(TAG, "Reading file: ${file.path}")
         val contents: String
         val lines = file.readLines()
@@ -95,6 +112,10 @@ object FileStore : IFileStore {
     }
 
     override fun saveTasksToFile(file: File, lines: List<String>, eol: String) : File {
+        if (!isAuthenticated) {
+            broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+            return file
+        }
         Log.i(TAG, "Saving tasks to file: ${file.path}")
         val obs = observer
         obs?.ignoreEvents(true)
@@ -105,6 +126,10 @@ object FileStore : IFileStore {
     }
 
     override fun appendTaskToFile(file: File, lines: List<String>, eol: String) {
+        if (!isAuthenticated) {
+            broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+            return
+        }
         Log.i(TAG, "Appending ${lines.size} tasks to ${file.path}")
         file.appendText(lines.joinToString(eol))
     }
@@ -118,6 +143,10 @@ object FileStore : IFileStore {
     }
 
     override fun loadFileList(file: File, txtOnly: Boolean): List<FileEntry> {
+        if (!isAuthenticated) {
+            broadcastAuthFailed(TodoApplication.app.localBroadCastManager)
+            return emptyList()
+        }
         val result = ArrayList<FileEntry>()
         if (file.canonicalPath == "/") {
             TodoApplication.app.getExternalFilesDir(null)?.let {
