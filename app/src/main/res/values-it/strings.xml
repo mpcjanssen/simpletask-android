@@ -280,8 +280,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="dropbox">Dropbox</string>
     <string name="save_filter">Salva il filtro attuale</string>
     <string name="save_filter_message">Inserisci un nome per il filtro attuale da mostrare nel cassetto dei filtri salvati</string>
-    <string name="donate_title">Dona</string>
-    <string name="donate_summary">Dona se apprezzi Simpletask. NOTA: La donazione è volontaria, Simpletask sarà sempre libero.  </string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Inverti ordine</string>
     <!-- Calendar sync -->

@@ -317,7 +317,6 @@ http://goo.gl/X1C55P
     <string name="title_filter_applied">Фильтровать по:</string>
     <string name="shortcut_addtask_name">Добавить Задачу</string>
     <string name="filter_import_export">Импорт/экспорт фильтров</string>
-    <string name="donated_summary">Спасибо за ваш взнос.</string>
     <string name="calendar_disp_name">Напоминания, созданные в Simpletask</string>
     <string name="calendar_sync_desc_due">Напоминание о сроке выполнения, сгенерированное в Simpletask</string>
     <string name="calendar_sync_desc_thre">Напоминание о крайнем сроке выполнения, сгенерированное в Simpletask</string>

@@ -142,7 +142,6 @@
     <string name="help_locale">en</string>
     <string name="calendar_write_error">错误︰无法写入日历</string>
     <string name="click_to_copy">单击复制到剪贴板。</string>
-    <string name="donated_summary">感谢您的捐助。</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">反向排序</string>
     <string name="calendar_disp_name">事务提醒</string>
@@ -333,8 +332,6 @@
     <string name="save_filter">保存当前筛选器</string>
     <string name="save_filter_message">为当前筛选器输入名称（将显示在已保存筛选器列表中）。</string>
     <string name="filter_import_export">导入/导出筛选器</string>
-    <string name="donate_title">捐助</string>
-    <string name="donate_summary">本软件是CopyLeft自由软件，软件开发者投入了很多辛勤的劳动，无偿提供给您使用。您可以选择各种方式捐助，我们都非常感谢。</string>
     <string name="calendar_sync_desc_due">由事务自动生成的任务截止日期提醒</string>
     <string name="calendar_sync_desc_thre">由事务自动生成的任务启动日期提醒</string>
     <string name="calendar_exists_warning">警告：日历已存在同名事件，覆盖中……</string>

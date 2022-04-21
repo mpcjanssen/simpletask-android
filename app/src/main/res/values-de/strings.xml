@@ -284,8 +284,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="dropbox">Dropbox</string>
     <string name="save_filter">Aktuellen Filter speichern</string>
     <string name="save_filter_message">Gib einen Namen für den aktuellen Filter ein, damit er unter den gespeicherten Filtern angezeigt wird.</string>
-    <string name="donate_title">Spenden</string>
-    <string name="donate_summary">Kostenlos für dich bereitgestellt, ist dies außerdem freie Software. Eine Menge harter Arbeit wurde hereingesteckt und weil du die Option hast, ist jede Spende gerne willkommen.</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Umgekehrte Sortierung</string>
     <!-- Calendar sync -->
@@ -314,7 +312,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="write_failed">Fehler beim Schreiben der Datei. Ihre Änderungen wurden NICHT gespeichert.</string>
     <string name="by_completion_date">Fertigstellungsdatum</string>
     <string name="clear_database">Datenbank leeren</string>
-    <string name="donated_summary">Vielen Dank für Ihre Spende.</string>
     <string name="none">kein</string>
     <string name="taskview_extended_pref_title">Zeige Daten in einer separaten Zeile</string>
     <string name="use_create_backup_summary">Beim Sortieren das Erstellungsdatum der Aufgabe verwenden, wenn kein Anfangsdatum gegeben ist.</string>

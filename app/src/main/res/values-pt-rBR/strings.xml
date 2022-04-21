@@ -322,9 +322,6 @@
     <string name="save_filter">Salvar filtro atual</string>
     <string name="save_filter_message">Inserir nome do filtro atual para exibi-lo no painel de filtros salvos.</string>
     <string name="filter_import_export">Importar/exportar filtros</string>
-    <string name="donate_title">Doar</string>
-    <string name="donate_summary">Doe se gostou do Simpletask. NOTA: Doações são voluntárias - o Simpletask sempre será gratuito.</string>
-    <string name="donated_summary">Obrigado pela sua doação.</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Organização reversa</string>
     <string name="calendar_disp_name">Lembretes do Simpletask</string>

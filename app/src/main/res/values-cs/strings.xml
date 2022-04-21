@@ -237,8 +237,6 @@
     <string name="no_filter">Bez filtru</string>
     <string name="dropbox">Dropbox</string>
     <string name="save_filter">Uložit stávající filtr</string>
-    <string name="donate_title">Přispět na vývoj</string>
-    <string name="donated_summary">Děkujeme za váš dar.</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Obrácené pořadí</string>
     <string name="calendar_write_error">Chyba: Nepodařilo se zapsat kalendář</string>
@@ -337,7 +335,6 @@
     <string name="title_activity_filter">Filtrovat</string>
     <string name="no_threshold_date">Žádné hraniční datum</string>
     <string name="save_filter_message">Zadejte název pro stávající filtr, který bude zobrazován v přihrádce s uloženými filtry.</string>
-    <string name="donate_summary">Krom toho že je poskytovaný zdarma, jedná se o svobodný software. Je do něho vkládáno mnoho usilovné práce a proto pokud máte možnost, jakýkoli dar je velmi oceněn.</string>
     <string name="calendar_sync_desc_due">Připomínka termínu, automaticky vytvořená Simpletask</string>
     <string name="calendar_sync_desc_thre">Připomínka hraničního data, automaticky vytvořená Simpletask</string>
     <string name="share_history">Zobrazit a sdílet vnitřní databáze historie todo.txt pro účely obnovy.</string>

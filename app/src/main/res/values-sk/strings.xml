@@ -134,7 +134,6 @@
     <string name="filter_show_completed">Zobraziť hotové úlohy</string>
     <string name="save_filter">Uložiť súčasný filter</string>
     <string name="save_filter_message">Zadajte názov súčasného filtra, ktorý bude zobrazený v zásuvke s uloženými filtrami.</string>
-    <string name="donate_title">Podporiť vývoj</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="log">Záznam udalostí (log)</string>
     <string name="next">Ďalší</string>
@@ -313,8 +312,6 @@
     <string name="input_new">Zadať nový</string>
     <string name="no_filter">Bez filtra</string>
     <string name="filter_import_export">Importovať/exportovať filtre</string>
-    <string name="donate_summary">Okrem toho, že je poskytovaný zadarmo, sa jedná o slobodný softvér. Bolo do neho vložené mnoho usilovnej práce a preto, ak máte možnosť, akýkoľvek príspevok je veľmi cenený.</string>
-    <string name="donated_summary">Ďakujeme za váš príspevok.</string>
     <string name="sort_reverse">Otočené poradie triedenia</string>
     <string name="calendar_disp_name">Pripomienky Simpletask</string>
     <string name="calendar_sync_desc_due">Pripomienka termínu, automaticky vytvorená aplikáciou Simpletask</string>

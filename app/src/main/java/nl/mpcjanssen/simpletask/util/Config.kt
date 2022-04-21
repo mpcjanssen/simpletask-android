@@ -89,15 +89,6 @@ class Config(app: TodoApplication) : Preferences(app) {
     val eol: String
         get() = if (_windowsEOL) "\r\n" else "\n"
 
-    fun hasDonated(): Boolean {
-        try {
-            TodoApplication.app.packageManager.getInstallerPackageName("nl.mpcjanssen.simpletask.donate")
-            return true
-        } catch (e: IllegalArgumentException) {
-            return false
-        }
-    }
-
     val hasAppendAtEnd by BooleanPreference(R.string.append_tasks_at_end, true)
 
     // Takes an argument f, an expression that maps theme strings to IDs

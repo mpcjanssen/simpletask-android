@@ -366,9 +366,6 @@
 
     <string name="filter_import_export">Szűrők importálása/exportálása</string>
 
-    <string name="donate_title">Támogatás</string>
-    <string name="donate_summary">Támogass, ha szereted a simpletasket. NE FELEDD: A fizetés önkéntes, a simpletask mindig ingyenes és szabad marad.</string>
-    <string name="donated_summary">Köszönjük a támogatásodat!</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Fordított sorrend</string>
 

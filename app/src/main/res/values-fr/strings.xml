@@ -317,9 +317,6 @@ Décochez cette option pour définir les nouvelles dates par rapport à aujourd\
     <string name="save_filter">Sauvegarder le filtre courant</string>
     <string name="save_filter_message">Entrer un nom pour le filtre courant, qui sera affiché dans les filtres sauvegardés.</string>
     <string name="filter_import_export">Import / export des filtres</string>
-    <string name="donate_title">Donner</string>
-    <string name="donate_summary">Fourni gratuitement, c\'est en plus un logiciel libre copyleft. Beaucoup de travail acharné y a été consacré, et parce que vous avez le choix, tout don est grandement apprécié.</string>
-    <string name="donated_summary">Merci pour votre don.</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Inverser le tri</string>
     <string name="calendar_disp_name">Rappels Simpletask</string>

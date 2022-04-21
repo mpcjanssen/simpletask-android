@@ -206,21 +206,6 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
     class CalendarPrefFragment : PrefFragment(R.xml.calendar_preferences)
     class ConfigurationPrefFragment : PrefFragment(R.xml.configuration_preferences)
 
-    class DonatePrefFragment : PrefFragment(R.xml.donate_preferences) {
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-
-            val screen = preferenceScreen
-            val toHide: Preference
-            if (TodoApplication.config.hasDonated()) {
-                toHide = screen.findPreference("donate")
-            } else {
-                toHide = screen.findPreference("donated")
-            }
-            screen.removePreference(toHide)
-        }
-    }
-
     class OtherPrefFragment : PrefFragment(R.xml.other_preferences) {
         @RequiresApi(Build.VERSION_CODES.M)
         override fun onCreate(savedInstanceState: Bundle?) {

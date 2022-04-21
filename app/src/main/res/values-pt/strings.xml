@@ -298,9 +298,6 @@
     <string name="save_filter">Guardar filtro atual</string>
     <string name="save_filter_message">Introduzir o nome do filtro atual para ser mostrado no painel de filtros guardados.</string>
     <string name="filter_import_export">Importar/exportar filtros</string>
-    <string name="donate_title">Donativo</string>
-    <string name="donate_summary">Fornecido a si gratuitamente. Isto é uma aplicação com direito de cópia livre. Foi realizado muito trabalho nesta aplicação, e se tomar esta opção, qualquer donativo é bastante apreciado.</string>
-    <string name="donated_summary">Obrigado pelo seu donativo.</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Ordenação inversa</string>
     <!-- Calendar sync -->

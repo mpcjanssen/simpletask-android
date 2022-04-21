@@ -120,8 +120,6 @@
     <string name="no_header">Ништа</string>
     <string name="no_prio">-</string>
     <string name="add_to_calendar">Додај подсетник</string>
-    <string name="donate_title">Донирај</string>
-    <string name="donated_summary">Хвала Вам на донацији.</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="hello_world">Здраво свете!</string>
     <string name="action_settings">Поставке</string>
@@ -337,7 +335,6 @@
     <string name="calendar_title">Simpletask подсетник</string>
     <string name="share_title">Simpletask задатак</string>
     <string name="task_added">Задатак додат у Simpletask</string>
-    <string name="donate_summary">Дат Вам бесплатно, ово је и слободни софтвер без ограничења коришћења. Много труда је улежено у њега, и уколико сте у могућности, свака донација ће се ценити.</string>
     <string name="calendar_disp_name">Simpletask подсетници</string>
     <string name="calendar_exists_warning">Упозорење: календар са истим именом већ постоји, преписујем…</string>
     <string name="share_history">Погледај и подели интерну todo.txt базу историјата измена за опоравак.</string>

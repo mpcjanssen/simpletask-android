@@ -227,8 +227,6 @@
     <string name="dropbox">Dropbox</string>
     <string name="save_filter">Lagre gjeldende filter</string>
     <string name="filter_import_export">Importer/eksporter filter</string>
-    <string name="donate_title">Doner</string>
-    <string name="donated_summary">Takk for din donasjon.</string>
     <string name="sort_reverse">Omvendt sortering</string>
     <string name="calendar_disp_name">Simpletask-påminnelser</string>
     <string name="calendar_write_error">Feil: Kunne ikke skrive kalender</string>
@@ -305,7 +303,6 @@
     <string name="input_new">Skriv inn ny</string>
     <string name="no_filter">Inget filter</string>
     <string name="save_filter_message">Skriv inn navn på gjeldende filter, for visning i skuffen for lagrede filter.</string>
-    <string name="donate_summary">Tilbudt deg gratis, men også copyleft friprog. Mye hardt arbeid har blitt investert i det, og siden du har valget, blir donasjoner varmt mottatt.</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="calendar_sync_desc_due">Påminnelse om frist, automatisk generert av Simpletask</string>
     <string name="calendar_sync_desc_thre">Påminnelse om terskel, automatisk generert av Simpletask</string>

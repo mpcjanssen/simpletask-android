@@ -325,9 +325,6 @@
     <string name="save_filter">Mevcut filtreyi kaydet</string>
     <string name="save_filter_message">Mevcut filtre için, kaydedilen filtreler çekmecesinde görüntülenecek bir ad girin.</string>
     <string name="filter_import_export">Filtreleri içe/dışa aktar</string>
-    <string name="donate_title">Bağış yap</string>
-    <string name="donate_summary">Size ücretsiz olarak sunulmasının yanında, bu ayrıca özgür bir copyleft yazılımdır. Bu, çok sıkı bir çalışmanın ürünüdür, ve yapacağınız herhangi bir bağış için çok teşekkür ederiz.</string>
-    <string name="donated_summary">Bağışınız için teşekkürler.</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Sıralamayı ters çevir</string>
     <string name="calendar_disp_name">Simpletask Hatırlatmalar</string>

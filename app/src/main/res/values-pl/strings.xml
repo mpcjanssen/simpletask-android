@@ -315,9 +315,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="dropbox">Dropbox</string>
     <string name="save_filter">Zapisz obecny filtr</string>
     <string name="save_filter_message">Wprowadź nazwę dla obecnego filtru, która zostanie wyświetlona spośród zapisanych filtrów.</string>
-    <string name="donate_title">Wspomóż</string>
-    <string name="donate_summary">Wspomóż Simpletask. UWAGA : Darowizna jest dobrowolna, Simpletask zawsze będzie darmowy. </string>
-    <string name="donated_summary">Dziękujemy za darowiznę</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Odwróć sortowanie</string>
     <!-- Calendar sync -->

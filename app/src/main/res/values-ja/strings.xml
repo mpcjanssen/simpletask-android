@@ -283,9 +283,6 @@
     <string name="save_filter">現在のフィルターを保存</string>
     <string name="save_filter_message">保存済みフィルターのドロワーに表示される、現在のフィルターの名前を入力します。</string>
     <string name="filter_import_export">フィルターのインポート/エクスポート</string>
-    <string name="donate_title">寄付</string>
-    <string name="donate_summary">無料で提供されます。これはまたコピーレフトの自由ソフトウェアです。多くの労力が投入されているので、任意の寄付は大歓迎です。</string>
-    <string name="donated_summary">寄付をいただき、ありがとうございます。</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">逆順に並べ替え</string>
     <string name="calendar_disp_name">Simpletask リマインダー</string>

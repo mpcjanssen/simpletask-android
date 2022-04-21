@@ -371,9 +371,6 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="save_filter">Save current filter</string>
     <string name="save_filter_message">Enter a name for the current filter, to be displayed in the saved filters drawer.</string>
     <string name="filter_import_export">Import/export filters</string>
-    <string name="donate_title">Donate</string>
-    <string name="donate_summary">Provided to you gratis, this is additionally copyleft libre software. A lot of hard work has been put into it, and because you are at the option to, any donation is greatly appreciated.</string>
-    <string name="donated_summary">Thank you for your donation.</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Reverse sort</string>
     <!-- Calendar sync -->

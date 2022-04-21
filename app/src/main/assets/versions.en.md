@@ -24,5 +24,5 @@ Simpletask Cloudless
 Donate versions
 ---------------
 
-There used to be donate versions in the playstore as well, but because they are exactly the same as the free version, they were becoming a hassle to maintain. If you want to donate, you can find a donation link in the settings.
+There used to be donate versions in the playstore as well, but because they are exactly the same as the free version, they were becoming a hassle to maintain. If you want to donate, you can find a donation link in help.
 

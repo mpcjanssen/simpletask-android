@@ -291,9 +291,6 @@
     <string name="save_filter">Huidig filter opslaan</string>
     <string name="save_filter_message">Voer een naam in voor het huidige filter; deze wordt weergegeven in de opgeslagen filters-lade.</string>
     <string name="filter_import_export">Filters importeren/exporteren</string>
-    <string name="donate_title">Doneren</string>
-    <string name="donate_summary">U gratis aangeboden en bovendien vrije software. Veel hard werk is er in gestoken, en omdat u de keuze heeft, wordt elke schenking sterk gewaardeerd.</string>
-    <string name="donated_summary">Bedankt voor uw donatie.</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Andersom sorteren</string>
     <string name="calendar_disp_name">Simpletask-herinneringen</string>

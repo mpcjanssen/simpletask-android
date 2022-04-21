@@ -297,8 +297,6 @@
     <string name="save_filter">현재 필터 저장</string>
     <string name="save_filter_message">저장된 필터 서랍에 표시될 현재 필터의 새 이름 입력</string>
 
-    <string name="donate_title">Donate</string>
-    <string name="donate_summary">심플태스크가 마음에 들면 기부하세요. 기부는 자율입니다.</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">정렬 역순</string>
 

@@ -156,9 +156,6 @@ Cualquier cambio que no haya sido sincronizado se perderá después de desconect
     <string name="dropbox">Dropbox</string>
     <string name="save_filter">Guardar filtro</string>
     <string name="save_filter_message">Introduzca un nombre para el filtro:</string>
-    <string name="donate_title">Donar</string>
-    <string name="donate_summary">Provisto gratis, Simpletask es software libre bajo licencia copyleft. Mucho trabajo se ha puesto en él. Cualquier donación será muy apreciada.</string>
-    <string name="donated_summary">Gracias por su donación.  </string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Invertir el orden</string>
     <!-- Calendar sync -->

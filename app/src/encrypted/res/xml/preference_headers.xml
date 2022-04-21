@@ -21,8 +21,4 @@
         android:fragment="nl.mpcjanssen.simpletask.Preferences$OtherPrefFragment"
         android:title="@string/preference_other"
         />
-    <header
-        android:fragment="nl.mpcjanssen.simpletask.Preferences$DonatePrefFragment"
-        android:title="@string/donate_title"
-        />
 </preference-headers>
