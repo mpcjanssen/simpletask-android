@@ -85,6 +85,12 @@ class AddTask : ThemedActionBarActivity() {
 
         Log.d(TAG, "Fill addtask")
 
+        val taskId = intent.getStringExtra(Constants.EXTRA_TASK_ID)
+        if (taskId != null) {
+            val task = TodoApplication.todoList.getTaskWithId(taskId)
+            if (task != null) TodoApplication.todoList.pendingEdits.add(task)
+        }
+
         val pendingTasks = TodoApplication.todoList.pendingEdits.map { it.inFileFormat(TodoApplication.config.useUUIDs) }
             val preFillString: String = when {
                 pendingTasks.isNotEmpty() -> {

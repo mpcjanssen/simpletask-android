@@ -42,6 +42,8 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
     }
 
+    var id: String = UUID.randomUUID().toString()
+
     val text: String
         get() {
             return tokens.joinToString(" ") { it.text }

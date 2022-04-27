@@ -416,4 +416,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="file_encryption_password">File encryption password</string>
     <string name="password_summary">%s</string>
     <string name="password_already_set_summary">Password already set. Setting a new password will overwrite the existing password and you may not be able to access files anymore in case you forget the password.</string>
+    <string name="pin_notification">Pin as notification</string>
+    <string name="channel_name">Pin notifications</string>
+    <string name="channel_description">Channel for tasks pinned as notifications</string>
 </resources>
