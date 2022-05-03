@@ -160,6 +160,7 @@ class TodoList(val config: Config) {
         val smallestSize = org.zip(updated) { orgTask, updatedTask ->
             val idx = todoItems.indexOf(orgTask)
             if (idx != -1) {
+                updatedTask.id = orgTask.id
                 todoItems[idx] = updatedTask
             } else {
                 todoItems.add(updatedTask)
@@ -430,6 +431,10 @@ class TodoList(val config: Config) {
 
     fun getTaskAt(idx: Int): Task? {
         return todoItems.getOrNull(idx)
+    }
+
+    fun getTaskWithId(id: String): Task? {
+        return todoItems.find { it.id == id }
     }
 
 

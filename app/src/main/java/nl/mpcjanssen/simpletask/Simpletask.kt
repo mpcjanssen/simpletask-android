@@ -13,6 +13,7 @@ package nl.mpcjanssen.simpletask
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.app.PendingIntent
 import android.app.SearchManager
 import android.content.*
 import android.content.res.Configuration
@@ -39,6 +40,8 @@ import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
@@ -49,6 +52,7 @@ import nl.mpcjanssen.simpletask.util.*
 import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.text.toInt
 import android.R.id as androidId
 
 class Simpletask : ThemedNoActionBarActivity() {
@@ -895,6 +899,7 @@ class Simpletask : ThemedNoActionBarActivity() {
             R.id.priority -> prioritizeTasks(checkedTasks)
             R.id.update_lists -> updateLists(checkedTasks)
             R.id.update_tags -> updateTags(checkedTasks)
+            R.id.pin_notification -> pinNotification(checkedTasks)
             R.id.menu_export_filter_export -> {
                 FileStoreActionQueue.add("Exporting filters") {
                     try {
@@ -1111,6 +1116,34 @@ class Simpletask : ThemedNoActionBarActivity() {
                 Task::removeTag
         ) {
             TodoApplication.todoList.notifyTasklistChanged(TodoApplication.config.todoFile, true)
+        }
+    }
+
+    private fun pinNotification(checkedTasks: List<Task>) {
+        for (task in checkedTasks) {
+            val taskIdHash = task.id.hashCode()
+            val editTaskIntent = Intent(this, AddTask::class.java).let {
+                it.putExtra(Constants.EXTRA_TASK_ID, task.id)
+                PendingIntent.getActivity(this, taskIdHash, it, PendingIntent.FLAG_IMMUTABLE)
+            }
+            val markDoneIntent = Intent(this, MarkTaskDone::class.java).let {
+                it.putExtra(Constants.EXTRA_TASK_ID, task.id)
+                PendingIntent.getService(this, taskIdHash, it, PendingIntent.FLAG_IMMUTABLE)
+            }
+            var builder = NotificationCompat.Builder(this, "pin-notifications")
+                .setSmallIcon(R.drawable.ic_done_white_24dp)
+                .setContentTitle(task.text)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(editTaskIntent)
+                .addAction(R.drawable.ic_done_white_24dp, getString(R.string.done), markDoneIntent)
+                .addExtras(Bundle().apply { putString(Constants.EXTRA_TASK_ID, task.id) })
+
+            with(NotificationManagerCompat.from(this)) {
+                notify(taskIdHash, builder.build())
+            }
+            if (!TodoApplication.config.hasKeepSelection) {
+                TodoApplication.todoList.clearSelection()
+            }
         }
     }
 

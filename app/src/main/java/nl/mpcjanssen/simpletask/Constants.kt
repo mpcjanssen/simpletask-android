@@ -59,6 +59,7 @@ object Constants {
     const val EXTRA_WIDGET_ID = "widgetid"
 
     const val EXTRA_PREFILL_TEXT = "prefill_text"
+    const val EXTRA_TASK_ID = "taskid"
 
     // Android OS specific constants
     const val ANDROID_EVENT = "vnd.android.cursor.item/event"
