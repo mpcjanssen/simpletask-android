@@ -1,5 +1,10 @@
 ﻿# Changelog
 
+## 11.0.0
+
+- Too many changes to list, just a new tag to get fixes since 10.9.3 included.
+- Version bump because of the new dropbox SDK and token handling.
+
 ## 10.9.3
 
 ### Fixed
