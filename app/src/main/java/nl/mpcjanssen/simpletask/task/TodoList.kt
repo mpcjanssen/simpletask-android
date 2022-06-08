@@ -192,7 +192,9 @@ class TodoList(val config: Config) {
         if (save) {
             save(FileStore, todoFile, eol = config.eol)
         }
-        if (!config.hasKeepSelection && !forceKeepSelection) {
+        if (selectedTasks.isEmpty()) {
+            broadcastRefreshSelection(TodoApplication.app.localBroadCastManager)
+        } else if (!config.hasKeepSelection && !forceKeepSelection) {
             clearSelection()
         }
         mLists = null
