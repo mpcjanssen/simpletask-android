@@ -3,7 +3,9 @@ Simpletask
 
 [![CircleCI](https://circleci.com/gh/mpcjanssen/simpletask-android.svg?style=svg)](https://circleci.com/gh/mpcjanssen/simpletask-android)
 
-See [here](./app/src/main/assets/index.en.md) for more information.
+Simpletask is a simple task manager for Android.
+
+See documentation [here](./app/src/main/assets/index.en.md).
 
 ## Translation
 
