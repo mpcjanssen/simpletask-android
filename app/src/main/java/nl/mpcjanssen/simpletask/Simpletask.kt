@@ -1120,31 +1120,10 @@ class Simpletask : ThemedNoActionBarActivity() {
     }
 
     private fun pinNotification(checkedTasks: List<Task>) {
-        for (task in checkedTasks) {
-            val taskIdHash = task.id.hashCode()
-            val editTaskIntent = Intent(this, AddTask::class.java).let {
-                it.putExtra(Constants.EXTRA_TASK_ID, task.id)
-                PendingIntent.getActivity(this, taskIdHash, it, PendingIntent.FLAG_IMMUTABLE)
-            }
-            val markDoneIntent = Intent(this, MarkTaskDone::class.java).let {
-                it.putExtra(Constants.EXTRA_TASK_ID, task.id)
-                PendingIntent.getService(this, taskIdHash, it, PendingIntent.FLAG_IMMUTABLE)
-            }
-            var builder = NotificationCompat.Builder(this, "pin-notifications")
-                .setSmallIcon(R.drawable.ic_done_white_24dp)
-                .setContentTitle(task.text)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(editTaskIntent)
-                .addAction(R.drawable.ic_done_white_24dp, getString(R.string.done), markDoneIntent)
-                .addExtras(Bundle().apply { putString(Constants.EXTRA_TASK_ID, task.id) })
-
-            with(NotificationManagerCompat.from(this)) {
-                notify(taskIdHash, builder.build())
-            }
-            if (!TodoApplication.config.hasKeepSelection) {
-                TodoApplication.todoList.clearSelection()
-            }
-        }
+        val taskIds = checkedTasks.map { it.id }.toTypedArray()
+        val intent = Intent(this, NotificationService::class.java)
+        intent.putExtra(Constants.EXTRA_TASK_ID, taskIds)
+        startForegroundService(intent)
     }
 
     private inner class UiHandler () {

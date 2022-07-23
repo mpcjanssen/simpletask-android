@@ -203,6 +203,9 @@ You should have received a copy of the GNU General Public License along with Sim
         <service
             android:name=".MarkTaskDone"
             />
+        <service
+            android:name=".NotificationService"
+            />
         <receiver android:name="nl.mpcjanssen.simpletask.AlarmReceiver"/>
         <uses-library
             android:name="com.sec.android.app.multiwindow"

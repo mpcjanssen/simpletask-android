@@ -74,6 +74,7 @@ class TodoApplication : Application() {
         db = Room.databaseBuilder(this,
                 AppDatabase::class.java, DB_FILE).fallbackToDestructiveMigration()
                 .build()
+        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (config.forceEnglish) {
             val conf = resources.configuration
             conf.locale = Locale.ENGLISH
@@ -220,15 +221,13 @@ class TodoApplication : Application() {
 
     fun updatePinnedNotifications() {
         Log.i(TAG, "Updating pinned notifications")
-        val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.getActiveNotifications().forEach { 
-            val taskId = it.notification.extras.getString(Constants.EXTRA_TASK_ID)
-            if (taskId != null) {
-                val taskText = TodoApplication.todoList.getTaskWithId(taskId)?.text
-                val notification = NotificationCompat.Builder(this, it.notification).setContentTitle(taskText).build()
-                notificationManager.notify(it.id, notification)
-            }
-        }       
+        val taskIds = notificationManager.getActiveNotifications().map { it.notification.extras.getString(Constants.EXTRA_TASK_ID) }.filterNotNull().toTypedArray()
+        val (completedIds, incompleteIds) = taskIds.partition { todoList.getTaskWithId(it)?.isCompleted() ?: false }
+        NotificationService.removeNotifications(completedIds)
+        Log.i(TAG, "taskIds: $taskIds")
+        val intent = Intent(this, NotificationService::class.java)
+        intent.putExtra(Constants.EXTRA_TASK_ID, incompleteIds.toTypedArray())
+        startForegroundService(intent)
     }
 
     fun clearTodoFile() {
@@ -268,8 +267,6 @@ class TodoApplication : Application() {
                 description = descriptionText
             }
             // Register the channel with the system
-            val notificationManager: NotificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
     }
@@ -282,6 +279,7 @@ class TodoApplication : Application() {
         lateinit var config : Config
         lateinit var todoList: TodoList
         lateinit var db : AppDatabase
+        lateinit var notificationManager: NotificationManager
     }
     var today: String = todayAsString
 }
