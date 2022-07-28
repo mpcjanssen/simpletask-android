@@ -26,14 +26,17 @@ package nl.mpcjanssen.simpletask.remote
 
 import android.Manifest
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.Settings
+import android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION
 import androidx.core.app.ActivityCompat
-import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.Simpletask
 import nl.mpcjanssen.simpletask.ThemedNoActionBarActivity
 import nl.mpcjanssen.simpletask.TodoApplication
 import nl.mpcjanssen.simpletask.databinding.LoginBinding
-import nl.mpcjanssen.simpletask.util.Config
 import nl.mpcjanssen.simpletask.util.showToastLong
 
 class LoginScreen : ThemedNoActionBarActivity() {
@@ -69,20 +72,33 @@ class LoginScreen : ThemedNoActionBarActivity() {
         }
     }
 
-    internal fun startLogin() {
-        ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_PERMISSION)
+    internal fun continueLogin() {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && !Environment.isExternalStorageManager()  )  {
+                val intent = Intent()
+                intent.action = Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION
+                val uri: Uri = Uri.fromParts("package", this.packageName, null)
+                intent.setData(uri)
+                startActivityForResult(intent, REQUEST_FULL_PERMISSION)
+            } else {
+                finishLogin()
+            }
     }
 
+    internal fun startLogin() {
+        ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_WRITE_PERMISSION)
+    }
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
-            REQUEST_PERMISSION -> finishLogin()
+            REQUEST_WRITE_PERMISSION -> continueLogin()
+            REQUEST_FULL_PERMISSION -> finishLogin()
         }
     }
 
     companion object {
-        private val REQUEST_PERMISSION = 1
+        private val REQUEST_WRITE_PERMISSION = 1
+        private val REQUEST_FULL_PERMISSION = 2
         internal val TAG = LoginScreen::class.java.simpleName
     }
 }

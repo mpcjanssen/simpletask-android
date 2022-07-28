@@ -2,10 +2,7 @@ package nl.mpcjanssen.simpletask.remote
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.os.Environment
-import android.os.FileObserver
-import android.os.Handler
-import android.os.Looper
+import android.os.*
 import androidx.core.content.ContextCompat
 import android.util.Log
 import nl.mpcjanssen.simpletask.R
@@ -40,9 +37,16 @@ object FileStore : IFileStore {
 
     val isAuthenticated: Boolean
         get() {
-            val permissionCheck = ContextCompat.checkSelfPermission(TodoApplication.app,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            return permissionCheck == PackageManager.PERMISSION_GRANTED
+            val externManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                Environment.isExternalStorageManager()
+            } else {
+                true
+            }
+            return (
+                    ContextCompat.checkSelfPermission(TodoApplication.app,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                            PackageManager.PERMISSION_GRANTED)
+                    && externManager
         }
 
     override fun loadTasksFromFile(file: File): List<String> {
