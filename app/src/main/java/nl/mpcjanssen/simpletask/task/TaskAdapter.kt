@@ -172,7 +172,9 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         // Set selected state
         // Log.d(tag, "Setting selected state ${TodoList.isSelected(item)}")
         view.isActivated = TodoApplication.todoList.isSelected(task)
-        taskDragArea.visibility = dragIndicatorVisibility(position)
+
+//        taskDragArea.visibility = dragIndicatorVisibility(position)
+        taskDragArea.visibility = View.GONE
 
         // Set click listeners
         view.setOnClickListener {
