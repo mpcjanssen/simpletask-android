@@ -180,7 +180,8 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         view.setOnClickListener {
             onClickAction (task)
             it.isActivated = !it.isActivated
-            taskDragArea.visibility = dragIndicatorVisibility(position)
+//            taskDragArea.visibility = dragIndicatorVisibility(position)
+            taskDragArea.visibility = View.GONE
         }
 
         view.setOnLongClickListener { onLongClickAction (task) }
