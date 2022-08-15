@@ -98,7 +98,7 @@
     <string name="sort_complete_last_pref_title">Tamamlananı en son göster</string>
     <string name="sort_complete_last_pref_summary">Tamamlanan görevleri her zaman listenin altında göster</string>
     <string name="keep_prio_header">Tamamlanan görevlerde önceliği koru</string>
-    <string name="keep_prio_summary">Todo.txt tamamlandığında önceliği kaldırır</string>
+    <string name="keep_prio_summary">Simpletask, tamamlamada önceliği korur</string>
     <string name="prepend_date_pref_title">Yeni görevlere tarih damgası ekle</string>
     <string name="prepend_date_pref_summary">Oluşturma tarihini otomatik olarak ekle</string>
     <string name="line_breaks_pref_title">Windows dostu satır sonları</string>
@@ -363,4 +363,13 @@
     <string name="no_tasks_to_archive">Arşivlenecek görev yok.</string>
     <string name="force_english_title">İngilizceyi zorla</string>
     <string name="share_link">Linki paylaş</string>
+    <string name="pref_key__set_encryption_password">pref_key__set_encryption_password</string>
+    <string name="password_summary">%s</string>
+    <string name="pref_key__default_encryption_password">pref_key__default_encryption_password</string>
+    <string name="show_filter_drawer">Kaydedilen filtreler</string>
+    <string name="password_already_set_summary">Parola zaten ayarlandı. Yeni bir parola belirlemek mevcut parolanın üzerine yazacaktır ve parolayı unutmanız durumunda dosyalara artık erişemeyebilirsiniz.</string>
+    <string name="pin_notification">Bildirim olarak sabitle</string>
+    <string name="channel_name">Bildirimleri sabitle</string>
+    <string name="channel_description">Bildirim olarak sabitlenen görevler için kanal</string>
+    <string name="file_encryption_password">Dosya şifreleme parolası</string>
 </resources>
