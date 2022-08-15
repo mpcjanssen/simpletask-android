@@ -77,7 +77,7 @@
     <string name="sort_complete_last_pref_title">显示已完成的最后一项</string>
     <string name="sort_complete_last_pref_summary">总是在清单的末尾显示己完成任务</string>
     <string name="keep_prio_header">在已完成的任务中保留优先级</string>
-    <string name="keep_prio_summary">Todo.txt 在完成时删除优先级</string>
+    <string name="keep_prio_summary">Simpletask 在完成时保留优先级</string>
     <string name="prepend_date_pref_summary">自动添加创建日期</string>
     <string name="line_breaks_pref_title">对 Windows 友好的换行符</string>
     <string name="line_breaks_pref_summary">使用对 Windows 友好的换行符</string>
@@ -170,7 +170,7 @@
     <string name="sort_case_sensitive_title">排序时区分大小写</string>
     <string name="use_create_backup_summary">排序时，如果没有设置启动日期就使用任务创建日期作为启动日期</string>
     <string name="todotxt_terms_title">使用 todo.txt 术语</string>
-    <string name="add_task_help">将任务更新或添加到任务列表。每行一条任务。<b>优先级</b>在每行起始，用 (.) 比如 (A) 表示（括号后面有空格）； <b>标签</b> 以 +标记（+号前面有空格），比如 +厨房； <b>清单</b>以 @标记（@前有空格），如 @在家。 注意这里的括号、+和@都是半角字符。一条任务可以包含任意个标签，也可以同时在多个清单上</string>
+    <string name="add_task_help">更新或将任务添加到任务列表。 每行一项任务。<b>优先级</b>以 (.) 开头，例如 (A)<b>标签</b>以 + 号开头，例如 +Kitchen<b>列表</b>以@ 符号开头，例如@home 一项任务可以包含任意数量的标签或位于多个列表中。 </string>
     <string name="prepend_date_pref_title">记录新任务的创建日期</string>
     <string name="swipe_complete_pref_title">滑动完成</string>
     <string name="swipe_complete_pref_summary">在任务上滑动以标识完成。</string>
@@ -340,7 +340,8 @@
     <string name="back_clears_filter_title">返回键清除筛选</string>
     <string name="back_clears_filter_summary">在退出应用程序之前按返回键将清除筛选器。</string>
     <string name="use_uuid_title">为每个任务分配一个 UUID</string>
-    <string name="nav_drawer_hint">使用“保存”按钮保存当前筛选器</string>
+    <string name="nav_drawer_hint">使用“保存”按钮
+\n保存当前筛选器</string>
     <string name="invalid_certificate_msg">服务器证书无效，你想继续吗？</string>
     <string name="invalid_certificate_title">证书无效。</string>
     <string name="no_tasks_to_archive">没有要归档的任务。</string>
@@ -352,4 +353,13 @@
     <string name="link_added">链接已添加到事务</string>
     <string name="share_link_failed">无法添加空链接。</string>
     <string name="share_link">分享链接</string>
+    <string name="pref_key__default_encryption_password">pref_key__default_encryption_password</string>
+    <string name="pref_key__set_encryption_password">pref_key__set_encryption_password</string>
+    <string name="file_encryption_password">文件加密密码</string>
+    <string name="password_summary">%s</string>
+    <string name="password_already_set_summary">密码已设置。 设置新密码将覆盖现有密码，如果忘记密码，你将无法再访问文件。</string>
+    <string name="pin_notification">固定为通知</string>
+    <string name="channel_name">固定通知</string>
+    <string name="channel_description">固定为通知的任务频道</string>
+    <string name="show_filter_drawer">已保存筛选器</string>
 </resources>
