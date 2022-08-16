@@ -265,7 +265,7 @@
     <string name="archive_now_pref_title">Arkiver nå</string>
     <string name="TODOTXTPATH_defaultPath">/todo</string>
     <string name="keep_prio_header">Behold prioritet for fullførte gjøremål</string>
-    <string name="keep_prio_summary">Todo.txt fjerner prioritet ved fullføring</string>
+    <string name="keep_prio_summary">Simpletask beholder prioritet ved fullføring</string>
     <string name="recur_from_original_date_pref_title">Gjenta gjøremål ved bruk av opprinnelige datoer</string>
     <string name="recur_from_original_date_pref_summary">Utsetter de opprinnelige datoene i gjøremålet når et gjentagende gjøremål opprettes. Velg bort dette for å sette nye datoer relativt til dagen.</string>
     <string name="manual_sync_pref_summary">Ikke last opp hver eneste endring til Dropbox automatisk.</string>
@@ -352,4 +352,13 @@
     <string name="link_added">Lenke lagt til i Simpletask</string>
     <string name="share_link_failed">Kunne ikke legge til lenke: Lenkeadresse tom</string>
     <string name="share_link">Del lenke</string>
+    <string name="show_filter_drawer">Lagrede filtre</string>
+    <string name="password_summary">%s</string>
+    <string name="pin_notification">Fest som merknad</string>
+    <string name="channel_name">Fest merknader</string>
+    <string name="file_encryption_password">Filkrypteringspassord</string>
+    <string name="channel_description">Kanal for gjøremål festet som merknader</string>
+    <string name="password_already_set_summary">Passord allerede satt. Å sette et nytt passord overskriver det eksisterede, og de kan hende du ikke vil få tilgang til filer hvis du glemmer det.</string>
+    <string name="pref_key__default_encryption_password">pref_key__default_encryption_password</string>
+    <string name="pref_key__set_encryption_password">pref_key__set_encryption_password</string>
 </resources>
