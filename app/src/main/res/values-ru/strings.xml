@@ -335,4 +335,7 @@ http://goo.gl/X1C55P
     <string name="dates_today">сегодня</string>
     <string name="selected">выбрано</string>
     <string name="no_prio">-</string>
+    <string name="keep">сохранять</string>
+    <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
+    <string name="show_filter_drawer">Сохраненные фильтры</string>
 </resources>
