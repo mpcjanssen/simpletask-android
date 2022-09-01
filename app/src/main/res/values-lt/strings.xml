@@ -1,2 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="cancel_changes">Pakeitimai bus prarasti.</string>
+    <string name="set_preferences">Nustatymai</string>
+    <string name="preferences">Nustatymai</string>
+    <string name="prev">Ankstesnis</string>
+    <string name="viewtask">Peržiūrėti Užduotį</string>
+    <string name="cancel">Atšaukti</string>
+    <string name="delete">Ištrinti</string>
+    <string name="dropbox_logout_pref_title">Atsijungti</string>
+    <string name="context_prompt_todotxt">Kontekstas</string>
+    <string name="dates_one_day_ago">vakar</string>
+    <string name="dates_one_week">viena savaitė</string>
+    <string name="dates_one_month_ago">praėjusį mėnesį</string>
+    <string name="dates_tomorrow">rytoj</string>
+    <string name="dates_one_month">vienas mėnuo</string>
+    <string name="action_settings">Nustatymai</string>
+    <string name="help">Pagalba</string>
+    <string name="history">Istorija</string>
+    <string name="archive">Archyvas</string>
+    <string name="next">Kitas</string>
+    <string name="add_task_help_btn">Pagalba</string>
+    <string name="visit_website_title">Pagalba</string>
+    <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
+    <string name="password_summary">%s</string>
+    <string name="date">Data</string>
+    <string name="calendar_sync_screen_title">Pranešimai</string>
+    <string name="color_due_pref_title">Spalva</string>
+    <string name="tasktexthint">\@Aptarti +Paryžius klausimą su +Hectoras @Troy
+\nPasakyti +Hectoras kad jis nebūtų toks nuobodus @Troy
+\nPašalinti šį tekstą iš meniu @Telefonas</string>
+    <string name="filter_show_prompt">Rodyti</string>
+    <string name="dates_two_weeks">dvi savaites</string>
+    <string name="dates_today">šiandien</string>
+    <string name="project_prompt_todotxt">Projektas</string>
+    <string name="delete_task_confirm">Ištrinti</string>
+    <string name="select_all">Pasirinkti visus</string>
+</resources>
