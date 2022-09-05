@@ -172,16 +172,13 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         // Set selected state
         // Log.d(tag, "Setting selected state ${TodoList.isSelected(item)}")
         view.isActivated = TodoApplication.todoList.isSelected(task)
-
-//        taskDragArea.visibility = dragIndicatorVisibility(position)
-        taskDragArea.visibility = View.GONE
+        taskDragArea.visibility = dragIndicatorVisibility(position)
 
         // Set click listeners
         view.setOnClickListener {
             onClickAction (task)
             it.isActivated = !it.isActivated
-//            taskDragArea.visibility = dragIndicatorVisibility(position)
-            taskDragArea.visibility = View.GONE
+            taskDragArea.visibility = dragIndicatorVisibility(position)
         }
 
         view.setOnLongClickListener { onLongClickAction (task) }
@@ -278,6 +275,9 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
     }
 
     fun dragIndicatorVisibility(visibleLineIndex: Int): Int {
+        if (!TodoApplication.config.hasTaskDrag) {
+            return View.GONE
+        }
         val line = visibleLines[visibleLineIndex]
         if (line.header) return View.GONE
         val task = line.task ?: throw IllegalStateException("If it's not a header, it must be a task")

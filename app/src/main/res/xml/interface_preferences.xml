@@ -58,4 +58,9 @@
             android:key="@string/use_uuids"
             android:title="@string/use_uuid_title"
     />
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/task_drag"
+        android:title="@string/task_drag_title"
+        />
 </PreferenceScreen>

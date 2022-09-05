@@ -212,6 +212,8 @@ class Config(app: TodoApplication) : Preferences(app) {
 
     val hasKeepPrio by BooleanPreference(R.string.keep_prio, true)
 
+    val hasTaskDrag by BooleanPreference(R.string.task_drag, false)
+
     val shareAppendText by StringPreference(R.string.share_task_append_text, " +background")
 
     var latestChangelogShown by IntPreference(R.string.latest_changelog_shown, 0)
