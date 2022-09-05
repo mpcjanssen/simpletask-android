@@ -362,5 +362,5 @@
     <string name="channel_name">固定通知</string>
     <string name="channel_description">固定为通知的任务频道</string>
     <string name="show_filter_drawer">已保存筛选器</string>
-    <string name="task_drag_title">拖动任务重新排序</string>
+    <string name="task_drag_title">拖动任务重新排序（测试）</string>
 </resources>
