@@ -361,4 +361,5 @@
     <string name="password_already_set_summary">Passord allerede satt. Å sette et nytt passord overskriver det eksisterede, og de kan hende du ikke vil få tilgang til filer hvis du glemmer det.</string>
     <string name="pref_key__default_encryption_password">pref_key__default_encryption_password</string>
     <string name="pref_key__set_encryption_password">pref_key__set_encryption_password</string>
+    <string name="task_drag_title">Dra gjøremål for å endre rekkefølgen (beta)</string>
 </resources>
