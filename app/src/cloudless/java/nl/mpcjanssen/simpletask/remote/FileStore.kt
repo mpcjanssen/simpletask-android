@@ -123,7 +123,7 @@ object FileStore : IFileStore {
         Log.i(TAG, "Saving tasks to file: ${file.path}")
         val obs = observer
         obs?.ignoreEvents(true)
-        writeFile(file, lines.joinToString(eol))
+        writeFile(file, lines.joinToString(eol) + eol)
         obs?.delayedStartListen(1000)
         lastSeenRemoteId = file.lastModified().toString()
         return file
@@ -135,7 +135,7 @@ object FileStore : IFileStore {
             return
         }
         Log.i(TAG, "Appending ${lines.size} tasks to ${file.path}")
-        file.appendText(lines.joinToString(eol))
+        file.appendText(lines.joinToString(eol) + eol)
     }
 
     override fun logout() {
