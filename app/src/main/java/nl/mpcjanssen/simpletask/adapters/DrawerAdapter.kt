@@ -58,7 +58,7 @@ class DrawerAdapter(private val m_inflater: LayoutInflater,
         var view = convertView
         val tv: TextView
         if (isHeader(position)) {
-            view = m_inflater.inflate(R.layout.drawer_list_header, parent, false)
+            view = m_inflater.inflate(R.layout.drawer_list_header_uppercase, parent, false)
             tv = view as TextView
             val lv = parent as ListView
             if (lv.isItemChecked(position)) {

@@ -236,6 +236,7 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="preference_title_debug_info">View debug log</string>
     <string name="preference_summary_debug_info">View and share the app version and log.</string>
     <string name="use_list_and_tags_icons_title">Use icons</string>
+    <string name="uppercase_headers_title">Uppercase list headers</string>
     <string name="use_list_and_tags_icons_summary">Use icons for changing the task\'s list and tag. Disable to use the todo.txt @ and + terms.</string>
     <!-- sync dialog -->
     <string name="sync_dialog_title">Manual Sync</string>

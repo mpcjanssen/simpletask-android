@@ -305,6 +305,6 @@ class Config(app: TodoApplication) : Preferences(app) {
 
     val idleBeforeSaveSeconds by IntPreference(R.string.idle_before_save, 5)
 
-
+    var uppercaseHeaders by BooleanPreference(R.string.uppercase_headers, true)
 
 }

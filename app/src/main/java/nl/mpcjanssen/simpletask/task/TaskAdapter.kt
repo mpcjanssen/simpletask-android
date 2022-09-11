@@ -39,7 +39,12 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
         val view = when (viewType) {
             0 -> {
                 // Header
-                LayoutInflater.from(parent.context).inflate(R.layout.list_header, parent, false)
+                val layout = if (TodoApplication.config.uppercaseHeaders) {
+                    R.layout.drawer_list_header_uppercase
+                } else {
+                    R.layout.drawer_list_header
+                }
+                LayoutInflater.from(parent.context).inflate(layout, parent, false)
             }
             1 -> {
                 // Task
@@ -194,7 +199,7 @@ class TaskAdapter(val completeAction: (Task) -> Unit,
     internal var visibleLines = ArrayList<VisibleLine>()
 
     internal fun setFilteredTasks(caller: Simpletask, newQuery: Query) {
-        textSize = TodoApplication.config.tasklistTextSize ?: textSize
+        textSize = TodoApplication.config.tasklistTextSize
         Log.i(tag, "Text size = $textSize")
         query = newQuery
 

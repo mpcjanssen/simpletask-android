@@ -79,4 +79,9 @@
             android:title="@string/use_list_and_tags_icons_title"
             android:summary="@string/use_list_and_tags_icons_summary"
     />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/uppercase_headers"
+        android:title="@string/uppercase_headers_title"
+        />
 </PreferenceScreen>
