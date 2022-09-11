@@ -3,7 +3,9 @@ Simpletask
 
 [![CircleCI](https://circleci.com/gh/mpcjanssen/simpletask-android.svg?style=svg)](https://circleci.com/gh/mpcjanssen/simpletask-android)
 
-Simpletask is a simple task manager for Android.
+Simpletask is a simple task manager for Android, based on the brilliant [todo.txt](http://todotxt.com) format by [Gina Trapani](http://ginatrapani.org/).
+
+## Documentation
 
 See documentation [here](./app/src/main/assets/index.en.md).
 
