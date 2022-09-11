@@ -372,4 +372,5 @@
     <string name="channel_name">Bildirimleri sabitle</string>
     <string name="channel_description">Bildirim olarak sabitlenen görevler için kanal</string>
     <string name="file_encryption_password">Dosya şifreleme parolası</string>
+    <string name="task_drag_title">Yeniden sıralamak için görevleri sürükleyin (BETA)</string>
 </resources>
