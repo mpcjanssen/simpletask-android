@@ -5,6 +5,13 @@ Simpletask
 
 Simpletask is a simple task manager for Android, based on the brilliant [todo.txt](http://todotxt.com) format by [Gina Trapani](http://ginatrapani.org/).
 
+  * [Documentation](#documentation)
+  * [Translation](#translation)
+  * [Cloudless Version](#cloudless-version)
+  * [Nextcloud Version](#nextcloud-version)
+  * [WebDAV Version](#webdav-version)
+  * [Dropbox](#dropbox)
+
 ## Documentation
 
 See documentation [here](./app/src/main/assets/index.en.md).
