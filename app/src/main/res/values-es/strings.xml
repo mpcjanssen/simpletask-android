@@ -62,7 +62,7 @@
     <!-- login -->
     <string name="first_title_word">Simpletask</string>
     <string name="login_screen_button">Iniciar sesión en Dropbox</string>
-    <string name="login_cloudless">Si no tiene una cuenta de Dropbox o no quiere utilizarla para almacenar su lista de tareas, puede descargar Simpletask Cloudless de la Tienda de Aplicaciones de Google. http://goo.gl/X1C55P</string>
+    <string name="login_cloudless">"Si no tiene una cuenta de Dropbox o no quiere utilizarla para almacenar su lista de tareas, puede descargar Simpletask Cloudless de la Tienda de Aplicaciones de Google.  http://goo.gl/X1C55P"</string>
     <!-- delete -->
     <string name="delete_task_title">Eliminar %s tarea(s)</string>
     <string name="archive_task_title">Archivar %s tarea(s)</string>
@@ -263,7 +263,7 @@ Una tarea puede incluir múltiples etiquetas y pertenecer a varias listas.
     <string name="sort_complete_last_pref_title">Mostrar completadas al final</string>
     <string name="sort_complete_last_pref_summary">Mostrar siempre las tareas completadas al final de la lista</string>
     <string name="keep_prio_header">Mantener prioridad en tareas completadas</string>
-    <string name="keep_prio_summary">Todo.txt elimina la prioridad al completar la tarea</string>
+    <string name="keep_prio_summary">Simpletask mantiene la prioridad al completar una tarea</string>
     <string name="prepend_date_pref_title">Colocar fecha a tareas nuevas</string>
     <string name="prepend_date_pref_summary">Agregar automáticamente la fecha de creación</string>
     <string name="line_breaks_pref_title">Saltos de línea al estilo Windows</string>
@@ -375,4 +375,12 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="link_added">Enlace agregado a Simpletask</string>
     <string name="share_link_failed">Fallo al agregar enlace vacío.</string>
     <string name="share_link">Compartir enlace</string>
+    <string name="file_encryption_password">Contraseña para encriptación de archivo</string>
+    <string name="pin_notification">Fijar en la barra de notificaciones</string>
+    <string name="channel_name">Fijar notificaciones</string>
+    <string name="channel_description">Canal para las tareas fijadas en la barra de notificaciones</string>
+    <string name="task_drag_title">Arrastrar tareas para reordenarlas (BETA)</string>
+    <string name="show_filter_drawer">Filtros guardados</string>
+    <string name="password_summary">%s</string>
+    <string name="password_already_set_summary">Una contraseña ya fue establecida. Al introducir una nueva contraseña, se sobreescribirá la anterior y es posible que no pueda volver a acceder al archivo en caso de que olvide la contraseña.</string>
 </resources>
