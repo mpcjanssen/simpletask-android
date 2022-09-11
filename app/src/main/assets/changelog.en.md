@@ -1,5 +1,12 @@
 ﻿# Changelog
 
+## 11.0.1
+
+- Add setting to enable task dragging for #1186 (BETA)
+- Add a setting to disable uppercase list headers. Fixes #1073
+- Ensure written files always end with EOL. Prevents concatenated lines (#1187).
+- Updated translations
+
 ## 11.0.0
 
 - Too many changes to list, just a new tag to get fixes since 10.9.3 included.
