@@ -373,4 +373,5 @@
     <string name="no_prio">-</string>
     <string name="dropbox">Dropbox</string>
     <string name="save_filter">Зберегти поточний фільтр</string>
+    <string name="task_drag_title">Перетягнути завдання для перевпорядкування (BETA)</string>
 </resources>
