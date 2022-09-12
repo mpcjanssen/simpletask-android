@@ -363,4 +363,5 @@
     <string name="channel_description">固定为通知的任务频道</string>
     <string name="show_filter_drawer">已保存筛选器</string>
     <string name="task_drag_title">拖动任务重新排序（测试）</string>
+    <string name="uppercase_headers_title">大写列表标题</string>
 </resources>
