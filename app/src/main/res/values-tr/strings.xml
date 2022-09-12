@@ -373,4 +373,5 @@
     <string name="channel_description">Bildirim olarak sabitlenen görevler için kanal</string>
     <string name="file_encryption_password">Dosya şifreleme parolası</string>
     <string name="task_drag_title">Yeniden sıralamak için görevleri sürükleyin (BETA)</string>
+    <string name="uppercase_headers_title">Liste başlıklarını büyük harf yap</string>
 </resources>
