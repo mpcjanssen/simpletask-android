@@ -584,7 +584,7 @@ data class UUIDToken(override val valueStr: String) : KeyValueToken {
 }
 
 // Extension functions
-fun String.lex(): List<String> = this.split(" ")
+fun String.lex(): List<String> = this.split(Pattern.compile("[ \\p{Z}]"))
 
 
 // Extension because ArrayList.filter requires API 24
