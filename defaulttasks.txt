@@ -1,0 +1,22 @@
+(B) 2022-07-23 This is 'Prio B' a task, created on 23 July. If you can (or cannot) read it, check filters: Show done yes/no
+2022-09-18 Check Settings - Miscelaneous: context and project instead of list an tag
+(A) A-ha, this is a task with prio A. Nothing else.
+(A) B-ha, this is a task with prio A as well. Nothing else.
+(A) !--- file is: defaulttasks.txt ---!
+(B) 2022-09-18 I was created on 2022-09-18. Edit me for details.
+(B) This task has a due date due:2027-09-18
+(C) 2022-09-18 Assign this task to @project1 as well as @project2 as well as +context3 and +context4
+(C) 2022-09-18 My +context (tag) is given
+(C) 2022-09-18 There is an @project (list) assigned to me
+ENJOY YOUR PRODUCTIVITY USING TODO.TXT AND SIMPLETASK :-)!
+(G) like 'Geting started': (1) Create a new task by tapping the '+' symbol at the lower right (note the '+' here is out of context due to the ' around); alternative: create startup icon
+(G) like 'Geting started': (2) Change filter for list (project), tag (context), prio, others, and/or adjust sort order. NOTE you may invert filters as well
+(G) like 'Geting started': (3) Swipe to the left (?using two fingers) +hiddenfeature to open the right drawer, save current filter
+(G) like 'Geting started': (4) Take a look at the settings to adjust look and feel to your needs
+(H) 2022-09-18 Long press on task to open links like +hiddenfeature https://github.com/mpcjanssen/simpletask-android/issues/911
+(H) 2022-09-18 Long press on task to open tel links might work as well
+(H) 2022-09-18 Swipe in from the right to open the saved filter drawer +hiddenfeature
+x 2022-09-18 (B) 2022-07-23 This is 'Prio B' a task, created on 23 July and closed on 18 Sep 2022. If you can (or cannot) read it, check filters: Show done yes/no
+x 2022-09-18 (H) 2022-09-18 Archive all tasks in the current view: select task, select all, archive
+(Z) Change this defaulttasks.txt to a REAL todo.txt file soon
+
