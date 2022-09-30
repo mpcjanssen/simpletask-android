@@ -383,4 +383,7 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="show_filter_drawer">Filtros guardados</string>
     <string name="password_summary">%s</string>
     <string name="password_already_set_summary">Una contraseña ya fue establecida. Al introducir una nueva contraseña, se sobreescribirá la anterior y es posible que no pueda volver a acceder al archivo en caso de que olvide la contraseña.</string>
+    <string name="uppercase_headers_title">Encabezados de lista en mayúsculas</string>
+    <string name="pref_key__default_encryption_password">pref_key__default_encryption_password</string>
+    <string name="pref_key__set_encryption_password">pref_key__set_encryption_password</string>
 </resources>
