@@ -62,13 +62,14 @@
     <!-- login -->
     <string name="first_title_word">Simpletask</string>
     <string name="login_screen_button">Iniciar sesión en Dropbox</string>
-    <string name="login_cloudless">"Si no tiene una cuenta de Dropbox o no quiere utilizarla para almacenar su lista de tareas, puede descargar Simpletask Cloudless de la Tienda de Aplicaciones de Google.  http://goo.gl/X1C55P"</string>
+    <string name="login_cloudless">Si no tienes una cuenta de Dropbox o no quieres usarlo para almacenar tu lista de tareas, puedes descargar Simpletask Cloudless desde la Play Store.
+\nhttps://goo.gl/X1C55P</string>
     <!-- delete -->
     <string name="delete_task_title">Eliminar %s tarea(s)</string>
     <string name="archive_task_title">Archivar %s tarea(s)</string>
     <string name="delete_task_message">Esto no se puede deshacer. ¿Está seguro?</string>
-    <string name="logout_message">Por favor, si no está conectado con Dropbox, asegúrese de haber sincronizado todos los cambios o que ha compartido su lista de tareas completa.
-Cualquier cambio que no haya sido sincronizado se perderá después de desconectarse.</string>
+    <string name="logout_message">Por favor, asegúrate de que has sincronizado todos los cambios con Dropbox o comparte tu lista de tareas completa si no estás conectado a Dropbox.
+\n Cualquier cambio que no se haya sincronizado se perderá después de cerrar la sesión.</string>
     <string name="dropbox_open">Por favor,si no está conectado con Dropbox, asegúrese de que ha sincronizado todos los cambios o que ha compartido su lista de tareas completa.
 \nCualquier cambio que no haya sido sincronizados se perderá al abrir un archivo diferente.</string>
     <string name="delete_task_confirm">Eliminar</string>
@@ -155,7 +156,7 @@ Cualquier cambio que no haya sido sincronizado se perderá después de desconect
     <string name="no_filter">Ningún filtro</string>
     <string name="dropbox">Dropbox</string>
     <string name="save_filter">Guardar filtro</string>
-    <string name="save_filter_message">Introduzca un nombre para el filtro:</string>
+    <string name="save_filter_message">Introduzca un nombre para el filtro actual, que se mostrará en el cajón de filtros guardados.</string>
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Invertir el orden</string>
     <!-- Calendar sync -->
@@ -220,7 +221,9 @@ Cualquier cambio que no haya sido sincronizado se perderá después de desconect
     <string name="cancel">Cancelar</string>
     <string name="clear_filter">Quitar filtro</string>
     <string name="write_failed">¡Error al escribir el archivo! Sus cambios NO fueron guardados.</string>
-    <string name="tasktexthint">\@Discutir con +Héctor la cuestión de +París @Troy. Decirle a +Héctor que no sea un pesado @Troy. Buscar en las configuraciones de +Simpletask cómo quitar este texto @Teléfono</string>
+    <string name="tasktexthint">\@Discute el tema de +París con +Hector @Troy
+\nDile a +Hector que no sea tan pesado @Troy
+\nQuitar este texto del menú @Teléfono</string>
     <string name="filter_name_empty">Nombre no especificado. No se creó el filtro</string>
     <string name="widget_name_empty">Nombre no especificado. No se creo el widget</string>
     <string name="add_task_help">"&lt;b&gt; Actualizar o agregar una tarea a la lista. Una tarea por línea. &lt;b&gt;Prioridad&lt;/b&gt; Al comienzo de la línea con (.), como en (A) &lt;b&gt;Etiquetas&lt;/b&gt; Comienzan con un signo +, como en +Cocina &lt;b&gt;Listas&lt;/b&gt; Comienzan con un signo @, como en @Casa. Una tarea puede incluir múltiples etiquetas y pertenecer a varias listas. "<b>Prioridad</b>
@@ -241,7 +244,7 @@ Una tarea puede incluir múltiples etiquetas y pertenecer a varias listas.
     <string name="ARCHIVE_settings_header">Archivar</string>
     <string name="ARCHIVE_settings_summary">Configuración para el archivado de tareas completadas en done.txt</string>
     <string name="auto_archive_pref_title">Archivado automático</string>
-    <string name="auto_archive_pref_summary">Archivar tareas inmediatamente al completarlas</string>
+    <string name="auto_archive_pref_summary">Archiva las tareas inmediatamente después de completarlas.</string>
     <string name="archive_now_pref_title">Archivar ahora</string>
     <string name="archive_now_pref_summary">Mover tareas completadas desde todo.txt a done.txt.</string>
     <string name="dropbox_logout_pref_title">Cerrar sesión</string>
@@ -303,7 +306,7 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="preference_title_debug_info">Ver registro de depuración</string>
     <string name="preference_summary_debug_info">Ver y compartir versión y registro de la aplicación.</string>
     <string name="login_folder_screen_button">Iniciar sesión en Dropbox
-(Acceso a la carpeta de la aplicación)</string>
+\n(Acceso a la carpeta de la aplicación)</string>
     <string name="by_project_todotxt">Proyecto</string>
     <string name="by_context_todotxt">Contexto</string>
     <string name="by_completion_date">Fecha de finalización</string>
@@ -340,8 +343,8 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="task_text_ellipsizing_none">Ninguno: \"Texto de la tarea\"</string>
     <string name="task_text_ellipsizing_start">Al comienzo: \"... de la tarea\"</string>
     <string name="task_text_ellipsizing_middle">En el medio: \"Texto ... tarea\"</string>
-    <string name="task_text_ellipsizing_end">Al final: \"Texto de la ...\"</string>
-    <string name="task_text_ellipsizing_marquee">"Marquesina:  \"Texto de la tar\""</string>
+    <string name="task_text_ellipsizing_end">Fin: Muy largo…</string>
+    <string name="task_text_ellipsizing_marquee">La etiqueta html marquee: Muy larga es</string>
     <string name="filter_tab_header_prio">Prioridad</string>
     <string name="filter_tab_header_other">Otros</string>
     <string name="filter_tab_header_sort">Ordenar</string>
@@ -376,14 +379,14 @@ Desmarcar esta opción para establecer las nuevas fechas respecto a hoy.</string
     <string name="share_link_failed">Fallo al agregar enlace vacío.</string>
     <string name="share_link">Compartir enlace</string>
     <string name="file_encryption_password">Contraseña para encriptación de archivo</string>
-    <string name="pin_notification">Fijar en la barra de notificaciones</string>
-    <string name="channel_name">Fijar notificaciones</string>
-    <string name="channel_description">Canal para las tareas fijadas en la barra de notificaciones</string>
+    <string name="pin_notification">Anclar como notificación</string>
+    <string name="channel_name">Anclar notificaciones</string>
+    <string name="channel_description">Canal para las tareas ancladas como notificaciones</string>
     <string name="task_drag_title">Arrastrar tareas para reordenarlas (BETA)</string>
     <string name="show_filter_drawer">Filtros guardados</string>
     <string name="password_summary">%s</string>
     <string name="password_already_set_summary">Una contraseña ya fue establecida. Al introducir una nueva contraseña, se sobreescribirá la anterior y es posible que no pueda volver a acceder al archivo en caso de que olvide la contraseña.</string>
     <string name="uppercase_headers_title">Encabezados de lista en mayúsculas</string>
-    <string name="pref_key__default_encryption_password">pref_key__default_encryption_password</string>
-    <string name="pref_key__set_encryption_password">pref_key__set_encryption_password</string>
+    <string name="pref_key__default_encryption_password">pref_llave _contraseña_de cifrado predeterminada</string>
+    <string name="pref_key__set_encryption_password">pref_llave__establecer_encriptación_contraseña</string>
 </resources>
