@@ -398,4 +398,5 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="link_added">Link zu Simpletask hinzugefügt</string>
     <string name="channel_name">Benachrichtigungen anheften</string>
     <string name="show_filter_drawer">Gespeicherte Filter</string>
+    <string name="idle_before_safe_title">Zeit vor dem Speichern</string>
 </resources>
