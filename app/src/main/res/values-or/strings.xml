@@ -1,2 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="dates_tomorrow">ଆସନ୍ତାକାଲି</string>
+    <string name="name">ନାମ</string>
+    <string name="dates_today">ଆଜି</string>
+    <string name="dates_one_month_ago">ଗତ ମାସ</string>
+    <string name="hello_world">ନମସ୍କାର ଵିଶ୍ୱ!</string>
+    <string name="dates_one_day_ago">ଗତକାଲି</string>
+    <string name="dates_one_week">ଗୋଟେ ସପ୍ତାହ</string>
+    <string name="dates_one_year_ago">ଗତ ଵର୍ଷ</string>
+    <string name="dates_one_week_ago">ଗତ ସପ୍ତାହ</string>
+    <string name="dates_two_weeks">ଦୁଇ ସପ୍ତାହ</string>
+    <string name="dates_one_month">ଗୋଟେ ମାସ</string>
+    <string name="action_settings">ସେଟିଂ</string>
+    <string name="task_action">କୃତ୍ୟ</string>
+    <string name="date">ତାରିଖ</string>
+    <string name="sort">ସଜାନ୍ତୁ</string>
+    <string name="set_preferences">ସେଟିଂ</string>
+    <string name="preferences">ସେଟିଂ</string>
+    <string name="help">ସହାୟତା</string>
+    <string name="theme_pref_title">ଥିମ୍</string>
+    <string name="calendar_sync_screen_title">ଵିଜ୍ଞପ୍ତି</string>
+    <string name="widget_theme_pref_title">ଥିମ୍</string>
+    <string name="color_due_pref_title">ରଙ୍ଗ</string>
+    <string name="rename_filter">ନାମ ବଦଳାନ୍ତୁ</string>
+    <string name="search">ସନ୍ଧାନ</string>
+    <string name="add">ଯୋଡ଼ନ୍ତୁ</string>
+    <string name="preference_appearance">ରୂପ</string>
+    <string name="ok">ଠିକ୍ ଅଛି</string>
+    <string name="preference_other">ଅନ୍ୟ</string>
+    <string name="todotxt_ui_settings_header">ଵୈଶିଷ୍ଟ୍ୟ</string>
+    <string name="todotxt_behavior_settings_header">ଆଚରଣ</string>
+    <string name="visit_website_title">ସହାୟତା</string>
+    <string name="about_settings_header">ଵିଷୟରେ</string>
+    <string name="about_settings_summary">ଆପ୍ ସୂଚନା</string>
+    <string name="add_task_help_btn">ସହାୟତା</string>
+</resources>
