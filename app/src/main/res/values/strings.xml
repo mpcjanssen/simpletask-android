@@ -405,6 +405,8 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="lua_config_share">Share</string>
     <string name="lua_open_config">Lua config</string>
     <string name="use_uuid_title">Assign a UUID to each task</string>
+    <string name="habit_mode_pref_title">Enable Habit Mode (BETA)</string>
+    <string name="habit_mode_pref_summary">Habit Mode brings this app to the foreground every time the device is unlocked.</string>
     <string name="task_drag_title">Drag tasks to reorder (BETA)</string>
     <string name="nav_drawer_hint">Save the current filter\n
         using the save button</string>

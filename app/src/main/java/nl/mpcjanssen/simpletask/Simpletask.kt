@@ -11,7 +11,7 @@
 
 package nl.mpcjanssen.simpletask
 
-import android.annotation.SuppressLint
+    import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.PendingIntent
 import android.app.SearchManager
@@ -42,6 +42,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import android.provider.Settings
 
 import hirondelle.date4j.DateTime
 import nl.mpcjanssen.simpletask.adapters.DrawerAdapter
@@ -80,9 +81,18 @@ class Simpletask : ThemedNoActionBarActivity() {
 
     private val uiHandler = UiHandler()
 
+
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i(TAG, "onCreate")
+        
+        // If Habit Mode is enabled, we start the foreground service that 
+        // catches the screen unlock events reliably. 
+        if(TodoApplication.config.enableHabitMode) {
+            startService(Intent(this, AppLauncherService::class.java))
+        }
+
         m_savedInstanceState = savedInstanceState
         val intentFilter = IntentFilter()
         intentFilter.addAction(Constants.BROADCAST_ACTION_LOGOUT)
