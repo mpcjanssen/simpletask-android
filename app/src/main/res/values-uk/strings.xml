@@ -334,7 +334,7 @@
     <string name="sync_download_message">Завантаження todo.txt…</string>
     <string name="sync_dialog_title">Ручна синхронізація</string>
     <string name="sync_dialog_download">Завантажити на пристрій</string>
-    <string name="preference_title_debug_info">Перегляд журналу зневадження</string>
+    <string name="preference_title_debug_info">Перегляд журналу налагодження</string>
     <string name="visit_website_title">Довідка</string>
     <string name="visit_website_data">https://mpcjanssen.nl/</string>
     <string name="about_settings_summary">Відомості про застосунок</string>

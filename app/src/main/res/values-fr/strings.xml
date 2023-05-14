@@ -99,7 +99,7 @@ Une tâche peut comprendre un nombre quelconque de balises, ou être dans plusie
     <string name="sort_complete_last_pref_title">Afficher les tâches terminées</string>
     <string name="sort_complete_last_pref_summary">Toujours afficher les tâches terminées en bas de la liste</string>
     <string name="keep_prio_header">Conserver la priorité dans les tâches terminées</string>
-    <string name="keep_prio_summary">Todo.txt supprime la priorité lors de l\'achèvement de la tâche</string>
+    <string name="keep_prio_summary">Simpletask conserve la priorité lors de l\'achèvement de la tâche</string>
     <string name="prepend_date_pref_title">Dater les nouvelles tâches</string>
     <string name="prepend_date_pref_summary">Ajouter automatiquement la date de création</string>
     <string name="line_breaks_pref_title">Sauts de ligne à la Windows</string>
@@ -367,4 +367,14 @@ Décochez cette option pour définir les nouvelles dates par rapport à aujourd\
     <string name="share_link_failed">Impossible d\'ajouter un lien vide.</string>
     <string name="idle_before_safe_summary">Temps d\'inactivité nécessaire avant que les modifications soient enregistrées (en secondes)</string>
     <string name="idle_before_safe_title">Durée avant enregistrement</string>
+    <string name="task_drag_title">Glisser les tâches pour les réorganiser (BETA)</string>
+    <string name="show_filter_drawer">Filtres sauvegardés</string>
+    <string name="password_already_set_summary">Mot de passe déjà défini. Changer le mot de passe écrasera le mot de passe existant et vous ne pourrez peut-être plus accéder aux fichiers si vous oubliez le mot de passe.</string>
+    <string name="file_encryption_password">Mot de passe de chiffrement du fichier</string>
+    <string name="pref_key__set_encryption_password">Mot de passe de chiffrement défini</string>
+    <string name="uppercase_headers_title">Mettre en majuscule les titres de liste</string>
+    <string name="pin_notification">Épingler en temps que notification</string>
+    <string name="channel_name">Épingler les notifications</string>
+    <string name="channel_description">Canal pour les tâches épinglées en tant que notifications</string>
+    <string name="pref_key__default_encryption_password">Mot de passe de chiffrement par défaut</string>
 </resources>

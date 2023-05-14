@@ -389,4 +389,14 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="use_list_and_tags_icons_summary">Verwenden Sie Symbole, um die Liste und das Tag der Aufgabe zu ändern. Deaktivieren Sie die Verwendung der todo.txt-Begriffe @ und +.</string>
     <string name="no_tasks_to_archive">Keine Aufgaben zu archivieren.</string>
     <string name="force_english_title">Englisch erzwingen</string>
+    <string name="share_link_failed">Leerer Link konnte nicht hinzugefügt werden.</string>
+    <string name="file_encryption_password">Passwort für die Dateiverschlüsselung</string>
+    <string name="password_summary">%s</string>
+    <string name="pin_notification">Als Benachrichtigung anheften</string>
+    <string name="share_link">Link teilen</string>
+    <string name="uppercase_headers_title">Listenüberschriften in Großbuchstaben</string>
+    <string name="link_added">Link zu Simpletask hinzugefügt</string>
+    <string name="channel_name">Benachrichtigungen anheften</string>
+    <string name="show_filter_drawer">Gespeicherte Filter</string>
+    <string name="idle_before_safe_title">Zeit vor dem Speichern</string>
 </resources>
