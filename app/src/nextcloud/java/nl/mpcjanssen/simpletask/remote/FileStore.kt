@@ -271,7 +271,7 @@ object FileStore : IFileStore {
                 if (remoteFile is RemoteFile) {
                     if (remoteFile.mimeType == "DIR") {
                         result.add(FileEntry(File(remoteFile.remotePath).name, true))
-                    } else if (!txtOnly || remoteFile.remotePath.lowercase(Locale.getDefault()).endsWith(".txt")) {
+                    } else if (!txtOnly || remoteFile.remotePath.toLowerCase(Locale.getDefault()).endsWith(".txt")) {
                         result.add(FileEntry(File(remoteFile.remotePath).name, false))
                     }
                 }
