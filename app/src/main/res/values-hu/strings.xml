@@ -1,5 +1,6 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="invalid_context">Érvénytelen listanév</string>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="invalid_context">Érvénytelen listanév</string>
     <string name="invalid_project">Érvénytelen címke</string>
     <string name="added_task">Feladat hozzáadva</string>
     <string name="add_task_failed">Nem sikerült hozzáadni a feladatot</string>
@@ -18,7 +19,7 @@
     <string name="log">Napló</string>
     <string name="next">Következő</string>
     <string name="prev">Előző</string>
-    <string name="open_file">Teendő fájl megnyitása</string>
+    <string name="open_file">Feladatlista fájl megnyitása</string>
     <string name="sync">Szinkronizálás</string>
     <string name="changelist">Lista választása</string>
     <string name="search">Keresés</string>
@@ -49,21 +50,17 @@
     <string name="ok">OK</string>
     <string name="cancel">Mégse</string>
     <string name="clear_filter">Szűrés kikapcsolása</string>
-    <string name="write_failed">Nem sikerült a fájl írása! A változások NINCSENEK mentve.</string>
-
+    <string name="write_failed">Nem sikerült a fájl írása. A változások NINCSENEK elmentve.</string>
     <string name="tasktexthint">\@Megbeszélés +Balaton témát +Pisti @Kávézó
 \n+Pisti szólni, ne húzza vissza a munkát @Kávézó
 \nTörölni ezt a sort a menüből @Telefon</string>
-
     <string name="filter_name_empty">Nincs név megadva, nincs szűrés</string>
     <string name="widget_name_empty">Nincs megadva widget név, a widget nem lesz hozzáadva</string>
     <string name="add_task_help">Adj hozzá vagy szerkessz feladatokat a feladatlistán. Feladat hozzáadásakor minden sor egy külön feladatot jelent, hogy gyorsan lehessen több feladatot is beírni. <b>Prioritás</b> - a sor elején zárójelben jelöld, pl. (A) <b>Címkék</b> használatához kezdd a szót + jellel, pl. +Konyha <b>Listák</b> használatához kezdd a szót @ jellel, pl. @otthon A feladatokhoz akármennyi címkét hozzá lehet rendelni, és több listán is szerepelhetnek. </string>
-
     <string name="preference_appearance">Megjelenés</string>
     <string name="preference_interface">Kezelőfelület</string>
     <string name="preference_widget">Widget</string>
     <string name="preference_other">Egyéb</string>
-
     <string name="ARCHIVE_settings_header">Archív</string>
     <string name="ARCHIVE_settings_summary">Elvégzett feladatok archiválása done.txt nevű fájlba</string>
     <string name="auto_archive_pref_title">Automatikus archiválás</string>
@@ -77,15 +74,11 @@
     <string name="TODOTXTPATH_defaultPath">/todo</string>
     <string name="DROPBOX_settings_header">Dropbox</string>
     <string name="DROPBOX_settings_summary">Dropbox szinkronizáció beállításai</string>
-
     <string name="todotxt_features_settings_header">Funkciók</string>
     <string name="todotxt_features_settings_summary">Funkciók engedélyezése és letiltása</string>
-
     <string name="todotxt_configuration_settings_header">Konfiguráció</string>
     <string name="todotxt_configuration_settings_summary">Az alkalmazás viselkedésének konfigurálása</string>
-
     <string name="todotxt_creation_settings_header">Feladatok létrehozása</string>
-
     <string name="todotxt_ui_settings_header">Funkciók</string>
     <string name="todotxt_ui_settings_summary">Szabályozd, mi jelenjen meg</string>
     <string name="todotxt_behavior_settings_header">Viselkedés</string>
@@ -108,23 +101,17 @@
     <string name="font_size_delta_pref_summary">Betűméret megváltoztatása.</string>
     <string name="theme_pref_title">Téma</string>
     <string name="theme_pref_summary">Az alkalmazás témájának megváltoztatása.</string>
-
     <string name="share_task_show_edit_pref_title">Megosztott feladatok szerkesztése</string>
     <string name="share_task_show_edit_summary">A Simpletaskbe megosztott feladatok szerkesztése mentés előtt</string>
-
     <string name="share_task_append_text_title">Háttér szöveg</string>
     <string name="share_task_append_text_summary">\"%s\" hozzáfűzése a háttérben hozzáadott feladatokhoz.</string>
-
     <string name="local_file_root_title">root:// könyvtár</string>
     <string name="local_file_root_summary">%s</string>
-
     <string name="menu_capitalize_tasks">Nagybetűsítés</string>
     <string name="back_saves_pref_title">Vissza gomb</string>
     <string name="back_saves_summary">A vissza nyíl megnyomásakor a beírt teendők mentése vagy a szűrő alkalmazása.</string>
-
     <string name="show_txt_only_pref_title">Csak a txt fájlok mutatása</string>
     <string name="show_txt_only_summary">A fájlválasztó párbeszédablakban csak a .txt fájlok mutatása.</string>
-
     <string name="calendar_sync_screen_title">Értesítések</string>
     <string name="calendar_sync_screen_summary">Naptárértesítések (kísérleti)</string>
     <string name="calendar_sync_dues_title">Határidő emlékeztetők</string>
@@ -133,15 +120,12 @@
     <string name="calendar_reminder_days_summary">Mikor érkezzen emlékeztető</string>
     <string name="calendar_reminder_time_title">Emlékeztető időpontja</string>
     <string name="calendar_reminder_time_summary">Hány órakor érkezzen az emlékeztető</string>
-
     <string name="widget_theme_pref_title">Téma</string>
     <string name="widget_theme_pref_summary">A widgeteknél használt téma megváltoztatása.</string>
-
     <string name="filter_tab_header_prio">PRIO</string>
     <string name="filter_tab_header_other">EGYÉB</string>
     <string name="filter_tab_header_sort">RENDEZ</string>
     <string name="filter_tab_header_script">SZKRIPT</string>
-
     <string name="script_tab_script_from_file">Szkript fájlból</string>
     <string name="script_tab_use_script">Szkript használata</string>
     <string name="script_tab_test">TESZT</string>
@@ -149,35 +133,26 @@
     <string name="script_tab_script">Szkript</string>
     <string name="script_tab_true_task_shown">True, a feladat megjelenik</string>
     <string name="script_tab_false_task_not_shown">False, a feladat nem jelenik meg</string>
-
     <string name="quick_filter_tag_header_inverted">FORDÍTOTT</string>
     <string name="widget_header_transparency_title">Fejléc átlátszósága</string>
     <string name="widget_background_transparency_title">Háttér átlátszósága</string>
-
     <string name="widget_extended_pref_title">Dátumsor mutatása</string>
     <string name="widget_extended_pref_summary">Dátumok mutatása külön soron</string>
-
     <string name="taskview_extended_pref_title">Dátumok mutatása külön soron</string>
-
     <string name="append_tasks_at_end_title">Fájlhoz fűzés</string>
     <string name="append_tasks_at_end_summary">Az új feladatokat a fájl végére szúrja be</string>
-
     <string name="color_due_pref_title">Színezés</string>
     <string name="color_due_pref_summary">Aktiválási és határidők</string>
-
     <string name="show_hidden_title">Rejtett feladatok mutatása</string>
     <string name="show_hidden_summary">A rejtett (h:1) feladatok mutatása, hogy szerkeszthesd őket. Utána újra visszaállíthatod ezt a beállítást.</string>
-
     <string name="show_empty_lists_title">Üres fejlécek mutatása</string>
     <string name="show_empty_lists_summary">A fejléceket akkor is mutatja, ha a hozzátartozó összes feladat rejtett.</string>
-
     <string name="show_edittext_hint_title">Tippek mutatása</string>
     <string name="recur_from_original_date_pref_title">Feladatok ismétlése az eredeti dátumok használatával</string>
     <string name="recur_from_original_date_pref_summary">Ismétlődő feladat létrehozásakor az eredeti dátum változtatása. Kapcsold ki ezt, hogy az új dátumokat a mai naphoz képest állítsa be.</string>
     <string name="datebar_relative_size_summary">Relatív méretű dátumsor</string>
     <string name="drawer_fixed_landscape_title">Menü megnyitása fekvőképnél</string>
     <string name="drawer_fixed_landscape_summary">Fekvőképnél mindig jelenjen meg az oldalsó menü.</string>
-
     <string name="task_text_ellipsizing_pref_title">Feladatszöveg elrejtése</string>
     <string name="task_text_ellipsizing_pref_summary">Feladatszöveg elrejtése a főablakban, ha 2 sornál hosszabb.</string>
     <string name="task_text_ellipsizing_none">Semmit: Ilyen a nagyon hosszú feladatszöveg</string>
@@ -185,85 +160,65 @@
     <string name="task_text_ellipsizing_middle">Közepét: Ilyen a ... szöveg</string>
     <string name="task_text_ellipsizing_end">Végét: Ilyen a nagyon hosszú...</string>
     <string name="task_text_ellipsizing_marquee">Feliratosan: Ilyen a nagyo</string>
-
     <string name="action_pop_up_call">Hívás:</string>
     <string name="action_pop_up_sms">SMS:</string>
-
     <string name="saved_filters_exported">Szűrők exportálva</string>
     <string name="saved_filters_imported">Szűrők importálva</string>
     <string name="toast_lua_config_imported">Lua config importálva</string>
-
     <string name="split_actionbar_pref_title">Osztott menüsáv</string>
     <string name="split_actionbar_pref_summary">Osztott menüsáv használatával a menü gombjai megjelennek a képernyő alján. Kikapcsolva a feladatlistának több helye lesz a képernyőn.</string>
-
     <string name="show_edittext_hint_summary">Tippek megjelenítése feladatok beírásakor. Kapcsold ki, ha zavar.</string>
-
     <string name="show_complete_checkbox_title">Jelölőnégyzetek mutatása</string>
     <string name="show_complete_checkbox_summary">Jelölőnégyzetek megjelenítése a feladatok előtt, hogy késznek/befejezetlennek jelölhesd őket.</string>
-
     <string name="show_confirmation_dialogs_title">Megerősítés kérése</string>
     <string name="show_confirmation_dialogs_summary">Kérdezzen, mielőtt archiválod vagy törlöd a feladatokat</string>
-
     <string name="show_todo_path_title">A todo fájl elérési útvonalának megjelenítése</string>
     <string name="show_todo_path_summary">A könyvtárneveknek csak az első betűje látszik</string>
-
     <string name="show_fast_scroll_title">Gyors görgetés</string>
     <string name="show_fast_scroll_summary">Gyors görgetés használata, ha a feladatlista hosszú</string>
-
     <string name="show_calendarview_title">Naptár használata dátum beírásához</string>
-
     <string name="sort_case_sensitive_title">Rendezés kis-/nagybetű szerint</string>
     <string name="sort_case_sensitive_summary">A listák, címkék és mentett szűrők rendezésekor figyelembe veszi a kis-/nagybetűket.</string>
-
     <string name="use_create_as_threshold_title">A létrehozás dátuma egyben az aktiválás dátuma is</string>
     <string name="use_create_backup_summary">Rendezéskor a feladat létrehozásának dátumát használja, ha nincs más aktiválási dátum megadva</string>
-
     <string name="todotxt_terms_title">Használja a todo.txt kifejezéseit</string>
     <string name="todotxt_terms_summary">Kontextus és projekt szavak a lista és címke helyett</string>
-
     <string name="about_settings_header">Névjegy</string>
     <string name="about_settings_summary">Alkalmazás információ</string>
     <string name="visit_website_title">Súgó</string>
     <string name="visit_website_summary">A Simpetask weboldala</string>
     <string name="visit_website_data">http://mpcjanssen.nl/pages/simpletask.html</string>
-
     <string name="visit_tracker_title">Javasolj funkciót vagy jelents hibát</string>
     <string name="visit_tracker_summary">Javasolj új funkciót vagy javítást, vagy jelents be hibát.</string>
     <string name="visit_tracker_data">http://mpcjanssen.nl/redmine/projects/simpletask-android/issues/</string>
     <string name="preference_title_debug_info">Hibanapló megtekintése</string>
     <string name="preference_summary_debug_info">Az alkalmazás verziójának és naplófájl mutatása, megosztása.</string>
-
     <string name="sync_dialog_title">Kézi szinkronizálás</string>
     <string name="sync_dialog_msg">Szeretnéd a todo.txt fájlodat le- vagy felölteni?</string>
     <string name="sync_dialog_upload">Feltöltés Dropboxba</string>
     <string name="sync_dialog_download">Letöltés az eszközre</string>
     <string name="sync_upload_message">todo.txt feltöltése…</string>
     <string name="sync_download_message">todo.txt letöltése…</string>
-
     <string name="sync_conflict_dialog_title">Fájlütközés</string>
     <string name="sync_conflict_dialog_msg">Hupsz... A Dropboxban a todo.txt fájlodnak egy újabb verziója van meg.
 \nSzeretnéd a helyi fájl változásait feltölteni vagy letöltöd a Dropboxban lévőt?</string>
-
     <string name="first_title_word">Simpletask</string>
     <string name="login_screen_button">Belépés Dropboxba</string>
     <string name="login_folder_screen_button">Belépés Dropboxba
 \n(Hozzásférés az alkalmazás könyvtárához)</string>
     <string name="login_cloudless">Ha nincs Dropbox-fiókod vagy nem szeretnéd használni a feladatlistád tárolására, letöltheted a Simpletask Cloudless appot a Play Áruházból.
 \nhttp://goo.gl/X1C55P</string>
-
     <string name="delete_task_title">%s feladat törlése</string>
     <string name="archive_task_title">%s feladat archiválása</string>
     <string name="delete_task_message">Ezt nem lehet visszavonni. Biztos ezt akarod?</string>
     <string name="logout_message">Győződj meg róla, hogy minden módosítás szinkronizált-e a dropboxszal, illetve ha nem használsz dropboxot, akkor megosztottad-e a teljes feladatlistád.
 \n Minden nem szinkronizált módosítás el fog veszni, amikor kilépsz.</string>
-     <string name="dropbox_open">Győződj meg róla, hogy minden módosítás szinkronizált-e a dropboxszal, illetve ha nem használsz dropboxot, akkor megosztottad-e a teljes feladatlistád.
+    <string name="dropbox_open">Győződj meg róla, hogy minden módosítás szinkronizált-e a dropboxszal, illetve ha nem használsz dropboxot, akkor megosztottad-e a teljes feladatlistád.
 \n Minden nem szinkronizált módosítás el fog veszni, amikor másik fájlt nyitsz meg.</string>
     <string name="delete_task_confirm">Törlés</string>
-
     <string name="clone_tags">Beírás előre</string>
     <string name="word_wrap">Sortörés</string>
     <string name="search_hint">Keresés...</string>
-
     <string name="sort_help">Húzással változtathatsz a rendezési sorrenden. Az elemekre kattintva a rendezés irányán változtathatsz.</string>
     <string name="file_order">Fájl szerinti (rendezetlen)</string>
     <string name="alphabetical">Név szerint</string>
@@ -278,7 +233,6 @@
     <string name="by_due_date">Határidő szerint</string>
     <string name="by_threshold_date">Aktiválás dátuma szerint</string>
     <string name="by_completion_date">Befejezés dátuma szerint</string>
-	
     <string name="filter_select_all">Mindent kijelöl</string>
     <string name="filter_clear_all">Szűrő törlése</string>
     <string name="filter_invert">Szűrő megfordítása</string>
@@ -296,15 +250,12 @@
     <string name="filter_show_lists">Listanevek mutatása a feladatoknál</string>
     <string name="filter_show_tags">Címkék mutatása a feladatoknál</string>
     <string name="filter_show_create_date">Feladatok korának mutatása</string>
-
     <string name="filter_show_completed_short">Befejezett</string>
     <string name="filter_show_future_short">Jövőbeli</string>
     <string name="filter_show_prompt">Megjelenítés</string>
     <string name="filter_saved_prompt">Mentett szűrők</string>
-
     <string name="task_select_parts">Feladatrészek kijelölése</string>
     <string name="task_show_all">Minden</string>
-
     <string name="title_filter_applied">Szűrve:</string>
     <string name="add_task_help_btn">Súgó</string>
     <string name="priority_prompt">Prioritás</string>
@@ -314,16 +265,12 @@
     <string name="project_prompt_todotxt">Projekt</string>
     <string name="context_prompt_todotxt">Kontextus</string>
     <string name="priority_format">(prio)</string>
-
     <string name="separator">Elválasztó</string>
-
     <string name="shortcut_addtask_name">Feladat hozzáadása</string>
     <string name="share_addtask_name">Simpletaskhez adás</string>
-
     <string name="none">semmi</string>
     <string name="keep">megtart</string>
     <string name="all">mind</string>
-
     <string name="dates_days_ago">%d napja</string>
     <string name="dates_one_day_ago">1 napja</string>
     <string name="dates_years_ago">%d éve</string>
@@ -332,15 +279,12 @@
     <string name="dates_one_month_ago">1 hónapja</string>
     <string name="dates_weeks_ago">%d hete</string>
     <string name="dates_one_week_ago">1 hete</string>
-
     <string name="dates_one_week">1 hét</string>
     <string name="dates_two_weeks">2 hét</string>
     <string name="dates_one_month">1 hónap</string>
-
     <string name="dates_today">ma</string>
     <string name="date_pick">dátumválasztás</string>
     <string name="dates_tomorrow">holnap</string>
-
     <string name="title_activity_filter">Szűrő</string>
     <string name="selected">kiválasztva</string>
     <string name="no_context">Bejövő</string>
@@ -353,51 +297,37 @@
     <string name="calendar_title">Simpletask emlékeztető</string>
     <string name="share_title">Simpletask feladat</string>
     <string name="version_copied">Verzióinfó a vágólapra másolva</string>
-
     <string name="task_added">Feladat hozzáadva Simpletaskhez</string>
     <string name="default_sort">Alapértelmezett rendezés</string>
     <string name="pull_to_refresh_refreshing_label">Dropbox szinkronizálás…</string>
     <string name="input_new">Új megadása</string>
     <string name="no_filter">Nincs szűrő</string>
     <string name="dropbox">Dropbox</string>
-
     <string name="save_filter">Jelenlegi szűrő mentése</string>
     <string name="save_filter_message">Nevezd el a jelenlegi szűrőt, ezzel a névvel fog megjelenni a mentett szűrők között.</string>
-
     <string name="filter_import_export">Szűrők importálása/exportálása</string>
-
     <string name="visit_donate_data">https://bitly.com/VYR7Fq</string>
     <string name="sort_reverse">Fordított sorrend</string>
-
     <string name="calendar_disp_name">Simpletask emlékeztetők</string>
     <string name="calendar_sync_desc_due">Határidő-emlékeztető, automatikusan létrehozva Simpletaskkel</string>
     <string name="calendar_sync_desc_thre">Aktiválás dátumáról emlékeztető, automatikusan létrehozva Simpletaskkel</string>
     <string name="calendar_exists_warning">Figyelmeztetés: Már létezik naptár ilyen névvel, felülírás...</string>
     <string name="calendar_write_error">Hiba: Nem sikerült a naptárba írni</string>
-
     <string name="click_to_copy">Kattints a vágólapra másoláshoz.</string>
-
     <string name="share_history">A belső todo.txt előzménylista adatbázisának megtekintése és megosztása helyreállításhoz.</string>
     <string name="share_history_title">Feladatelőzmények</string>
-
     <string name="hello_world">Helló világ!</string>
     <string name="action_settings">Beállítások</string>
-
     <string name="help_locale">hu</string>
-
     <string name="task_action">Művelet</string>
-
     <string name="name">Név</string>
     <string name="date">Dátum</string>
     <string name="back_clears_filter_title">A vissza gomb kikapcsolja a szűrést</string>
     <string name="back_clears_filter_summary">A vissza nyíl törli a szűrést, mielőtt kilépne az alkalmazásból.</string>
     <string name="experimental_title">Kísérleti</string>
     <string name="experimental_summary">Kísérleti funkciók engedélyezése</string>
-
     <string name="keep_selection_title">Kijelölés megtartása</string>
     <string name="keep_selection_summary">A feladatok kijelöltek maradnak a változtatások elmentése után.</string>
-
-
     <string name="lua_error">Lua hiba</string>
     <string name="lua_config_screen">Lua konfiguráció</string>
     <string name="lua_run">Futtatás</string>
@@ -406,4 +336,6 @@
     <string name="lua_config_import">Import</string>
     <string name="lua_config_share">Megosztás</string>
     <string name="lua_open_config">Lua config</string>
+    <string name="show_filter_drawer">Mentett szűrők</string>
+    <string name="cancel_changes">A változások el fognak veszni.</string>
 </resources>
