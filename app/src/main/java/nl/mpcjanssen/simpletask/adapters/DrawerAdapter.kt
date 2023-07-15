@@ -9,6 +9,7 @@ import android.widget.ListView
 import android.widget.TextView
 import nl.mpcjanssen.simpletask.R
 import nl.mpcjanssen.simpletask.util.alfaSort
+import nl.mpcjanssen.simpletask.util.getString
 import java.util.*
 
 class DrawerAdapter(private val m_inflater: LayoutInflater,
@@ -62,7 +63,7 @@ class DrawerAdapter(private val m_inflater: LayoutInflater,
             tv = view as TextView
             val lv = parent as ListView
             if (lv.isItemChecked(position)) {
-                tv.text = items[position] + " inverted"
+                tv.text = items[position] + " " + getString(R.string.quick_filter_tag_header_inverted)
             } else {
                 tv.text = items[position]
             }
