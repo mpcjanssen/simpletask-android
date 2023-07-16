@@ -28,6 +28,9 @@ You should have received a copy of the GNU General Public License along with Sim
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -194,6 +197,19 @@ You should have received a copy of the GNU General Public License along with Sim
                 android:resource="@xml/appwidget_info"
                 />
         </receiver>
+
+        <!-- In support of 'habit mode' that launches SimpleTask when the device is unlocked-->   
+        <receiver android:name=".AppLauncherReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Service to improve reliability of 'habit mode' -->
+        <service
+            android:name=".AppLauncherService"
+            android:enabled="true"
+            android:exported="false" />
 
         <service
             android:name=".AppWidgetService"

@@ -30,9 +30,11 @@ package nl.mpcjanssen.simpletask
 import android.Manifest
 import android.content.*
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.preference.*
+import android.provider.Settings
 import android.text.TextUtils
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -89,6 +91,7 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
                 val broadcastIntent = Intent(Constants.BROADCAST_MAIN_FONTSIZE_CHANGED)
                 localBroadcastManager.sendBroadcast(broadcastIntent)
             }
+            getString(R.string.habit_mode_pref_key) -> requestDrawOverlaysPermissionAndStartService()
         }
     }
 
@@ -108,6 +111,24 @@ class Preferences : ThemedPreferenceActivity(), SharedPreferences.OnSharedPrefer
                 ActivityCompat.requestPermissions(this,
                         arrayOf(Manifest.permission.READ_CALENDAR), 0)
             }
+        }
+    }
+
+    private fun requestDrawOverlaysPermissionAndStartService() {
+        Log.i(TAG, "requestDrawOverlaysPermissionAndStartService")
+        if (TodoApplication.config.enableHabitMode) {
+            // test to see if we already have permission
+            val canDrawOverlays = Settings.canDrawOverlays(this)
+            if (!canDrawOverlays) {
+
+                val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+                intent.data = Uri.parse("package:${packageName}")
+                startActivityForResult(intent, 0)
+            }
+
+            startService(Intent(this, AppLauncherService::class.java))
+        } else {
+            stopService(Intent(this, AppLauncherService::class.java))
         }
     }
 

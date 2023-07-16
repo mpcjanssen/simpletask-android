@@ -184,4 +184,5 @@ You should have received a copy of the GNU General Public License along with Tod
     <string name="query_store"                    translatable="false">query_store</string>
     <string name="force_english"                  translatable="false">force_english</string>
     <string name="idle_before_save"               translatable="false">idle_before_save</string>
+    <string name="habit_mode_pref_key"            translatable="false">habit_mode_enable</string>
 </resources>

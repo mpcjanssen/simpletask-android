@@ -177,6 +177,8 @@ class Config(app: TodoApplication) : Preferences(app) {
 
     val showConfirmationDialogs by BooleanPreference(R.string.ui_show_confirmation_dialogs, true)
 
+    val enableHabitMode by BooleanPreference(R.string.habit_mode_pref_key, false)
+
     val defaultSorts: Array<String>
         get() = TodoApplication.app.resources.getStringArray(R.array.sortKeys)
 
