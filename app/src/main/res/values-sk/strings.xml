@@ -263,7 +263,7 @@
     <string name="rename_filter_message">Zadajte názov pre uložený filter:</string>
     <string name="update_filter">Aktualizovať</string>
     <string name="config_widget">Nastaviť ovládací prvok</string>
-    <string name="filter_show_future">Zobraziť úlohy s hraničným termínom v budúcnosti</string>
+    <string name="filter_show_future">Zobraziť úlohy s termínom v budúcnosti</string>
     <string name="filter_show_lists">Zobrazovať zoznamy v úlohách</string>
     <string name="filter_show_tags">Zobrazovať v úlohách štítky</string>
     <string name="filter_show_create_date">Zobrazovať vek úloh</string>
