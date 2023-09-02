@@ -10,6 +10,7 @@ import nl.mpcjanssen.simpletask.remote.FileStore
 
 import nl.mpcjanssen.simpletask.remote.IFileStore
 import nl.mpcjanssen.simpletask.util.*
+import nl.mpcjanssen.simpletask.dao.TaskIdDao
 import java.io.File
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
@@ -45,7 +46,7 @@ class TodoList(val config: Config) {
         } else {
             todoItems.addAll(0, updatedItems)
         }
-
+        TaskIdDao.add(items)
     }
 
     fun add(t: Task, atEnd: Boolean) {
@@ -57,7 +58,7 @@ class TodoList(val config: Config) {
         Log.d(tag, "Remove")
         pendingEdits.removeAll(tasks)
         todoItems.removeAll(tasks)
-
+        TaskIdDao.remove(tasks)
     }
 
 
@@ -160,10 +161,13 @@ class TodoList(val config: Config) {
         val smallestSize = org.zip(updated) { orgTask, updatedTask ->
             val idx = todoItems.indexOf(orgTask)
             if (idx != -1) {
-                updatedTask.id = orgTask.id
-                todoItems[idx] = updatedTask
+                val newTask = updatedTask.withId(orgTask.id)
+                todoItems[idx] = newTask
+                TaskIdDao.remove(orgTask)
+                TaskIdDao.add(newTask)
             } else {
                 todoItems.add(updatedTask)
+                TaskIdDao.add(updatedTask)
             }
             1
         }.size
@@ -265,7 +269,15 @@ class TodoList(val config: Config) {
             try {
                 val items = FileStore.loadTasksFromFile(file)
 
-                val newTodoItems = items.map { Task(it) }.toMutableList()
+                val newTodoItems = items.map { 
+                    val taskId = TaskIdDao.get(it)
+                    if (taskId == null) {
+                        val task = Task(it) 
+                        TaskIdDao.add(task)
+                        task
+                    }
+                    else Task(it, id = taskId)
+                }.toMutableList()
                 synchronized(todoItems) {
                     Log.d(tag, "Fill todolist with ${items.size} items")
                     todoItems = newTodoItems

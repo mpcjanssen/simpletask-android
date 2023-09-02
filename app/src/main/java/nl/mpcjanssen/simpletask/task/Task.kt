@@ -4,7 +4,7 @@ import nl.mpcjanssen.simpletask.util.addInterval
 import java.util.*
 import java.util.regex.Pattern
 
-class Task(text: String, defaultPrependedDate: String? = null) {
+class Task(text: String, defaultPrependedDate: String? = null, val id: String = UUID.randomUUID().toString()) {
 
     var tokens: ArrayList<TToken>
 
@@ -21,6 +21,10 @@ class Task(text: String, defaultPrependedDate: String? = null) {
 
     fun update(rawText: String) {
         tokens = parse(rawText)
+    }
+
+    fun withId(id: String): Task {
+        return Task(text, id = id)
     }
 
     private inline fun <reified T> getFirstToken(): T? {
@@ -41,8 +45,6 @@ class Task(text: String, defaultPrependedDate: String? = null) {
         }
 
     }
-
-    var id: String = UUID.randomUUID().toString()
 
     val text: String
         get() {

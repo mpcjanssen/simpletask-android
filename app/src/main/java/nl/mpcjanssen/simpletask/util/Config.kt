@@ -1,13 +1,16 @@
 package nl.mpcjanssen.simpletask.util
 
+import android.content.Context.MODE_PRIVATE
 import android.os.Build
 import android.os.Environment
+import android.preference.PreferenceManager
 import android.util.Log
 import androidx.annotation.RequiresApi
 import me.smichel.android.KPreferences.Preferences
 import nl.mpcjanssen.simpletask.*
 import nl.mpcjanssen.simpletask.remote.FileStore
 import nl.mpcjanssen.simpletask.task.Task
+import nl.mpcjanssen.simpletask.dao.TaskIdDao
 import org.json.JSONObject
 import java.io.File
 import java.util.*
@@ -231,7 +234,16 @@ class Config(app: TodoApplication) : Preferences(app) {
             val lines = it.lines()
             Log.i(TAG, "Getting ${lines.size} items todoList from cache")
             ArrayList<Task>().apply {
-                addAll(lines.map { line -> Task(line) })
+                addAll(lines.map { line -> 
+                    val taskId = TaskIdDao.get(line)
+                    if (taskId == null) {
+                        val task = Task(line) 
+                        TaskIdDao.add(task)
+                        task
+                    } else {
+                        Task(line, id = taskId)
+                    }
+                })
             }
         }
         set(items) {
