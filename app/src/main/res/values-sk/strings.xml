@@ -92,7 +92,7 @@
     <string name="archive">Archivovať</string>
     <string name="debug_info">Informácie pre ladenie</string>
     <string name="cleartask">Vyčistiť úlohu</string>
-    <string name="archive_now_pref_summary">Presunúť hotové úlohy z todo.txt do done.txt</string>
+    <string name="archive_now_pref_summary">Presunúť hotové úlohy z todo.txt do done.txt.</string>
     <string name="TODOTXTPATH_summary">Dropbox priečinok kde je uložený súbor todo.txt.</string>
     <string name="todotxt_features_settings_summary">Povoliť alebo zakázať vlastnosti</string>
     <string name="todotxt_behavior_settings_header">Správanie</string>
@@ -152,9 +152,9 @@
     <string name="insert_threshold">Vložiť hraničný dátum</string>
     <string name="clear_filter">Vyčistiť filter</string>
     <string name="write_failed">Nepodarilo sa zapísať do súboru. Vaše zmeny NEBOLI uložené.</string>
-    <string name="tasktexthint">\@Prediskutovať +Peter problém s +Jožo @Martin
-\nPovedať +Jožo aby nebol taký ťahúň @Martin
-\nOdobrať tento text z ponuky @telefón</string>
+    <string name="tasktexthint">\@Discuss +Paris problém s +Hector @Troy
+\nPovedzte +Hector nie je taký drag @Troy
+\nOdstráňte tento text z menu @Phone</string>
     <string name="filter_name_empty">Nie je zadaný filter, filter nebude pridaný</string>
     <string name="widget_name_empty">Nebol zadaný názov ovládacieho prvku, nebude pridaný</string>
     <string name="add_task_help">Aktualizovať alebo pridať na zoznam úloh. Každá úloha je na samostatnom riadku.<b>Priorita</b> začnite riadok s (.), ako (A)<b>Štítky</b> začnite znakom +, ako +kuchyňa <b>zoznamy</b> začnite znakom @, ako @doma Úloha môže obsahovať ľubovoľný počet štítkov alebo byť na viacerých zoznamoch. </string>
@@ -164,11 +164,11 @@
     <string name="todotxt_settings_summary">Nastavenia celej aplikácie</string>
     <string name="sort_complete_last_pref_summary">Vždy zobrazovať dokončené úlohy na konci zoznamu</string>
     <string name="keep_prio_header">Zachovať prioritu v dokončených úlohách</string>
-    <string name="keep_prio_summary">Todo.txt pri dokončení úlohy odoberie prioritu</string>
+    <string name="keep_prio_summary">Easytask drží prioritu na dokončenie</string>
     <string name="recur_from_original_date_pref_title">Opakovať úlohu s použitím pôvodných dátumov</string>
     <string name="recur_from_original_date_pref_summary">Pri vytváraní opakujúcej sa úlohy posunúť dátumy z pôvodnej úlohy. Pre nastavenie nových dátumov odkazujúcich sa na dnešok túto voľbu odškrtnite.</string>
     <string name="swipe_complete_pref_title">Potiahnutím doprava dokončite</string>
-    <string name="swipe_complete_pref_summary">Úlohu dokončíte tak, že ju potiahnete doprava</string>
+    <string name="swipe_complete_pref_summary">Úlohu dokončíte tak, že ju potiahnete doprava.</string>
     <string name="manual_sync_pref_summary">Nenahrávať automaticky každú zmenu na Dropbox.</string>
     <string name="datebar_relative_size_summary">Relatívna veľkosť dátového riadku</string>
     <string name="font_size_delta_pref_summary">Zmeniť veľkosť písma.</string>
@@ -234,13 +234,13 @@
     <string name="sync_upload_message">Nahrávanie todo.txt…</string>
     <string name="sync_download_message">Sťahovanie todo.txt…</string>
     <string name="sync_conflict_dialog_title">Konflikt súboru</string>
-    <string name="sync_conflict_dialog_msg">Ups! Na Dropboxe je novšia verzia vášho súboru todo.txt.
-\nChcete nahrať vaše lokálne zmeny alebo si stiahnuť verziu z Dropboxu\?</string>
+    <string name="sync_conflict_dialog_msg">Oops! K dispozícii je nová verzia vášho todo. txt súbor v Dropbox.
+\nChcete nahrať svoje miestne zmeny, alebo stiahnuť verziu Dropbox\?</string>
     <string name="first_title_word">Simpletask</string>
     <string name="login_screen_button">Prihlásiť sa na Dropbox</string>
     <string name="login_folder_screen_button">Prihlásiť sa na Dropbox
 \n(prístup do adresára aplikácie)</string>
-    <string name="login_cloudless">Ak nemáte účet na Dropboxe alebo ho nechcete používat pre ukladanie vašich zoznamov úloh, môžete si stiahnuť SImpletask Cloudless z obchodu Play.
+    <string name="login_cloudless">Ak nemáte účet Dropbox alebo ho nechcete používať na uloženie zoznamu úloh, môžete si stiahnuť Easytask Cloudless z Play Store.
 \nhttps://goo.gl/X1C55P</string>
     <string name="delete_task_title">Odstrániť %s úloh(u)</string>
     <string name="archive_task_title">Archivovať %s úloh(u)</string>
@@ -352,4 +352,15 @@
     <string name="link_added">Odkaz pridaný do Simpletask</string>
     <string name="share_link_failed">Nepodarilo sa pridať prázdny odkaz.</string>
     <string name="share_link">Zdieľať odkaz</string>
+    <string name="show_filter_drawer">Uložené filtre</string>
+    <string name="password_summary">%s</string>
+    <string name="pref_key__default_encryption_password">pref_key__predvolené_encryption_password</string>
+    <string name="uppercase_headers_title">Horná kufrík</string>
+    <string name="channel_description">Kanál pre úlohy pined ako notifikácie</string>
+    <string name="file_encryption_password">Šifrovacie heslo</string>
+    <string name="task_drag_title">Presuňte úlohy na reorder (BETA)</string>
+    <string name="password_already_set_summary">Heslo už nastavené. Nastavenie nového hesla prepíše existujúce heslo a už nemôžete získať prístup k súborom, ak zabudnete heslo.</string>
+    <string name="channel_name">Pin notifikácie</string>
+    <string name="pref_key__set_encryption_password">pref_key__set_encryption_password</string>
+    <string name="pin_notification">Pin ako oznámenie</string>
 </resources>
